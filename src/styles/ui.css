@@ -559,3 +559,74 @@
   font-size: 16px;
   text-align: center;
 }
+
+/* Game text styles (Glk styles). Italic and bold are synthesised from the bundled faces. */
+.reader__run--emphasized {
+  font-style: italic;
+}
+
+.reader__run--header,
+.reader__run--subheader,
+.reader__run--alert,
+.reader__run--input {
+  font-weight: 700;
+}
+
+.reader__run--preformatted {
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-wrap;
+}
+
+/* Status line in the top zone: location on the left, score / turns on the right. */
+.reader__status {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.reader__score {
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+/* Command bar (basic line input; chips and history arrive with S1.4). */
+.command {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 40em;
+}
+
+.command__prompt {
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+.command__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0 8px 0 0;
+  padding: 8px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+}
+
+.command__send {
+  min-height: 48px;
+  min-width: 48px;
+  padding: 8px 16px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #000;
+  color: #fff;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}

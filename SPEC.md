@@ -229,7 +229,9 @@ The core screen. It must feel like reading an ebook.
 - Tap zones: left 30 % = previous page, right 70 % = next page (Kindle convention); swipe left/right when
   supported. Page indicator "3 / 3" at the bottom.
 - New output after a command opens on the page containing the echoed command; if output spans several
-  pages, a "▸ more" marker invites turning the page. The command bar is visible only on the **last** page
+  pages, a "▸ more" marker invites turning the page. A turn (echoed command + reply) that does not fit in the rest of
+  the page but fits on a page of its own starts a new page, so most replies are read whole, with the command bar.
+- While the game waits for a command, its bare prompt (">") is not shown: the command field stands for it. The command bar is visible only on the **last** page
   (on earlier pages the bar shows "Back to the present ›"); that slot has the same height on every page, so all pages
   share one text-area height.
 - `[MORE]` / "press any key" prompts from the game are satisfied by a tap on the page.
@@ -291,6 +293,8 @@ interface Engine {
   load(story: ArrayBuffer | string, opts: EngineOptions): Promise<void>;
   onOutput(cb: (blocks: OutputBlock[]) => void): void;       // paragraphs, styles, status line, images
   onInputRequest(cb: (req: LineInput | CharInput | ChoiceInput) => void): void;
+  onExit(cb: () => void): void;                              // the story has ended (quit / end of story)
+  onError(cb: (message: string) => void): void;              // fatal engine error
   sendLine(text: string): void;
   sendChar(key: string): void;
   choose(index: number): void;
@@ -304,6 +308,13 @@ For ZVM and Quixe, we implement a **GlkOte-compatible display layer** (the API P
 to) that translates Glk window updates into `OutputBlock`s: buffer window → transcript, grid window →
 status line, graphics → grayscale images, sound → ignored. Existing Parchment code is reused where its
 licence allows (MIT); only the presentation layer is ours.
+
+`OutputBlock` (`src/engines/engine.ts`): `paragraph` (styled runs, Glk style names; `append` continues the previous
+paragraph, e.g. the echoed command after the prompt), `status` (the whole status line, one string per row) and `clear`
+(ignored by the paginated transcript, which keeps everything). The Z-machine runs on ZVM (`ifvms`) and the Glk API
+library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
+bundle, one Glk instance per game (see `src/engines/README.md`). `load()` rejects when the story cannot start; the VM
+runs synchronously until it waits for input.
 
 ### 4.3 Twine sandbox
 

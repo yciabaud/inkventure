@@ -1,10 +1,20 @@
 // Paginator (SPEC §3.6): lays measured text blocks out into pages that exactly fit the text area.
 // Pure functions over measurements, so they are unit-tested with mocked metrics; measure.ts reads them from the DOM.
 
-/** A paragraph of output. `input` is an echoed player command. */
+/** A styled piece of a paragraph (Glk style name: `emphasized`, `header`, `input`…). */
+export interface Run {
+  text: string;
+  style: string;
+}
+
+/**
+ * A paragraph of output. `input` is an echoed player command. `runs`, when present, split `text` into styled pieces
+ * (their texts joined are exactly `text`).
+ */
 export interface ReaderBlock {
   kind: 'text' | 'input';
   text: string;
+  runs?: Run[];
 }
 
 /** A place in the text: character `offset` in block `block`. */
@@ -38,6 +48,7 @@ export interface Fragment {
   end: number;
   kind: ReaderBlock['kind'];
   text: string;
+  runs?: Run[];
 }
 
 // Measurements are fractional; tolerate rounding so a line that exactly fits is not pushed to the next page.
@@ -47,25 +58,52 @@ export function comparePositions(a: Position, b: Position): number {
   return a.block !== b.block ? a.block - b.block : a.offset - b.offset;
 }
 
+function blockHeight(metrics: BlockMetrics): number {
+  let height = 0;
+  for (let l = 0; l < metrics.lines.length; l++) height += metrics.lines[l].height;
+  return height;
+}
+
 /**
  * Splits blocks into pages of `pageHeight` px. Blocks are split between lines when they do not fit; a line taller
  * than the page gets a page of its own (it is clipped rather than looping forever). There is always at least one page.
+ *
+ * `groupStarts[b]` marks blocks that start a group kept together when possible (a turn: the echoed command and the
+ * game's reply). A group that does not fit in the rest of the page but fits on a page of its own starts a new page,
+ * so the player reads the whole reply, with the command bar, without turning the page.
  */
-export function paginate(metrics: BlockMetrics[], pageHeight: number): Page[] {
+export function paginate(
+  metrics: BlockMetrics[],
+  pageHeight: number,
+  groupStarts?: boolean[],
+): Page[] {
   const pages: Page[] = [];
   let start: Position = { block: 0, offset: 0 };
   let y = 0;
 
+  function breakAt(position: Position) {
+    pages.push({ start: start, end: position });
+    start = position;
+    y = 0;
+  }
+
   for (let b = 0; b < metrics.length; b++) {
     const lines = metrics[b].lines;
-    if (b > 0 && y > 0) y += metrics[b - 1].gapAfter;
+    const gap = b > 0 && y > 0 ? metrics[b - 1].gapAfter : 0;
+    if (y > 0 && groupStarts && groupStarts[b]) {
+      let group = blockHeight(metrics[b]);
+      for (let g = b + 1; g < metrics.length && !groupStarts[g]; g++) {
+        group += metrics[g - 1].gapAfter + blockHeight(metrics[g]);
+      }
+      if (y + gap + group > pageHeight + EPSILON && group <= pageHeight + EPSILON) {
+        breakAt({ block: b, offset: 0 });
+      }
+    }
+    if (y > 0) y += gap;
     for (let l = 0; l < lines.length; l++) {
       const height = lines[l].height;
       if (y > 0 && y + height > pageHeight + EPSILON) {
-        const breakAt = { block: b, offset: l === 0 ? 0 : lines[l].start };
-        pages.push({ start: start, end: breakAt });
-        start = breakAt;
-        y = 0;
+        breakAt({ block: b, offset: l === 0 ? 0 : lines[l].start });
       }
       y += height;
     }
@@ -82,6 +120,19 @@ export function pageIndexOf(pages: Page[], position: Position): number {
   return 0;
 }
 
+/** The runs covering characters `start` to `end` of their joined text. */
+export function sliceRuns(runs: Run[], start: number, end: number): Run[] {
+  const out: Run[] = [];
+  let offset = 0;
+  for (let i = 0; i < runs.length && offset < end; i++) {
+    const from = Math.max(start - offset, 0);
+    const to = Math.min(end - offset, runs[i].text.length);
+    if (to > from) out.push({ text: runs[i].text.slice(from, to), style: runs[i].style });
+    offset += runs[i].text.length;
+  }
+  return out;
+}
+
 /** The block fragments shown on `page`, in reading order. */
 export function pageFragments(blocks: ReaderBlock[], page: Page): Fragment[] {
   const fragments: Fragment[] = [];
@@ -91,13 +142,16 @@ export function pageFragments(blocks: ReaderBlock[], page: Page): Fragment[] {
     const start = b === page.start.block ? page.start.offset : 0;
     const end = b === page.end.block ? page.end.offset : text.length;
     if (end <= start && !(text.length === 0 && b < page.end.block)) continue;
-    fragments.push({
+    const fragment: Fragment = {
       block: b,
       start: start,
       end: end,
       kind: blocks[b].kind,
       text: text.slice(start, end),
-    });
+    };
+    const runs = blocks[b].runs;
+    if (runs) fragment.runs = sliceRuns(runs, start, end);
+    fragments.push(fragment);
   }
   return fragments;
 }
