@@ -470,7 +470,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Engines | ZVM + Quixe (Parchment, MIT), inkjs (MIT) | Mature, pure JS. |
 | Unit tests | Vitest | Fast, TS-native. |
 | E2E tests | Playwright | Device emulation, network mocking. |
-| Hosting | GitHub Pages | Free, static. |
+| Hosting | GitHub Pages (project site, deployed by `.github/workflows/deploy.yml` after CI passes on `main`) | Free, static. |
 | CI/CD | GitHub Actions | Tests, build, catalogue job, ebook build. |
 
 ```
@@ -492,6 +492,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 ├── content/featured.json
 ├── scripts/catalog/    crawler, resolver, emitter, content-policy.json
 ├── scripts/size/       check-size.ts: asset budgets report (CI)
+├── scripts/build/      build-info.ts: version.json + build meta tag (Vite plugin)
 ├── ebook/              Markdown sources, templates, build script
 └── tests/
     ├── unit/           (or colocated *.test.ts)
