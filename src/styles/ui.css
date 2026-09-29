@@ -461,6 +461,109 @@
   text-overflow: ellipsis;
 }
 
+/* Reader actions under the app's top bar in the top menu. */
+.reader__actions {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  border-bottom: 2px solid #000;
+}
+
+.reader__actions > * {
+  margin: 0 8px 8px 0;
+}
+
+.reader__action {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 16px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reader__aa {
+  margin-right: 8px;
+  font-family: Literata, Georgia, serif;
+  font-size: 20px;
+}
+
+/* Text settings ("Aa") dialog. */
+.settings {
+  padding: 8px 16px 16px;
+}
+
+.settings__row {
+  margin-bottom: 12px;
+}
+
+.settings__label {
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.segmented {
+  display: flex;
+  align-items: center;
+}
+
+.segmented > * + * {
+  margin-left: 6px;
+}
+
+.segmented__option {
+  flex: 1;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 6px 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.segmented__option[aria-pressed='true'] {
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+}
+
+.segmented__option:disabled {
+  border-color: #767676;
+  color: #767676;
+  cursor: default;
+}
+
+.segmented__value {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+}
+
+.settings__check {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.settings__check input {
+  width: 24px;
+  height: 24px;
+  margin: 0 12px 0 0;
+}
+
 /* The app's top bar, drawn over the text when the top zone is tapped (no re-pagination). */
 .reader__bar {
   position: absolute;

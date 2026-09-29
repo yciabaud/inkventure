@@ -15,6 +15,10 @@ interface Props {
   pinToLast?: boolean;
   /** Extra class for the slot under the text (its height is the same on every page). */
   slotClass?: string;
+  /** Inline style of the text area (reader settings: font, size, spacing, margins, alignment). */
+  textStyle?: Record<string, string>;
+  /** Changes whenever `textStyle` changes the layout: the text is paginated again, keeping the reading position. */
+  layoutKey?: string;
   /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
   focus?: number;
 }
@@ -30,6 +34,8 @@ export function PagedText({
   focus,
   pinToLast,
   slotClass,
+  textStyle,
+  layoutKey,
 }: Props) {
   const areaRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -57,6 +63,14 @@ export function PagedText({
     turner.checkFit();
   }, [turner, view]);
 
+  // New text settings: paginate again (the first layout happens on attach).
+  const layoutKeyRef = useRef(layoutKey);
+  useLayoutEffect(() => {
+    if (layoutKey === layoutKeyRef.current) return;
+    layoutKeyRef.current = layoutKey;
+    turner.refresh();
+  }, [turner, layoutKey]);
+
   const count = Math.max(view.pages.length, 1);
   const current = Math.min(view.index, count - 1);
   const isLast = current === count - 1;
@@ -66,7 +80,13 @@ export function PagedText({
 
   return (
     <div class="reader__body">
-      <div class="reader__page" ref={areaRef} role="region" aria-label={t('reader.text')}>
+      <div
+        class="reader__page"
+        ref={areaRef}
+        role="region"
+        aria-label={t('reader.text')}
+        style={textStyle}
+      >
         <div class="reader__text" ref={textRef}>
           {loading && <p class="reader__loading ui-font">{t('reader.loading')}</p>}
           {fragments.map((fragment) => (

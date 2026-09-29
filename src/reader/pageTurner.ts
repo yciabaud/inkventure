@@ -175,6 +175,11 @@ export class PageTurner {
     this.remeasure();
   }
 
+  /** Measures everything again, keeping the reading position (text settings changed). */
+  refresh(): void {
+    this.remeasure();
+  }
+
   /** Measures everything again (fonts changed). */
   private remeasure(): void {
     this.cache = null;

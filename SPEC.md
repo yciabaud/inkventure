@@ -261,8 +261,11 @@ text area never changes size), in three rows:
 **Reader menu** (tap on status line or ⋯)
 
 - Home · Library
-- Aa: font size (6 steps), typeface (serif / sans / dyslexia-friendly), margins (3), line spacing (3),
-  text alignment (left / justified) — persisted as reader defaults and per-game override.
+- Aa: font size (6 steps, 14–28 px), typeface (serif / sans / "easy reading"), margins (3), line spacing (3),
+  text alignment (left / justified) — saved as reader defaults (`prefs.reader`), or for one game only
+  ("For this game only", stored in `progress:<tuid>.reader`). Every change re-paginates at once, keeping the reading
+  position. "Easy reading" is a wide system sans with extra letter and word spacing: a real dyslexia font
+  (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10).
 - Save… (named slots, max 5 + autosave) · Restore… · Undo · Restart (confirm)
 - Transcript (full, paginated, read-only) · Help (how to play, common commands) · Game info
 - Refresh screen

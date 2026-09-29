@@ -37,7 +37,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S1.1 → S1.3 →
 | [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | done |
 | [S0.7](stories/S0.7-asset-size-budgets.md) | Asset size budgets in CI | E0 | M0 | S0.1 | done |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
-| [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | todo |
+| [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |
 | [S1.4](stories/S1.4-command-bar-chips.md) | Command bar, shortcut chips & history | E1 | M1 | S1.3 | done |
 | [S1.5](stories/S1.5-saves-autosave-undo.md) | Autosave, resume, save slots & undo | E1 | M1 | S1.3, S0.6 | todo |
