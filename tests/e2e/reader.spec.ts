@@ -283,3 +283,22 @@ test('a page turn takes under 300 ms with the CPU throttled 4×', async ({ page,
   expect(durations.length).toBeGreaterThan(0);
   expect(Math.max(...durations)).toBeLessThan(300);
 });
+
+test('re-paginates when the web fonts arrive late, without relying on font events', async ({
+  page,
+}) => {
+  // As seen on WebKit in CI: `fonts.ready` already resolved before the download started and no `loadingdone` in time.
+  await page.addInitScript(() => {
+    const fonts = document.fonts;
+    Object.defineProperty(fonts, 'addEventListener', { value: () => undefined });
+    Object.defineProperty(fonts, 'ready', { get: () => Promise.resolve(fonts) });
+  });
+  await page.route(/\.woff2?$/, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await route.continue();
+  });
+  await page.goto(DEMO);
+  await expect(page.locator('.reader__block').first()).toBeVisible();
+  await expect.poll(() => page.evaluate(() => document.fonts.check('18px Literata'))).toBe(true);
+  await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
+});

@@ -34,6 +34,7 @@ export class PageTurner {
   private gesture: Point | null = null;
   private ignoreClickUntil = 0;
   private detach: (() => void) | null = null;
+  private fontsPending: Record<string, boolean> = {};
 
   constructor(private readonly onChange: (view: PageView) => void) {}
 
@@ -77,9 +78,36 @@ export class PageTurner {
     if (!force && key === this.laidOut) return;
     this.laidOut = key;
 
-    this.pages = paginate(measureBlocks(area, text.className, width, this.blocks), height);
+    const measured = measureBlocks(area, text.className, width, this.blocks);
+    this.pages = paginate(measured.metrics, height);
     this.index = pageIndexOf(this.pages, this.anchor);
     this.emit();
+    this.awaitFonts(measured.fonts);
+  }
+
+  /**
+   * Web fonts load when text first uses them, usually after the first layout, and change every line. Asks for the
+   * fonts the text is set in and lays out again once they arrive. FontFaceSet events alone are not enough: WebKit
+   * resolved `fonts.ready` before the download started and fired no `loadingdone` in time (CI, S1.1).
+   */
+  private awaitFonts(fonts: string[]): void {
+    const set = document.fonts;
+    if (!set || typeof set.load !== 'function' || typeof set.check !== 'function') return;
+    for (let i = 0; i < fonts.length; i++) {
+      const font = fonts[i];
+      if (this.fontsPending[font]) continue;
+      try {
+        if (set.check(font)) continue;
+      } catch {
+        continue; // unparsable font value
+      }
+      this.fontsPending[font] = true;
+      const done = () => {
+        delete this.fontsPending[font];
+        this.layout(true);
+      };
+      set.load(font).then(done, done);
+    }
   }
 
   /** Listens to taps, swipes, keys, resizes and font loads. `area` is the tap area, `text` the text column. */

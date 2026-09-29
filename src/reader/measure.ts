@@ -51,6 +51,17 @@ function lineBoxes(p: HTMLElement, text: string, range: Range | null): LineBox[]
   return lines;
 }
 
+export interface Measurement {
+  metrics: BlockMetrics[];
+  /** CSS `font` values the blocks are set in (one per block kind), for `document.fonts.check()` / `load()`. */
+  fonts: string[];
+}
+
+function fontOf(element: HTMLElement): string {
+  const style = window.getComputedStyle(element);
+  return style.fontStyle + ' ' + style.fontWeight + ' ' + style.fontSize + ' ' + style.fontFamily;
+}
+
 /**
  * Measures `blocks` inside `host` (the text area), in a hidden layer of width `width` px styled like `className`.
  */
@@ -59,7 +70,7 @@ export function measureBlocks(
   className: string,
   width: number,
   blocks: ReaderBlock[],
-): BlockMetrics[] {
+): Measurement {
   const layer = document.createElement('div');
   layer.className = className;
   layer.setAttribute('aria-hidden', 'true');
@@ -82,14 +93,20 @@ export function measureBlocks(
 
   const range = document.createRange ? document.createRange() : null;
   const metrics: BlockMetrics[] = [];
+  const fonts: string[] = [];
+  const kinds: Record<string, boolean> = {};
   let previousBottom = 0;
   for (let i = 0; i < elements.length; i++) {
     const rect = elements[i].getBoundingClientRect();
     if (i > 0) metrics[i - 1].gapAfter = Math.max(rect.top - previousBottom, 0);
     metrics.push({ lines: lineBoxes(elements[i], blocks[i].text, range), gapAfter: 0 });
     previousBottom = rect.bottom;
+    if (!kinds[blocks[i].kind]) {
+      kinds[blocks[i].kind] = true;
+      fonts.push(fontOf(elements[i]));
+    }
   }
 
   host.removeChild(layer);
-  return metrics;
+  return { metrics: metrics, fonts: fonts };
 }
