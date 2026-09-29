@@ -40,6 +40,11 @@ export function PagedText({ blocks, lastPageSlot, interceptTap, focus }: Props) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turner, blocks]);
 
+  // After each draw, make sure the page really fits (see PageTurner.checkFit).
+  useLayoutEffect(() => {
+    turner.checkFit();
+  }, [turner, view]);
+
   const count = Math.max(view.pages.length, 1);
   const current = Math.min(view.index, count - 1);
   const isLast = current === count - 1;

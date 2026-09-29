@@ -13,8 +13,13 @@ interface Fragment {
 async function open(page: Page) {
   await page.goto(DEMO);
   await expect(page.locator('.reader__block').first()).toBeVisible();
-  // Web fonts change the layout: wait until they are in and the text has been laid out again.
+  // Web fonts change the layout: wait until they are in and the text has been laid out again. Not `fonts.ready`
+  // alone: WebKit resolves it before the fonts have loaded (CI flake on the first page, run 36637490211).
   await page.evaluate(() => document.fonts.ready);
+  await expect.poll(() => literataLoaded(page), { timeout: 10_000 }).toBe(true);
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
 }
 
 async function indicator(page: Page): Promise<{ page: number; count: number }> {
@@ -317,6 +322,52 @@ test('re-paginates when the web fonts arrive late, without relying on font event
   await expect(page.locator('.reader__block').first()).toBeVisible();
   expect(await literataLoaded(page)).toBe(false);
   await expect.poll(() => literataLoaded(page), { timeout: 10_000 }).toBe(true);
+  await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
+});
+
+test('re-paginates when a font face finishes loading, even if load(), ready and loadingdone all mislead', async ({
+  page,
+  context,
+}) => {
+  // Reference: the demo loaded normally, laid out in the reading font.
+  const reference = await context.newPage();
+  await open(reference);
+  const expected = await fragments(reference);
+  await reference.close();
+
+  // Worst case seen on WebKit: every FontFaceSet signal says "done" before the faces have loaded. Only each face's
+  // own `loaded` promise (and the fit check after drawing) can trigger the re-layout.
+  await page.addInitScript(() => {
+    const fonts = document.fonts;
+    Object.defineProperty(fonts, 'addEventListener', { value: () => undefined });
+    Object.defineProperty(fonts, 'ready', { get: () => Promise.resolve(fonts) });
+    Object.defineProperty(fonts, 'load', { value: () => Promise.resolve([]) });
+    // Without it, the font swap resizing the slot under the text would trigger a re-layout by itself.
+    Object.defineProperty(window, 'ResizeObserver', { value: undefined });
+  });
+  await page.route(/\.woff2?$/, async (route) => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await route.continue();
+  });
+  await page.goto(DEMO, { waitUntil: 'commit' });
+  await expect(page.locator('.reader__block').first()).toBeVisible();
+  // First layout done at once, in the fallback font: page 1 holds different text.
+  expect(await literataLoaded(page)).toBe(false);
+  expect(await fragments(page)).not.toEqual(expected);
+  // Once the faces have loaded, page 1 is laid out exactly as with the fonts from the start.
+  await expect.poll(() => literataLoaded(page), { timeout: 10_000 }).toBe(true);
+  await expect.poll(() => fragments(page)).toEqual(expected);
+  expect((await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
+});
+
+test('a page drawn with other metrics than it was laid out with corrects itself', async ({
+  page,
+}) => {
+  await open(page);
+  // Taller lines without any resize or font event: the current pagination no longer fits what gets drawn.
+  await page.addStyleTag({ content: '.reader__block { line-height: 2.4 !important; }' });
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowLeft');
   await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
 });
 
