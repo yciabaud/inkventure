@@ -1,7 +1,14 @@
 // Page state and input handling for the paged text view, kept out of the component so the listeners (attached once)
 // and the reading position are plain mutable state.
-import { measureBlocks } from './measure';
-import { pageIndexOf, paginate, type Page, type Position, type ReaderBlock } from './paginator';
+import { measureBlocks, type Measurement } from './measure';
+import {
+  pageIndexOf,
+  paginate,
+  type BlockMetrics,
+  type Page,
+  type Position,
+  type ReaderBlock,
+} from './paginator';
 
 /** Share of the width, from the left, that turns back a page (Kindle convention: left 30 % back, right 70 % forward). */
 export const PREV_ZONE = 0.3;
@@ -27,7 +34,7 @@ interface Point {
 }
 
 export class PageTurner {
-  private interceptTap: (() => boolean) | undefined;
+  private interceptTap: ((isLastPage: boolean) => boolean) | undefined;
   private pages: Page[] = [];
   private index = 0;
   private blocks: ReaderBlock[] = [];
@@ -43,16 +50,23 @@ export class PageTurner {
   private fontsRequested: Record<string, boolean> = {};
   /** 'waiting' until the fonts of the first layout are in (or FONT_WAIT_MS has passed). */
   private firstLayout: 'pending' | 'waiting' | 'done' = 'pending';
+  /** Metrics of the blocks last measured, reused for unchanged blocks at the same width (a turn adds a few blocks). */
+  private cache: { width: number; blocks: ReaderBlock[]; metrics: BlockMetrics[] } | null = null;
 
   constructor(private readonly onChange: (view: PageView) => void) {}
 
-  /** Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu). */
-  setInterceptTap(intercept: (() => boolean) | undefined): void {
+  /**
+   * Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu, or to answer a
+   * "press any key" prompt on the last page).
+   */
+  setInterceptTap(intercept: ((isLastPage: boolean) => boolean) | undefined): void {
     this.interceptTap = intercept;
   }
 
-  setBlocks(blocks: ReaderBlock[]): void {
+  /** New text. With `focus`, opens on the page where that block starts (e.g. the echoed command of a new turn). */
+  setBlocks(blocks: ReaderBlock[], focus?: number): void {
     this.blocks = blocks;
+    if (focus !== undefined && focus >= 0) this.anchor = { block: focus, offset: 0 };
     this.layout(true);
   }
 
@@ -64,7 +78,7 @@ export class PageTurner {
   }
 
   turn(delta: number): void {
-    if (this.interceptTap && this.interceptTap()) return;
+    if (this.interceptTap && this.interceptTap(this.index >= this.pages.length - 1)) return;
     this.turnTo(this.index + delta);
   }
 
@@ -92,11 +106,41 @@ export class PageTurner {
     }
     this.laidOut = key;
 
-    const measured = measureBlocks(area, text.className, width, this.blocks);
-    this.pages = paginate(measured.metrics, height);
+    const measured = this.measure(area, text.className, width);
+    // Turns (an echoed command and its reply) are kept on one page when they fit.
+    const turns: boolean[] = [];
+    for (let i = 0; i < this.blocks.length; i++) turns.push(this.blocks[i].kind === 'input');
+    this.pages = paginate(measured.metrics, height, turns);
     this.index = pageIndexOf(this.pages, this.anchor);
     this.emit();
     this.awaitFonts(measured.fonts);
+  }
+
+  /** Measures the blocks, reusing the metrics of the unchanged leading blocks when the width is the same. */
+  private measure(area: HTMLElement, className: string, width: number): Measurement {
+    const blocks = this.blocks;
+    const cache = this.cache;
+    let same = 0;
+    if (cache && cache.width === width) {
+      const n = Math.min(cache.blocks.length, blocks.length);
+      while (same < n && cache.blocks[same] === blocks[same]) same++;
+      if (same === blocks.length && same === cache.blocks.length) {
+        return { metrics: cache.metrics, fonts: [] };
+      }
+    }
+    // Measure again from the last unchanged block: its gap to the first new block is part of its metrics.
+    const from = Math.max(same - 1, 0);
+    const measured = measureBlocks(area, className, width, blocks.slice(from));
+    const metrics =
+      cache && from > 0 ? cache.metrics.slice(0, from).concat(measured.metrics) : measured.metrics;
+    this.cache = { width: width, blocks: blocks, metrics: metrics };
+    return { metrics: metrics, fonts: measured.fonts };
+  }
+
+  /** Measures everything again (fonts changed). */
+  private remeasure(): void {
+    this.cache = null;
+    this.layout(true);
   }
 
   /**
@@ -126,14 +170,14 @@ export class PageTurner {
     // Past FONT_WAIT_MS the text shows in the fallback font; it is laid out again when the fonts arrive.
     const timer = window.setTimeout(() => {
       this.firstLayout = 'done';
-      this.layout(true);
+      this.remeasure();
     }, FONT_WAIT_MS);
     for (let i = 0; i < loads.length; i++) {
       loads[i].then(() => {
         if (--left > 0) return;
         window.clearTimeout(timer);
         this.firstLayout = 'done';
-        this.layout(true);
+        this.remeasure();
       });
     }
     return false;
@@ -168,7 +212,7 @@ export class PageTurner {
    */
   private awaitFonts(fonts: string[]): void {
     const loads = this.loadFonts(fonts);
-    for (let i = 0; i < loads.length; i++) loads[i].then(() => this.layout(true));
+    for (let i = 0; i < loads.length; i++) loads[i].then(() => this.remeasure());
   }
 
   /** Listens to taps, swipes, keys, resizes and font loads. `area` is the tap area, `text` the text column. */
@@ -178,7 +222,7 @@ export class PageTurner {
     this.text = text;
 
     const relayout = () => this.layout(false);
-    const relayoutAll = () => this.layout(true);
+    const relayoutAll = () => this.remeasure();
 
     // Swipes are detected from the events themselves: the Kindle fires touch and pointer events although
     // `ontouchstart` is absent (SPEC §2.2). Whichever event arrives first handles the gesture.
@@ -200,7 +244,8 @@ export class PageTurner {
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       const tag = target && target.tagName;
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (event.defaultPrevented || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT')
+        return;
       const key = event.key;
       if (key === 'ArrowRight' || key === 'Right' || key === 'PageDown') this.turn(1);
       else if (key === 'ArrowLeft' || key === 'Left' || key === 'PageUp') this.turn(-1);

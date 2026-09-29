@@ -7,18 +7,49 @@ export function blockClass(kind: ReaderBlock['kind']): string {
   return 'reader__block reader__block--' + kind;
 }
 
+export function runClass(style: string): string {
+  return 'reader__run reader__run--' + style;
+}
+
 /** Creates the element a block (or fragment) is rendered with; the reader view renders the same markup. */
 function blockElement(block: ReaderBlock): HTMLElement {
   const p = document.createElement('p');
   p.className = blockClass(block.kind);
-  p.appendChild(document.createTextNode(block.text));
+  if (block.runs) {
+    for (let i = 0; i < block.runs.length; i++) {
+      const span = document.createElement('span');
+      span.className = runClass(block.runs[i].style);
+      span.appendChild(document.createTextNode(block.runs[i].text));
+      p.appendChild(span);
+    }
+  } else {
+    p.appendChild(document.createTextNode(block.text));
+  }
   return p;
+}
+
+/** The text nodes of `element` in order, with the offset of each in the element's text. */
+function textNodes(
+  element: Node,
+  out: Array<{ node: Node; start: number }>,
+  offset: number,
+): number {
+  for (let child = element.firstChild; child; child = child.nextSibling) {
+    if (child.nodeType === 3) {
+      out.push({ node: child, start: offset });
+      offset += (child.nodeValue || '').length;
+    } else {
+      offset = textNodes(child, out, offset);
+    }
+  }
+  return offset;
 }
 
 function lineBoxes(p: HTMLElement, text: string, range: Range | null): LineBox[] {
   const box = p.getBoundingClientRect();
-  const node = p.firstChild;
-  if (!range || !node || typeof range.getBoundingClientRect !== 'function') {
+  const nodes: Array<{ node: Node; start: number }> = [];
+  textNodes(p, nodes, 0);
+  if (!range || !nodes.length || typeof range.getBoundingClientRect !== 'function') {
     // No range geometry: keep the block whole.
     return [{ start: 0, height: box.height }];
   }
@@ -26,11 +57,15 @@ function lineBoxes(p: HTMLElement, text: string, range: Range | null): LineBox[]
   const starts: number[] = [];
   const tops: number[] = [];
   let threshold = 0;
+  let n = 0;
   const word = /\S+/g;
   let match: RegExpExecArray | null;
   while ((match = word.exec(text))) {
-    range.setStart(node, match.index);
-    range.setEnd(node, match.index + 1);
+    // Words only move forward, and so does the text node holding their first character.
+    while (n + 1 < nodes.length && nodes[n + 1].start <= match.index) n++;
+    const local = match.index - nodes[n].start;
+    range.setStart(nodes[n].node, local);
+    range.setEnd(nodes[n].node, local + 1);
     const rect = range.getBoundingClientRect();
     if (!threshold) threshold = Math.max(rect.height / 2, 1);
     if (!tops.length || rect.top > tops[tops.length - 1] + threshold) {

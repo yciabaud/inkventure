@@ -170,3 +170,33 @@ describe('pageFragments', () => {
     ]);
   });
 });
+
+describe('keeping turns together', () => {
+  // Blocks of 3 lines (60 px) with 10 px gaps; blocks 2 and 4 start turns.
+  const blocks = [0, 1, 2, 3, 4, 5, 6].map((i) => text(30, String(i)));
+  const metrics = measure(blocks, 10);
+  const turns = blocks.map((_, i) => i === 2 || i === 4);
+
+  it('starts a new page at a turn that does not fit the rest of the page but fits a page', () => {
+    // Page of 180 px: blocks 0-1 take 130 px; turn 2-3 (130 px) does not fit after them, but fits a page.
+    const pages = paginate(metrics, 180, turns);
+    expect(pages[1].start).toEqual({ block: 2, offset: 0 });
+    // Without the rule, turn 2 would start at the bottom of page 1 and be split.
+    expect(paginate(metrics, 180)[1].start).toEqual({ block: 2, offset: 20 });
+  });
+
+  it('splits a turn longer than a page as usual', () => {
+    // Turn 4-6 is 200 px: longer than a 180 px page, so it is split between lines.
+    const pages = paginate(metrics, 180, turns);
+    expect(pages[2].start).toEqual({ block: 4, offset: 20 });
+    expect(reassemble(blocks, pages)).toEqual(blocks.map((b) => b.text));
+  });
+
+  it('never skips or duplicates text', () => {
+    for (const height of [70, 130, 180, 200, 333]) {
+      const pages = paginate(metrics, height, turns);
+      expect(reassemble(blocks, pages)).toEqual(blocks.map((b) => b.text));
+      for (let i = 1; i < pages.length; i++) expect(pages[i].start).toEqual(pages[i - 1].end);
+    }
+  });
+});

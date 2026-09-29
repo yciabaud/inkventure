@@ -1,7 +1,7 @@
 import type { ComponentChildren } from 'preact';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../i18n/i18n';
-import { blockClass } from './measure';
+import { blockClass, runClass } from './measure';
 import { PageTurner, type PageView } from './pageTurner';
 import { pageFragments, type ReaderBlock } from './paginator';
 
@@ -10,14 +10,16 @@ interface Props {
   /** Shown under the text on the last page only (command bar, choices). */
   lastPageSlot: ComponentChildren;
   /** Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu). */
-  interceptTap?: () => boolean;
+  interceptTap?: (isLastPage: boolean) => boolean;
+  /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
+  focus?: number;
 }
 
 /**
  * Game text laid out in pages that exactly fit the text area (no scrolling), turned by tap zones, swipes or the
  * arrow keys. The reading position survives re-pagination (resize, rotation, font changes).
  */
-export function PagedText({ blocks, lastPageSlot, interceptTap }: Props) {
+export function PagedText({ blocks, lastPageSlot, interceptTap, focus }: Props) {
   const areaRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<PageView>({ pages: [], index: 0 });
@@ -33,7 +35,9 @@ export function PagedText({ blocks, lastPageSlot, interceptTap }: Props) {
   }, [turner]);
 
   useLayoutEffect(() => {
-    turner.setBlocks(blocks);
+    turner.setBlocks(blocks, focus);
+    // Only new text moves the reader, not a new focus on its own.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turner, blocks]);
 
   const count = Math.max(view.pages.length, 1);
@@ -56,7 +60,13 @@ export function PagedText({ blocks, lastPageSlot, interceptTap }: Props) {
               data-start={fragment.start}
               data-end={fragment.end}
             >
-              {fragment.text}
+              {fragment.runs
+                ? fragment.runs.map((run, i) => (
+                    <span key={i} class={runClass(run.style)}>
+                      {run.text}
+                    </span>
+                  ))
+                : fragment.text}
             </p>
           ))}
         </div>
