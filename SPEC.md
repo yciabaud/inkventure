@@ -223,12 +223,15 @@ The core screen. It must feel like reading an ebook.
 **Pagination**
 
 - Game output is laid out into pages that exactly fit the text area (no scrollbars). The paginator works
-  on measured DOM heights with the current font settings, and re-paginates on settings change/orientation.
+  on measured DOM heights with the current font settings, and re-paginates on settings change/orientation,
+  keeping the reading position (the start of the page last turned to). Long paragraphs are split between lines,
+  at a word start (no hyphenation in the reader).
 - Tap zones: left 30 % = previous page, right 70 % = next page (Kindle convention); swipe left/right when
   supported. Page indicator "3 / 3" at the bottom.
 - New output after a command opens on the page containing the echoed command; if output spans several
   pages, a "▸ more" marker invites turning the page. The command bar is visible only on the **last** page
-  (on earlier pages the bar shows "Back to the present ›").
+  (on earlier pages the bar shows "Back to the present ›"); that slot has the same height on every page, so all pages
+  share one text-area height.
 - `[MORE]` / "press any key" prompts from the game are satisfied by a tap on the page.
 
 **Command input (parser games)**
