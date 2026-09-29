@@ -525,7 +525,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 ### 11.2 End-to-end tests — Playwright
 
 - Projects: `ereader-small` (≈600×800, touch, `reducedMotion`), `ereader-large` (≈1072×1448) on WebKit and
-  Chromium; `desktop` smoke on Chromium.
+  Chromium; `desktop` smoke on Chromium. WebKit projects always run in CI; locally they are opt-in (`PW_WEBKIT=1`).
 - Network mocked via `page.route`: catalogue fixtures, fixture story files instead of IF Archive, cover art stubbed.
 - Scenarios (grow with the stories): Home Featured & My adventures; Library search, filters, sort,
   pagination, back button restores filters; Game detail → Add to Home → Play; play a Z-machine fixture

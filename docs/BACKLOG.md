@@ -29,7 +29,7 @@ S0.1 → S0.4 → S0.6 → S0.5 → S0.2 → S0.3 → S1.1 → S1.3 → S1.2 →
 
 | ID | Title | Epic | Milestone | Depends on | Status |
 |---|---|---|---|---|---|
-| [S0.1](stories/S0.1-project-scaffold.md) | Project scaffold, tooling & CI | E0 | M0 | — | todo |
+| [S0.1](stories/S0.1-project-scaffold.md) | Project scaffold, tooling & CI | E0 | M0 | — | done |
 | [S0.2](stories/S0.2-github-pages-deploy.md) | GitHub Pages deployment | E0 | M0 | S0.1 | todo |
 | [S0.3](stories/S0.3-kindle-capability-probe.md) | Kindle capability probe page (spike) | E0 | M0 | S0.2 | todo |
 | [S0.4](stories/S0.4-eink-design-system-shell.md) | E-ink design system, app shell & hash router | E0 | M0 | S0.1 | todo |
