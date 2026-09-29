@@ -19,8 +19,9 @@ The source of truth is [SPEC.md](SPEC.md); the work is split into stories in [do
 
 ## Non-negotiable constraints
 
-- **Kindle experimental browser is the baseline**: the legacy bundle must pass `es-check es5`; no CSS grid,
-  no CSS variables, no animations or transitions, tap targets ≥ 48 px, pages instead of scrolling.
+- **The Kindle measured in S0.3 is the baseline** (SPEC §2.1–2.2): everything must work on it. Very old e-readers
+  are best effort: the ES5 legacy bundle is still built and must pass `es-check es5`, but CSS grid and custom
+  properties are allowed. No animations or transitions, tap targets ≥ 48 px, pages instead of scrolling.
 - **Asset budgets** (`size-budget.json`) are hard limits: never raise one to make CI pass without the user's agreement.
 - **Static only**: no backend; the app never calls the IFDB API (the catalogue is pre-built by CI).
 - **All persistence goes through `src/storage/`** — never call `localStorage` directly.

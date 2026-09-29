@@ -74,8 +74,8 @@ links straight into the app.
 
 | Class | Examples | Browser | Support level |
 |---|---|---|---|
-| **A — baseline** | Kindle Paperwhite / Oasis / Basic / Scribe | Kindle "experimental browser" (modern engine behind an old WebKit user agent, see §2.2; older firmware may be genuinely old) | **Primary target.** Everything must work here. |
-| B | Kobo (Clara, Libra, Sage) | Kobo WebKit browser (Beta features) | Supported, same build as A. |
+| **A — baseline** | Current Kindle (the device measured in S0.3) | Kindle "experimental browser" (modern engine behind an old WebKit user agent, see §2.2) | **Primary target.** Everything must work here. |
+| B | Kobo (Clara, Libra, Sage), older Kindle firmware | Kobo / old Kindle WebKit browsers | **Best effort**, same build: the ES5 legacy bundle keeps JS running; layout may degrade (grid, custom properties). |
 | C | PocketBook, Onyx Boox, tablets, desktop | Modern Chromium / WebKit | Supported + enhancements (offline cache, IndexedDB). |
 
 ### 2.2 Capabilities of the baseline browser
@@ -103,10 +103,10 @@ raw reports in [docs/device-reports/](docs/device-reports/README.md)). First rep
 - **Performance:** ~50–80× slower than a desktop for a tight loop (1e6 iterations: 277–454 ms across two runs), but
   JSON is fast (153 KB parsed in 12–20 ms) and layout is acceptable (300 paragraphs in 70 ms). Home renders in ~1.1 s.
 
-**What we keep assuming for older e-readers.** Older Kindle firmware and other e-readers (class B) may still ship a
-genuinely old WebKit, so the ES5 legacy bundle, the `es-check es5` gate and the conservative CSS rules
-(flexbox only, no grid, no custom properties) **stay in place** until more device reports justify relaxing them.
-Other assumptions that remain:
+**Decision (2026-09-29): this Kindle is the baseline; very old e-readers are best effort.** Older Kindle firmware and
+other e-readers (class B) may ship a genuinely old WebKit. The ES5 legacy bundle and the `es-check es5` gate stay
+(they cost nothing on the baseline, which loads the modern bundle), but CSS grid and custom properties are now
+allowed; problems on old devices are fixed case by case when reported. Other assumptions that remain:
 
 - **Display:** 6"–10.2" e-ink, 16 gray levels, CSS viewport roughly 600×740 to 1240×1650, ghosting on partial
   refresh, slow repaint (≈100–500 ms).
@@ -488,7 +488,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Language | TypeScript | Safety across engines / storage / pipeline. |
 | UI | Preact (+ hooks) | ~4 KB, works with ES5 transpilation. |
 | Build | Vite + `@vitejs/plugin-legacy` (Babel, core-js polyfills) | Produces an ES5 legacy bundle for Kindle and a modern one for others. |
-| Styles | Plain CSS (PostCSS + autoprefixer), flexbox only | No grid / custom properties dependency. |
+| Styles | Plain CSS (PostCSS + autoprefixer); flexbox, grid and custom properties allowed; no animations or transitions | Supported by the baseline Kindle (§2.2); e-ink has no use for motion. |
 | Engines | ZVM + Quixe (Parchment, MIT), inkjs (MIT) | Mature, pure JS. |
 | Unit tests | Vitest | Fast, TS-native. |
 | E2E tests | Playwright | Device emulation, network mocking. |
@@ -568,8 +568,9 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 
 ### 11.3 Legacy-compatibility gate
 
-- `es-check es5` on the legacy build output; stylelint rules banning `grid`, `var()`, and other unsupported
-  features. This is the only automatable proxy for the Kindle browser — Playwright cannot emulate it.
+- `es-check es5` on the legacy build output (and the device probe), keeping very old e-readers running (best
+  effort, §2.1); stylelint bans animations, transitions and other features useless or too new for e-ink. The baseline
+  Kindle itself is covered by the modern-bundle e2e runs plus the device probe and checklist (§11.4).
 
 ### 11.4 Real-device checklist
 
