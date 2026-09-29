@@ -22,6 +22,7 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 | Date | Device (model, firmware) | Browser | Report | Key findings |
 |---|---|---|---|---|
 | 2026-09-29 | Kindle, 636×848 CSS px @2x (model / firmware not recorded) | Experimental browser (UA says WebKit 531 / Kindle 3.0, engine is modern) | [2026-09-29-kindle.txt](2026-09-29-kindle.txt) | Modern engine (ES2017, no `?.`), loads the **modern** bundle; IF Archive CORS **ok**, IFDB API blocked; Home in ~1.1 s; localStorage ~4.75M chars; SW / IndexedDB / Cache API present; touch events fire although `ontouchstart` is absent; downloads **woff2**. |
+| 2026-09-29 | Same Kindle, after a device restart | Experimental browser | [2026-09-29-kindle-after-restart.txt](2026-09-29-kindle-after-restart.txt) | **localStorage survived the restart** (`run #4`, first run 6 min earlier); other results unchanged; loop benchmark 454 ms vs 277 ms (expect ±60 % run-to-run variance on the CPU). |
 
 ## Reading the report
 

@@ -1,0 +1,56 @@
+# Same Kindle as 2026-09-29-kindle.txt, after the owner restarted the device (browser relaunched).
+# Raw probe report, reassembled from the 3 QR parts. The swipe box was not used on this run.
+inkventure-probe v1
+probe.startedAt: Tue, 29 Sep 2026 21:15:03 GMT
+device.userAgent: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+device.language: en-US / en-US
+device.viewport: 636x740
+device.screen: 636x848 depth 24
+device.pixelRatio: 2
+device.online: yes
+js.syntax.yes: arrow,letConst,class,template,destructuring,defaultParams,spread,forOf,generators,asyncAwait
+js.syntax.no: optionalChaining
+js.builtins.yes: Promise,fetch,Map,Set,WeakMap,Symbol,Proxy,ObjectAssign,ArrayFrom,ArrayIncludes,StringStartsWith,MathImul,Uint8Array,DataView,TextDecoder,requestAnimationFrame,Worker,Blob,FileReader
+js.builtins.no: WebAssembly
+js.intl: yes, fr number 1 234,5
+api.hashchange: yes
+api.historyPushState: yes
+api.indexedDB: yes
+api.serviceWorker: yes
+api.cacheStorage: yes
+api.documentFonts: yes
+api.resourceTiming: yes
+api.matchMedia: yes
+css.flexbox: flex:yes -webkit-flex:yes -webkit-box:yes
+css.grid: yes
+css.customProperties: yes
+css.filterGrayscale: yes
+css.objectFit: yes
+css.calc: yes
+css.vw: yes
+css.hyphens: yes
+css.positionFixed: yes
+input.touchEvents: no
+input.pointerEvents: yes
+input.maxTouchPoints: 0
+input.eventsSeen: none yet (use the swipe box)
+input.lastSwipe: none
+storage.localStorage: yes
+storage.persistence: run #4, first run 2026-09-29T21:09:29.495Z
+storage.sessionStorage: yes
+net.ifArchive: ok 200 (87040 bytes)
+net.ifArchiveMirror: ok 200 (87040 bytes)
+net.ifdbApi: blocked (CORS or offline)
+net.ifdbCoverImage: ok 120x120
+app.render: 1124 ms to first render of Home
+net.xhrArraybuffer: yes
+storage.quotaChars: ~4.75M chars (stopped by QuotaExceededError)
+perf.loop1e6Ms: 454
+perf.json: 153 KB: parse 20 ms, stringify 7 ms
+perf.layout300ParagraphsMs: 77 (18600px)
+build.commit: d3e971f2ee0a
+build.date: 2026-09-29T21:04:05.847Z
+app.bundle: modern (ES modules)
+app.htmlLang: en
+app.bytes: 5 resources, transfer 0 KB, encoded 71 KB (0 transfer = cache or unsupported)
+app.fontFormat: woff2 x3

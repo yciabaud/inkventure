@@ -93,15 +93,15 @@ raw reports in [docs/device-reports/](docs/device-reports/README.md)). First rep
 - **Network:** XHR `arraybuffer` works; the **IF Archive and its mirror send CORS headers** (game files can be
   downloaded directly); the IFDB JSON API is **blocked** (no CORS, as found in its source); IFDB cover
   thumbnails display.
-- **Storage:** localStorage ≈ 4.75 M characters before `QuotaExceededError`. IndexedDB, Service Worker and the
-  Cache API **exist** (whether they work reliably, and whether localStorage survives a browser restart, is still
-  to be measured).
+- **Storage:** localStorage ≈ 4.75 M characters before `QuotaExceededError`, and it **survives a device restart**
+  (second report). IndexedDB, Service Worker and the Cache API **exist** (whether they work reliably is still to be
+  measured).
 - **CSS:** flexbox (all syntaxes), grid, custom properties, `filter: grayscale`, `object-fit`, `calc`, `vw`,
   hyphens and `position: fixed` are all supported. Web fonts load, as **woff2**.
 - **Input:** `ontouchstart` is **absent**, yet `touchstart` / `touchmove` / `touchend` and `pointerdown` events
   fire; `maxTouchPoints` reports 0. Feature-detect by listening to events, never by `'ontouchstart' in window`.
-- **Performance:** ~50× slower than a desktop for a tight loop (1e6 iterations: 277 ms), but JSON is fast
-  (153 KB parsed in 12 ms) and layout is acceptable (300 paragraphs in 70 ms). Home renders in ~1.1 s.
+- **Performance:** ~50–80× slower than a desktop for a tight loop (1e6 iterations: 277–454 ms across two runs), but
+  JSON is fast (153 KB parsed in 12–20 ms) and layout is acceptable (300 paragraphs in 70 ms). Home renders in ~1.1 s.
 
 **What we keep assuming for older e-readers.** Older Kindle firmware and other e-readers (class B) may still ship a
 genuinely old WebKit, so the ES5 legacy bundle, the `es-check es5` gate and the conservative CSS rules
@@ -597,7 +597,7 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
 | # | Question / risk | Plan |
 |---|---|---|
-| 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. Still open: localStorage persistence across a browser restart, swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
+| 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. localStorage persists across a device restart. Still open: swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
 | 2 | Does the IF Archive send CORS headers? | **Yes** (S0.3, main site and mirror): direct downloads; fallbacks in §5.5 kept. |
 | 3 | IFDB API has no CORS. | **Confirmed live** on the Kindle (S0.3). Pre-built index (decided). |
 | 4 | Glulx (Quixe) performance on Kindle CPUs. | Measure in S1.7; "may be slow" badge; possibly exclude very large games. |
@@ -605,6 +605,6 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 6 | IFDB adult tagging incomplete. | Tag denylist + manual exclude list; report link. |
 | 7 | IFDB / IF Archive load and etiquette. | Weekly incremental crawl, rate limiting, contact IFTF. |
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
-| 9 | Kindle may clear localStorage. | Export/import codes; prompt to export after N saves. |
+| 9 | Kindle may clear localStorage. | Survives a device restart (S0.3), but could still be cleared by the user or the browser. Export/import codes; prompt to export after N saves. |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
 | 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Candidate follow-up story after M1: offline app shell + recently played games, validated on the device. |
