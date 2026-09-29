@@ -1,0 +1,381 @@
+/* E-ink design system — components. Same constraints as base.css. */
+
+/* App shell */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app__main {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 32px;
+}
+
+.screen__title {
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #000;
+  margin-bottom: 24px;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 16px;
+  border-bottom: 2px solid #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.top-bar__brand {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  min-width: 48px;
+  font-family: Literata, Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.top-bar__nav {
+  display: flex;
+  align-items: stretch;
+}
+
+/* Icon button */
+.icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 4px;
+  margin: 0;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: #fff;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.icon-btn--current {
+  border-bottom-color: #000;
+  font-weight: 600;
+}
+
+.icon-btn__label {
+  margin-top: 2px;
+}
+
+.icon {
+  display: block;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 48px;
+  padding: 10px 24px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: #000;
+  color: #fff;
+}
+
+.btn--secondary {
+  background: #fff;
+  color: #000;
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+/* Pager */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+}
+
+.pager__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 96px;
+  padding: 8px 16px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pager__btn--disabled {
+  border-color: #767676;
+  color: #767676;
+}
+
+.pager__status {
+  padding: 0 16px;
+}
+
+/* Cover */
+.cover {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #000;
+}
+
+.cover--small {
+  width: 64px;
+  height: 96px;
+  font-size: 9px;
+}
+
+.cover--medium {
+  width: 120px;
+  height: 180px;
+  font-size: 14px;
+}
+
+.cover--large {
+  width: 200px;
+  height: 300px;
+  font-size: 20px;
+}
+
+.cover__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.cover--typo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  /* em, not %: percentage padding is relative to the parent's width. */
+  padding: 1em 0.8em;
+  text-align: center;
+  font-family: Literata, Georgia, serif;
+  line-height: 1.2;
+}
+
+.cover__title,
+.cover__ornament,
+.cover__author {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.cover__title {
+  font-size: 1.4em;
+  font-weight: 700;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.cover__title--long {
+  font-size: 1.1em;
+}
+
+.cover__ornament {
+  margin: 0.6em 0;
+  font-size: 1.1em;
+}
+
+.cover__author {
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+.cover--frame {
+  border: 6px double #000;
+}
+
+.cover--band {
+  justify-content: flex-start;
+  padding-top: 0;
+}
+
+.cover--band .cover__title {
+  display: block;
+  width: auto;
+  margin: 0 -0.8em 0.6em;
+  padding: 2em 0.8em 0.6em;
+  background: #000;
+  color: #fff;
+}
+
+.cover--inverse {
+  background: #000;
+  color: #fff;
+}
+
+.cover--rules .cover__title {
+  padding: 0.5em 0;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+}
+
+.cover--corner {
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  border-left: 12px solid #000;
+}
+
+/* Dialog & menu */
+.dialog-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 16px 16px;
+}
+
+.dialog {
+  outline: 0;
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 6px;
+}
+
+.dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  border-bottom: 2px solid #000;
+}
+
+.dialog__title {
+  margin: 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.dialog__body {
+  padding: 8px 0;
+}
+
+.menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu__item {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 16px;
+  border: 0;
+  background: #fff;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu li + li .menu__item {
+  border-top: 1px solid #767676;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.empty-state__ornament {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.empty-state__text {
+  color: #333;
+}
+
+.empty-state__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* Error page */
+.error-page {
+  padding: 32px 16px;
+}
+
+.error-page__text {
+  color: #333;
+}
+
+.error-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.error-page__actions > * {
+  margin: 0 16px 16px 0;
+}
+
+/* Game summary (placeholder layout for the detail page) */
+.game-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-summary__actions {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 24px;
+}

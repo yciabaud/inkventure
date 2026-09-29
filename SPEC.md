@@ -472,7 +472,8 @@ A free ebook, in EN and FR, is the main acquisition channel.
 ├── SPEC.md, CLAUDE.md, README.md
 ├── docs/BACKLOG.md, docs/stories/*.md
 ├── src/
-│   ├── app/            shell, router, top bar
+│   ├── app/            shell, hash router
+│   ├── ui/             design-system components (TopBar, Button, Pager, Cover, Dialog…), icons
 │   ├── screens/        home/, library/, game/, reader/, settings/
 │   ├── reader/         paginator, command bar, chips
 │   ├── engines/        engine.ts, glkote-bridge/, zvm/, quixe/, ink/, twine/

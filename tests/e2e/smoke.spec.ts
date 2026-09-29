@@ -9,6 +9,7 @@ test('app loads at / with no console errors', async ({ page }) => {
 
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1, name: 'Inkventure' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Inkventure' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 1, name: 'Home' })).toBeVisible();
   expect(errors).toEqual([]);
 });
