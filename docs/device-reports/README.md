@@ -23,6 +23,7 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 |---|---|---|---|---|
 | 2026-09-29 | Kindle, 636×848 CSS px @2x (model / firmware not recorded) | Experimental browser (UA says WebKit 531 / Kindle 3.0, engine is modern) | [2026-09-29-kindle.txt](2026-09-29-kindle.txt) | Modern engine (ES2017, no `?.`), loads the **modern** bundle; IF Archive CORS **ok**, IFDB API blocked; Home in ~1.1 s; localStorage ~4.75M chars; SW / IndexedDB / Cache API present; touch events fire although `ontouchstart` is absent; downloads **woff2**. |
 | 2026-09-29 | Same Kindle, after sleep / wake (not a restart) | Experimental browser | [2026-09-29-kindle-after-sleep.txt](2026-09-29-kindle-after-sleep.txt) | localStorage kept across sleep / wake (`run #4`); a real restart is still to be tested. Other results unchanged; loop benchmark 454 ms vs 277 ms (expect ±60 % run-to-run variance on the CPU). |
+| 2026-09-29 | Same Kindle, after a real device restart | Experimental browser | (only this line was sent) `storage.persistence: run #6, first run 2026-09-29T21:09:29.495Z` | **localStorage survives a device restart.** |
 
 ## Reading the report
 

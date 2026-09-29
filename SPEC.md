@@ -93,8 +93,8 @@ raw reports in [docs/device-reports/](docs/device-reports/README.md)). First rep
 - **Network:** XHR `arraybuffer` works; the **IF Archive and its mirror send CORS headers** (game files can be
   downloaded directly); the IFDB JSON API is **blocked** (no CORS, as found in its source); IFDB cover
   thumbnails display.
-- **Storage:** localStorage ≈ 4.75 M characters before `QuotaExceededError`, kept across sleep / wake (second
-  report); survival across a real browser or device restart is still to be measured. IndexedDB, Service Worker and the Cache API **exist** (whether they work reliably is still to be
+- **Storage:** localStorage ≈ 4.75 M characters before `QuotaExceededError`, kept across sleep / wake **and survives
+  a real device restart** (`run #6` after a restart, same first-run date). IndexedDB, Service Worker and the Cache API **exist** (whether they work reliably is still to be
   measured).
 - **CSS:** flexbox (all syntaxes), grid, custom properties, `filter: grayscale`, `object-fit`, `calc`, `vw`,
   hyphens and `position: fixed` are all supported. Web fonts load, as **woff2**.
@@ -597,7 +597,7 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
 | # | Question / risk | Plan |
 |---|---|---|
-| 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. Still open: localStorage persistence across a real restart (kept across sleep / wake), swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
+| 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. localStorage persists across sleep / wake and a real device restart. Still open: swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
 | 2 | Does the IF Archive send CORS headers? | **Yes** (S0.3, main site and mirror): direct downloads; fallbacks in §5.5 kept. |
 | 3 | IFDB API has no CORS. | **Confirmed live** on the Kindle (S0.3). Pre-built index (decided). |
 | 4 | Glulx (Quixe) performance on Kindle CPUs. | Measure in S1.7; "may be slow" badge; possibly exclude very large games. |
@@ -605,6 +605,6 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 6 | IFDB adult tagging incomplete. | Tag denylist + manual exclude list; report link. |
 | 7 | IFDB / IF Archive load and etiquette. | Weekly incremental crawl, rate limiting, contact IFTF. |
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
-| 9 | Kindle may clear localStorage. | Kept across sleep / wake (S0.3); a real restart is still to be tested, and it could be cleared by the user or the browser anyway. Export/import codes; prompt to export after N saves. |
+| 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Export/import codes; prompt to export after N saves. |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
 | 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Candidate follow-up story after M1: offline app shell + recently played games, validated on the device. |
