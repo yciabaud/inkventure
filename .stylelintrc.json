@@ -1,16 +1,20 @@
 {
   "extends": ["stylelint-config-standard"],
   "rules": {
-    "declaration-property-value-disallowed-list": {
-      "display": ["/grid/"]
-    },
-    "function-disallowed-list": ["var", "env"],
-    "property-disallowed-list": ["/^grid/", "/^animation/", "/^transition/", "/^--/", "inset"],
+    "function-disallowed-list": ["env"],
+    "property-disallowed-list": ["/^animation/", "/^transition/", "inset"],
     "at-rule-disallowed-list": ["keyframes"],
-    "declaration-block-no-redundant-longhand-properties": [true, { "ignoreShorthands": ["inset"] }],
+    "declaration-block-no-redundant-longhand-properties": [
+      true,
+      {
+        "ignoreShorthands": ["inset"]
+      }
+    ],
     "selector-class-pattern": [
       "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
-      { "message": "Use BEM class names: block__element--modifier (kebab-case parts)" }
+      {
+        "message": "Use BEM class names: block__element--modifier (kebab-case parts)"
+      }
     ]
   }
 }

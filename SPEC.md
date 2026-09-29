@@ -74,27 +74,46 @@ links straight into the app.
 
 | Class | Examples | Browser | Support level |
 |---|---|---|---|
-| **A — baseline** | Kindle Paperwhite / Oasis / Basic / Scribe | Kindle "experimental browser" (old WebKit) | **Primary target.** Everything must work here. |
-| B | Kobo (Clara, Libra, Sage) | Kobo WebKit browser (Beta features) | Supported, same build as A. |
+| **A — baseline** | Current Kindle (the device measured in S0.3) | Kindle "experimental browser" (modern engine behind an old WebKit user agent, see §2.2) | **Primary target.** Everything must work here. |
+| B | Kobo (Clara, Libra, Sage), older Kindle firmware | Kobo / old Kindle WebKit browsers | **Best effort**, same build: the ES5 legacy bundle keeps JS running; layout may degrade (grid, custom properties). |
 | C | PocketBook, Onyx Boox, tablets, desktop | Modern Chromium / WebKit | Supported + enhancements (offline cache, IndexedDB). |
 
-### 2.2 Assumed capabilities of the baseline browser
+### 2.2 Capabilities of the baseline browser
 
-To be confirmed by the capability probe ([S0.3](docs/stories/S0.3-kindle-capability-probe.md), served at
-`/probe/`; results in [docs/device-reports/](docs/device-reports/README.md)); until then we assume the worst:
+Measured with the capability probe ([S0.3](docs/stories/S0.3-kindle-capability-probe.md), served at `/probe/`;
+raw reports in [docs/device-reports/](docs/device-reports/README.md)). First report: a current Kindle, 2026-09-29.
 
-- **JavaScript:** ES5 only. No native `Promise`, `fetch`, `class`, arrow functions, `Map/Set` guaranteed.
-  → Ship a transpiled ES5 bundle with polyfills (Promise, Object.assign, Array helpers, etc.).
-- **Network:** `XMLHttpRequest` (with `responseType = "arraybuffer"` to be verified).
-- **Storage:** `localStorage` (≈5 MB, persistence across browser restarts to be verified).
-  No reliable IndexedDB, Cache API or Service Worker → **no offline mode on Kindle**; Wi-Fi is needed to
-  load the app and a game, but a loaded game keeps working and autosaves locally.
-- **CSS:** flexbox (possibly old syntax), no CSS grid, no CSS variables guaranteed, limited web fonts.
-- **Input:** touch (single tap reliable; swipe detection to verify), slow virtual keyboard that covers
-  half the screen, no hardware keys exposed to the page.
-- **Display:** 6"–10.2" e-ink, 16 gray levels, CSS viewport roughly 600×800 to 1240×1650,
-  ghosting on partial refresh, slow repaint (≈100–500 ms).
-- **CPU:** slow single core — interpreters must stay responsive (see [§4.5](#45-performance)).
+**What the Kindle measured** (experimental browser; CSS viewport 636×740 of a 636×848 screen, DPR 2):
+
+- **Engine:** the user agent still says `AppleWebKit/531.2+ … Kindle/3.0+`, but the engine is modern: ES2015–2017
+  syntax (arrow functions, classes, `let`/`const`, template literals, destructuring, spread, `for…of`,
+  generators, `async`/`await`) and built-ins (`Promise`, `fetch`, `Map`/`Set`, `Symbol`, `Proxy`,
+  `TextDecoder`, typed arrays, `Worker`) are native. **Missing:** optional chaining (`?.`) and WebAssembly.
+  It loaded the **modern** (ES modules) bundle. `Intl` works (French number formatting included).
+- **Network:** XHR `arraybuffer` works; the **IF Archive and its mirror send CORS headers** (game files can be
+  downloaded directly); the IFDB JSON API is **blocked** (no CORS, as found in its source); IFDB cover
+  thumbnails display.
+- **Storage:** localStorage ≈ 4.75 M characters before `QuotaExceededError`, kept across sleep / wake **and survives
+  a real device restart** (`run #6` after a restart, same first-run date). IndexedDB, Service Worker and the Cache API **exist** (whether they work reliably is still to be
+  measured).
+- **CSS:** flexbox (all syntaxes), grid, custom properties, `filter: grayscale`, `object-fit`, `calc`, `vw`,
+  hyphens and `position: fixed` are all supported. Web fonts load, as **woff2**.
+- **Input:** `ontouchstart` is **absent**, yet `touchstart` / `touchmove` / `touchend` and `pointerdown` events
+  fire; `maxTouchPoints` reports 0. Feature-detect by listening to events, never by `'ontouchstart' in window`.
+- **Performance:** ~50–80× slower than a desktop for a tight loop (1e6 iterations: 277–454 ms across two runs), but
+  JSON is fast (153 KB parsed in 12–20 ms) and layout is acceptable (300 paragraphs in 70 ms). Home renders in ~1.1 s.
+
+**Decision (2026-09-29): this Kindle is the baseline; very old e-readers are best effort.** Older Kindle firmware and
+other e-readers (class B) may ship a genuinely old WebKit. The ES5 legacy bundle and the `es-check es5` gate stay
+(they cost nothing on the baseline, which loads the modern bundle), but CSS grid and custom properties are now
+allowed; problems on old devices are fixed case by case when reported. Other assumptions that remain:
+
+- **Display:** 6"–10.2" e-ink, 16 gray levels, CSS viewport roughly 600×740 to 1240×1650, ghosting on partial
+  refresh, slow repaint (≈100–500 ms).
+- **Keyboard:** slow virtual keyboard covering half the screen; no hardware keys exposed to the page.
+- **Offline:** not relied upon; Wi-Fi is needed to load the app and a game, but a loaded game keeps working and
+  autosaves locally. A Service Worker offline shell is now a realistic enhancement (see §6.2 and §13).
+- **CPU:** slow — interpreters must stay responsive (see [§4.5](#45-performance)).
 
 ### 2.3 Consequences for the whole app
 
@@ -376,10 +395,11 @@ and the game cards in the ebook.
 ### 5.5 Game files
 
 - Downloaded at play time from the URL in `games/<tuid>.json` (IF Archive primarily).
-- **To verify in M0:** whether `ifarchive.org` (and its mirrors) serve `Access-Control-Allow-Origin`.
-  Fallbacks in order: (1) another CORS-enabled mirror; (2) the pipeline mirrors files whose licence allows
-  redistribution into `public/games/` (freeware/open licences only, recorded in the index); (3) a tiny,
-  documented CORS relay (e.g. Cloudflare Worker) — last resort because it breaks "100 % static".
+- **Verified on a Kindle (S0.3):** `ifarchive.org` and `mirror.ifarchive.org` allow cross-origin reads, so story
+  files are fetched directly. Fallbacks kept in case a file is hosted elsewhere or this changes: (1) another
+  CORS-enabled mirror; (2) the pipeline mirrors files whose licence allows redistribution into `public/games/`
+  (freeware/open licences only, recorded in the index); (3) a tiny, documented CORS relay (e.g. Cloudflare
+  Worker) — last resort because it breaks "100 % static".
 - Files are cached in localStorage only if small (< 512 KB, LRU, see §6); larger files are re-downloaded
   per session on Kindle.
 
@@ -420,7 +440,8 @@ All keys are prefixed and versioned:
 ### 6.2 Enhancements (class C devices)
 
 - IndexedDB for story files and catalogue shards; Service Worker for offline app shell + recently played
-  games. Feature-detected; never required.
+  games. Feature-detected; never required. The Kindle measured in S0.3 exposes all three APIs, so this may reach
+  class A too once it is shown to work there (§13 #11).
 
 ### 6.3 Export / import
 
@@ -467,7 +488,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Language | TypeScript | Safety across engines / storage / pipeline. |
 | UI | Preact (+ hooks) | ~4 KB, works with ES5 transpilation. |
 | Build | Vite + `@vitejs/plugin-legacy` (Babel, core-js polyfills) | Produces an ES5 legacy bundle for Kindle and a modern one for others. |
-| Styles | Plain CSS (PostCSS + autoprefixer), flexbox only | No grid / custom properties dependency. |
+| Styles | Plain CSS (PostCSS + autoprefixer); flexbox, grid and custom properties allowed; no animations or transitions | Supported by the baseline Kindle (§2.2); e-ink has no use for motion. |
 | Engines | ZVM + Quixe (Parchment, MIT), inkjs (MIT) | Mature, pure JS. |
 | Unit tests | Vitest | Fast, TS-native. |
 | E2E tests | Playwright | Device emulation, network mocking. |
@@ -547,8 +568,9 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 
 ### 11.3 Legacy-compatibility gate
 
-- `es-check es5` on the legacy build output; stylelint rules banning `grid`, `var()`, and other unsupported
-  features. This is the only automatable proxy for the Kindle browser — Playwright cannot emulate it.
+- `es-check es5` on the legacy build output (and the device probe), keeping very old e-readers running (best
+  effort, §2.1); stylelint bans animations, transitions and other features useless or too new for e-ink. The baseline
+  Kindle itself is covered by the modern-bundle e2e runs plus the device probe and checklist (§11.4).
 
 ### 11.4 Real-device checklist
 
@@ -576,13 +598,14 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
 | # | Question / risk | Plan |
 |---|---|---|
-| 1 | Real capabilities of the Kindle browser (ES level, XHR arraybuffer, localStorage persistence, swipe). | Capability probe S0.3 on real devices, update §2.2. |
-| 2 | Does the IF Archive send CORS headers? | Check in S3.4 (and S0.3 from a device); fallbacks in §5.5. |
-| 3 | IFDB API has no CORS (verified in source, to confirm live). | Pre-built index (decided). |
+| 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. localStorage persists across sleep / wake and a real device restart. Still open: swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
+| 2 | Does the IF Archive send CORS headers? | **Yes** (S0.3, main site and mirror): direct downloads; fallbacks in §5.5 kept. |
+| 3 | IFDB API has no CORS. | **Confirmed live** on the Kindle (S0.3). Pre-built index (decided). |
 | 4 | Glulx (Quixe) performance on Kindle CPUs. | Measure in S1.7; "may be slow" badge; possibly exclude very large games. |
 | 5 | Twine games vary wildly; restyling may fail. | Experimental flag; curated allowlist if needed. |
 | 6 | IFDB adult tagging incomplete. | Tag denylist + manual exclude list; report link. |
 | 7 | IFDB / IF Archive load and etiquette. | Weekly incremental crawl, rate limiting, contact IFTF. |
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
-| 9 | Kindle may clear localStorage. | Export/import codes; prompt to export after N saves. |
+| 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Export/import codes; prompt to export after N saves. |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
+| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Candidate follow-up story after M1: offline app shell + recently played games, validated on the device. |
