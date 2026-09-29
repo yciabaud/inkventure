@@ -23,7 +23,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here *
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.5 → S0.2 → S0.3 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S2.4 → S3.1 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S2.4 → S3.1 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
 
 ## Stories
 
