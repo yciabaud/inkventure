@@ -38,5 +38,15 @@
   "storage.unavailable": "This browser is not saving data: your progress will be lost when you close this page.",
   "storage.full": "Storage is full: your latest progress could not be saved. Free some space in Settings.",
   "storage.manage": "Manage data",
-  "storage.dismiss": "Dismiss"
+  "storage.dismiss": "Dismiss",
+  "library.count": {
+    "one": "{count} adventure",
+    "other": "{count} adventures"
+  },
+  "time.today": "today",
+  "time.yesterday": "yesterday",
+  "time.daysAgo": {
+    "one": "{count} day ago",
+    "other": "{count} days ago"
+  }
 }
