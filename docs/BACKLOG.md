@@ -34,7 +34,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.5 → S0.2 → S0.3 → S1.1 → S1.3 →
 | [S0.3](stories/S0.3-kindle-capability-probe.md) | Kindle capability probe page (spike) | E0 | M0 | S0.2 | todo |
 | [S0.4](stories/S0.4-eink-design-system-shell.md) | E-ink design system, app shell & hash router | E0 | M0 | S0.1 | done |
 | [S0.5](stories/S0.5-i18n-framework.md) | Internationalisation framework (EN/FR) | E0 | M0 | S0.4 | todo |
-| [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | todo |
+| [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | done |
 | [S0.7](stories/S0.7-asset-size-budgets.md) | Asset size budgets in CI | E0 | M0 | S0.1 | done |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | todo |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | todo |

@@ -413,6 +413,8 @@ All keys are prefixed and versioned:
   story files (LRU) first, then old autosaves of games not played for 90 days; never evict named saves
   silently — warn the user instead.
 - **Schema migrations:** a `ik:schema` key and ordered migration functions.
+- **Storage unavailable** (disabled site data, private mode): the app runs on an in-memory store and shows a
+  non-blocking warning that progress will not be kept.
 
 ### 6.2 Enhancements (class C devices)
 
