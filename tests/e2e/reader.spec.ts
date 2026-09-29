@@ -294,11 +294,32 @@ test('re-paginates when the web fonts arrive late, without relying on font event
     Object.defineProperty(fonts, 'ready', { get: () => Promise.resolve(fonts) });
   });
   await page.route(/\.woff2?$/, async (route) => {
+    // Longer than FONT_WAIT_MS: the first layout gives up waiting and uses the fallback font.
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await route.continue();
+  });
+  // Do not wait for the load event: it waits for the fonts.
+  await page.goto(DEMO, { waitUntil: 'commit' });
+  await expect(page.locator('.reader__block').first()).toBeVisible();
+  expect(await page.evaluate(() => document.fonts.check('18px Literata'))).toBe(false);
+  await expect
+    .poll(() => page.evaluate(() => document.fonts.check('18px Literata')), { timeout: 10_000 })
+    .toBe(true);
+  await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
+});
+
+test('waits for the web fonts before the first layout, so the page is drawn once', async ({
+  page,
+}) => {
+  await page.route(/\.woff2?$/, async (route) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     await route.continue();
   });
-  await page.goto(DEMO);
+  // Do not wait for the load event: it waits for the fonts.
+  await page.goto(DEMO, { waitUntil: 'commit' });
+  await expect(page.getByText('Loading…')).toBeVisible();
   await expect(page.locator('.reader__block').first()).toBeVisible();
-  await expect.poll(() => page.evaluate(() => document.fonts.check('18px Literata'))).toBe(true);
-  await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
+  // The first text drawn is already set in the reading font.
+  expect(await page.evaluate(() => document.fonts.check('18px Literata'))).toBe(true);
+  expect(await page.evaluate(() => document.fonts.check('bold 18px Literata'))).toBe(true);
 });
