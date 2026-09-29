@@ -30,13 +30,18 @@ export interface PageView {
   index: number;
 }
 
-interface Point {
+export interface Point {
   x: number;
   y: number;
 }
 
+/** Called before a tap or swipe turns the page; `point` (viewport coordinates) is given for taps only. */
+export type TapInterceptor = (isLastPage: boolean, point?: Point) => boolean;
+
 export class PageTurner {
-  private interceptTap: ((isLastPage: boolean) => boolean) | undefined;
+  private interceptTap: TapInterceptor | undefined;
+  /** Keep the last page open across re-layouts (the command field has focus, the keyboard may resize the page). */
+  private pinLast = false;
   private pages: Page[] = [];
   private index = 0;
   private blocks: ReaderBlock[] = [];
@@ -63,8 +68,15 @@ export class PageTurner {
    * Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu, or to answer a
    * "press any key" prompt on the last page).
    */
-  setInterceptTap(intercept: ((isLastPage: boolean) => boolean) | undefined): void {
+  setInterceptTap(intercept: TapInterceptor | undefined): void {
     this.interceptTap = intercept;
+  }
+
+  /** While pinned, every re-layout (e.g. the virtual keyboard shrinking the page) stays on the last page. */
+  setPinLast(pin: boolean): void {
+    if (pin === this.pinLast) return;
+    this.pinLast = pin;
+    if (pin) this.last();
   }
 
   /** New text. With `focus`, opens on the page where that block starts (e.g. the echoed command of a new turn). */
@@ -81,8 +93,8 @@ export class PageTurner {
     this.emit();
   }
 
-  turn(delta: number): void {
-    if (this.interceptTap && this.interceptTap(this.index >= this.pages.length - 1)) return;
+  turn(delta: number, point?: Point): void {
+    if (this.interceptTap && this.interceptTap(this.index >= this.pages.length - 1, point)) return;
     this.turnTo(this.index + delta);
   }
 
@@ -115,7 +127,8 @@ export class PageTurner {
     const turns: boolean[] = [];
     for (let i = 0; i < this.blocks.length; i++) turns.push(this.blocks[i].kind === 'input');
     this.pages = paginate(measured.metrics, height, turns);
-    this.index = pageIndexOf(this.pages, this.anchor);
+    this.index = this.pinLast ? this.pages.length - 1 : pageIndexOf(this.pages, this.anchor);
+    if (this.pinLast && this.pages.length) this.anchor = this.pages[this.index].start;
     this.emit();
     this.awaitFonts(measured.fonts);
   }
@@ -264,7 +277,10 @@ export class PageTurner {
     const onClick = (event: MouseEvent) => {
       if (Date.now() < this.ignoreClickUntil) return;
       const rect = area.getBoundingClientRect();
-      this.turn(event.clientX - rect.left < rect.width * PREV_ZONE ? -1 : 1);
+      this.turn(event.clientX - rect.left < rect.width * PREV_ZONE ? -1 : 1, {
+        x: event.clientX,
+        y: event.clientY,
+      });
     };
     const onKey = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;

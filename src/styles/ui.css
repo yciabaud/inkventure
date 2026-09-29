@@ -591,7 +591,91 @@
   margin-right: 16px;
 }
 
-/* Command bar (basic line input; chips and history arrive with S1.4). */
+/* Game slot: the same (taller) height on every page, holding the command bar on the last one (S1.4). */
+.reader__slot--game {
+  height: 196px;
+}
+
+.command-bar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 40em;
+}
+
+.command-bar > * + * {
+  margin-top: 8px;
+}
+
+/* One row of chips; labels shrink with an ellipsis rather than wrap, so the bar keeps its height. */
+.chips {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.chips > * + * {
+  margin-left: 6px;
+}
+
+.chip {
+  flex: 0 1 auto;
+  min-width: 48px;
+  min-height: 48px;
+  overflow: hidden;
+  padding: 6px 10px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.chip:disabled {
+  border-color: #767676;
+  color: #767676;
+  cursor: default;
+}
+
+.chip--direction {
+  flex-shrink: 0;
+}
+
+.chip--more {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.chips > .chip--more:first-child {
+  margin-left: 0;
+}
+
+.chip--noun {
+  font-weight: 400;
+}
+
+.chips__hint {
+  flex: 1;
+  min-width: 0;
+  color: #333;
+  font-size: 15px;
+}
+
+/* Dialogs listing more directions or actions. */
+.chip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+/* Command field row. */
 .command {
   display: flex;
   align-items: center;

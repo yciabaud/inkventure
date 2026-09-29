@@ -17,7 +17,7 @@ function Screen({ location }: { location: Location }) {
     case 'game':
       return <GameScreen tuid={route.tuid} />;
     case 'play':
-      return <ReaderScreen tuid={route.tuid} />;
+      return <ReaderScreen tuid={route.tuid} language={query.lang} />;
     case 'settings':
       return <SettingsScreen />;
     default:
@@ -34,7 +34,7 @@ export function App() {
     // The reader takes the whole screen and shows the top bar itself when its top zone is tapped.
     return (
       <div class="app" lang={locale}>
-        <ReaderScreen tuid={route.tuid} />
+        <ReaderScreen tuid={route.tuid} language={location.query.lang} />
       </div>
     );
   }
