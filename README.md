@@ -5,6 +5,8 @@ Inkventure is a static web app with a Kindle-inspired interface: a home screen o
 a filterable library of playable games, and a reader that turns parser and choice-based games into pages
 you play mostly by tapping. It is distributed through a free ebook that links straight into the app.
 
+- Live app: https://yciabaud.github.io/inkventure/ (deployed from `main` after CI passes; build info in
+  [`version.json`](https://yciabaud.github.io/inkventure/version.json))
 - Specification: [SPEC.md](SPEC.md)
 - Backlog and stories: [docs/BACKLOG.md](docs/BACKLOG.md)
 - Contributor / agent workflow: [CLAUDE.md](CLAUDE.md)
@@ -20,5 +22,11 @@ npm run lint        # ESLint, stylelint, Prettier
 npm test            # unit tests (Vitest, jsdom)
 npm run build       # modern + ES5 legacy bundles in dist/
 npm run check:es5   # es-check on the legacy bundle
+npm run check:size  # asset size budgets (size-budget.json)
 npm run test:e2e    # Playwright (set PW_WEBKIT=1 to include WebKit locally; CI always does)
 ```
+
+## Deployment
+
+`.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages when the CI workflow succeeds on `main` (or when run
+manually). One-time setup: repository **Settings → Pages → Build and deployment → Source: GitHub Actions**.
