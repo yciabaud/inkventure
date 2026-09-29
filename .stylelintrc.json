@@ -1,0 +1,11 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "declaration-property-value-disallowed-list": {
+      "display": ["/grid/"]
+    },
+    "function-disallowed-list": ["var", "env"],
+    "property-disallowed-list": ["/^grid/", "/^animation/", "/^transition/", "/^--/"],
+    "at-rule-disallowed-list": ["keyframes"]
+  }
+}

@@ -9,4 +9,16 @@ you play mostly by tapping. It is distributed through a free ebook that links st
 - Backlog and stories: [docs/BACKLOG.md](docs/BACKLOG.md)
 - Contributor / agent workflow: [CLAUDE.md](CLAUDE.md)
 
-Status: specification phase — no code yet.
+## Development
+
+Requires Node 22 (see `.nvmrc`).
+
+```sh
+npm ci
+npm run dev         # dev server
+npm run lint        # ESLint, stylelint, Prettier
+npm test            # unit tests (Vitest, jsdom)
+npm run build       # modern + ES5 legacy bundles in dist/
+npm run check:es5   # es-check on the legacy bundle
+npm run test:e2e    # Playwright (set PW_WEBKIT=1 to include WebKit locally; CI always does)
+```
