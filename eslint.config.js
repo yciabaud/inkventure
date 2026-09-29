@@ -5,7 +5,16 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'playwright-report', 'test-results', 'public/catalog'] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'playwright-report',
+      'test-results',
+      'public/catalog',
+      'public/probe/qrcode.js',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -31,6 +40,19 @@ export default tseslint.config(
         { object: 'window', property: 'localStorage', message: 'Use src/storage/ instead.' },
         { object: 'window', property: 'sessionStorage', message: 'Use src/storage/ instead.' },
       ],
+    },
+  },
+  {
+    // Device probe (S0.3): standalone ES5 script for old e-reader browsers, no build step.
+    files: ['public/probe/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 5,
+      sourceType: 'script',
+      globals: { ...globals.browser, qrcode: 'readonly' },
+    },
+    rules: {
+      // ES5 has no optional catch binding, so `catch (e)` is required even when `e` is unused.
+      '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
     },
   },
   prettier,

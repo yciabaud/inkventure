@@ -80,7 +80,8 @@ links straight into the app.
 
 ### 2.2 Assumed capabilities of the baseline browser
 
-To be confirmed by the capability probe ([S0.3](docs/stories/S0.3-kindle-capability-probe.md)); until then we assume the worst:
+To be confirmed by the capability probe ([S0.3](docs/stories/S0.3-kindle-capability-probe.md), served at
+`/probe/`; results in [docs/device-reports/](docs/device-reports/README.md)); until then we assume the worst:
 
 - **JavaScript:** ES5 only. No native `Promise`, `fetch`, `class`, arrow functions, `Map/Set` guaranteed.
   → Ship a transpiled ES5 bundle with polyfills (Promise, Object.assign, Array helpers, etc.).
