@@ -3,7 +3,8 @@
  * Kindle baseline: flexbox only, no grid, no custom properties, no animations or transitions.
  * Palette: black #000 on white #fff; secondary text #333 / #555 (contrast ≥ 7:1), borders #000 or #767676.
  * Spacing scale: 4, 8, 16, 24, 32, 48 px. Tap targets ≥ 48 × 48 px.
- * Fonts: Literata (reading serif) and Source Sans 3 (UI sans), latin subset, with system fallbacks.
+ * Fonts: Literata 400/700 (reading serif) and Source Sans 3 400 (UI sans), latin subset, system fallbacks.
+ * Italic and bold UI text are synthesised by the browser to stay within the font budget (size-budget.json).
  */
 html,
 body {

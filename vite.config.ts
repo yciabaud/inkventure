@@ -5,6 +5,10 @@ import legacy from '@vitejs/plugin-legacy';
 export default defineConfig({
   // Relative asset URLs so the build works from any sub-path (GitHub Pages, S0.2).
   base: './',
+  build: {
+    // Read by scripts/size/check-size.ts to tell initial chunks from lazy ones.
+    manifest: true,
+  },
   plugins: [
     preact(),
     // ES5 bundle + core-js polyfills for the Kindle experimental browser (old WebKit).
