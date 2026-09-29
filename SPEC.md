@@ -432,9 +432,11 @@ All keys are prefixed and versioned:
 
 ## 7. Internationalisation
 
-- UI strings in `src/i18n/<locale>.json` (ICU-lite: plurals and interpolation), EN and FR at launch;
-  missing keys fall back to EN (and are reported by a unit test).
-- Locale chosen from `navigator.language`, overridable in Settings, persisted in prefs.
+- UI strings in `src/i18n/<locale>.json`, EN and FR at launch: `{name}` interpolation (numbers formatted for the
+  locale) and plurals written as `{ "one": …, "other": … }` chosen by the `count` parameter (CLDR rules: EN one = 1,
+  FR one = 0–1). Missing keys fall back to EN; a unit test enforces key, message-kind and placeholder parity.
+- Locale chosen from the browser's preferred languages (`navigator.languages` / `language`), overridable in
+  Settings, persisted in prefs (`locale`); the choice is applied before the first render and sets `<html lang>`.
 - Dates and numbers formatted with small helpers (no reliance on `Intl` on Kindle).
 - The **game language** (Library filter, verb chips) is independent from the UI language.
 - Featured pitches and ebook content are written per locale.

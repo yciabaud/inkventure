@@ -6,7 +6,8 @@ test('a pref persists across reload', async ({ page }) => {
   await page.evaluate(() => window.__inkventure!.setPrefs({ locale: 'fr' }));
 
   await page.reload();
-  await expect(page.getByRole('heading', { level: 1, name: 'Home' })).toBeVisible();
+  // The saved locale is applied on start (S0.5).
+  await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible();
   expect(await page.evaluate(() => window.__inkventure!.getPrefs())).toEqual({ locale: 'fr' });
   expect(await page.evaluate(() => localStorage.getItem('ik:v1:prefs'))).toBe('{"locale":"fr"}');
   expect(await page.evaluate(() => localStorage.getItem('ik:schema'))).toBe('1');

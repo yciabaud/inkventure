@@ -3,6 +3,7 @@ import { HomeScreen } from '../screens/home/HomeScreen';
 import { LibraryScreen } from '../screens/library/LibraryScreen';
 import { ReaderScreen } from '../screens/reader/ReaderScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
+import { useLocale } from '../i18n/i18n';
 import { getStore } from '../storage';
 import { StorageNotice } from '../ui/StorageNotice';
 import { TopBar } from '../ui/TopBar';
@@ -26,8 +27,10 @@ function Screen({ location }: { location: Location }) {
 
 export function App() {
   const location = useLocation();
+  // Re-render the whole tree when the UI language changes (t() reads the current locale).
+  const locale = useLocale();
   return (
-    <div class="app">
+    <div class="app" lang={locale}>
       <TopBar current={location.route.name} />
       <main class="app__main">
         <StorageNotice store={getStore()} />
