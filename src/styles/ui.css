@@ -419,3 +419,143 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.empty-state__actions > * + * {
+  margin-top: 16px;
+}
+
+/* Reader: the whole screen, laid out in pages (no scrolling). The text area height is what the paginator fills. */
+.reader {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.reader__top {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 16px;
+  border: 0;
+  border-bottom: 2px solid #000;
+  background: #fff;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reader__title {
+  overflow: hidden;
+  margin-right: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The app's top bar, drawn over the text when the top zone is tapped (no re-pagination). */
+.reader__bar {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  background: #fff;
+}
+
+.reader .notice {
+  flex-shrink: 0;
+  margin: 8px 16px 0;
+}
+
+.reader__loading {
+  padding: 24px;
+}
+
+.reader__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.reader__page {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 16px 24px 8px;
+}
+
+.reader__text {
+  max-width: 40em;
+  margin: 0 auto;
+}
+
+/* Hyphenation off: the paginator splits paragraphs at word starts. */
+.reader__block {
+  margin: 0 0 0.75em;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+.reader__text > :last-child {
+  margin-bottom: 0;
+}
+
+.reader__block--input {
+  font-weight: 700;
+}
+
+/* Same height on every page, so every page has the same text area: the command bar on the last page, a way back
+   to it on the others. */
+.reader__slot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  padding: 8px 16px;
+  border-top: 1px solid #767676;
+}
+
+.reader__present {
+  min-height: 48px;
+  padding: 8px 24px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reader__input-slot {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 40em;
+  min-height: 48px;
+  margin: 0;
+  padding: 8px 16px;
+  border: 2px dashed #767676;
+  color: #333;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+}
+
+.reader__indicator {
+  flex-shrink: 0;
+  padding: 0 0 8px;
+  font-size: 16px;
+  text-align: center;
+}
