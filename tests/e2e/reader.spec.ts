@@ -45,6 +45,17 @@ async function fragments(page: Page): Promise<Fragment[]> {
   );
 }
 
+/** Whether every Literata face (regular and bold) has loaded. Not `fonts.check()`: WebKit answers true too early. */
+async function literataLoaded(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    const faces: FontFace[] = [];
+    document.fonts.forEach((face) => {
+      if (face.family.replace(/["']/g, '') === 'Literata') faces.push(face);
+    });
+    return faces.length > 0 && faces.every((face) => face.status === 'loaded');
+  });
+}
+
 /** Overflow of the text beyond the text area (> 0 means a clipped line) and scrollable overflow anywhere. */
 async function overflow(page: Page) {
   return page.evaluate(() => {
@@ -135,7 +146,10 @@ test('every page fits without scrolling, and the pages never skip or duplicate t
   for (let i = 1; i <= count; i++) {
     expect((await indicator(page)).page).toBe(i);
     const o = await overflow(page);
-    expect(o.clipped, `page ${i} clips its last line`).toBeLessThanOrEqual(0.5);
+    expect(
+      o.clipped,
+      `page ${i} clips its last line (Literata loaded: ${await literataLoaded(page)})`,
+    ).toBeLessThanOrEqual(0.5);
     expect(o.areaScroll).toBeLessThanOrEqual(0);
     expect(o.pageScroll).toBeLessThanOrEqual(0);
     seen.push(...(await fragments(page)));
@@ -301,10 +315,8 @@ test('re-paginates when the web fonts arrive late, without relying on font event
   // Do not wait for the load event: it waits for the fonts.
   await page.goto(DEMO, { waitUntil: 'commit' });
   await expect(page.locator('.reader__block').first()).toBeVisible();
-  expect(await page.evaluate(() => document.fonts.check('18px Literata'))).toBe(false);
-  await expect
-    .poll(() => page.evaluate(() => document.fonts.check('18px Literata')), { timeout: 10_000 })
-    .toBe(true);
+  expect(await literataLoaded(page)).toBe(false);
+  await expect.poll(() => literataLoaded(page), { timeout: 10_000 }).toBe(true);
   await expect.poll(async () => (await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
 });
 
@@ -320,6 +332,5 @@ test('waits for the web fonts before the first layout, so the page is drawn once
   await expect(page.getByText('Loading…')).toBeVisible();
   await expect(page.locator('.reader__block').first()).toBeVisible();
   // The first text drawn is already set in the reading font.
-  expect(await page.evaluate(() => document.fonts.check('18px Literata'))).toBe(true);
-  expect(await page.evaluate(() => document.fonts.check('bold 18px Literata'))).toBe(true);
+  expect(await literataLoaded(page)).toBe(true);
 });

@@ -40,7 +40,7 @@ export class PageTurner {
   private gesture: Point | null = null;
   private ignoreClickUntil = 0;
   private detach: (() => void) | null = null;
-  private fontsPending: Record<string, boolean> = {};
+  private fontsRequested: Record<string, boolean> = {};
   /** 'waiting' until the fonts of the first layout are in (or FONT_WAIT_MS has passed). */
   private firstLayout: 'pending' | 'waiting' | 'done' = 'pending';
 
@@ -100,8 +100,8 @@ export class PageTurner {
   }
 
   /**
-   * Before the first layout: true when the fonts the text is set in are available. Otherwise starts loading them and
-   * lays out when they arrive or after FONT_WAIT_MS, whichever comes first.
+   * Before the first layout: true once the fonts the text is set in have loaded. Until then, asks for them and lays
+   * out when they arrive or after FONT_WAIT_MS, whichever comes first.
    */
   private fontsReadyForFirstLayout(area: HTMLElement, className: string, width: number): boolean {
     if (this.firstLayout === 'waiting') return false;
@@ -115,62 +115,60 @@ export class PageTurner {
     }
     if (!sample.length) return false;
 
-    const set = document.fonts;
-    const missing = this.missingFonts(measureBlocks(area, className, width, sample).fonts);
-    if (!set || !missing.length) {
+    const loads = this.loadFonts(measureBlocks(area, className, width, sample).fonts);
+    if (!loads.length) {
       this.firstLayout = 'done';
       return true;
     }
 
     this.firstLayout = 'waiting';
-    let left = missing.length;
-    const go = () => {
-      if (this.firstLayout === 'done') return;
+    let left = loads.length;
+    // Past FONT_WAIT_MS the text shows in the fallback font; it is laid out again when the fonts arrive.
+    const timer = window.setTimeout(() => {
       this.firstLayout = 'done';
-      window.clearTimeout(timer);
       this.layout(true);
-    };
-    const timer = window.setTimeout(go, FONT_WAIT_MS);
-    const loaded = () => {
-      left--;
-      if (left <= 0) go();
-    };
-    for (let i = 0; i < missing.length; i++) set.load(missing[i]).then(loaded, loaded);
+    }, FONT_WAIT_MS);
+    for (let i = 0; i < loads.length; i++) {
+      loads[i].then(() => {
+        if (--left > 0) return;
+        window.clearTimeout(timer);
+        this.firstLayout = 'done';
+        this.layout(true);
+      });
+    }
     return false;
   }
 
-  /** The fonts among `fonts` that still have to load (none when the browser cannot tell). */
-  private missingFonts(fonts: string[]): string[] {
+  /**
+   * Asks for the fonts not requested yet; returns a promise per font, settled once it has loaded (or failed).
+   * `load()` rather than `check()` or FontFaceSet events: on WebKit (CI), `check()` reported the fonts available and
+   * `ready` resolved before they had loaded, and no `loadingdone` came in time, so pages stayed laid out in the
+   * fallback font. A font already loaded settles at once.
+   */
+  private loadFonts(fonts: string[]): Array<Promise<void>> {
     const set = document.fonts;
-    const missing: string[] = [];
-    if (!set || typeof set.load !== 'function' || typeof set.check !== 'function') return missing;
+    const loads: Array<Promise<void>> = [];
+    if (!set || typeof set.load !== 'function') return loads;
+    const settle = () => undefined;
     for (let i = 0; i < fonts.length; i++) {
+      if (this.fontsRequested[fonts[i]]) continue;
+      this.fontsRequested[fonts[i]] = true;
       try {
-        if (!set.check(fonts[i])) missing.push(fonts[i]);
+        loads.push(set.load(fonts[i]).then(settle, settle));
       } catch {
         // unparsable font value
       }
     }
-    return missing;
+    return loads;
   }
 
   /**
-   * Web fonts change every line. When the text is set in a font that is not loaded yet (the first layout gave up
-   * waiting, or a setting changed the font), asks for it and lays out again once it arrives. FontFaceSet events alone are not enough: WebKit
-   * resolved `fonts.ready` before the download started and fired no `loadingdone` in time (CI, S1.1).
+   * Web fonts change every line. When the text uses a font not requested before (the first layout found other kinds
+   * of blocks, or a setting changed the font), loads it and lays out again once it has arrived.
    */
   private awaitFonts(fonts: string[]): void {
-    const missing = this.missingFonts(fonts);
-    for (let i = 0; i < missing.length; i++) {
-      const font = missing[i];
-      if (this.fontsPending[font]) continue;
-      this.fontsPending[font] = true;
-      const done = () => {
-        delete this.fontsPending[font];
-        this.layout(true);
-      };
-      document.fonts.load(font).then(done, done);
-    }
+    const loads = this.loadFonts(fonts);
+    for (let i = 0; i < loads.length; i++) loads[i].then(() => this.layout(true));
   }
 
   /** Listens to taps, swipes, keys, resizes and font loads. `area` is the tap area, `text` the text column. */
