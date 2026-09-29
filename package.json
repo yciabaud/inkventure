@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "lint": "eslint . && stylelint \"src/**/*.css\" && prettier --check .",
     "format": "prettier --write .",
-    "check:es5": "es-check es5 \"dist/assets/*-legacy*.js\""
+    "check:es5": "es-check es5 \"dist/assets/*-legacy*.js\"",
+    "check:size": "node scripts/size/check-size.ts"
   },
   "dependencies": {
     "@fontsource/literata": "^5.3.0",

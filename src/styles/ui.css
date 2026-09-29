@@ -18,7 +18,7 @@
 .screen__title {
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 700;
   padding-bottom: 8px;
   border-bottom: 2px solid #000;
   margin-bottom: 24px;
@@ -73,7 +73,7 @@
 
 .icon-btn--current {
   border-bottom-color: #000;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .icon-btn__label {
@@ -96,7 +96,7 @@
   border-radius: 4px;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
@@ -138,7 +138,7 @@
   border: 2px solid #000;
   border-radius: 4px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .pager__btn--disabled {
@@ -296,7 +296,7 @@
   margin: 0;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .dialog__body {

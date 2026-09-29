@@ -1,0 +1,11 @@
+{
+  "$comment": "Asset size budgets in KiB (SPEC §10). gzip sizes for JS/CSS; font files and catalogue shards are measured as stored.",
+  "initialJsLegacy": 150,
+  "initialJsModern": 150,
+  "css": 20,
+  "fontsWoff": 80,
+  "fontsWoff2": 70,
+  "lazyChunk": 100,
+  "catalogShard": 150,
+  "firstLoadLegacy": 200
+}

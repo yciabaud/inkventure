@@ -385,7 +385,9 @@ and the game cards in the ebook.
 ### 5.6 Attribution & terms
 
 - Every game detail links back to its IFDB page; "Catalogue data from IFDB" in About.
-- Cover art is hot-linked from IFDB (`coverart?id=…`), not re-hosted.
+- Cover art is hot-linked from IFDB, not re-hosted, and always requested **as a thumbnail** sized for the slot
+  (`coverart?id=…&thumbnail=WxH`, IFDB caps it at 250×250), never at full size — full-size covers can weigh
+  hundreds of KB over e-reader Wi-Fi.
 - Respect IFDB and IF Archive usage etiquette; contact the IFTF before launch to announce the project.
 
 ---
@@ -481,9 +483,11 @@ A free ebook, in EN and FR, is the main acquisition channel.
 │   ├── storage/        storage layer, migrations, export/import
 │   ├── i18n/           en.json, fr.json, i18n.ts
 │   └── styles/
+├── size-budget.json    asset size budgets (checked by scripts/size/)
 ├── public/catalog/     generated index (not hand-edited)
 ├── content/featured.json
 ├── scripts/catalog/    crawler, resolver, emitter, content-policy.json
+├── scripts/size/       check-size.ts: asset budgets report (CI)
 ├── ebook/              Markdown sources, templates, build script
 └── tests/
     ├── unit/           (or colocated *.test.ts)
@@ -497,7 +501,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 
 | Area | Requirement |
 |---|---|
-| Payload | Initial JS ≤ 150 KB gzipped (legacy bundle); each engine chunk loaded on demand; CSS ≤ 20 KB. |
+| Payload | Budgets in `size-budget.json`, enforced in CI by `npm run check:size` (S0.7): initial JS ≤ 150 KiB gz (legacy and modern), CSS ≤ 20 KiB gz, fonts ≤ 80 KiB as `.woff` (Kindle fallback) and ≤ 70 KiB as `.woff2`, each lazy chunk (engines…) ≤ 100 KiB gz, each catalogue shard ≤ 150 KiB, Kindle first load (legacy JS + CSS + `.woff`) ≤ 200 KiB. Cover images are requested as IFDB thumbnails (§5.6). |
 | Speed (Kindle) | Home interactive < 3 s on Wi-Fi; page turn < 300 ms; Library first results < 4 s. |
 | Compatibility | Legacy bundle passes `es-check es5`; no runtime errors in the capability-probe browsers. |
 | Accessibility | Semantic HTML, labels on icon buttons, focus order, contrast ≥ 4.5:1, font scaling; dyslexia-friendly typeface option. |
@@ -551,7 +555,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 
 | Milestone | Content | Stories |
 |---|---|---|
-| **M0 — Foundations & spikes** | Scaffold, CI, deploy, capability probe on Kindle, design system, i18n, storage | S0.1–S0.6 |
+| **M0 — Foundations & spikes** | Scaffold, CI, deploy, capability probe on Kindle, design system, i18n, storage, size budgets | S0.1–S0.7 |
 | **M1 — Playable Z-machine** | Paginated reader, settings, ZVM, command bar & chips, saves, status line | S1.1–S1.6 |
 | **M2 — Catalogue pipeline** | IFDB crawl, playability, index, featured | S2.1–S2.4 |
 | **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings & export | S3.1–S3.4, S4.1–S4.2, S5.1–S5.2 |
