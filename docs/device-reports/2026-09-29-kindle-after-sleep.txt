@@ -1,4 +1,4 @@
-# Same Kindle as 2026-09-29-kindle.txt, after the owner restarted the device (browser relaunched).
+# Same Kindle as 2026-09-29-kindle.txt, after the device went to sleep and woke up (not a restart).
 # Raw probe report, reassembled from the 3 QR parts. The swipe box was not used on this run.
 inkventure-probe v1
 probe.startedAt: Tue, 29 Sep 2026 21:15:03 GMT
