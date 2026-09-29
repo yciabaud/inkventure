@@ -34,5 +34,9 @@
   "settings.emptyTitle": "Settings are coming",
   "settings.emptyText": "Language, reading defaults and your data will be managed here.",
   "error.title": "Something went wrong",
-  "error.home": "Go to Home"
+  "error.home": "Go to Home",
+  "storage.unavailable": "This browser is not saving data: your progress will be lost when you close this page.",
+  "storage.full": "Storage is full: your latest progress could not be saved. Free some space in Settings.",
+  "storage.manage": "Manage data",
+  "storage.dismiss": "Dismiss"
 }

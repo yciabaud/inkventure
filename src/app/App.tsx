@@ -3,6 +3,8 @@ import { HomeScreen } from '../screens/home/HomeScreen';
 import { LibraryScreen } from '../screens/library/LibraryScreen';
 import { ReaderScreen } from '../screens/reader/ReaderScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
+import { getStore } from '../storage';
+import { StorageNotice } from '../ui/StorageNotice';
 import { TopBar } from '../ui/TopBar';
 import { useLocation, type Location } from './router';
 
@@ -28,6 +30,7 @@ export function App() {
     <div class="app">
       <TopBar current={location.route.name} />
       <main class="app__main">
+        <StorageNotice store={getStore()} />
         <Screen location={location} />
       </main>
     </div>
