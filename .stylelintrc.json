@@ -5,7 +5,12 @@
       "display": ["/grid/"]
     },
     "function-disallowed-list": ["var", "env"],
-    "property-disallowed-list": ["/^grid/", "/^animation/", "/^transition/", "/^--/"],
-    "at-rule-disallowed-list": ["keyframes"]
+    "property-disallowed-list": ["/^grid/", "/^animation/", "/^transition/", "/^--/", "inset"],
+    "at-rule-disallowed-list": ["keyframes"],
+    "declaration-block-no-redundant-longhand-properties": [true, { "ignoreShorthands": ["inset"] }],
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      { "message": "Use BEM class names: block__element--modifier (kebab-case parts)" }
+    ]
   }
 }
