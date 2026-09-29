@@ -5,3 +5,4 @@ test-results
 package-lock.json
 public/catalog
 *.md
+public/probe/qrcode.js
