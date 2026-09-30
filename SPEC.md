@@ -175,16 +175,26 @@ Purpose: find the next adventure in the playable catalogue.
 
 - **Search box**: title / author, matched client-side (accent- and case-insensitive; every word must start a word of
   the title or author), run on submit rather than on each keystroke (each redraw is an e-ink refresh).
-- **Filters** (panel opened by a "Filters" button; state reflected in the URL hash so the back button works):
-  - Genre (IFDB genre, multi-select)
-  - Language (e.g. English, Français, Español… from the index facets)
+- **Filters** (panel opened by a "Filters" button, "Filters (n)" when some are set; state reflected in the URL hash
+  so the back button and a reload keep it):
+  - Genre (IFDB genre, multi-select; spellings differing only by case merged)
+  - Language (English, Français, Español… from the index facets, named in their own language)
   - Format / system (Z-machine, Glulx, Ink, Twine)
-  - Minimum rating (★ 3+, 4+…) and minimum number of ratings
+  - Minimum rating (★ 3+, 3.5+, 4+, 4.5+) and minimum number of ratings (5, 10, 25, 50)
   - Play time (< 30 min, 30 min–1 h, 1–2 h, 2 h+ — from IFDB median playtime when available)
-  - Forgiveness (Merciful → Cruel)
+  - Forgiveness (Merciful → Cruel; shown once the index carries it, see [§5.2](#52-catalogue-index))
   - Release year range
-  - "Start here" (newcomer-friendly: featured or tagged)
-- **Sort**: best rated (IFDB star sort), most rated, newest, title A–Z.
+  - "Start here" (newcomer-friendly: a curated starter of `featured.json`, or an IFDB tag listed in
+    `scripts/catalog/starter-tags.json`, e.g. *recommended for beginners*)
+
+  Values are OR-ed within a filter and filters AND-ed; a game whose value is unknown (no rating, no play time) is
+  left out by a filter on it. The panel replaces the results: a first page with the sort and one row per filter
+  (its current value), and a page of choices per filter with counts, as many 56 px rows as fit, paged with ‹ ›.
+  Choices apply at once and replace the current history entry, so "Show n adventures" returns to the results with
+  them and the back button leaves the panel as the results were. Hash keys: `q`, `sort`, `genre`, `lang`,
+  `format`, `rating`, `votes`, `time`, `fg`, `from`, `to`, `start`, `page`, `panel` (lists comma-separated).
+- **Sort**: best rated (IFDB star sort; the default), most rated, newest, title A–Z; games without the value last,
+  ties keep the search order (title matches first, then by title).
 - **Results**, paginated, as many as fit the screen (no scrolling), in two views remembered in the preferences:
   - **Grid** (default, like the Kindle library): covers (IFDB thumbnail or typographic cover) with the title under
     each, on two lines at most, since cover art does not always show it (4 × 2 on a 600 × 800 e-reader);
@@ -405,8 +415,9 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.
    - `index-<n>.json` — compact rows sharded by ~500 games (short keys to keep parse time low on Kindle):
      `{t: tuid, n: title, a: author, y: year, l: lang, g: [genres], f: format, r: avgRating, rc: ratingCount,
-     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag}`, sorted by title; unknown values are
-     left out (`fg` is not available from IFDB's JSON API yet).
+     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag, st: starterFlag}`, sorted by title;
+     unknown values are left out (`fg` is not available from IFDB's JSON API yet; `st` marks the games carrying a
+     newcomer-friendly IFDB tag of `scripts/catalog/starter-tags.json`).
    - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link.
 5. **Validate** — JSON schema checks, sizes budget (each shard < 150 KB), sanity counts vs previous build
    (fail if > 20 % drop).

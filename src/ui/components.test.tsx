@@ -36,6 +36,16 @@ describe('Pager', () => {
     expect(container.querySelector('.pager__status')?.textContent).toBe('3 / 3');
   });
 
+  it('renders buttons calling onPage instead of links when given', () => {
+    const pages: number[] = [];
+    render(<Pager page={2} pageCount={3} onPage={(n) => pages.push(n)} />, container);
+    expect(container.querySelector('a')).toBeNull();
+    const buttons = container.querySelectorAll('button');
+    buttons[0].click();
+    buttons[1].click();
+    expect(pages).toEqual([1, 3]);
+  });
+
   it('renders nothing for a single page', () => {
     render(<Pager page={1} pageCount={1} hrefFor={hrefFor} />, container);
     expect(container.innerHTML).toBe('');

@@ -1,6 +1,18 @@
-import type { RefObject } from 'preact';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
-import { formatHash, type Query } from '../../app/router';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { formatHash, formatQuery, type Query } from '../../app/router';
+import {
+  activeCount,
+  applyFilters,
+  DEFAULT_SORT,
+  formatFilters,
+  formatName,
+  NO_FILTERS,
+  parseFilters,
+  parseSort,
+  sortIndices,
+  type Filters,
+  type SortKey,
+} from '../../catalog/filters';
 import { gridLayout, listPerPage, type GridLayout } from '../../catalog/layout';
 import { loadCatalog, type Catalog, type IndexRow } from '../../catalog/loader';
 import { paginate, search } from '../../catalog/search';
@@ -10,18 +22,10 @@ import { Button } from '../../ui/Button';
 import { Cover } from '../../ui/Cover';
 import { EmptyState } from '../../ui/EmptyState';
 import { Pager } from '../../ui/Pager';
+import { FiltersPanel, parsePanel, type PanelChange, type PanelName } from './FiltersPanel';
+import { useArea } from './useArea';
 
 export type LibraryView = 'grid' | 'list';
-
-/** Before the list area is measured (and in jsdom). */
-const DEFAULT_AREA = { width: 568, height: 480 };
-
-const FORMAT_NAMES: Record<string, string> = {
-  zcode: 'Z-code',
-  glulx: 'Glulx',
-  twine: 'Twine',
-  ink: 'ink',
-};
 
 /**
  * IFDB cover thumbnail (SPEC §5.6: always a thumbnail, never the full-size image), rounded up to 10 px steps so
@@ -63,27 +67,6 @@ function useCatalog(): [CatalogState, () => void] {
   return [state, () => setAttempt((n) => n + 1)];
 }
 
-/** Size of the list area, measured after every render (it shrinks when the pager appears) and on resize. */
-function useArea(): [{ width: number; height: number }, RefObject<HTMLDivElement>] {
-  const [area, setArea] = useState(DEFAULT_AREA);
-  const [, setTick] = useState(0);
-  const list = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => {
-    const element = list.current;
-    if (!element || !element.clientHeight) return;
-    if (element.clientWidth !== area.width || element.clientHeight !== area.height) {
-      setArea({ width: element.clientWidth, height: element.clientHeight });
-    }
-  });
-  useEffect(() => {
-    const remeasure = () => setTick((tick) => tick + 1);
-    window.addEventListener('resize', remeasure);
-    return () => window.removeEventListener('resize', remeasure);
-  }, []);
-  return [area, list];
-}
-
 /** Grid (Kindle-like covers, the default) or list, remembered in the preferences. */
 function useView(): [LibraryView, (view: LibraryView) => void] {
   const [view, setView] = useState<LibraryView>(() => getPrefs(getStore()).libraryView || 'grid');
@@ -96,10 +79,19 @@ function useView(): [LibraryView, (view: LibraryView) => void] {
   ];
 }
 
-function libraryHash(q: string, page?: number): string {
-  const query: Query = {};
-  if (q) query.q = q;
+/** What the results show: the search, the filters and the order, all kept in the hash (SPEC §3.4). */
+interface Browse {
+  q: string;
+  filters: Filters;
+  sort: SortKey;
+}
+
+function libraryHash(browse: Browse, page?: number, panel?: PanelName): string {
+  const query: Query = formatFilters(browse.filters);
+  if (browse.q) query.q = browse.q;
+  if (browse.sort !== DEFAULT_SORT) query.sort = browse.sort;
   if (page && page > 1) query.page = String(page);
+  if (panel) query.panel = panel;
   return formatHash({ name: 'library' }, query);
 }
 
@@ -158,7 +150,7 @@ function ResultRow({ row }: { row: IndexRow }) {
     details.push('★ ' + formatNumber(row.r, locale, 1) + ' (' + formatNumber(row.rc, locale) + ')');
   }
   if (row.p) details.push(playtime(row.p));
-  details.push(FORMAT_NAMES[row.f] || row.f);
+  details.push(formatName(row.f));
   return (
     <li>
       <a class="result" href={formatHash({ name: 'game', tuid: row.t })} aria-label={label(row)}>
@@ -172,7 +164,8 @@ function ResultRow({ row }: { row: IndexRow }) {
   );
 }
 
-function SearchForm({ q }: { q: string }) {
+function SearchForm({ browse }: { browse: Browse }) {
+  const q = browse.q;
   const input = useRef<HTMLInputElement>(null);
   return (
     <form
@@ -181,7 +174,7 @@ function SearchForm({ q }: { q: string }) {
       onSubmit={(event) => {
         event.preventDefault();
         const value = input.current ? input.current.value.trim() : '';
-        location.hash = libraryHash(value);
+        location.hash = libraryHash({ ...browse, q: value });
       }}
     >
       <input
@@ -201,7 +194,11 @@ function SearchForm({ q }: { q: string }) {
         {t('library.searchButton')}
       </Button>
       {q && (
-        <a class="search__clear" href={libraryHash('')} aria-label={t('library.clear')}>
+        <a
+          class="search__clear"
+          href={libraryHash({ ...browse, q: '' })}
+          aria-label={t('library.clear')}
+        >
           ✕
         </a>
       )}
@@ -211,18 +208,65 @@ function SearchForm({ q }: { q: string }) {
 
 export function LibraryScreen({ query }: { query: Query }) {
   useLocale();
-  const q = query.q || '';
+  const browse: Browse = {
+    q: query.q || '',
+    filters: parseFilters(query),
+    sort: parseSort(query.sort),
+  };
+  const panel = parsePanel(query.panel);
   const [state, retry] = useCatalog();
   const [area, listRef] = useArea();
   const [view, setView] = useView();
   const grid = gridLayout(area.width, area.height);
   const perPage = view === 'grid' ? grid.perPage : listPerPage(area.height);
   const catalog = state.status === 'ready' ? state.catalog : null;
+  // Search, then filter, then sort; recomputed only when one of them changes.
+  const filterKey = formatQuery(formatFilters(browse.filters));
   const matches = useMemo(
-    () => (catalog ? search(catalog.rows, catalog.keys, q) : []),
-    [catalog, q],
+    () =>
+      catalog
+        ? sortIndices(
+            catalog.rows,
+            applyFilters(
+              catalog.rows,
+              search(catalog.rows, catalog.keys, browse.q),
+              browse.filters,
+            ),
+            browse.sort,
+          )
+        : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [catalog, browse.q, filterKey, browse.sort],
   );
+  const filtered = activeCount(browse.filters);
+
+  if (catalog && panel) {
+    return (
+      <FiltersPanel
+        panel={panel}
+        catalog={catalog}
+        filters={browse.filters}
+        sort={browse.sort}
+        count={matches.length}
+        go={(change: PanelChange) =>
+          location.replace(
+            libraryHash(
+              {
+                q: browse.q,
+                filters: change.filters || browse.filters,
+                sort: change.sort || browse.sort,
+              },
+              1,
+              change.panel,
+            ),
+          )
+        }
+      />
+    );
+  }
+
   const page = paginate(matches, parseInt(query.page || '1', 10), perPage);
+  const clearFilters = libraryHash({ ...browse, filters: NO_FILTERS });
 
   let body;
   if (state.status === 'loading') {
@@ -241,9 +285,16 @@ export function LibraryScreen({ query }: { query: Query }) {
     );
   } else if (!matches.length) {
     body = (
-      <p class="library__status" role="status">
-        {t('library.noResults', { query: q })}
-      </p>
+      <div class="library__status" role="status">
+        <p>
+          {browse.q ? t('library.noResults', { query: browse.q }) : t('library.noResultsFilters')}
+        </p>
+        {filtered > 0 && (
+          <a class="library__link" href={clearFilters}>
+            {t('library.clearFilters')}
+          </a>
+        )}
+      </div>
     );
   } else if (view === 'grid') {
     body = (
@@ -270,14 +321,19 @@ export function LibraryScreen({ query }: { query: Query }) {
   return (
     <div class="screen library">
       <h1 class="screen__title">{t('library.title')}</h1>
-      <SearchForm q={q} />
+      <SearchForm browse={browse} />
       <div class="library__bar">
         <p class="library__count">
           {catalog ? t('library.count', { count: matches.length }) : '\u00a0'}
         </p>
+        {catalog && (
+          <a class="library__action" href={libraryHash(browse, 1, 'filters')}>
+            {filtered ? t('library.filtersCount', { count: filtered }) : t('library.filters')}
+          </a>
+        )}
         <button
           type="button"
-          class="library__view"
+          class="library__action"
           onClick={() => setView(view === 'grid' ? 'list' : 'grid')}
         >
           {view === 'grid' ? t('library.viewList') : t('library.viewGrid')}
@@ -287,7 +343,11 @@ export function LibraryScreen({ query }: { query: Query }) {
         {body}
       </div>
       {catalog && (
-        <Pager page={page.page} pageCount={page.pageCount} hrefFor={(n) => libraryHash(q, n)} />
+        <Pager
+          page={page.page}
+          pageCount={page.pageCount}
+          hrefFor={(n) => libraryHash(browse, n)}
+        />
       )}
     </div>
   );

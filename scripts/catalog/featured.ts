@@ -34,8 +34,11 @@ export interface CuratedFile {
   items: CuratedItem[];
 }
 
-/** A game of a featured list: its index row, plus the pitch (`pi`, curated games only) and the starter flag. */
-export type FeaturedRow = IndexRow & { pi?: string; st?: 1 };
+/**
+ * A game of a featured list: its index row (whose `st` starter flag comes from IFDB tags) plus the pitch (`pi`,
+ * curated games only); curated starters get `st` too.
+ */
+export type FeaturedRow = IndexRow & { pi?: string };
 
 /** The published `featured.json`. */
 export interface FeaturedFile {

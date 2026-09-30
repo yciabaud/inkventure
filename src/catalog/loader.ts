@@ -62,8 +62,31 @@ export function fetchCatalog(base: string = CATALOG_BASE, onProgress?: Progress)
         }),
       );
     });
-    return chain.then(() => ({ meta: meta, rows: rows, keys: rows.map(searchKey) }));
+    return chain
+      .then(() => markStarters(base, rows))
+      .then(() => ({ meta: meta, rows: rows, keys: rows.map(searchKey) }));
   });
+}
+
+/**
+ * Flags the "Start here" games of `featured.json` (curated starters, SPEC §5.3) in `rows`; the index already flags
+ * the games tagged newcomer-friendly. Optional: without the file, only the tagged games are starters.
+ */
+function markStarters(base: string, rows: IndexRow[]): Promise<void> {
+  return getJson(base + 'featured.json').then(
+    (content) => {
+      const locales = (content as { locales?: Record<string, Array<{ t: string; st?: 1 }>> })
+        .locales;
+      if (!locales) return;
+      const starters: Record<string, boolean> = {};
+      for (const locale in locales) {
+        const list = locales[locale] || [];
+        for (let i = 0; i < list.length; i++) if (list[i].st) starters[list[i].t] = true;
+      }
+      for (let i = 0; i < rows.length; i++) if (starters[rows[i].t]) rows[i].st = 1;
+    },
+    () => undefined,
+  );
 }
 
 let cached: Promise<Catalog> | null = null;
