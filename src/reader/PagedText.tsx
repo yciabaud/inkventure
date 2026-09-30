@@ -11,10 +11,20 @@ import { pageFragments, type ReaderBlock } from './paginator';
  */
 export const SLOT_HEIGHT = 64;
 
+/** Where the reader is, and how to jump to either end (for `pageSlot`). */
+export interface PageNav {
+  isFirst: boolean;
+  isLast: boolean;
+  first: () => void;
+  last: () => void;
+}
+
 interface Props {
   blocks: ReaderBlock[];
   /** Shown under the text on the last page only (command bar, choices). */
-  lastPageSlot: ComponentChildren;
+  lastPageSlot?: ComponentChildren;
+  /** Shown under the text on every page instead of `lastPageSlot` and "Back to the present" (read-only views). */
+  pageSlot?: (nav: PageNav) => ComponentChildren;
   /** Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu). */
   interceptTap?: TapInterceptor;
   /** Stay on the last page across re-layouts (the command field has focus). */
@@ -39,6 +49,7 @@ interface Props {
 export function PagedText({
   blocks,
   lastPageSlot,
+  pageSlot,
   interceptTap,
   focus,
   pinToLast,
@@ -128,7 +139,14 @@ export function PagedText({
             : { height: SLOT_HEIGHT + 'px' }
         }
       >
-        {loading ? null : isLast ? (
+        {loading ? null : pageSlot ? (
+          pageSlot({
+            isFirst: current === 0,
+            isLast: isLast,
+            first: () => turner.first(),
+            last: () => turner.last(),
+          })
+        ) : isLast ? (
           lastPageSlot
         ) : (
           <button type="button" class="reader__present" onClick={() => turner.last()}>

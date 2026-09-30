@@ -107,6 +107,10 @@ export class PageTurner {
     this.turnTo(this.index + delta);
   }
 
+  first(): void {
+    this.turnTo(0);
+  }
+
   last(): void {
     this.turnTo(this.pages.length - 1);
   }

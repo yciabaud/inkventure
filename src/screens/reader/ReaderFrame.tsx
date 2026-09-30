@@ -19,7 +19,7 @@ interface Props {
    * only closes the menu. `settings` are the text settings to lay the pages out with.
    */
   children: (closeBar: () => boolean, settings: ReaderSettings) => ComponentChildren;
-  /** The game's own actions in the menu (Save…, Restore…, Undo, Restart), after "Aa". */
+  /** The game's own actions in the menu (Save…, Restore…, Undo, Restart, Transcript), after "Aa". */
   actions?: ReaderAction[];
 }
 
@@ -31,7 +31,7 @@ export interface ReaderAction {
 
 /**
  * Full-screen reader chrome. The top zone opens a menu over the text: the app's top bar and the reader's own
- * actions (text settings "Aa", the game's actions, refresh screen); transcript and help join it in S1.6.
+ * actions (text settings "Aa", the game's actions and Transcript, refresh screen).
  */
 export function ReaderFrame({ tuid, heading, children, actions }: Props) {
   const [barOpen, setBarOpen] = useState(false);

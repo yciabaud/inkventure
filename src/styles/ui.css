@@ -734,6 +734,24 @@
   cursor: pointer;
 }
 
+.reader__present:disabled {
+  border-color: #767676;
+  color: #767676;
+  cursor: default;
+}
+
+/* Transcript view: start, end and back to the game, under every page. */
+.reader__transcript-nav {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.reader__transcript-nav .reader__present {
+  padding: 8px 12px;
+}
+
 .reader__input-slot {
   display: flex;
   align-items: center;
