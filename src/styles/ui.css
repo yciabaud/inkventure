@@ -908,6 +908,51 @@ button.pager__btn {
   padding: 8px 12px;
 }
 
+/* Choice games: full-width numbered buttons under the text of the last page (the raised slot is sized to the list). */
+.story-choices {
+  width: 100%;
+  max-width: 40em;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.story-choices__item + .story-choices__item {
+  margin-top: 8px;
+}
+
+.story-choice {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+}
+
+.story-choice__number {
+  flex-shrink: 0;
+  min-width: 1.5em;
+  margin-right: 10px;
+  font-weight: 700;
+}
+
+.story-choice__text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
 .reader__input-slot {
   display: flex;
   align-items: center;

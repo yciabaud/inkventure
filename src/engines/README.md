@@ -8,7 +8,8 @@ Engine abstraction and adapters (SPEC §4).
   them into `OutputBlock`s and input requests, and sends the player's input back as GlkOte events. No DOM.
 - `formats.ts`: catalogue format → engine, the lazy loader of each shipped engine, and a header check of story files.
 - `zvm/`: the Z-machine engine (lazy chunk).
-- `quixe/`: the Glulx engine (lazy chunk), on the Quixe files downloaded into `vendor/quixe/` at install. Later: `ink/`, `twine/`.
+- `quixe/`: the Glulx engine (lazy chunk), on the Quixe files downloaded into `vendor/quixe/` at install.
+- `ink/`: the ink engine (lazy chunk), on inkjs. Later: `twine/`.
 
 ## Third-party code
 
@@ -16,6 +17,7 @@ Engine abstraction and adapters (SPEC §4).
 |---|---|---|---|
 | [ifvms](https://github.com/curiousdannii/ifvms.js) | 1.1.6 | ZVM, the Z-machine VM (Parchment project) | MIT, © the ifvms.js team |
 | [glkote-term](https://github.com/curiousdannii/glkote-term) | 0.4.4 | `src/glkapi.js` only: the Glk API library | MIT, © 2008-2018 Andrew Plotkin, Dannii Willis |
+| [inkjs](https://github.com/y-lohse/inkjs) | 2.4.0 | ink runtime (`dist/ink.mjs`, without the compiler) | MIT, © 2017 Yannick Lohse |
 | [Quixe](https://github.com/erkyrath/quixe) | 2.2.6 (tag `quixe-2.2.6`, downloaded at install into `vendor/quixe/`) | Glulx VM, its Glk library (GlkOte 2.3 generation), dispatch layer and Blorb decoder | MIT, © 2010-2024 Andrew Plotkin |
 
 Only `ifvms/src/zvm.js` (and what it requires) and `glkote-term/src/glkapi.js` are bundled; their terminal front ends
@@ -38,3 +40,10 @@ autosave snapshot (`do_autosave` with the pending `glk_select` event from `GiDis
 first prompt too); the RAM is stored XORed with the story's initial RAM (mostly zeros: the fixture's save deflates to
 ~1.5 KB). Images are not shown yet (follow-up); sound is ignored; the game's own UNDO uses Quixe's undo, the reader's
 Undo its snapshots.
+
+Ink (S1.8): inkjs's runtime only (no compiler: stories come compiled, as JSON; the byte order mark inklecate writes is
+skipped). Each stop is a `ChoiceInput`; the choice made is echoed as an `input` paragraph, so it opens the next turn like
+a command. `# title:` (global tag) and `# chapter:` (line tags) make the status line: title left, chapter right.
+`saveState` is `story.state.toJson()` in a JSON envelope naming the story (a hash of its JSON) and the current chapter;
+the reader's Undo restores its previous turn snapshot. Unbound external functions fall back to the ink function of the
+same name (`allowExternalFunctionFallbacks`); none is bound. A runtime error of the story is reported through `onError`.

@@ -21,10 +21,11 @@ export function engineFor(format: string): EngineKind | null {
 
 type Loader = () => Promise<() => Engine>;
 
-/** Engines shipped so far; the others arrive with their stories (Ink S1.8, Twine S1.9). */
+/** Engines shipped so far; Twine arrives with its story (S1.9). */
 const LOADERS: Partial<Record<EngineKind, Loader>> = {
   zmachine: () => import('./zvm/zvmEngine').then((module) => module.createZvmEngine),
   glulx: () => import('./quixe/quixeEngine').then((module) => () => module.createQuixeEngine()),
+  ink: () => import('./ink/inkEngine').then((module) => module.createInkEngine),
 };
 
 /** Whether this build can play games of `kind`. */

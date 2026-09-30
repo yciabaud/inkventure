@@ -7,8 +7,9 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { GameReader } from './GameReader';
 import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
-// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z` and `#/play/fixture-glulx`.
+// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx` and `fixture-ink`.
 import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url';
+import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url';
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
 import type { EngineKind } from '../../engines/engine';
 
@@ -21,9 +22,13 @@ export const FIXTURE_Z_TUID = 'fixture-z';
 /** `#/play/fixture-glulx`: the same game built for Glulx. */
 export const FIXTURE_GLULX_TUID = 'fixture-glulx';
 
+/** `#/play/fixture-ink`: the same story told with choices, in ink. */
+export const FIXTURE_INK_TUID = 'fixture-ink';
+
 const FIXTURES: Record<string, { url: string; kind: EngineKind }> = {
   [FIXTURE_Z_TUID]: { url: fixtureZUrl, kind: 'zmachine' },
   [FIXTURE_GLULX_TUID]: { url: fixtureGlulxUrl, kind: 'glulx' },
+  [FIXTURE_INK_TUID]: { url: fixtureInkUrl, kind: 'ink' },
 };
 
 /**

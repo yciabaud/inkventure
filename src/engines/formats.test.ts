@@ -21,13 +21,15 @@ describe('format → engine', () => {
     expect(engineFor('toString')).toBeNull();
   });
 
-  it('ships the Z-machine and Glulx engines, so far', async () => {
+  it('ships the Z-machine, Glulx and ink engines, so far', async () => {
     expect(isAvailable('zmachine')).toBe(true);
     expect(isAvailable('glulx')).toBe(true);
-    expect(isAvailable('ink')).toBe(false);
+    expect(isAvailable('ink')).toBe(true);
+    expect(isAvailable('twine')).toBe(false);
     expect(typeof (await loadEngine('zmachine'))).toBe('function');
     expect(typeof (await loadEngine('glulx'))).toBe('function');
-    await expect(loadEngine('ink')).rejects.toThrow(/No engine/);
+    expect(typeof (await loadEngine('ink'))).toBe('function');
+    await expect(loadEngine('twine')).rejects.toThrow(/No engine/);
   });
 
   it('recognises story files by their header', () => {
