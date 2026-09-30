@@ -41,6 +41,9 @@ const files = [
   'assets/font.woff',
   'assets/font.woff2',
   'catalog/index-0.json',
+  'catalog/meta.json',
+  'catalog/games/small.json',
+  'catalog/games/big.json',
   'catalog/README.md',
 ];
 
@@ -71,6 +74,9 @@ function sizes(overrides: Partial<Record<string, number>> = {}): Sizes {
     'assets/font.woff': 70,
     'assets/font.woff2': 56,
     'catalog/index-0.json': 120,
+    'catalog/meta.json': 1,
+    'catalog/games/small.json': 1,
+    'catalog/games/big.json': 3,
   };
   const out: Sizes = {};
   for (const key of Object.keys(base)) out[key] = kib(overrides[key] ?? base[key]);
@@ -105,6 +111,19 @@ describe('evaluate', () => {
     expect(byLabel['Lazy chunk assets/zvm.js']).toBe(60);
     expect(byLabel['Catalogue catalog/index-0.json']).toBe(120);
     expect(byLabel['First load (Kindle: legacy JS + CSS + .woff)']).toBe(58 + 2 + 70);
+  });
+
+  it('checks shards and meta.json one by one, and only the largest game detail', () => {
+    const rows = evaluate(manifest, files, sizes(), budgets);
+    const labels = rows.map((r) => r.label).filter((label) => label.indexOf('atalogue') >= 0);
+    expect(labels).toEqual([
+      'Catalogue catalog/index-0.json',
+      'Catalogue catalog/meta.json',
+      'Largest catalogue game detail',
+    ]);
+    expect(rows.find((r) => r.label === 'Largest catalogue game detail')!.files).toEqual([
+      'catalog/games/big.json',
+    ]);
   });
 
   it('ignores non-JSON files in the catalogue folder', () => {

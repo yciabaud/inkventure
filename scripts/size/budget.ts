@@ -111,7 +111,9 @@ export function evaluate(
   const css = files.filter((f) => /\.css$/.test(f)).sort();
   const woff = files.filter((f) => /\.woff$/.test(f)).sort();
   const woff2 = files.filter((f) => /\.woff2$/.test(f)).sort();
-  const shards = files.filter((f) => /^catalog\/.*\.json$/.test(f)).sort();
+  // Index shards and meta.json each get a row; the per-game details (thousands of small files) are checked together.
+  const shards = files.filter((f) => /^catalog\/[^/]+\.json$/.test(f)).sort();
+  const details = files.filter((f) => /^catalog\/games\/[^/]+\.json$/.test(f));
 
   const rows: Row[] = [
     row('Initial JS (legacy / Kindle)', legacyJs, sizes, 'gzip', budgets.initialJsLegacy),
@@ -125,6 +127,10 @@ export function evaluate(
   }
   for (const shard of shards) {
     rows.push(row('Catalogue ' + shard, [shard], sizes, 'raw', budgets.catalogShard));
+  }
+  if (details.length) {
+    const largest = details.reduce((max, f) => (sizes[f].raw > sizes[max].raw ? f : max));
+    rows.push(row('Largest catalogue game detail', [largest], sizes, 'raw', budgets.catalogShard));
   }
   const firstLoad = rows[0].bytes + rows[2].bytes + rows[3].bytes;
   rows.push({

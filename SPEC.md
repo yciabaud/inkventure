@@ -400,11 +400,14 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.
    - `index-<n>.json` — compact rows sharded by ~500 games (short keys to keep parse time low on Kindle):
      `{t: tuid, n: title, a: author, y: year, l: lang, g: [genres], f: format, r: avgRating, rc: ratingCount,
-     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag}`.
+     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag}`, sorted by title; unknown values are
+     left out (`fg` is not available from IFDB's JSON API yet).
    - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link.
 5. **Validate** — JSON schema checks, sizes budget (each shard < 150 KB), sanity counts vs previous build
    (fail if > 20 % drop).
-6. **Deploy** — commit to a `catalog` data branch or publish together with the app on the `gh-pages` branch.
+6. **Deploy** — the weekly Catalogue workflow commits the files (and the crawler's record cache) to a `catalog`
+   data branch; deployment and preview builds copy them into `public/catalog/` before building. The repository keeps
+   a small sample catalogue there for development and tests.
 
 Client side: `meta.json` + index shards are loaded when the Library opens (with a "Loading catalogue…"
 page), cached in memory, and in IndexedDB on class C devices. Filtering, sorting and search run over the

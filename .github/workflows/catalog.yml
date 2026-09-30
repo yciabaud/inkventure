@@ -1,0 +1,73 @@
+name: Catalogue
+
+# Rebuilds the catalogue from IFDB every week (SPEC §5.2): crawl (incremental, with the record cache kept on the
+# `catalog` branch), resolve playability, emit and validate the index, then publish it on the `catalog` branch.
+# The deployment (deploy.yml) runs after it and builds the site with that catalogue. Never triggered by pull requests.
+on:
+  schedule:
+    - cron: '17 4 * * 1' # Mondays, 04:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: catalog
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # The first full crawl fetches every record at 1 request/s; later runs mostly reuse the cache.
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Check out the catalog branch (created on the first run)
+        run: |
+          if git fetch --quiet origin catalog 2>/dev/null; then
+            git worktree add catalog-data FETCH_HEAD
+            git -C catalog-data checkout -B catalog
+          else
+            git worktree add --orphan -b catalog catalog-data
+          fi
+          mkdir -p data/cache
+          if [ -d catalog-data/cache/viewgame ]; then cp -R catalog-data/cache/viewgame data/cache/; fi
+      - name: Crawl ifdb.org
+        run: npm run catalog:crawl
+      - name: Resolve playability
+        run: npm run catalog:resolve -- --summary "$GITHUB_STEP_SUMMARY"
+      - name: Emit and validate the catalogue
+        run: npm run catalog:emit -- --previous catalog-data/catalog/meta.json --summary "$GITHUB_STEP_SUMMARY"
+      - name: Publish on the catalog branch
+        run: |
+          rm -rf catalog-data/catalog catalog-data/cache/viewgame
+          mkdir -p catalog-data/cache
+          cp -R data/catalog catalog-data/catalog
+          cp -R data/cache/viewgame catalog-data/cache/viewgame
+          cp data/resolved/report.json catalog-data/report.json
+          printf '%s\n' '# Catalogue data' '' \
+            'Published by the Catalogue workflow (.github/workflows/catalog.yml) on main. Do not edit by hand.' '' \
+            '- `catalog/`: the files the app loads (copied into public/catalog/ by deployment builds).' \
+            '- `cache/viewgame/`: IFDB records, reused while their page version is unchanged.' \
+            '- `report.json`: games left out, with their reasons.' > catalog-data/README.md
+          cd catalog-data
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Catalogue unchanged.'
+          else
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit --quiet -m "Catalogue $(date -u +%Y-%m-%d): $(node -p "require('./catalog/meta.json').count") games"
+            git push origin catalog
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-report
+          path: data/resolved/report.json
+          retention-days: 30
+          if-no-files-found: ignore

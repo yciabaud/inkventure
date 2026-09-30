@@ -30,6 +30,9 @@ jobs:
           cache: npm
       - run: npm ci
         if: github.event.action != 'closed'
+      # The real catalogue (catalog branch) when there is one, as in the deployed site.
+      - run: scripts/catalog/use-published.sh
+        if: github.event.action != 'closed'
       - run: npm run build && rm -rf dist/.vite
         if: github.event.action != 'closed'
         env:

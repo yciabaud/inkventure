@@ -1,11 +1,12 @@
 name: Deploy to GitHub Pages
 
-# Deploys main once its CI run has passed (lint, unit, build, es5, size and e2e gates), or on demand.
+# Deploys main once its CI run has passed (lint, unit, build, es5, size and e2e gates), after each Catalogue run (the
+# catalogue published on the `catalog` branch replaces the sample in public/catalog/), or on demand.
 # The site is served from the gh-pages branch: main at its root, pull request previews under pr-preview/
 # (see preview.yml), so this deployment must leave that folder alone.
 on:
   workflow_run:
-    workflows: [CI]
+    workflows: [CI, Catalogue]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -20,7 +21,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.name == 'Catalogue'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,6 +34,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: scripts/catalog/use-published.sh
       - run: npm run build
         env:
           GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}

@@ -33,5 +33,7 @@ npm run test:e2e    # Playwright (set PW_WEBKIT=1 to include WebKit locally; CI 
 `.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages when the CI workflow succeeds on `main` (or when run
 manually), by pushing it to the root of the `gh-pages` branch. `.github/workflows/preview.yml` publishes every pull
 request to `https://yciabaud.github.io/inkventure/pr-preview/pr-<number>/` (the link is commented on the PR) and
-removes it when the PR is closed. One-time setup: repository **Settings → Pages → Build and deployment → Source:
+removes it when the PR is closed. The catalogue comes from the weekly `.github/workflows/catalog.yml` run, which
+publishes it on the `catalog` branch and triggers a deployment (see [scripts/catalog/README.md](scripts/catalog/README.md)).
+One-time setup: repository **Settings → Pages → Build and deployment → Source:
 Deploy from a branch → `gh-pages` / `(root)`**.
