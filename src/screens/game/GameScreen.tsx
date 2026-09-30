@@ -65,11 +65,12 @@ function playtime(minutes: number): string {
 
 /**
  * The blurb laid out in columns as wide as its area, one column per page (no scrolling), turned with the pager. The
- * page count is measured from the columns the browser makes.
+ * page count is the column where the text ends, found with an empty marker after its last word.
  */
 function Blurb({ paragraphs }: { paragraphs: string[] }) {
   const [area, areaRef] = useArea();
   const columns = useRef<HTMLDivElement>(null);
+  const endMark = useRef<HTMLSpanElement>(null);
   const [pageCount, setPageCount] = useState(1);
   const [page, setPage] = useState(1);
   const height = Math.max(area.height, MIN_BLURB_HEIGHT);
@@ -79,8 +80,12 @@ function Blurb({ paragraphs }: { paragraphs: string[] }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     const element = columns.current;
-    if (!element) return;
-    const count = Math.max(1, Math.round((element.scrollWidth + COLUMN_GAP) / step));
+    const end = endMark.current;
+    if (!element || !end) return;
+    // The column holding the end of the text. Measured from the end marker rather than scrollWidth, which WebKit
+    // does not widen for overflowing columns; both boxes move with the transform, so the page shown does not matter.
+    const offset = end.getBoundingClientRect().left - element.getBoundingClientRect().left;
+    const count = Math.max(1, Math.floor(offset / step) + 1);
     if (count !== pageCount) setPageCount(count);
     if (page > count) setPage(count);
   });
@@ -109,7 +114,10 @@ function Blurb({ paragraphs }: { paragraphs: string[] }) {
           }}
         >
           {paragraphs.map((text, i) => (
-            <p key={i}>{text}</p>
+            <p key={i}>
+              {text}
+              {i === paragraphs.length - 1 && <span ref={endMark} />}
+            </p>
           ))}
         </div>
       </div>
