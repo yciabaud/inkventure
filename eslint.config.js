@@ -13,6 +13,7 @@ export default tseslint.config(
       'test-results',
       'public/catalog',
       'public/probe/qrcode.js',
+      'vendor',
     ],
   },
   js.configs.recommended,

@@ -1,0 +1,105 @@
+! Inkventure fixture game: "The Lamp at Saltmere", Glulx build.
+! The Z-machine fixture (../zmachine/lamp.inf) with a portable key prompt (KeyCharPrimitive instead of @read_char), for
+! Inkventure's Glulx tests (MIT, like the app).
+! Built with Inform 6.41 and the Inform 6 standard library 6.12.2 (compiled games may be distributed freely).
+! Rebuild with scripts/fixtures/build-glulx.sh.
+!
+! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
+! objects, a locked container, a score and a winning ending.
+!
+! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
+
+Constant Story "THE LAMP AT SALTMERE";
+Constant Headline "^An Inkventure test fixture.^";
+Constant MAX_SCORE 3;
+
+Include "Parser";
+Include "VerbLib";
+
+[ Initialise;
+    location = Landing;
+    print "^^[Press any key to begin.]^";
+    KeyPress();
+    print "^The last boat has gone. The keeper has not come back, and night is falling on Saltmere. Someone has to light
+        the lamp.^^";
+];
+
+[ KeyPress;
+    return KeyCharPrimitive();
+];
+
+Object Landing "Landing Stage"
+  with description
+        "A stone jetty at the foot of the lighthouse. The tower door stands open to the north; a wooden shed leans
+        against the rocks to the east.",
+       n_to Tower, in_to Tower, e_to Shed_Door,
+  has  light;
+
+Object -> Can "paraffin can"
+  with name 'paraffin' 'can' 'oil' 'fuel',
+       description "A dented can, about a quarter full of paraffin.",
+       after [;
+           Take: if (self hasnt general) { give self general; score++; }
+       ];
+
+Object Shed_Door "shed"
+  with name 'shed' 'wooden' 'door',
+       description "A wooden shed with a rope looped round its door.",
+       door_to Shed, door_dir e_to,
+       before [;
+           Enter: if (self has open) { PlayerTo(Shed); rtrue; }
+       ],
+       found_in Landing Shed,
+  has  scenery door openable ~open;
+
+Object Shed "Inside the Shed"
+  with description "Coils of rope, lobster pots and a shelf of odds and ends. The jetty is back to the west.",
+       w_to Landing, out_to Landing,
+  has  light;
+
+Object -> Matches "box of matches"
+  with name 'box' 'of' 'matches' 'match',
+       description "A small box of matches, dry enough.";
+
+Object Tower "Foot of the Tower"
+  with description
+        "A round whitewashed room. Iron stairs spiral up into the dark; the jetty is back to the south.",
+       s_to Landing, out_to Landing, u_to Lamp_Room,
+  has  light;
+
+Object Lamp_Room "Lamp Room"
+  with description
+        "The top of the tower, walled with glass. The great lens stands in the middle of the room, and the lamp sits
+        under it. The stairs lead back down.",
+       d_to Tower,
+  has  light;
+
+Object -> Lamp "lamp"
+  with name 'lamp' 'burner' 'wick',
+       description [;
+           if (self has on) "The lamp burns white and steady under the lens.";
+           if (self has general) "The lamp is full of paraffin, ready to be lit.";
+           "The lamp's reservoir is dry.";
+       ],
+       before [;
+           Fill:
+               if (self has general) "It is already full.";
+               if (Can notin player) "You have nothing to fill it with.";
+               give self general; score++;
+               "You pour the paraffin into the reservoir.";
+           SwitchOn, Burn:
+               if (self hasnt general) "The reservoir is dry: there is nothing to burn.";
+               if (Matches notin player) "You have nothing to light it with.";
+               give self on; score++;
+               deadflag = 2;
+               "You strike a match and hold it to the wick. The flame catches, the lens begins to turn, and the beam
+               sweeps out over the sea.";
+       ],
+  has  static switchable;
+
+Object -> Lens "lens"
+  with name 'lens' 'glass' 'prisms',
+       description "Rings of glass and brass, taller than you are.",
+  has  scenery;
+
+Include "Grammar";

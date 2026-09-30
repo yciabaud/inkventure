@@ -25,6 +25,17 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 | 2026-09-29 | Same Kindle, after sleep / wake (not a restart) | Experimental browser | [2026-09-29-kindle-after-sleep.txt](2026-09-29-kindle-after-sleep.txt) | localStorage kept across sleep / wake (`run #4`); a real restart is still to be tested. Other results unchanged; loop benchmark 454 ms vs 277 ms (expect ±60 % run-to-run variance on the CPU). |
 | 2026-09-29 | Same Kindle, after a real device restart | Experimental browser | (only this line was sent) `storage.persistence: run #6, first run 2026-09-29T21:09:29.495Z` | **localStorage survives a device restart.** |
 
+## Measuring turn latency (story S1.7)
+
+1. On the e-reader, open a game with `?perf=1` after its address, e.g.
+   `https://yciabaud.github.io/inkventure/#/play/<tuid>?perf=1` (or the pull request preview). The bundled Glulx
+   fixture is `#/play/fixture-glulx?perf=1`.
+2. Play about ten ordinary commands (`look`, `inventory`, moves, `examine …`). After each one the status line shows the
+   turn's time, e.g. `(840 ms)`.
+3. Note, per game: title and tuid, story file size (from its IFDB / IF Archive page), the first turn, and the typical
+   and worst of the next turns. Save it as `docs/device-reports/<YYYY-MM-DD>-<device>-turns.txt` and add a line
+   below.
+
 ## Reading the report
 
 | Line | Meaning |

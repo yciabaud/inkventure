@@ -365,7 +365,11 @@ paragraph, e.g. the echoed command after the prompt), `status` (the whole status
 (ignored by the paginated transcript, which keeps everything). The Z-machine runs on ZVM (`ifvms`) and the Glk API
 library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
 bundle, one Glk instance per game (see `src/engines/README.md`). `load()` rejects when the story cannot start; the VM
-runs synchronously until it waits for input.
+runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its own, newer Glk library and Blorb decoder,
+downloaded unchanged at install time from the upstream `quixe-2.2.6` tag into `vendor/quixe/` (Quixe is not on npm;
+the files are checked against SHA-256 hashes kept in the repository, and ignored by git) and patched at build time; `.gblorb` files are unpacked
+client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input. Images in
+Glulx games are not shown yet (follow-up); sound is ignored.
 
 ### 4.3 Twine sandbox
 
@@ -377,8 +381,8 @@ runs synchronously until it waits for input.
 
 ### 4.4 Saves
 
-- Z-machine / Glulx: in-memory Quetzal snapshots produced via the engine's save opcode (autosave after
-  each turn), plus up to 5 named slots.
+- Z-machine / Glulx: in-memory snapshots produced via the engine's autosave (after each turn), plus up to 5 named
+  slots.
 - Ink: `story.state.toJson()`.
 - Undo: engine undo where available, else restore the previous autosave (keep last 10 turn snapshots in memory,
   last 1 on disk).
@@ -386,6 +390,8 @@ runs synchronously until it waits for input.
   Glk library state, so a pending line input resumes), in a small JSON envelope naming the story; a plain Quetzal file
   can only be resumed by the game's own `@restore`. The game's SAVE / RESTORE commands are cancelled: saves go through
   the reader menu.
+- Glulx state: Quixe's autosave snapshot (RAM, stack, heap and the Glk library state) in a JSON envelope naming the
+  story (its first 64 bytes); the RAM is stored XORed with the story's initial RAM, so it compresses to little.
 - A turn begins when the game waits for a command: its state is snapshotted (after the page is drawn) for Undo and
   written as the autosave with the transcript tail (the last 200 paragraphs with text, at most ≈ 20,000 characters),
   and the progress
@@ -397,10 +403,14 @@ runs synchronously until it waits for input.
 ### 4.5 Performance
 
 - Engines are loaded lazily per format (separate chunks).
-- Long-running VM work is sliced (yield to the event loop every N ms) so taps stay responsive.
-- Spike in M0 measures turn latency on a real Kindle for a small and a large Z game and a Glulx game.
-  Targets: Z-machine turn < 1 s; Glulx turn < 3 s. Games above the threshold get the "May be slow" badge
-  (heuristic: format + file size), computed at index time.
+- Long-running VM work is sliced so taps stay responsive: Quixe yields to the event loop once a run has taken 100 ms
+  and carries on from a timer; meanwhile the command bar says "The story is thinking…". ZVM turns are fast enough to
+  run in one go.
+- Turn latency is measured on the device with the reader's `?perf=1` flag (`#/play/<tuid>?perf=1`): the status line
+  shows the last turn's time in ms (and the console logs it). Targets: Z-machine turn < 1 s; Glulx turn < 3 s.
+- "May be slow" badge (`slow`, computed at index time): **provisional rule, every Glulx game** (the IFDB API gives no
+  file size). To be refined from Kindle measurements of 2–3 real Glulx games (story S1.7), e.g. by story file size
+  once the pipeline knows it.
 
 ---
 
@@ -617,6 +627,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 │   ├── screens/        home/, library/, game/, reader/, settings/
 │   ├── reader/         paginator, command bar, chips
 │   ├── engines/        engine.ts, glkote-bridge/, zvm/, quixe/, ink/, twine/
+├── vendor/quixe/       Quixe 2.2.6 (MIT), downloaded at install (postinstall), patched at build time
 │   ├── catalog/        index loader, filters, search
 │   ├── storage/        storage layer, migrations
 │   ├── i18n/           en.json, fr.json, i18n.ts
@@ -713,7 +724,7 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 1 | Real capabilities of the Kindle browser. | **Measured** (S0.3, §2.2): modern engine, loads the modern bundle. localStorage persists across sleep / wake and a real device restart. Still open: swipe gestures in practice, older firmware / Kobo reports. Relax the ES5/CSS constraints only after more reports. |
 | 2 | Does the IF Archive send CORS headers? | **Yes** (S0.3, main site and mirror): direct downloads; fallbacks in §5.5 kept. |
 | 3 | IFDB API has no CORS. | **Confirmed live** on the Kindle (S0.3). Pre-built index (decided). |
-| 4 | Glulx (Quixe) performance on Kindle CPUs. | Measure in S1.7; "may be slow" badge; possibly exclude very large games. |
+| 4 | Glulx (Quixe) performance on Kindle CPUs. | Quixe ships time-sliced (S1.7); measure real games on the Kindle with `?perf=1`; "may be slow" badge (every Glulx game until measured); possibly exclude very large games. |
 | 5 | Twine games vary wildly; restyling may fail. | Experimental flag; curated allowlist if needed. |
 | 6 | IFDB adult tagging incomplete. | Tag denylist + manual exclude list; report link. |
 | 7 | IFDB / IF Archive load and etiquette. | Weekly incremental crawl, rate limiting, contact IFTF. |
