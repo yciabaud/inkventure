@@ -11,6 +11,8 @@ export interface HomeEntry {
   added: number;
   /** When it was last played (ms), once started. */
   lastPlayed?: number;
+  /** IFDB has cover art for it (its thumbnail can be shown). */
+  cover?: boolean;
 }
 
 export function getHome(store: Store): HomeEntry[] {
@@ -26,23 +28,73 @@ export function isInHome(store: Store, tuid: string): boolean {
 /** Adds the game at the top of the list; a game already there keeps its place and dates. */
 export function addToHome(
   store: Store,
-  game: { tuid: string; title: string; author: string },
+  game: { tuid: string; title: string; author: string; cover?: unknown },
   now: number,
 ): HomeEntry[] {
   const list = getHome(store);
   if (list.some((entry) => entry.tuid === game.tuid)) return list;
-  const next = [{ tuid: game.tuid, title: game.title, author: game.author, added: now }].concat(
-    list,
-  );
+  const entry: HomeEntry = { tuid: game.tuid, title: game.title, author: game.author, added: now };
+  if (game.cover) entry.cover = true;
+  const next = [entry].concat(list);
   store.set(keys.home, next);
   return next;
 }
 
-/** Removes the game from the list; its saves and progress stay. */
-export function removeFromHome(store: Store, tuid: string): HomeEntry[] {
+/**
+ * Removes the game from the list. Its saves (autosave and named slots) and progress record stay, unless
+ * `deleteSaves`; its cached story file stays either way (it is evicted when room is needed).
+ */
+export function removeFromHome(
+  store: Store,
+  tuid: string,
+  options: { deleteSaves?: boolean } = {},
+): HomeEntry[] {
   const next = getHome(store).filter((entry) => entry.tuid !== tuid);
   store.set(keys.home, next);
+  if (options.deleteSaves) {
+    const prefix = 'save:' + tuid + ':';
+    const all = store.keys();
+    for (let i = 0; i < all.length; i++) {
+      if (all[i].indexOf(prefix) === 0 || all[i] === keys.progress(tuid)) store.remove(all[i]);
+    }
+  }
   return next;
+}
+
+/** A game of My adventures with what its progress record says. */
+export interface Adventure extends HomeEntry {
+  /** Turns played, once started. */
+  turns?: number;
+}
+
+/** My adventures with their progress (turns, last played), in the stored order (most recently added first). */
+export function myAdventures(store: Store): Adventure[] {
+  return getHome(store).map((entry) => {
+    const progress = store.get<{ turns?: unknown; lastPlayed?: unknown }>(
+      keys.progress(entry.tuid),
+    );
+    const adventure: Adventure = { ...entry };
+    if (progress && typeof progress.lastPlayed === 'number')
+      adventure.lastPlayed = progress.lastPlayed;
+    if (progress && typeof progress.turns === 'number') adventure.turns = progress.turns;
+    return adventure;
+  });
+}
+
+/** Last played (or added, for a game never played) first. */
+export function sortRecent(list: Adventure[]): Adventure[] {
+  const recent = (a: Adventure) => Math.max(a.lastPlayed || 0, a.added || 0);
+  return list.slice().sort((a, b) => recent(b) - recent(a));
+}
+
+/** The game the Continue hero offers: the last one played among My adventures, if any was started. */
+export function continueGame(list: Adventure[]): Adventure | undefined {
+  let best: Adventure | undefined;
+  for (let i = 0; i < list.length; i++) {
+    const lastPlayed = list[i].lastPlayed;
+    if (lastPlayed && (!best || lastPlayed > (best.lastPlayed as number))) best = list[i];
+  }
+  return best;
 }
 
 const PROGRESS = /^progress:(.+)$/;

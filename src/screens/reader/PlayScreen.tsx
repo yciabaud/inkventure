@@ -206,6 +206,8 @@ export function PlayScreen({ tuid, language }: { tuid: string; language?: string
       <GameReader
         tuid={tuid}
         title={state.game.title}
+        author={state.game.author}
+        cover={!!state.game.cover}
         language={language || state.game.language}
         kind={state.kind}
         story={state.story}

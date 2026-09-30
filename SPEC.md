@@ -160,15 +160,25 @@ Purpose: get back into a game in one tap, or start a recommended one.
 
 - **Continue** hero: last played game — cover, title, "Turn 142 · last played 2 days ago", big **Continue** button.
   Hidden if no game started.
-- **My adventures** shelf: games the player added from the library or started. Grid (covers) / list
-  (title, author, progress) toggle; sort by *recent* or *title*; long-press or "⋯" menu → *Remove from Home*
-  (keeps saves unless "also delete saves" is checked).
-- **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
-  one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
+- **My adventures** shelf: games the player added from the library or started (a game is added on its first turn,
+  again if it was removed). A grid of covers like the Library's (as many rows and columns as fit), last played (or
+  added) first; no list view or sort on Home (decided in S4.2 review:
+  too much for a shelf). A "⋮" over the bottom right corner of each cover, like the Kindle library, opens the game's
+  menu: the game (cover, title, author, progress), then Continue / Play, its page, *Remove from Home* (keeps saves and
+  progress unless "also delete saves" is checked; the cached story file stays either way).
+- **One shelf at a time** (so its covers can be large): when the player has adventures and there are featured games,
+  a tab row "My adventures | Featured" replaces the shelf title (`#/home?shelf=featured`, replaced in the history);
+  the shelf takes the height left under the hero, with a compact "‹ 2 / 5 ›" pager on the same header row (without
+  the page number on narrow screens). Both shelves use the same multi-row grid as the Library (title under each
+  cover, covers spaced evenly up to the screen edges), so covers have the same size in both tabs.
+- **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), a "Start here" badge
+  on newcomer-friendly titles (their one-line pitch is not shown on Home since S4.2, where the grid leaves room for
+  the title only; it stays for the ebook cards); then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
 - Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
   paged guide that also offers the test adventure), Featured shelf first.
-- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–204 px tall) and as many
+- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–250 px tall, the
+  largest IFDB thumbnail) and as many
   cards as fit side by side make a page. It loads only `catalog/featured.json`, not the index.
 - Shelves are paginated horizontally with explicit ‹ › buttons, never scrolled.
 
@@ -519,7 +529,7 @@ All keys are prefixed and versioned:
 | Key | Content |
 |---|---|
 | `ik:v1:prefs` | UI language, reader defaults (font, size, margins, spacing, align), list/grid choices |
-| `ik:v1:home` | *My adventures*, most recently added first: `[{tuid, title, author, added, lastPlayed?}]` (title and author so Home needs no catalogue) |
+| `ik:v1:home` | *My adventures*, most recently added first: `[{tuid, title, author, added, cover?}]` (title, author and whether IFDB has a cover, so Home needs no catalogue; turns and last played come from the progress record) |
 | `ik:v1:progress:<tuid>` | `turns`, `lastPlayed`, `location`, per-game reader overrides (`reader`) |
 | `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |

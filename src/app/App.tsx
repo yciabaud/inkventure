@@ -22,7 +22,7 @@ function Screen({ location }: { location: Location }) {
     case 'help':
       return <HelpScreen />;
     default:
-      return <HomeScreen />;
+      return <HomeScreen query={query} />;
   }
 }
 

@@ -172,6 +172,22 @@ button.pager__btn {
   padding: 0 16px;
 }
 
+/* In a shelf header: "‹ 2 / 5 ›". */
+.pager--compact {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.pager--compact .pager__btn {
+  min-width: 48px;
+  padding: 8px 12px;
+  font-size: 22px;
+}
+
+.pager--compact .pager__status {
+  padding: 0 10px;
+}
+
 /* Cover */
 .cover {
   position: relative;
@@ -1455,73 +1471,35 @@ button.pager__btn {
   overflow: hidden;
 }
 
-.shelf__pager {
+/* Across the page's side margins (.app__main padding), for a grid spaced evenly up to the screen edges. */
+.shelf__row--bleed {
+  margin: 0 -16px;
+}
+
+.shelf__head {
+  display: flex;
   flex-shrink: 0;
-  min-height: 64px;
+  align-items: center;
+
+  /* The same height with or without a pager (52 px buttons), so both shelves' covers match. */
+  min-height: 52px;
+  margin-bottom: 8px;
+}
+
+.shelf__head .pager {
+  margin-left: auto;
 }
 
 .shelf__title {
-  margin: 0 0 8px;
+  flex: 1;
+  min-width: 0;
+  margin: 0 8px 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   font-weight: 700;
-}
-
-.shelf__cards {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.shelf__item + .shelf__item {
-  margin-left: 16px;
-}
-
-.shelf-card {
-  display: flex;
-  flex-direction: column;
-  color: #000;
-  text-decoration: none;
-}
-
-.shelf-card__badge {
-  align-self: flex-start;
-  margin: 6px 0 0;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.shelf-card__title {
-  display: -webkit-box;
-  max-height: 40px;
-  margin-top: 6px;
-  overflow: hidden;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
-  overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.shelf-card__text {
-  display: -webkit-box;
-  max-height: 54px;
-  margin-top: 2px;
-  overflow: hidden;
-  font-size: 14px;
-  line-height: 18px;
-  overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-
-.shelf .pager {
-  margin-top: 0;
-  padding-top: 16px;
 }
 
 .home__browse {
@@ -1537,4 +1515,171 @@ button.pager__btn {
 
 .help__actions .btn {
   margin: 8px 8px 0 0;
+}
+
+/* Home (S4.2): Continue hero, My adventures (grid or list, a "⋯" per game). */
+.shelf + .shelf {
+  margin-top: 12px;
+}
+
+/* A cover of My adventures: its ⋮ is placed over it. */
+.tiles__item {
+  position: relative;
+}
+
+/* "⋮" over the bottom right corner of a cover (placed inline), in a 48 px target. */
+.more-btn {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* No frame over the cover: black dots with a white halo, readable on any cover. */
+.more-btn__dots {
+  padding: 0 6px 10px 0;
+  color: #000;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 2px #fff,
+    0 0 3px #fff,
+    0 0 4px #fff;
+}
+
+/* A game's menu: the game, then its actions. */
+.game-menu__game {
+  display: flex;
+  align-items: center;
+  padding: 4px 16px 12px;
+  border-bottom: 1px solid #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.game-menu__text {
+  flex: 1;
+  min-width: 0;
+  margin-left: 12px;
+}
+
+.game-menu__title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.game-menu__meta {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.hero {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #000;
+}
+
+.hero__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0 12px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.hero__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.hero__meta {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: 17px;
+}
+
+.check input {
+  width: 24px;
+  height: 24px;
+  margin: 0 12px 0 0;
+}
+
+/* My adventures | Featured (Home, when the player has both). */
+.tabs {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.tabs__tab {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin-right: 16px;
+  border-bottom: 3px solid transparent;
+  color: #555;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabs__tab--on {
+  border-bottom-color: #000;
+  color: #000;
+}
+
+/* Narrow screens: the tabs and ‹ › keep one line without the page number. The old max-width notation: older
+   e-reader browsers do not know the range syntax. */
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (max-width: 420px) {
+  .pager--compact .pager__status {
+    display: none;
+  }
+
+  .tabs__tab {
+    margin-right: 12px;
+    font-size: 18px;
+  }
+}
+
+/* Covers spaced evenly: the same gap between them and to the edges of the row. */
+.tiles--even {
+  column-gap: 0;
+  justify-content: space-evenly;
+}
+
+/* "Start here" on a featured cover (top left corner). */
+.tile__badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  margin: 0;
+  background: #fff;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  white-space: nowrap;
 }

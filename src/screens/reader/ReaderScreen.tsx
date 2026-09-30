@@ -48,6 +48,7 @@ function FixtureReader({ language }: { language?: string }) {
     <GameReader
       tuid={FIXTURE_Z_TUID}
       title="The Lamp at Saltmere"
+      author="Inkventure Fixtures"
       language={language || 'en'}
       kind="zmachine"
       story={story}
