@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxadlt0000000008",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXADLT0000000008\"]},\"bibliographic\":{\"title\":\"After Hours\",\"author\":\"G. Mock\",\"language\":\"en\",\"firstpublished\":\"2020\",\"description\":\"Synthetic listing for the catalogue tests.\"},\"contacts\":[],\"ifdb\":{\"tuid\":\"fxadlt0000000008\",\"pageversion\":5,\"link\":\"https://ifdb.org/viewgame?id=fxadlt0000000008\",\"downloads\":{\"links\":[{\"url\":\"https://ifarchive.org/if-archive/games/zcode/after.z8\",\"title\":\"after.z8\",\"isGame\":true,\"format\":\"zcode\"}]},\"averageRating\":3,\"starRating\":3,\"ratingCountAvg\":5,\"ratingCountTot\":5,\"tags\":[{\"name\":\"Sexual Content\",\"tagcnt\":1,\"gamecnt\":10},{\"name\":\"romance\",\"tagcnt\":1,\"gamecnt\":10}]}}"
+}

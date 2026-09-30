@@ -1,0 +1,15 @@
+{
+  "comment": "SPEC §5.4. With CONTENT_POLICY=general (default) games carrying one of `denyTags` (IFDB tags, case-insensitive) are left out. `exclude` removes games by hand under every policy: IFDB tagging is incomplete. Each entry: { \"tuid\": \"…\", \"reason\": \"…\" }.",
+  "denyTags": [
+    "sexual content",
+    "adult",
+    "adult content",
+    "erotica",
+    "erotic",
+    "nsfw",
+    "porn",
+    "pornography",
+    "sex"
+  ],
+  "exclude": []
+}

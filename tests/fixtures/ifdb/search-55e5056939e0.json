@@ -1,5 +1,5 @@
 {
   "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Atwine&sortby=ttl&pg=1",
   "status": 200,
-  "body": "{\"games\":[{\"tuid\":\"fxtwin0000000006\",\"title\":\"Paper Lanterns\",\"link\":\"https://ifdb.org/viewgame?id=fxtwin0000000006\",\"author\":\"E. Instance\",\"hasCoverArt\":false,\"devsys\":\"Twine\",\"published\":{\"machine\":\"2023\",\"printable\":\"2023\"},\"averageRating\":3.75,\"numRatings\":4,\"starRating\":4,\"starSort\":3.75}]}"
+  "body": "{\"games\":[{\"tuid\":\"fxtwin0000000006\",\"title\":\"Paper Lanterns\",\"link\":\"https://ifdb.org/viewgame?id=fxtwin0000000006\",\"author\":\"E. Instance\",\"hasCoverArt\":false,\"devsys\":\"Twine 2 (Harlowe)\",\"published\":{\"machine\":\"2023\",\"printable\":\"2023\"},\"averageRating\":3.75,\"numRatings\":4,\"starRating\":4,\"starSort\":3.75}]}"
 }

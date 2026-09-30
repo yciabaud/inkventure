@@ -389,10 +389,12 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    project, retries with backoff, incremental: only re-fetch games whose IFDB page version changed). Search pages
    hold 100 rows and leave hidden games out, so paging ends at the first empty page. The crawler also fetches each
    candidate's `viewgame?json` record (cached per game, keyed by page version) into `data/raw/games.json`.
-2. **Resolve playability** — from each candidate's `viewgame?json` record (fetched by the crawler) get links,
-   formats, IFID, genre, language, forgiveness, tags, cover art. Pick the best playable file
-   (prefer `.zblorb/.gblorb` over bare story files; prefer IF Archive URLs). Drop games without a
-   supported file.
+2. **Resolve playability** (`scripts/catalog/resolve.ts`, offline) — from each candidate's `viewgame?json` record
+   (fetched by the crawler) get links, formats, IFID, genre, language (primary subtag), tags, rating, play time, cover
+   art (forgiveness is only in the iFiction XML, not fetched yet). Pick the best playable file among the formats
+   enabled in `scripts/catalog/playability.json` (those with an engine): IF Archive URLs first, uncompressed before a
+   zip (zips only when IFDB names the story file inside), `.zblorb/.gblorb` before bare story files; HTTPS only (IF
+   Archive links upgraded). Drop games without such a file, recording the reason in `report.json`.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.

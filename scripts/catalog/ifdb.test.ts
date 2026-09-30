@@ -33,7 +33,9 @@ describe('parsing', () => {
   it('turns IFDB error answers and non-JSON bodies into IfdbError', () => {
     expect(() => parseSearch('{"error":"Invalid search"}')).toThrow(IfdbError);
     expect(() => parseSearch('<html>')).toThrow(IfdbError);
-    expect(() => parseViewgame('{"error":"No game"}', 'x')).toThrow(/No game/);
+    expect(() => parseViewgame('{"errorCode":"notFound","errorMessage":"No game"}', 'x')).toThrow(
+      /No game/,
+    );
   });
 
   it('checks that a record is the requested game', () => {

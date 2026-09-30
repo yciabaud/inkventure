@@ -1,8 +1,8 @@
 name: Catalogue crawl (manual)
 
-# Runs the IFDB crawler (scripts/catalog/crawl.ts) against ifdb.org on demand, to check the live API against the
-# fixtures. It records every response and keeps them, with the raw dataset, as an artifact; nothing is committed or
-# deployed. The scheduled catalogue build replaces it in S2.3. Never triggered by pull requests.
+# Runs the IFDB crawler (scripts/catalog/crawl.ts) against ifdb.org on demand, then the playability resolver, to check
+# the live API against the fixtures. It records every response and keeps them, with the raw and resolved datasets, as
+# an artifact, and writes a summary of the raw fields to the job summary; nothing is committed or deployed. The scheduled catalogue build replaces it in S2.3. Never triggered by pull requests.
 on:
   workflow_dispatch:
     inputs:
@@ -42,6 +42,8 @@ jobs:
           if [ -n "$LIMIT" ]; then args+=(--limit "$LIMIT"); fi
           if [ -n "$MAX_PAGES" ]; then args+=(--max-pages "$MAX_PAGES"); fi
           npm run catalog:crawl -- "${args[@]}" | tee data-crawl.log
+      - name: Resolve playability
+        run: npm run catalog:resolve -- --summary "$GITHUB_STEP_SUMMARY"
       - name: Summary
         if: always()
         run: |
@@ -60,6 +62,7 @@ jobs:
           name: catalog-crawl
           path: |
             data/raw/
+            data/resolved/
             data/recorded/
             data-crawl.log
           retention-days: 14

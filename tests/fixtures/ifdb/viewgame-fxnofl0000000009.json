@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxnofl0000000009",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXNOFL0000000009\"]},\"bibliographic\":{\"title\":\"Web Only\",\"author\":\"H. Stub\",\"language\":\"en\",\"firstpublished\":\"2021\",\"description\":\"Synthetic listing for the catalogue tests.\"},\"contacts\":[],\"ifdb\":{\"tuid\":\"fxnofl0000000009\",\"pageversion\":5,\"link\":\"https://ifdb.org/viewgame?id=fxnofl0000000009\",\"downloads\":{\"links\":[{\"url\":\"https://example.net/play\",\"title\":\"Play Online\"},{\"url\":\"https://ifarchive.org/if-archive/games/solutions/webonly.txt\",\"title\":\"webonly.txt\",\"format\":\"text\"}]},\"averageRating\":3,\"starRating\":3,\"ratingCountAvg\":2,\"ratingCountTot\":2,\"tags\":[]}}"
+}

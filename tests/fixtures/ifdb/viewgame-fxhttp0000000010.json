@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxhttp0000000010",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXHTTP0000000010\"]},\"bibliographic\":{\"title\":\"Plain Transfer\",\"author\":\"I. Dummy\",\"language\":\"de\",\"firstpublished\":\"1999\",\"description\":\"Synthetic listing for the catalogue tests.\"},\"contacts\":[],\"ifdb\":{\"tuid\":\"fxhttp0000000010\",\"pageversion\":5,\"link\":\"https://ifdb.org/viewgame?id=fxhttp0000000010\",\"downloads\":{\"links\":[{\"url\":\"http://example.com/transfer.z5\",\"title\":\"transfer.z5\",\"isGame\":true,\"format\":\"zcode\"}]},\"averageRating\":null,\"ratingCountAvg\":0,\"ratingCountTot\":0,\"tags\":[]}}"
+}
