@@ -1,0 +1,42 @@
+name: PR preview
+
+# Publishes each pull request's build to https://<owner>.github.io/<repo>/pr-preview/pr-<number>/ (a sticky comment
+# on the PR gives the link) and removes it when the PR is closed. Previews are for manual testing only: the CI
+# workflow remains the gate. Pull requests from forks get a read-only token, so they are skipped.
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: preview-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Always checked out: the deploy step also needs a repository to push the removal from.
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: github.event.action != 'closed'
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+        if: github.event.action != 'closed'
+      - run: npm run build && rm -rf dist/.vite
+        if: github.event.action != 'closed'
+        env:
+          # version.json and the build meta tag name the PR head, not the temporary merge commit.
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+      - uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
