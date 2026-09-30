@@ -35,7 +35,11 @@ export function App() {
     // The reader takes the whole screen and shows the top bar itself when its top zone is tapped.
     return (
       <div class="app" lang={locale}>
-        <ReaderScreen tuid={route.tuid} language={location.query.lang} />
+        <ReaderScreen
+          tuid={route.tuid}
+          language={location.query.lang}
+          perf={location.query.perf === '1'}
+        />
       </div>
     );
   }

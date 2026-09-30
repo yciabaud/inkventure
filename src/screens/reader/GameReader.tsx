@@ -113,10 +113,12 @@ interface Props {
   kind: EngineKind;
   /** The story file. */
   story: Uint8Array;
+  /** Show how long the last turn took, in the status line (`?perf=1`: measuring engines on a device). */
+  perf?: boolean;
 }
 
 /** A game in the reader: the engine of its format runs `story`; the session is autosaved under `tuid`. */
-export function GameReader({ tuid, title, author, cover, language, kind, story }: Props) {
+export function GameReader({ tuid, title, author, cover, language, kind, story, perf }: Props) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [transcript, setTranscript] = useState<Transcript>(EMPTY_TRANSCRIPT);
   const [request, setRequest] = useState<InputRequest | null>(null);
@@ -127,6 +129,19 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
   // The command field has focus: stay on the last page when the virtual keyboard resizes it.
   const [typing, setTyping] = useState(false);
   const engineRef = useRef<Engine | null>(null);
+  // When the input that started the running turn was sent, and how long the last turn took (ms).
+  const turnStartRef = useRef<number | null>(null);
+  const [turnTime, setTurnTime] = useState<number | null>(null);
+
+  /** The game waits for input again (or has ended): the running turn is over. */
+  function turnEnded() {
+    const start = turnStartRef.current;
+    turnStartRef.current = null;
+    if (start === null || !perf) return;
+    const time = Date.now() - start;
+    setTurnTime(time);
+    console.info('Turn took ' + time + ' ms');
+  }
   const table = useMemo(() => verbTable(language || DEFAULT_LANGUAGE), [language]);
 
   // The session outside React state, so snapshots read it as the engine is (not as last rendered).
@@ -227,10 +242,12 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
         engineRef.current = engine;
         engine.onOutput((blocks) => showTranscript(applyOutput(transcriptRef.current, blocks)));
         engine.onInputRequest((req) => {
+          turnEnded();
           setRequest(req);
           if (req.type === 'line' && !restoringRef.current) snapshotRef.current(engine);
         });
         engine.onExit(() => {
+          turnEnded();
           setRequest(null);
           setState({ phase: 'ended' });
         });
@@ -377,6 +394,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
     if (!engine || !awaitingChar) return;
     setFocus(blocks.length);
     setRequest(null);
+    turnStartRef.current = Date.now();
     engine.sendChar(key);
   }
 
@@ -389,6 +407,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
     setCommand('');
     if (text.trim()) setHistory((current) => current.concat(text.trim()));
     turnRef.current++;
+    turnStartRef.current = Date.now();
     engine.sendLine(text);
   }
 
@@ -424,6 +443,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
       <span class="reader__status">
         <span class="reader__title">{status.left}</span>
         {status.right && <span class="reader__score">{status.right}</span>}
+        {perf && turnTime !== null && (
+          <span class="reader__score">{t('reader.turnTime', { ms: turnTime })}</span>
+        )}
       </span>
     ) : (
       <span class="reader__title">{title}</span>
@@ -438,6 +460,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story }
         {t('reader.continue')} ›
       </button>
     );
+  } else if (state.phase === 'playing' && !request) {
+    // A long turn (a slow Glulx game on an e-reader): the VM yields between slices, so this gets drawn.
+    slot = <p class="reader__input-slot">{t('reader.working')}</p>;
   } else if (awaitingLine) {
     slot = (
       <CommandBar

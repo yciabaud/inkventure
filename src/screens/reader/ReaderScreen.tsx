@@ -7,8 +7,10 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { GameReader } from './GameReader';
 import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
-// The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
+// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z` and `#/play/fixture-glulx`.
+import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url';
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
+import type { EngineKind } from '../../engines/engine';
 
 /** `#/play/demo`: a long static text in the paginated reader. */
 export const DEMO_TUID = 'demo';
@@ -16,22 +18,49 @@ export const DEMO_TUID = 'demo';
 /** `#/play/fixture-z`: the bundled Z-machine fixture game (tests, and a game that needs no network). */
 export const FIXTURE_Z_TUID = 'fixture-z';
 
+/** `#/play/fixture-glulx`: the same game built for Glulx. */
+export const FIXTURE_GLULX_TUID = 'fixture-glulx';
+
+const FIXTURES: Record<string, { url: string; kind: EngineKind }> = {
+  [FIXTURE_Z_TUID]: { url: fixtureZUrl, kind: 'zmachine' },
+  [FIXTURE_GLULX_TUID]: { url: fixtureGlulxUrl, kind: 'glulx' },
+};
+
 /**
  * The reader takes the whole screen (no app top bar until its top zone is tapped); the pages before a catalogue game
- * starts bring the app's chrome themselves. `language` overrides the game language for the command chips (`?lang=fr`).
+ * starts bring the app's chrome themselves. `language` overrides the game language for the command chips (`?lang=fr`);
+ * `perf` shows how long each turn took (`?perf=1`, for measuring on a device).
  */
-export function ReaderScreen({ tuid, language }: { tuid: string; language?: string }) {
+export function ReaderScreen({
+  tuid,
+  language,
+  perf,
+}: {
+  tuid: string;
+  language?: string;
+  perf?: boolean;
+}) {
   if (tuid === DEMO_TUID) return <DemoReader />;
-  if (tuid === FIXTURE_Z_TUID) return <FixtureReader language={language} />;
-  return <PlayScreen tuid={tuid} language={language} />;
+  if (Object.prototype.hasOwnProperty.call(FIXTURES, tuid))
+    return <FixtureReader key={tuid} tuid={tuid} language={language} perf={perf} />;
+  return <PlayScreen tuid={tuid} language={language} perf={perf} />;
 }
 
-function FixtureReader({ language }: { language?: string }) {
+function FixtureReader({
+  tuid,
+  language,
+  perf,
+}: {
+  tuid: string;
+  language?: string;
+  perf?: boolean;
+}) {
+  const fixture = FIXTURES[tuid];
   const [story, setStory] = useState<Uint8Array | null>(null);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    fetch(fixtureZUrl)
+    fetch(fixture.url)
       .then((response) => {
         if (!response.ok) throw new Error('HTTP ' + response.status);
         return response.arrayBuffer();
@@ -40,17 +69,18 @@ function FixtureReader({ language }: { language?: string }) {
         (data) => setStory(new Uint8Array(data)),
         () => setFailed(true),
       );
-  }, []);
+  }, [fixture.url]);
 
   if (failed) return <ErrorPage message={t('reader.gameLoadFailed')} />;
   if (!story) return <p class="reader__loading ui-font">{t('reader.loading')}</p>;
   return (
     <GameReader
-      tuid={FIXTURE_Z_TUID}
+      tuid={tuid}
       title="The Lamp at Saltmere"
       author="Inkventure Fixtures"
       language={language || 'en'}
-      kind="zmachine"
+      kind={fixture.kind}
+      perf={perf}
       story={story}
     />
   );

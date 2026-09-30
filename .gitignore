@@ -8,3 +8,6 @@ test-results/
 
 # Catalogue pipeline output and record cache (scripts/catalog)
 data/
+
+# Quixe, downloaded at install from its upstream tag (scripts/build/fetch-quixe.ts)
+vendor/quixe/*.js

@@ -116,6 +116,6 @@ test('shows an error with a retry when the catalogue cannot be loaded', async ({
   await expect(page.getByText('The catalogue could not be loaded')).toBeVisible();
   fail = false;
   await press(page.getByRole('button', { name: 'Try again' }));
-  // The committed sample catalogue.
-  await expect(page.getByText('4 adventures')).toBeVisible();
+  // The committed sample catalogue (four Z-code games and a Glulx one).
+  await expect(page.getByText('5 adventures')).toBeVisible();
 });

@@ -109,9 +109,11 @@ export class GlkOteBridge {
   private pending: { window: number; type: 'line' | 'char' } | null = null;
   private exited = false;
 
+  /** `dialog`: file storage, for Glk libraries that ask GlkOte for it (`getlibrary('Dialog')`, Quixe's). */
   constructor(
     private readonly sink: BridgeSink,
     private readonly columns: number,
+    private readonly dialog: unknown = null,
   ) {}
 
   // ---- GlkOte API, called by glkapi.js ----
@@ -181,8 +183,8 @@ export class GlkOteBridge {
     return this.iface;
   }
 
-  getlibrary(): null {
-    return null;
+  getlibrary(name: string): unknown {
+    return name === 'Dialog' ? this.dialog : null;
   }
 
   save_allstate(): Record<string, never> {

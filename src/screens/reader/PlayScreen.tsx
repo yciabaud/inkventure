@@ -137,8 +137,16 @@ function Failure({
   );
 }
 
-/** `language` overrides the game's language for the command chips (`?lang=fr`). */
-export function PlayScreen({ tuid, language }: { tuid: string; language?: string }) {
+/** `language` overrides the game's language for the command chips (`?lang=fr`); `perf` shows turn times (`?perf=1`). */
+export function PlayScreen({
+  tuid,
+  language,
+  perf,
+}: {
+  tuid: string;
+  language?: string;
+  perf?: boolean;
+}) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [attempt, setAttempt] = useState(0);
 
@@ -209,6 +217,7 @@ export function PlayScreen({ tuid, language }: { tuid: string; language?: string
         author={state.game.author}
         cover={!!state.game.cover}
         language={language || state.game.language}
+        perf={perf}
         kind={state.kind}
         story={state.story}
       />

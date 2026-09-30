@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { applyPatch, PATCHES } from './vendor-patches.ts';
 
-const [GLKAPI, OPCODES] = PATCHES;
+const [GLKAPI, OPCODES, QUIXE, QUIXE_GLKAPI, GI_DISPA, GI_BLORB] = PATCHES;
 
 function load(code: string) {
   const module = { exports: {} as unknown };
@@ -33,6 +33,38 @@ describe('opcodes.js patch', () => {
     const patched = applyPatch(source, OPCODES.replacements);
     expect(patched).toContain('stack_var = new Variable( undefined, 0 ),');
     expect(patched).not.toMatch(/^stack_var = new Variable\( this\.e/m);
+  });
+});
+
+describe('Quixe patches', () => {
+  const read = (name: string) => readFileSync('vendor/quixe/' + name, 'utf8');
+
+  it('turn each vendored file into an ES module exporting its class', () => {
+    expect(applyPatch(read('quixe.js'), QUIXE.replacements)).toMatch(/^export \{ QuixeClass \};$/m);
+    expect(applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements)).toMatch(
+      /^export \{ GlkClass \};$/m,
+    );
+    expect(applyPatch(read('gi_dispa.js'), GI_DISPA.replacements)).toMatch(
+      /^export \{ GiDispaClass \};$/m,
+    );
+    expect(applyPatch(read('gi_blorb.js'), GI_BLORB.replacements)).toMatch(
+      /^export \{ BlorbClass \};$/m,
+    );
+  });
+
+  it('add time slicing and abandon() to Quixe', () => {
+    const quixe = applyPatch(read('quixe.js'), QUIXE.replacements);
+    expect(quixe).toContain('opt_slice_ms = all_options.slice_ms || 0;');
+    expect(quixe).toContain('if (!self.abandoned) quixe_resume();');
+    expect(quixe).toContain('abandon: function() { self.abandoned = true; }');
+  });
+
+  it('leave no window, document or jQuery on the paths the app runs', () => {
+    const glkapi = applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements);
+    expect(glkapi).not.toMatch(/window\.GlkOteClass|document\.createElement/);
+    expect(applyPatch(read('gi_blorb.js'), GI_BLORB.replacements)).toContain(
+      'if (false) { /* IFmd: needs jQuery */',
+    );
   });
 });
 
