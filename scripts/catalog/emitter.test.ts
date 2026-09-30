@@ -103,6 +103,22 @@ describe('emit', () => {
     expect(meta).toMatchObject({ version: 1, built: BUILT, policy: 'general', count: 5 });
   });
 
+  it('sorts titles by their words, ignoring leading punctuation', () => {
+    const files = emit(
+      [game('a', '**Cough**'), game('b', '"Alpha"'), game('c', 'beta'), game('d', '1981')],
+      {
+        built: BUILT,
+        policy: 'general',
+      },
+    );
+    expect((files['index-0.json'] as { rows: IndexRow[] }).rows.map((r) => r.n)).toEqual([
+      '1981',
+      '"Alpha"',
+      'beta',
+      '**Cough**',
+    ]);
+  });
+
   it('counts facet values, most frequent first', () => {
     const files = emit(
       [

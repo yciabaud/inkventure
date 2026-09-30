@@ -53,7 +53,7 @@ test.describe('English browser', () => {
 
     await page.evaluate(() => window.__inkventure!.changeLocale('fr'));
     await expect(page.getByRole('heading', { level: 1, name: 'Bibliothèque' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Suiv. ›' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Chercher' })).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
 
     await page.reload();

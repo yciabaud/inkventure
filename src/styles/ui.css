@@ -935,3 +935,120 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+/* Library (S3.1): search, result count, a list of as many rows as fit (no scrolling), then the pager. */
+.library__count {
+  margin: 4px 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+.library__list {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.library__status {
+  margin: 24px 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  text-align: center;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+}
+
+.search__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  margin: 0 8px 0 0;
+  padding: 8px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  appearance: none;
+}
+
+.search__clear {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-left: 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  color: #000;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* RESULT_ROW_HEIGHT in LibraryScreen.tsx. */
+.result {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  border-bottom: 1px solid #767676;
+  color: #000;
+  text-decoration: none;
+}
+
+.result__thumb {
+  flex-shrink: 0;
+  width: 36px;
+  height: 48px;
+  margin-right: 12px;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.result__thumb--none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.result__text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.result__title,
+.result__line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.result__title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.result__line {
+  font-size: 15px;
+  line-height: 1.25;
+}

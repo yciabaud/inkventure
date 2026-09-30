@@ -172,7 +172,8 @@ Purpose: get back into a game in one tap, or start a recommended one.
 
 Purpose: find the next adventure in the playable catalogue.
 
-- **Search box**: title / author, matched client-side (accent- and case-insensitive).
+- **Search box**: title / author, matched client-side (accent- and case-insensitive; every word must start a word of
+  the title or author), run on submit rather than on each keystroke (each redraw is an e-ink refresh).
 - **Filters** (panel opened by a "Filters" button; state reflected in the URL hash so the back button works):
   - Genre (IFDB genre, multi-select)
   - Language (e.g. English, Français, Español… from the index facets)
@@ -183,8 +184,8 @@ Purpose: find the next adventure in the playable catalogue.
   - Release year range
   - "Start here" (newcomer-friendly: featured or tagged)
 - **Sort**: best rated (IFDB star sort), most rated, newest, title A–Z.
-- **Results**: paginated list (10 per page on small screens), each row: small cover, title, author, year,
-  ★ rating (n), format badge, playtime. Tap → game detail.
+- **Results**: paginated list, as many rows as fit the screen (8 on a 600 × 800 e-reader), each row: small cover,
+  title, author, year, ★ rating (n), playtime, format. Tap → game detail.
 - Only playable games appear (see [§5.2](#52-catalogue-index)). Result count shown ("214 adventures").
 
 ### 3.5 Game detail (`#/game/:tuid`)
