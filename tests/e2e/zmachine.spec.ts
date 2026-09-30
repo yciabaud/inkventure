@@ -40,8 +40,12 @@ async function begin(page: Page) {
 async function fits(page: Page) {
   return page.evaluate(() => {
     const area = document.querySelector('.reader__page') as HTMLElement;
-    const bottom =
-      area.getBoundingClientRect().bottom - parseFloat(getComputedStyle(area).paddingBottom);
+    // On the last page the command bar covers the bottom of the text area: the text must end above it.
+    const slot = document.querySelector('.reader__slot') as HTMLElement;
+    const bottom = Math.min(
+      area.getBoundingClientRect().bottom - parseFloat(getComputedStyle(area).paddingBottom),
+      slot.getBoundingClientRect().top,
+    );
     const blocks = area.querySelectorAll('.reader__block');
     const last = blocks[blocks.length - 1];
     const doc = document.documentElement;
@@ -53,6 +57,27 @@ async function fits(page: Page) {
     );
   });
 }
+
+test('earlier pages keep a short slot; only the last page makes room for the command bar', async ({
+  page,
+}) => {
+  await begin(page);
+  const indicator = page.locator('.reader__indicator');
+  for (let i = 0; i < 12 && (await indicator.textContent()) === '1 / 1'; i++) {
+    await send(page, i % 2 ? 'south' : 'north');
+    await expect(page.getByRole('button', { name: 'Navigation' })).toContainText(
+      'Moves: ' + (i + 1),
+    );
+    expect(await fits(page)).toBe(true);
+  }
+  const slotHeight = () =>
+    page.locator('.reader__slot').evaluate((e) => e.getBoundingClientRect().height);
+  expect(await slotHeight()).toBeGreaterThan(150);
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  expect(await slotHeight()).toBeLessThanOrEqual(64);
+  expect(await fits(page)).toBe(true);
+});
 
 test('type look and see the room description on the last page', async ({ page }) => {
   await begin(page);

@@ -15,7 +15,7 @@ import { settingsKey, textStyle } from '../../reader/settings';
 import { PagedText } from '../../reader/PagedText';
 import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
-import { CommandBar } from './CommandBar';
+import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
 import { ReaderFrame } from './ReaderFrame';
 // The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
@@ -208,7 +208,7 @@ export function GameReader({ language }: { language?: string }) {
             blocks={blocks}
             focus={focus}
             lastPageSlot={slot}
-            slotClass="reader__slot--game"
+            lastSlotHeight={COMMAND_BAR_HEIGHT}
             textStyle={textStyle(settings)}
             layoutKey={settingsKey(settings)}
             pinToLast={typing}

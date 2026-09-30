@@ -200,3 +200,44 @@ describe('keeping turns together', () => {
     }
   });
 });
+
+describe('a shorter last page (room for the command bar)', () => {
+  // Five blocks of 2 lines (40 px) with 10 px gaps: 240 px in all.
+  const blocks = [0, 1, 2, 3, 4].map((i) => text(20, String(i)));
+  const metrics = measure(blocks, 10);
+
+  function used(pages: Page[], index: number): number {
+    let y = 0;
+    pageFragments(blocks, pages[index]).forEach((fragment, i) => {
+      if (i > 0) y += GAP;
+      y += Math.ceil((fragment.end - fragment.start) / 10) * LINE;
+    });
+    return y;
+  }
+
+  it('keeps the pages when the last one already fits the smaller height', () => {
+    // 200 px pages: blocks 0-3 (190 px), then block 4 (40 px) fits in 100 px.
+    expect(paginate(metrics, 200, undefined, 100)).toEqual(paginate(metrics, 200));
+  });
+
+  it('lays the end out again when the last page is too tall, leaving earlier pages alone', () => {
+    // 150 px pages: blocks 0-2 (140 px), then blocks 3-4 (90 px) do not fit in 60 px.
+    const normal = paginate(metrics, 150);
+    const pages = paginate(metrics, 150, undefined, 60);
+    expect(normal).toHaveLength(2);
+    expect(pages).toHaveLength(3);
+    expect(pages[0]).toEqual(normal[0]);
+    expect(used(pages, pages.length - 1)).toBeLessThanOrEqual(60);
+    expect(reassemble(blocks, pages)).toEqual(blocks.map((b) => b.text));
+  });
+
+  it('never skips or duplicates text, and the last page always fits', () => {
+    for (const height of [70, 110, 150, 200, 333]) {
+      for (const last of [40, 50, 69, height]) {
+        const pages = paginate(metrics, height, undefined, last);
+        expect(reassemble(blocks, pages)).toEqual(blocks.map((b) => b.text));
+        expect(used(pages, pages.length - 1)).toBeLessThanOrEqual(Math.max(last, LINE));
+      }
+    }
+  });
+});

@@ -11,6 +11,12 @@ function nav(page: Page, name: string) {
   return page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name });
 }
 
+/** Opens Settings from the ⋯ menu. */
+async function openSettings(page: Page) {
+  await press(page.getByRole('button', { name: 'Menu' }));
+  await press(page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: 'Settings' }));
+}
+
 async function expectScreen(page: Page, hash: string, title: string) {
   await expect(page).toHaveURL(new RegExp(hash.replace(/[?]/g, '\\?') + '$'));
   await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
@@ -37,7 +43,7 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await press(page.getByRole('link', { name: 'Play' }));
   await expectScreen(page, '#/play/sample', 'Reader');
 
-  await press(nav(page, 'Settings'));
+  await openSettings(page);
   await expectScreen(page, '#/settings', 'Settings');
 
   await press(nav(page, 'Home'));
@@ -57,7 +63,6 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
 test('deep link cold start on #/settings', async ({ page }) => {
   await page.goto('/#/settings');
   await expectScreen(page, '#/settings', 'Settings');
-  await expect(nav(page, 'Settings')).toHaveAttribute('aria-current', 'page');
 });
 
 test('unknown routes fall back to Home without a history entry', async ({ page }) => {
@@ -77,6 +82,22 @@ test('menu offers Refresh screen, which flashes and restores the page', async ({
   await expect(dialog).toBeHidden();
   await expect(page.locator('.screen-flash')).toHaveCount(0);
   await expectScreen(page, '#/home', 'Home');
+});
+
+test('a tap leaves no focus outline; the keyboard still shows one', async ({ page }) => {
+  await page.goto('/#/home');
+  const library = nav(page, 'Library');
+  await press(library);
+  await expectScreen(page, '#/library', 'Library');
+  const outline = () =>
+    page.evaluate(() => {
+      const element = document.activeElement as HTMLElement;
+      return getComputedStyle(element).outlineStyle;
+    });
+  expect(await outline()).toBe('none');
+
+  await page.keyboard.press('Tab');
+  expect(await outline()).toBe('solid');
 });
 
 const screens = ['#/home', '#/library?page=2', '#/game/sample', '#/play/sample', '#/settings'];

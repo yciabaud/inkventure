@@ -8,11 +8,20 @@
 }
 
 .app__main {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 24px 16px 32px;
+  padding: 24px 16px 16px;
+}
+
+/* A screen fills the page, so its pager sits at the bottom of the screen, like a book page number. */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 .screen__title {
@@ -123,7 +132,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: auto;
+  padding-top: 24px;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 18px;
 }
@@ -618,16 +628,22 @@
   font-weight: 700;
 }
 
-/* Same height on every page, so every page has the same text area: the command bar on the last page, a way back
-   to it on the others. */
+/* Under the text: a way back to the present on earlier pages. Its height (SLOT_HEIGHT, set inline) is the same on
+   every page, so every page has the same text area. */
 .reader__slot {
+  position: relative;
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  height: 72px;
-  padding: 8px 16px;
+  padding: 7px 16px;
   border-top: 1px solid #767676;
+  background: #fff;
+}
+
+/* Last page of a game: the taller command bar covers the bottom of the text area (the paginator leaves it empty). */
+.reader__slot--raised {
+  padding: 8px 16px;
 }
 
 .reader__present {
@@ -658,8 +674,9 @@
 
 .reader__indicator {
   flex-shrink: 0;
-  padding: 0 0 8px;
+  padding: 0 0 2px;
   font-size: 16px;
+  line-height: 1.25;
   text-align: center;
 }
 
@@ -692,11 +709,6 @@
 .reader__score {
   flex-shrink: 0;
   margin-right: 16px;
-}
-
-/* Game slot: the same (taller) height on every page, holding the command bar on the last one (S1.4). */
-.reader__slot--game {
-  height: 196px;
 }
 
 .command-bar {

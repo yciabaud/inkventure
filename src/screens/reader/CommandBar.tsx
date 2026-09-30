@@ -13,6 +13,12 @@ const MAIN_DIRECTIONS = ['n', 's', 'e', 'w', 'up', 'down'];
  */
 const MAIN_VERBS = ['look', 'examine', 'take', 'inventory'];
 
+/**
+ * Height in px of the slot holding the bar on the last page (three rows of 48 px chips, gaps and padding). The same on
+ * every turn, so the last page keeps its layout while the game answers.
+ */
+export const COMMAND_BAR_HEIGHT = 196;
+
 interface Props {
   table: VerbTable;
   /** Objects recently mentioned, most recent first. */
