@@ -1471,6 +1471,11 @@ button.pager__btn {
   overflow: hidden;
 }
 
+/* Across the page's side margins (.app__main padding), for a grid spaced evenly up to the screen edges. */
+.shelf__row--bleed {
+  margin: 0 -16px;
+}
+
 .shelf__head {
   display: flex;
   flex-shrink: 0;
@@ -1587,7 +1592,7 @@ button.pager__btn {
 
 /* No frame over the cover: black dots with a white halo, readable on any cover. */
 .more-btn__dots {
-  padding: 0 6px 4px 0;
+  padding: 0 6px 10px 0;
   color: #000;
   font-size: 28px;
   font-weight: 700;
@@ -1708,4 +1713,10 @@ button.pager__btn {
     margin-right: 12px;
     font-size: 18px;
   }
+}
+
+/* Covers spaced evenly: the same gap between them and to the edges of the row. */
+.tiles--even {
+  column-gap: 0;
+  justify-content: space-evenly;
 }

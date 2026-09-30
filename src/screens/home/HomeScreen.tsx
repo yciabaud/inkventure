@@ -38,6 +38,9 @@ const HERO_COVER_WIDTH = 60;
 /** The game's cover in its menu. */
 const MENU_COVER_WIDTH = 64;
 
+/** Side margin of the page (`.app__main` padding). */
+const PAGE_GUTTER = 16;
+
 /** The "⋮" button over a cover (its tap target). */
 const MORE_SIZE = 48;
 
@@ -81,10 +84,13 @@ function Shelf({
   pageCount,
   onPage,
   rowRef,
+  bleed,
   children,
 }: {
   label: string;
   heading: ComponentChildren;
+  /** The row spans the screen's side margins too (a grid spaces its covers evenly up to the screen edges). */
+  bleed?: boolean;
   page: number;
   pageCount: number;
   onPage: (page: number) => void;
@@ -97,7 +103,7 @@ function Shelf({
         {heading}
         <Pager page={page} pageCount={pageCount} onPage={onPage} compact />
       </div>
-      <div class="shelf__row" ref={rowRef}>
+      <div class={bleed ? 'shelf__row shelf__row--bleed' : 'shelf__row'} ref={rowRef}>
         {children}
       </div>
     </section>
@@ -387,7 +393,9 @@ function AdventuresShelf({
   const [menuFor, setMenuFor] = useState<Adventure | null>(null);
   const [removing, setRemoving] = useState<Adventure | null>(null);
   const [area, areaRef] = useArea();
-  const layout = gridLayout(area.width, area.height);
+  // Sized for the page's content width; the row itself spans the side margins so the covers are spaced evenly,
+  // between them and to the screen edges.
+  const layout = gridLayout(Math.max(area.width - 2 * PAGE_GUTTER, 0), area.height);
   const shown = paginate(sortRecent(games), page, layout.perPage);
   return (
     <>
@@ -398,9 +406,10 @@ function AdventuresShelf({
         pageCount={shown.pageCount}
         onPage={setPage}
         rowRef={areaRef}
+        bleed
       >
         <ul
-          class="tiles"
+          class="tiles tiles--even"
           aria-label={t('home.adventures')}
           style={{
             gridTemplateColumns: 'repeat(' + layout.columns + ', ' + layout.coverWidth + 'px)',
