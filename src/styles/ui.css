@@ -389,17 +389,106 @@ button.pager__btn {
   margin: 0 16px 16px 0;
 }
 
-/* Game summary (placeholder layout for the detail page) */
-.game-summary {
+/* Game detail (S3.3): cover and facts, actions, the blurb in pages (one CSS column per page), credits. */
+.game__head {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-shrink: 0;
+  align-items: flex-start;
 }
 
-.game-summary__actions {
-  width: 100%;
-  max-width: 320px;
-  margin-top: 24px;
+.game__info {
+  flex: 1;
+  min-width: 0;
+  margin-left: 16px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+
+.game__title {
+  margin: 0 0 4px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.game__author {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.game__facts {
+  margin: 0 0 4px;
+}
+
+.game__badges {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 4px 0 0;
+}
+
+.badge {
+  margin: 4px 6px 0 0;
+  padding: 2px 8px;
+  border: 1px solid #000;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.game__actions {
+  display: flex;
+  flex-shrink: 0;
+  margin: 16px 0 12px;
+}
+
+.game__actions .btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+.game__actions > :first-child {
+  margin-right: 8px;
+}
+
+.game__notice,
+.game__empty {
+  margin: 0 0 12px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+}
+
+.game__blurb {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.game__columns {
+  column-fill: auto;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.game__columns p {
+  margin: 0 0 0.6em;
+}
+
+.game__credits {
+  flex-shrink: 0;
+  margin: 8px 0 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+}
+
+.game__credits a {
+  display: inline-block;
+  min-height: 48px;
+  padding: 13px 0;
+  color: #000;
 }
 
 /* Storage notice (non-blocking banner above the screen content) */

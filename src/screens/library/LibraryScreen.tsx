@@ -14,6 +14,7 @@ import {
   type SortKey,
 } from '../../catalog/filters';
 import { gridLayout, listPerPage, type GridLayout } from '../../catalog/layout';
+import { thumbnailUrl } from '../../catalog/game';
 import { loadCatalog, type Catalog, type IndexRow } from '../../catalog/loader';
 import { paginate, search } from '../../catalog/search';
 import { formatNumber, t, useLocale } from '../../i18n/i18n';
@@ -26,22 +27,6 @@ import { FiltersPanel, parsePanel, type PanelChange, type PanelName } from './Fi
 import { useArea } from './useArea';
 
 export type LibraryView = 'grid' | 'list';
-
-/**
- * IFDB cover thumbnail (SPEC §5.6: always a thumbnail, never the full-size image), rounded up to 10 px steps so
- * nearby sizes share cached images.
- */
-export function thumbnailUrl(tuid: string, width: number, height: number): string {
-  const up = (n: number) => Math.ceil(n / 10) * 10;
-  return (
-    'https://ifdb.org/coverart?id=' +
-    encodeURIComponent(tuid) +
-    '&thumbnail=' +
-    up(width) +
-    'x' +
-    up(height)
-  );
-}
 
 type CatalogState =
   | { status: 'loading'; loaded: number; total: number }
