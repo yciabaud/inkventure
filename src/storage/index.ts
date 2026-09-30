@@ -4,6 +4,7 @@ import { createStore, type Store } from './store';
 
 export { compressBytes, compressText, decompressBytes, decompressText } from './compress';
 export { keys } from './keys';
+export { addToHome, getHome, isInHome, removeFromHome, type HomeEntry } from './home';
 export { getPrefs, setPrefs, type Prefs } from './prefs';
 export { isStorageFullError, type StorageEvent, type StorageFullError, type Store } from './store';
 

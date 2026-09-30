@@ -79,9 +79,21 @@
   "sort.new": "Newest",
   "sort.title": "Title A–Z",
   "game.title": "Game",
-  "game.sampleTitle": "Sample adventure",
-  "game.sampleAuthor": "Unknown author",
   "game.play": "Play",
+  "game.continue": "Continue",
+  "game.addToHome": "Add to Home",
+  "game.removeFromHome": "Remove from Home",
+  "game.homeFull": "Storage is full: this game could not be added to Home.",
+  "game.experimental": "Experimental",
+  "game.slow": "May be slow on this device",
+  "game.noBlurb": "No description on IFDB.",
+  "game.ifdb": "Data from IFDB",
+  "game.ifArchive": "Game file on the IF Archive",
+  "game.loading": "Loading…",
+  "game.loadFailed": "This game could not be loaded",
+  "game.missing": "Adventure not found",
+  "game.missingText": "It is no longer in the catalogue. Look for another one in the library.",
+  "game.toLibrary": "Go to the library",
   "play.title": "Reader",
   "play.emptyTitle": "The reader is not ready yet",
   "play.emptyText": "Game {tuid} will open here.",
@@ -175,5 +187,9 @@
   "time.daysAgo": {
     "one": "{count} day ago",
     "other": "{count} days ago"
+  },
+  "game.rating": {
+    "one": "★ {stars} ({count} rating)",
+    "other": "★ {stars} ({count} ratings)"
   }
 }

@@ -205,10 +205,14 @@ Purpose: find the next adventure in the playable catalogue.
 ### 3.5 Game detail (`#/game/:tuid`)
 
 - Cover, title, author(s), year, language, genre, format badge, ★ rating and count, playtime, forgiveness.
-- Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long).
+- Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long: one CSS column per page, turned
+  with the pager).
 - Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**.
 - "Experimental" / "May be slow on this device" notices when relevant (Twine, heavy Glulx).
-- Credits: "Data from IFDB" link to the IFDB page, licence info when known, link to the file on the IF Archive.
+- Credits: "Data from IFDB" link to the IFDB page, licence info when known (not in the catalogue yet), link to the
+  file on the IF Archive.
+- Loads `games/<tuid>.json` only (not the index), so a deep link opens fast on a cold start; a game no longer in the
+  catalogue (404) says so and leads to the Library.
 
 ### 3.6 Reader (`#/play/:tuid`)
 
@@ -499,7 +503,7 @@ All keys are prefixed and versioned:
 | Key | Content |
 |---|---|
 | `ik:v1:prefs` | UI language, reader defaults (font, size, margins, spacing, align), list/grid choices |
-| `ik:v1:home` | ordered list of tuids in *My adventures* with added/last-played dates |
+| `ik:v1:home` | *My adventures*, most recently added first: `[{tuid, title, author, added, lastPlayed?}]` (title and author so Home needs no catalogue) |
 | `ik:v1:progress:<tuid>` | `turns`, `lastPlayed`, `location`, per-game reader overrides (`reader`) |
 | `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
