@@ -24,6 +24,8 @@
   "library.searchPlaceholder": "Titre ou auteur",
   "library.searchButton": "Chercher",
   "library.clear": "Tout afficher",
+  "library.viewGrid": "Vue en grille",
+  "library.viewList": "Vue en liste",
   "library.results": "Aventures",
   "library.loading": "Chargement du catalogue…",
   "library.loadingProgress": "Chargement du catalogue… {loaded} / {total}",

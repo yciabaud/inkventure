@@ -1,17 +1,20 @@
 import type { RefObject } from 'preact';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { formatHash, type Query } from '../../app/router';
+import { gridLayout, listPerPage, type GridLayout } from '../../catalog/layout';
 import { loadCatalog, type Catalog, type IndexRow } from '../../catalog/loader';
 import { paginate, search } from '../../catalog/search';
 import { formatNumber, t, useLocale } from '../../i18n/i18n';
+import { getPrefs, getStore, setPrefs } from '../../storage';
 import { Button } from '../../ui/Button';
+import { Cover } from '../../ui/Cover';
 import { EmptyState } from '../../ui/EmptyState';
 import { Pager } from '../../ui/Pager';
 
-/** Height of a result row in px (`.result` in ui.css): the list shows as many as fit, no scrolling. */
-export const RESULT_ROW_HEIGHT = 56;
-/** Before the list is measured (and in jsdom). */
-const DEFAULT_PER_PAGE = 10;
+export type LibraryView = 'grid' | 'list';
+
+/** Before the list area is measured (and in jsdom). */
+const DEFAULT_AREA = { width: 568, height: 480 };
 
 const FORMAT_NAMES: Record<string, string> = {
   zcode: 'Z-code',
@@ -20,9 +23,20 @@ const FORMAT_NAMES: Record<string, string> = {
   ink: 'ink',
 };
 
-/** IFDB cover thumbnail (SPEC §5.6: always a thumbnail, never the full-size image). */
-export function thumbnailUrl(tuid: string): string {
-  return 'https://ifdb.org/coverart?id=' + encodeURIComponent(tuid) + '&thumbnail=36x48';
+/**
+ * IFDB cover thumbnail (SPEC §5.6: always a thumbnail, never the full-size image), rounded up to 10 px steps so
+ * nearby sizes share cached images.
+ */
+export function thumbnailUrl(tuid: string, width: number, height: number): string {
+  const up = (n: number) => Math.ceil(n / 10) * 10;
+  return (
+    'https://ifdb.org/coverart?id=' +
+    encodeURIComponent(tuid) +
+    '&thumbnail=' +
+    up(width) +
+    'x' +
+    up(height)
+  );
 }
 
 type CatalogState =
@@ -49,23 +63,37 @@ function useCatalog(): [CatalogState, () => void] {
   return [state, () => setAttempt((n) => n + 1)];
 }
 
-/** Rows that fit in the list area (measured, and again on resize), so a page never scrolls. */
-function useRowsPerPage(): [number, RefObject<HTMLDivElement>] {
-  const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
+/** Size of the list area, measured after every render (it shrinks when the pager appears) and on resize. */
+function useArea(): [{ width: number; height: number }, RefObject<HTMLDivElement>] {
+  const [area, setArea] = useState(DEFAULT_AREA);
   const [, setTick] = useState(0);
   const list = useRef<HTMLDivElement>(null);
-  // After every render: the list shrinks when the pager appears. Setting the same value does not re-render.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
-    const height = list.current ? list.current.clientHeight : 0;
-    if (height > 0) setPerPage(Math.max(3, Math.floor(height / RESULT_ROW_HEIGHT)));
+    const element = list.current;
+    if (!element || !element.clientHeight) return;
+    if (element.clientWidth !== area.width || element.clientHeight !== area.height) {
+      setArea({ width: element.clientWidth, height: element.clientHeight });
+    }
   });
   useEffect(() => {
     const remeasure = () => setTick((tick) => tick + 1);
     window.addEventListener('resize', remeasure);
     return () => window.removeEventListener('resize', remeasure);
   }, []);
-  return [perPage, list];
+  return [area, list];
+}
+
+/** Grid (Kindle-like covers, the default) or list, remembered in the preferences. */
+function useView(): [LibraryView, (view: LibraryView) => void] {
+  const [view, setView] = useState<LibraryView>(() => getPrefs(getStore()).libraryView || 'grid');
+  return [
+    view,
+    (next) => {
+      setPrefs(getStore(), { libraryView: next });
+      setView(next);
+    },
+  ];
 }
 
 function libraryHash(q: string, page?: number): string {
@@ -80,6 +108,25 @@ function playtime(minutes: number): string {
   return t('library.hours', { count: Math.round(minutes / 60) });
 }
 
+function label(row: IndexRow): string {
+  return row.a ? row.n + ', ' + row.a : row.n;
+}
+
+function Tile({ row, layout }: { row: IndexRow; layout: GridLayout }) {
+  return (
+    <li>
+      <a class="tile" href={formatHash({ name: 'game', tuid: row.t })} aria-label={label(row)}>
+        <Cover
+          title={row.n}
+          author={row.a}
+          width={layout.coverWidth}
+          imageUrl={row.c ? thumbnailUrl(row.t, layout.coverWidth, layout.coverHeight) : undefined}
+        />
+      </a>
+    </li>
+  );
+}
+
 function Thumb({ row }: { row: IndexRow }) {
   const [broken, setBroken] = useState(false);
   if (!row.c || broken) {
@@ -92,7 +139,7 @@ function Thumb({ row }: { row: IndexRow }) {
   return (
     <img
       class="result__thumb"
-      src={thumbnailUrl(row.t)}
+      src={thumbnailUrl(row.t, 36, 48)}
       alt=""
       width={36}
       height={48}
@@ -112,7 +159,7 @@ function ResultRow({ row }: { row: IndexRow }) {
   details.push(FORMAT_NAMES[row.f] || row.f);
   return (
     <li>
-      <a class="result" href={formatHash({ name: 'game', tuid: row.t })}>
+      <a class="result" href={formatHash({ name: 'game', tuid: row.t })} aria-label={label(row)}>
         <Thumb row={row} />
         <span class="result__text">
           <span class="result__title">{row.n}</span>
@@ -164,7 +211,10 @@ export function LibraryScreen({ query }: { query: Query }) {
   useLocale();
   const q = query.q || '';
   const [state, retry] = useCatalog();
-  const [perPage, listRef] = useRowsPerPage();
+  const [area, listRef] = useArea();
+  const [view, setView] = useView();
+  const grid = gridLayout(area.width, area.height);
+  const perPage = view === 'grid' ? grid.perPage : listPerPage(area.height);
   const catalog = state.status === 'ready' ? state.catalog : null;
   const matches = useMemo(
     () => (catalog ? search(catalog.rows, catalog.keys, q) : []),
@@ -193,6 +243,18 @@ export function LibraryScreen({ query }: { query: Query }) {
         {t('library.noResults', { query: q })}
       </p>
     );
+  } else if (view === 'grid') {
+    body = (
+      <ol
+        class="tiles"
+        aria-label={t('library.results')}
+        style={{ gridTemplateColumns: 'repeat(' + grid.columns + ', ' + grid.coverWidth + 'px)' }}
+      >
+        {page.items.map((index) => (
+          <Tile key={catalog!.rows[index].t} row={catalog!.rows[index]} layout={grid} />
+        ))}
+      </ol>
+    );
   } else {
     body = (
       <ol class="results" aria-label={t('library.results')}>
@@ -207,9 +269,18 @@ export function LibraryScreen({ query }: { query: Query }) {
     <div class="screen library">
       <h1 class="screen__title">{t('library.title')}</h1>
       <SearchForm q={q} />
-      <p class="library__count">
-        {catalog ? t('library.count', { count: matches.length }) : '\u00a0'}
-      </p>
+      <div class="library__bar">
+        <p class="library__count">
+          {catalog ? t('library.count', { count: matches.length }) : '\u00a0'}
+        </p>
+        <button
+          type="button"
+          class="library__view"
+          onClick={() => setView(view === 'grid' ? 'list' : 'grid')}
+        >
+          {view === 'grid' ? t('library.viewList') : t('library.viewGrid')}
+        </button>
+      </div>
       <div class="library__list" ref={listRef}>
         {body}
       </div>

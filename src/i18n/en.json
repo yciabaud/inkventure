@@ -24,6 +24,8 @@
   "library.searchPlaceholder": "Title or author",
   "library.searchButton": "Search",
   "library.clear": "Show all",
+  "library.viewGrid": "Grid view",
+  "library.viewList": "List view",
   "library.results": "Adventures",
   "library.loading": "Loading catalogue…",
   "library.loadingProgress": "Loading catalogue… {loaded} / {total}",

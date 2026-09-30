@@ -10,6 +10,11 @@ function results(page: Page) {
   return page.getByRole('list', { name: 'Adventures' }).getByRole('link');
 }
 
+/** Accessible names of the results on the page ("Title, Author"), in the grid or the list. */
+function names(page: Page) {
+  return results(page).evaluateAll((links) => links.map((link) => link.getAttribute('aria-label')));
+}
+
 async function searchFor(page: Page, query: string) {
   await page.getByRole('searchbox', { name: 'Search the library' }).fill(query);
   await press(page.getByRole('button', { name: 'Search' }));
@@ -23,12 +28,12 @@ test('search, page through the results, and come back with the back button', asy
   await searchFor(page, 'adventure');
   await expect(page).toHaveURL(/#\/library\?q=adventure$/);
   await expect(page.getByText('39 adventures')).toBeVisible();
-  const firstPage = await results(page).allTextContents();
+  const firstPage = await names(page);
   expect(firstPage.length).toBeGreaterThan(2);
 
   await press(page.getByRole('link', { name: 'Next ›' }));
   await expect(page).toHaveURL(/#\/library\?page=2&q=adventure$/);
-  const secondPage = await results(page).allTextContents();
+  const secondPage = await names(page);
   expect(secondPage[0]).not.toBe(firstPage[0]);
 
   await press(results(page).first());
@@ -39,18 +44,18 @@ test('search, page through the results, and come back with the back button', asy
   await expect(page.getByRole('searchbox', { name: 'Search the library' })).toHaveValue(
     'adventure',
   );
-  await expect(results(page).first()).toHaveText(secondPage[0]);
+  await expect(results(page).first()).toHaveAttribute('aria-label', secondPage[0]!);
 
   await page.goBack();
   await expect(page).toHaveURL(/#\/library\?q=adventure$/);
-  await expect(results(page).first()).toHaveText(firstPage[0]);
+  await expect(results(page).first()).toHaveAttribute('aria-label', firstPage[0]!);
 });
 
 test('matches accents and case loosely, and says when nothing matches', async ({ page }) => {
   await routeCatalog(page);
   await page.goto('/#/library?q=ECHO');
   await expect(results(page)).toHaveCount(1);
-  await expect(results(page).first()).toContainText('Écho 03');
+  await expect(results(page).first()).toHaveAttribute('aria-label', /^Écho 03,/);
 
   await page.goto('/#/library?q=zoe');
   await expect(page.getByText('8 adventures')).toBeVisible();
@@ -62,29 +67,40 @@ test('matches accents and case loosely, and says when nothing matches', async ({
   await expect(page.getByText('40 adventures')).toBeVisible();
 });
 
-test('the results fill the page without scrolling', async ({ page }) => {
-  await routeCatalog(page, syntheticCatalog(60));
+for (const view of ['Grid', 'List']) {
+  test(`${view.toLowerCase()} view: the results fill the page without scrolling`, async ({
+    page,
+  }) => {
+    await routeCatalog(page, syntheticCatalog(60));
+    await page.goto('/#/library');
+    await expect(results(page).first()).toBeVisible();
+    if (view === 'List') await press(page.getByRole('button', { name: 'List view' }));
+    const layout = await page.evaluate(() => {
+      const list = document.querySelector('.library__list') as HTMLElement;
+      const items = list.querySelectorAll('li');
+      const box = list.getBoundingClientRect();
+      const doc = document.documentElement;
+      let inside = true;
+      for (let i = 0; i < items.length; i++) {
+        const r = items[i].getBoundingClientRect();
+        inside = inside && r.bottom <= box.bottom + 0.5 && r.right <= box.right + 0.5;
+      }
+      return { items: items.length, inside, scrolls: doc.scrollHeight > doc.clientHeight };
+    });
+    expect(layout).toEqual({ items: layout.items, inside: true, scrolls: false });
+    expect(layout.items).toBeGreaterThanOrEqual(4);
+  });
+}
+
+test('the grid is the default; the chosen view is remembered', async ({ page }) => {
+  await routeCatalog(page);
   await page.goto('/#/library');
-  await expect(results(page).first()).toBeVisible();
-  const layout = await page.evaluate(() => {
-    const list = document.querySelector('.library__list') as HTMLElement;
-    const rows = list.querySelectorAll('.result');
-    const last = rows[rows.length - 1].getBoundingClientRect();
-    const doc = document.documentElement;
-    return {
-      rows: rows.length,
-      lastFits: last.bottom <= list.getBoundingClientRect().bottom + 0.5,
-      scrolls: doc.scrollHeight > doc.clientHeight,
-      roomForAnother: list.getBoundingClientRect().bottom - last.bottom >= 56,
-    };
-  });
-  expect(layout).toEqual({
-    rows: layout.rows,
-    lastFits: true,
-    scrolls: false,
-    roomForAnother: false,
-  });
-  expect(layout.rows).toBeGreaterThanOrEqual(5);
+  await expect(page.locator('.tile').first()).toBeVisible();
+  await press(page.getByRole('button', { name: 'List view' }));
+  await expect(page.locator('.result').first()).toBeVisible();
+  await page.reload();
+  await expect(page.locator('.result').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Grid view' })).toBeVisible();
 });
 
 test('shows an error with a retry when the catalogue cannot be loaded', async ({ page }) => {

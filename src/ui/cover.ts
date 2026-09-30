@@ -28,6 +28,18 @@ function normalise(value: string): string {
   return value.replace(/\s+/g, ' ').trim();
 }
 
+/** Longest author line a cover shows in full. */
+export const MAX_COVER_AUTHOR = 32;
+
+/** A long list of authors keeps its first name only: `Tim Anderson, Marc Blank, …` → `Tim Anderson…`. */
+export function shortAuthor(author: string): string {
+  if (author.length <= MAX_COVER_AUTHOR) return author;
+  const first = author.split(/,|;| and | & | \[| \(/)[0].trim();
+  return (
+    (first.length <= MAX_COVER_AUTHOR ? first : first.slice(0, MAX_COVER_AUTHOR - 1).trim()) + '…'
+  );
+}
+
 export function coverDesign(title: string, author: string): CoverDesign {
   const cleanTitle = normalise(title);
   const cleanAuthor = normalise(author);
@@ -36,6 +48,6 @@ export function coverDesign(title: string, author: string): CoverDesign {
     variant: COVER_VARIANTS[hash % COVER_VARIANTS.length],
     ornament: COVER_ORNAMENTS[Math.floor(hash / COVER_VARIANTS.length) % COVER_ORNAMENTS.length],
     title: cleanTitle,
-    author: cleanAuthor,
+    author: shortAuthor(cleanAuthor),
   };
 }

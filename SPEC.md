@@ -184,8 +184,11 @@ Purpose: find the next adventure in the playable catalogue.
   - Release year range
   - "Start here" (newcomer-friendly: featured or tagged)
 - **Sort**: best rated (IFDB star sort), most rated, newest, title A–Z.
-- **Results**: paginated list, as many rows as fit the screen (8 on a 600 × 800 e-reader), each row: small cover,
-  title, author, year, ★ rating (n), playtime, format. Tap → game detail.
+- **Results**, paginated, as many as fit the screen (no scrolling), in two views remembered in the preferences:
+  - **Grid** (default, like the Kindle library): covers only, IFDB thumbnail or typographic cover (4 × 2 on a
+    600 × 800 e-reader);
+  - **List**: small cover, title, then author, year, ★ rating (n), playtime, format (8 rows on 600 × 800).
+  Tap → game detail.
 - Only playable games appear (see [§5.2](#52-catalogue-index)). Result count shown ("214 adventures").
 
 ### 3.5 Game detail (`#/game/:tuid`)
