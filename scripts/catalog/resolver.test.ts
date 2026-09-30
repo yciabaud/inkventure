@@ -12,6 +12,7 @@ import {
   policyReason,
   resolve,
   secureUrl,
+  urlsToCheck,
   yearOf,
   type ContentPolicyConfig,
 } from './resolver';
@@ -97,6 +98,28 @@ describe('file selection', () => {
       zcode,
     );
     expect('file' in choice && choice.file.file.url).toBe(A + 'a.zblorb');
+  });
+
+  it('uses a file outside the IF Archive only when the app can read it (CORS)', () => {
+    const other = 'https://example.com/a.z5';
+    const mirror = 'https://mirror.example.org/a.zblorb';
+    const links = [
+      { url: other, format: 'zcode', isGame: true },
+      { url: mirror, format: 'blorb/zcode', isGame: true },
+    ];
+    expect(urlsToCheck(record(links), '', zcode)).toEqual([mirror, other]);
+    const pick = (readable: string[]) =>
+      chooseFile(record(links), '', zcode, (url) => readable.indexOf(url) >= 0);
+    expect(pick([mirror, other])).toMatchObject({ file: { file: { url: mirror } } });
+    expect(pick([other])).toMatchObject({ file: { file: { url: other } } });
+    expect(pick([])).toEqual({ reason: 'unreadable-host', detail: mirror });
+
+    // An IF Archive file needs no check.
+    const withArchive = links.concat([{ url: A + 'a.z5', format: 'zcode', isGame: true }]);
+    expect(urlsToCheck(record(withArchive), '', zcode)).toEqual([]);
+    expect(chooseFile(record(withArchive), '', zcode, () => false)).toMatchObject({
+      file: { file: { url: A + 'a.z5' } },
+    });
   });
 
   it('takes the first enabled format in order', () => {
