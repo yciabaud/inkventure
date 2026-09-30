@@ -243,6 +243,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   german: 'de',
   deutsch: 'de',
   spanish: 'es',
+  castilian: 'es',
   español: 'es',
   italian: 'it',
   italiano: 'it',
@@ -262,9 +263,11 @@ const LANGUAGE_NAMES: Record<string, string> = {
  */
 export function normalizeLanguage(value: unknown): string | undefined {
   if (typeof value !== 'string') return undefined;
-  const first = value.split(/[,;/]/)[0].trim().toLowerCase();
-  const bracketed = /\(([a-z]{2,3})(?:-[a-z0-9]+)*\)$/.exec(first);
+  const whole = value.trim().toLowerCase();
+  // Several languages keep their codes together at the end: `Castilian, English (es, en)`.
+  const bracketed = /\(([a-z]{2,3})(?:-[a-z0-9]+)*(?:\s*,[^)]*)?\)$/.exec(whole);
   if (bracketed) return bracketed[1];
+  const first = whole.split(/[,;/]/)[0].trim();
   const code = /^([a-z]{2,3})(?:[-_][a-z0-9]+)*$/.exec(first);
   if (code && !LANGUAGE_NAMES[first]) return code[1];
   return LANGUAGE_NAMES[first.replace(/\s*\(.*\)$/, '')];

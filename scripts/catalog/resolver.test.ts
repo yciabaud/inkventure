@@ -184,6 +184,12 @@ describe('metadata', () => {
     expect(normalizeLanguage('Français')).toBe('fr');
     expect(normalizeLanguage('German (de-DE)')).toBe('de');
     expect(normalizeLanguage('es, en')).toBe('es');
+    // Seen on IFDB: several languages, their codes together in brackets; the first is the main one.
+    expect(normalizeLanguage('Castilian, English (es, en)')).toBe('es');
+    expect(normalizeLanguage('German, English, Castilian (de, en, es)')).toBe('de');
+    expect(normalizeLanguage('English, Russian, Belarusian (en, ru, be)')).toBe('en');
+    expect(normalizeLanguage('zh-Hans')).toBe('zh');
+    expect(normalizeLanguage('es-AR')).toBe('es');
     expect(normalizeLanguage('Klingon')).toBeUndefined();
     expect(normalizeLanguage(undefined)).toBeUndefined();
   });
