@@ -149,11 +149,64 @@ stay out.
 - **French community:** fiction-interactive.fr relies on IFDB rather than its own database. The yearly francophone
   contest now runs on itch.io (18th edition in 2025); its recommended systems are Inform 6/7, Twine, Undum and ink.
 
+## Catalogue strategy for itch.io content (Decker, Bitsy…)
+
+Separate **metadata** (title, author, cover, tags) from **game files**. Metadata can be collected, but files are
+the hard part.
+
+### Option A — Scrape itch.io
+
+- **Metadata is feasible.**
+  - Browse-page RSS feeds (`https://itch.io/games/tag-decker.xml`) give the list of games.
+  - `https://{author}.itch.io/{game}/data.json` gives title, authors, tags and cover. itch.io's founder recommends
+    it over scraping HTML.
+  - A weekly CI job like the IFDB crawler (S2.1–S2.3) would work: cache, rate limit, honest User-Agent, recorded
+    fixtures for tests.
+- **Game files are the blocker.**
+  - HTML games are served from `*.itch.zone` behind a sitelock and anti-hotlinking, so the app cannot load them
+    from the Kindle.
+  - Mirroring them in CI and re-hosting them on GitHub Pages means redistributing copyrighted works without
+    permission. The engine's MIT licence does not cover the game, and itch.io's terms only cover use on itch.io.
+- **Metadata only, with a "Play on itch.io" link, is possible but poor.** The Kindle would open the full itch.io
+  page with the stock engine running at 60 Hz, which is barely playable.
+
+### Option B — Curated catalogue, entered by hand
+
+Built on the `featured.json` pattern (S2.4): a hand-maintained file, validated in CI.
+
+- An **"Illustrated games" shelf** of 20–50 Decker/Bitsy games chosen because they work well on e-ink: 1-bit or few
+  colours, little animation, no hacks.
+- Each entry has the **author's permission** or an explicit free licence, plus credits and the source URL.
+- The `.deck` or `.bitsy` file is stored in the repo and served by GitHub Pages. These are small text files, tens to
+  hundreds of KB.
+- Every game is tested on the Kindle before it is added.
+- The cost is human, mostly writing to authors. There is a precedent: Ragzouken's bitsy-archive collected ~450
+  games with permission.
+
+### Option C — User-supplied games
+
+An "Open a file or URL" entry point: the player brings a `.deck`, `.bitsy` or exported `.html` file, and the app
+extracts the embedded game data.
+
+- There is no redistribution by us, so this covers the long tail.
+- URLs need CORS. itch.zone will not work, so in practice this means a file on the device or a CORS-friendly host.
+
+### Recommendation: hybrid
+
+1. **A CI metadata scraper that produces a candidate list for us, not for the app.** For each game it records tags,
+   declared licence, engine and whether it is HTML5. It is rate limited and stores no game files.
+2. **Human curation** from that list, with permission requests, into a curated file (Option B).
+3. **Option C as a complement**, once at least one of the Decker/Bitsy players exists.
+
+Open questions:
+
+- Do itch.io's terms allow automated reads of RSS and `data.json` at a weekly cadence? This needs checking in a
+  browser; the research proxy blocked the terms page.
+- Where to keep permission records, e.g. a `permissions` field with the date and a link to the author's reply.
+
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.
-2. **"Open a file or URL" entry point** (user-supplied `.deck`, `.bitsy` or `.html`). This sidesteps catalogue
-   licensing for itch.io content, since the user brings the game.
-3. **Curated, permission-based shelf** for Bitsy/Decker games, like bitsy-archive, stored as recorded files in the
-   repo or on GitHub Pages.
-4. Record the ZVM/Quixe maintenance risk in SPEC §13.
+2. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf,
+   then user-supplied files.
+3. Record the ZVM/Quixe maintenance risk in SPEC §13.
