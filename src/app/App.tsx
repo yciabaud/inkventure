@@ -1,4 +1,5 @@
 import { GameScreen } from '../screens/game/GameScreen';
+import { HelpScreen } from '../screens/home/HelpScreen';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { LibraryScreen } from '../screens/library/LibraryScreen';
 import { ReaderScreen } from '../screens/reader/ReaderScreen';
@@ -18,6 +19,8 @@ function Screen({ location }: { location: Location }) {
       return <GameScreen tuid={route.tuid} />;
     case 'settings':
       return <SettingsScreen />;
+    case 'help':
+      return <HelpScreen />;
     default:
       return <HomeScreen />;
   }

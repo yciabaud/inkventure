@@ -34,6 +34,7 @@ export type DropReason =
   | 'format-not-enabled'
   | 'compressed-no-primary'
   | 'insecure-url'
+  | 'unreadable-host'
   | 'adult-content'
   | 'excluded';
 
@@ -50,6 +51,11 @@ export interface ResolveOptions {
   enabledFormats: StoryFormat[];
   policy: ContentPolicy;
   config: ContentPolicyConfig;
+  /**
+   * Whether the app can read a file outside the IF Archive from the browser (its host sends CORS headers; checked by
+   * `check-cors.ts`). Without it, every host is assumed readable (fixtures, local runs).
+   */
+  readable?: (url: string) => boolean;
 }
 
 /** The file the app downloads. `archive`: the story is `primary` inside a zip. */
@@ -169,9 +175,16 @@ type Choice = { file: Candidate } | { reason: DropReason; detail?: string };
 /**
  * The best playable file of a record. Preference: an enabled format (in `enabledFormats` order), the IF Archive
  * (its CORS headers are verified, SPEC §5.5), an uncompressed file, a blorb (with its cover and metadata), then
- * IFDB's order. A zip is only usable when IFDB names the story file inside it (`compressedPrimary`).
+ * IFDB's order. A zip is only usable when IFDB names the story file inside it (`compressedPrimary`). With
+ * `readable`, a file outside the IF Archive is only used when there is no IF Archive file and its host lets the app
+ * read it (CORS, SPEC §5.5); `readable` is asked about those files only.
  */
-export function chooseFile(record: GameRecord, devsys: string, enabled: StoryFormat[]): Choice {
+export function chooseFile(
+  record: GameRecord,
+  devsys: string,
+  enabled: StoryFormat[],
+  readable?: (url: string) => boolean,
+): Choice {
   const links = ((record.ifdb.downloads && record.ifdb.downloads.links) || []) as Link[];
   const candidates: Candidate[] = [];
   const problems: Array<{ reason: DropReason; detail: string }> = [];
@@ -228,7 +241,22 @@ export function chooseFile(record: GameRecord, devsys: string, enabled: StoryFor
       Number(b.blorb) - Number(a.blorb) ||
       a.index - b.index,
   );
+  if (readable && !usable.some((c) => c.onArchive)) {
+    const reachable = usable.filter((c) => readable(c.file.url));
+    if (!reachable.length) return { reason: 'unreadable-host', detail: usable[0].file.url };
+    return { file: reachable[0] };
+  }
   return { file: usable[0] };
+}
+
+/** The files outside the IF Archive that the choice of a game's file depends on (to check with `check-cors.ts`). */
+export function urlsToCheck(record: GameRecord, devsys: string, enabled: StoryFormat[]): string[] {
+  const urls: string[] = [];
+  chooseFile(record, devsys, enabled, (url) => {
+    urls.push(url);
+    return false;
+  });
+  return urls;
 }
 
 function unique<T>(items: T[]): T[] {
@@ -422,7 +450,12 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
     }
     result.counts.formats[choice.file.format] =
       (result.counts.formats[choice.file.format] || 0) + 1;
-    const enabledChoice = chooseFile(game.record, game.search.devsys || '', options.enabledFormats);
+    const enabledChoice = chooseFile(
+      game.record,
+      game.search.devsys || '',
+      options.enabledFormats,
+      options.readable,
+    );
     if ('reason' in enabledChoice) {
       drop(game, enabledChoice.reason, enabledChoice.detail);
       continue;

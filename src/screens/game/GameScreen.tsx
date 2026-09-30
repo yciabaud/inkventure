@@ -1,6 +1,6 @@
 // Game detail (SPEC §3.5; story S3.3): cover, metadata, badges, the blurb in pages, Play / Continue, Add to or
 // Remove from Home, and credits. Loads `games/<tuid>.json` alone, so a deep link works on a cold start.
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { formatHash } from '../../app/router';
 import { formatName, languageName } from '../../catalog/filters';
 import {
@@ -22,18 +22,11 @@ import {
 import { Button, LinkButton } from '../../ui/Button';
 import { Cover } from '../../ui/Cover';
 import { EmptyState } from '../../ui/EmptyState';
-import { Pager } from '../../ui/Pager';
-import { useArea } from '../library/useArea';
+import { PagedParagraphs } from '../../ui/PagedParagraphs';
 
 /** Cover slot (the `cover--medium` size). */
 const COVER_WIDTH = 120;
 const COVER_HEIGHT = 180;
-
-/** Space between two columns (pages) of the blurb. */
-const COLUMN_GAP = 24;
-
-/** The blurb area never gets smaller than this, even on a short screen (it then overflows a little). */
-const MIN_BLURB_HEIGHT = 96;
 
 type State =
   | { status: 'loading' }
@@ -61,69 +54,6 @@ function useGame(tuid: string): [State, () => void] {
 function playtime(minutes: number): string {
   if (minutes < 60) return t('library.minutes', { count: minutes });
   return t('library.hours', { count: Math.round(minutes / 60) });
-}
-
-/**
- * The blurb laid out in columns as wide as its area, one column per page (no scrolling), turned with the pager. The
- * page count is the column where the text ends, found with an empty marker after its last word.
- */
-function Blurb({ paragraphs }: { paragraphs: string[] }) {
-  const [area, areaRef] = useArea();
-  const columns = useRef<HTMLDivElement>(null);
-  const endMark = useRef<HTMLSpanElement>(null);
-  const [pageCount, setPageCount] = useState(1);
-  const [page, setPage] = useState(1);
-  const height = Math.max(area.height, MIN_BLURB_HEIGHT);
-  const step = area.width + COLUMN_GAP;
-
-  // Measured after every render (like useArea): the columns change with the area and the text.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useLayoutEffect(() => {
-    const element = columns.current;
-    const end = endMark.current;
-    if (!element || !end) return;
-    // The column holding the end of the text. Measured from the end marker rather than scrollWidth, which WebKit
-    // does not widen for overflowing columns; both boxes move with the transform, so the page shown does not matter.
-    const offset = end.getBoundingClientRect().left - element.getBoundingClientRect().left;
-    const count = Math.max(1, Math.floor(offset / step) + 1);
-    if (count !== pageCount) setPageCount(count);
-    if (page > count) setPage(count);
-  });
-
-  // Web fonts change the layout without a render: count the pages again once they are loaded.
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
-    if (!fonts || !fonts.addEventListener) return;
-    const remeasure = () => setTick((tick) => tick + 1);
-    fonts.addEventListener('loadingdone', remeasure);
-    return () => fonts.removeEventListener('loadingdone', remeasure);
-  }, []);
-
-  return (
-    <>
-      <div class="game__blurb" ref={areaRef}>
-        <div
-          class="game__columns"
-          ref={columns}
-          style={{
-            height: height + 'px',
-            columnWidth: area.width + 'px',
-            columnGap: COLUMN_GAP + 'px',
-            transform: 'translateX(' + -(page - 1) * step + 'px)',
-          }}
-        >
-          {paragraphs.map((text, i) => (
-            <p key={i}>
-              {text}
-              {i === paragraphs.length - 1 && <span ref={endMark} />}
-            </p>
-          ))}
-        </div>
-      </div>
-      <Pager page={page} pageCount={pageCount} onPage={setPage} />
-    </>
-  );
 }
 
 function Details({ game }: { game: GameDetail }) {
@@ -196,7 +126,7 @@ function Details({ game }: { game: GameDetail }) {
         </p>
       )}
       {paragraphs.length > 0 ? (
-        <Blurb key={game.tuid} paragraphs={paragraphs} />
+        <PagedParagraphs key={game.tuid} paragraphs={paragraphs} />
       ) : (
         <p class="game__empty">{t('game.noBlurb')}</p>
       )}

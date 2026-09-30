@@ -56,10 +56,23 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
   year, rating, play time, cover, IFIDs, tags. `slow` is provisional: every Glulx game (S1.7 will measure).
 - **Content policy**: `CONTENT_POLICY=general` (default) drops games tagged with one of `content-policy.json`'s
   `denyTags` (case-insensitive); `adult` keeps them. The `exclude` list applies to every policy.
+- **Readable files** (`--cors FILE`): a file outside the IF Archive is used only when there is no IF Archive file and
+  `check-cors.ts` found that the app can read it; otherwise the game is dropped (`unreadable-host`). Without `--cors`
+  every host is assumed readable (local runs on the fixtures).
 - **Reasons**: `no-game-file`, `unsupported-format`, `format-not-enabled`, `compressed-no-primary`, `insecure-url`,
-  `adult-content`, `excluded`.
+  `unreadable-host`, `adult-content`, `excluded`.
 - `--summary FILE` appends a Markdown summary, including the distribution of the raw IFDB fields (link formats,
   compression, languages, genres); the manual workflow writes it to the job summary.
+
+## CORS check
+
+`check-cors.ts` (`npm run catalog:cors`, live network, ≤ 1 request/s) lists the files the resolver would use outside
+the IF Archive (`urlsToCheck`: games without an IF Archive file) and requests each one as the app would, from
+`https://yciabaud.github.io` (`Origin` header, first bytes only, redirects followed by hand: every response must
+send `Access-Control-Allow-Origin: *` or that origin, and none may lead to plain HTTP). Results go to
+`data/cache/cors.json` (`{ url: { ok, checked, detail?, transient? } }`), reused for 30 days; network errors and 5xx
+answers are `transient` and checked again at the next run. The weekly workflow keeps the file on the `catalog` branch
+and passes it to `resolve.ts --cors`.
 
 ## Index and publication (S2.3)
 

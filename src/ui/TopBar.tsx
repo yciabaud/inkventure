@@ -12,7 +12,8 @@ import { refreshScreen } from './refreshScreen';
  */
 export function TopBar({ current }: { current: RouteName }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const section = current === 'game' || current === 'play' ? 'library' : current;
+  const section =
+    current === 'game' || current === 'play' ? 'library' : current === 'help' ? 'home' : current;
 
   return (
     <header class="top-bar">

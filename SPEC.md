@@ -166,7 +166,10 @@ Purpose: get back into a game in one tap, or start a recommended one.
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
   one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
-- Empty state (first launch): short welcome text, "How to play" link, Featured shelf first.
+- Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
+  paged guide that also offers the test adventure), Featured shelf first.
+- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–204 px tall) and as many
+  cards as fit side by side make a page. It loads only `catalog/featured.json`, not the index.
 - Shelves are paginated horizontally with explicit ‹ › buttons, never scrolled.
 
 ### 3.4 Library (`#/library`)
@@ -413,7 +416,9 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    art (forgiveness is only in the iFiction XML, not fetched yet). Pick the best playable file among the formats
    enabled in `scripts/catalog/playability.json` (those with an engine): IF Archive URLs first, uncompressed before a
    zip (zips only when IFDB names the story file inside), `.zblorb/.gblorb` before bare story files; HTTPS only (IF
-   Archive links upgraded). Drop games without such a file, recording the reason in `report.json`.
+   Archive links upgraded). A file outside the IF Archive is used only if its host lets a browser page read it
+   (CORS, checked by `check-cors.ts` before resolving, see [§5.5](#55-game-files)). Drop games without such a file,
+   recording the reason in `report.json`.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.
@@ -481,6 +486,11 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
   CORS-enabled mirror; (2) the pipeline mirrors files whose licence allows redistribution into `public/games/`
   (freeware/open licences only, recorded in the index); (3) a tiny, documented CORS relay (e.g. Cloudflare
   Worker) — last resort because it breaks "100 % static".
+- **Other hosts are checked, not assumed** (found in S4.1 review: 207 of 1,693 games, 6 of 16 in French, had their
+  only file on author sites, GitHub, web.archive.org…, most without CORS, so Play failed): the weekly build requests
+  each such file with an `Origin` header (following redirects, each of which must allow it) and keeps the result for
+  30 days in `cache/cors.json` on the `catalog` branch (network and 5xx errors are checked again the next week). Games
+  whose file cannot be read leave the catalogue (`unreadable-host` in the report).
 - Download (S3.4): XHR `arraybuffer` with a progress page (KB received, of the total when known; Cancel), abandoned
   after **30 s without receiving anything** (not a fixed total time: Wi-Fi can be slow). A zip is unzipped client-side
   (the `primary` file the catalogue names). The file must look like a story for its engine (Blorb or the format's

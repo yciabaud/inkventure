@@ -6,7 +6,8 @@ export type Route =
   | { name: 'library' }
   | { name: 'game'; tuid: string }
   | { name: 'play'; tuid: string }
-  | { name: 'settings' };
+  | { name: 'settings' }
+  | { name: 'help' };
 
 export type RouteName = Route['name'];
 
@@ -67,6 +68,8 @@ function matchPath(segments: string[]): Route | null {
         return { name: 'library' };
       case 'settings':
         return { name: 'settings' };
+      case 'help':
+        return { name: 'help' };
     }
     return null;
   }

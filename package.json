@@ -20,6 +20,7 @@
     "check:size": "node scripts/size/check-size.ts",
     "catalog:crawl": "node scripts/catalog/crawl.ts",
     "catalog:resolve": "node scripts/catalog/resolve.ts",
+    "catalog:cors": "node scripts/catalog/check-cors.ts",
     "catalog:emit": "node scripts/catalog/emit.ts",
     "catalog:sample": "node scripts/catalog/build-sample.ts",
     "catalog:featured": "node scripts/catalog/build-featured.ts"
