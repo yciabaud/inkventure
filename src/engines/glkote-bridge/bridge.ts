@@ -154,8 +154,8 @@ export class GlkOteBridge {
     if (data.windows) this.updateWindows(data.windows);
     if (data.content && data.content.length) this.updateContent(data.content);
     if (data.specialinput) {
-      // File prompts (save / restore / transcript): not supported yet (saves are S1.5). Answer "cancelled" once
-      // glkapi has finished this update.
+      // File prompts (the game's own SAVE / RESTORE / SCRIPT commands): cancelled, saves go through the reader's
+      // menu instead. Answer once glkapi has finished this update.
       const iface = this.iface;
       const gen = this.generation;
       setTimeout(() => {
@@ -218,6 +218,11 @@ export class GlkOteBridge {
 
   get hasExited(): boolean {
     return this.exited;
+  }
+
+  /** The kind of input the game waits for, or null (running, ended or failed). */
+  get waitingFor(): 'line' | 'char' | null {
+    return this.pending ? this.pending.type : null;
   }
 
   // ---- Update handling ----
@@ -296,8 +301,12 @@ export class GlkOteBridge {
   }
 }
 
-/** In-memory stand-in for GlkOte's Dialog (file storage). Real save files arrive with S1.5. */
-export function createMemoryDialog() {
+/**
+ * In-memory stand-in for GlkOte's Dialog (file storage). `autosave` is the VM's autosave slot: ZVM writes its snapshot
+ * there when asked to (`do_autosave`) and reads it back when it starts with `do_vm_autosave`; it writes null when a
+ * snapshot fails to restore.
+ */
+export function createMemoryDialog(autosave: unknown = null) {
   const files: Record<string, string | Uint8Array> = {};
   function key(ref: { filename: string; usage: string }): string {
     return ref.usage + ':' + ref.filename;
@@ -305,6 +314,13 @@ export function createMemoryDialog() {
   let temp = 0;
   return {
     streaming: false,
+    autosave: autosave,
+    autosave_read() {
+      return this.autosave;
+    },
+    autosave_write(_signature: string, snapshot: unknown) {
+      this.autosave = snapshot;
+    },
     file_construct_ref(filename: string, usage: string, gameid?: string) {
       return { filename: filename || 'file', usage: usage || '', gameid: gameid || '' };
     },

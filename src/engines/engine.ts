@@ -68,7 +68,18 @@ export interface Engine {
   /** A key: a single character, or a Glk special key name such as `return`, `escape`, `left`. */
   sendChar(key: string): void;
   choose(index: number): void;
+  /**
+   * The whole game state, between turns (while the game waits for a line or a choice); rejects otherwise. Opaque bytes
+   * that only the same engine and story can restore.
+   */
   saveState(): Promise<Uint8Array>;
+  /**
+   * Continues from a saved state: the game then asks for input again (its text is not replayed, the reader keeps its
+   * own transcript). Rejects, leaving the game as it was, when the data is not a state of this story.
+   */
   restoreState(data: Uint8Array): Promise<void>;
+  /** Starts the story again from the beginning. */
+  restart(): Promise<void>;
+  /** Takes back the last turn when the engine can; false lets the reader restore its previous snapshot instead. */
   undo(): Promise<boolean>;
 }

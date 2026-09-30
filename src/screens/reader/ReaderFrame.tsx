@@ -19,13 +19,21 @@ interface Props {
    * only closes the menu. `settings` are the text settings to lay the pages out with.
    */
   children: (closeBar: () => boolean, settings: ReaderSettings) => ComponentChildren;
+  /** The game's own actions in the menu (Save…, Restore…, Undo, Restart), after "Aa". */
+  actions?: ReaderAction[];
+}
+
+export interface ReaderAction {
+  label: string;
+  onSelect: () => void;
+  disabled?: boolean;
 }
 
 /**
  * Full-screen reader chrome. The top zone opens a menu over the text: the app's top bar and the reader's own
- * actions (text settings "Aa", refresh screen); save, transcript and help join it in S1.5 / S1.6.
+ * actions (text settings "Aa", the game's actions, refresh screen); transcript and help join it in S1.6.
  */
-export function ReaderFrame({ tuid, heading, children }: Props) {
+export function ReaderFrame({ tuid, heading, children, actions }: Props) {
   const [barOpen, setBarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const readerSettings = useReaderSettings(tuid);
@@ -63,6 +71,20 @@ export function ReaderFrame({ tuid, heading, children }: Props) {
               </span>
               {t('reader.textSettings')}
             </button>
+            {(actions || []).map((action) => (
+              <button
+                key={action.label}
+                type="button"
+                class="reader__action"
+                disabled={action.disabled}
+                onClick={() => {
+                  setBarOpen(false);
+                  action.onSelect();
+                }}
+              >
+                {action.label}
+              </button>
+            ))}
             <button
               type="button"
               class="reader__action"

@@ -19,3 +19,9 @@ Only `ifvms/src/zvm.js` (and what it requires) and `glkote-term/src/glkapi.js` a
 are not. Both run from an ES module bundle thanks to small patches applied at build time and checked by tests
 (`scripts/build/vendor-patches.ts`): `glkapi.js` becomes a factory (one Glk instance per game, no implicit globals) and
 `opcodes.js` stops reading `this` at module level. Upgrading either package means re-checking those patches.
+
+Saves (S1.5): `saveState` uses ZVM's autosave snapshot (`do_autosave`: Quetzal RAM + Glk state, which needs ZVM's Glk
+dispatch layer `ifvms/src/zvm/dispatch.js`; importing it also sets an unused `window.GiDispa`). `restoreState` and
+`restart` boot a new VM (with `do_vm_autosave` to restore) and only swap it in once it has started, so a bad save leaves
+the game running. The text Glk keeps for redrawing (`reserve`) is dropped from snapshots: the reader restores its own
+transcript.
