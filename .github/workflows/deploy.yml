@@ -1,6 +1,8 @@
 name: Deploy to GitHub Pages
 
 # Deploys main once its CI run has passed (lint, unit, build, es5, size and e2e gates), or on demand.
+# The site is served from the gh-pages branch: main at its root, pull request previews under pr-preview/
+# (see preview.yml), so this deployment must leave that folder alone.
 on:
   workflow_run:
     workflows: [CI]
@@ -9,9 +11,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 # One deployment at a time; never cancel one that is already publishing.
 concurrency:
@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -38,19 +38,11 @@ jobs:
           GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
       - run: npm run check:es5
       - run: npm run check:size
-      # The Vite manifest is only used by check:size; don't publish it.
-      - run: rm -rf dist/.vite
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      # The Vite manifest is only used by check:size; don't publish it. Serve files as they are (no Jekyll).
+      - run: rm -rf dist/.vite && touch dist/.nojekyll
+      - uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          folder: dist
+          branch: gh-pages
+          clean-exclude: pr-preview/
+          commit-message: Deploy ${{ github.event.workflow_run.head_sha || github.sha }}

@@ -157,3 +157,38 @@ test('opening the keyboard (a shorter page) keeps the command field on screen', 
   expect(current).toBe(count);
   await page.setViewportSize(size);
 });
+
+test('on a phone-sized screen no chip is cut: those that do not fit move to the dialogs', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto(GAME + '?lang=fr');
+  await press(page, 'Continue ›');
+  // The opening turn is longer than one page at this size: jump to its end, where the bar is.
+  await press(page, 'Back to the present ›');
+  await expect(command(page)).toBeVisible();
+  for (const name of ['Directions', 'Actions']) {
+    const row = page.getByRole('group', { name: name });
+    const chips = await row.locator('.chip:not(.fit-hidden)').evaluateAll((elements) =>
+      elements.map((e) => {
+        const rect = e.getBoundingClientRect();
+        const parent = (e.parentNode as HTMLElement).getBoundingClientRect();
+        return {
+          text: e.textContent,
+          cut: e.scrollWidth > e.clientWidth || rect.right > parent.right + 0.5,
+        };
+      }),
+    );
+    expect(chips.length).toBeGreaterThan(1);
+    expect(chips.filter((c) => c.cut)).toEqual([]);
+  }
+  // Whatever left the bar is still one tap away.
+  const hidden = page.getByRole('group', { name: 'Actions' }).locator('.fit-hidden');
+  if (await hidden.count()) {
+    const label = (await hidden.first().textContent()) || '';
+    await press(page, 'More…');
+    await expect(
+      page.getByRole('dialog').getByRole('button', { name: label, exact: true }),
+    ).toBeVisible();
+  }
+});

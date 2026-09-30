@@ -23,7 +23,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here *
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S2.4 → S3.1 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S2.4 → S3.1 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
 
 ## Stories
 
@@ -36,6 +36,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S1.1 → S1.3 →
 | [S0.5](stories/S0.5-i18n-framework.md) | Internationalisation framework (EN/FR) | E0 | M0 | S0.4 | done |
 | [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | done |
 | [S0.7](stories/S0.7-asset-size-budgets.md) | Asset size budgets in CI | E0 | M0 | S0.1 | done |
+| [S0.8](stories/S0.8-pr-preview-deployments.md) | Pull request preview deployments | E0 | M0 | S0.2 | in-progress |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |

@@ -22,6 +22,7 @@
   "library.emptyTitle": "The catalogue is on its way",
   "library.emptyText": "Search and filters arrive with the catalogue.",
   "library.sample": "Open a sample game",
+  "library.playFixture": "Play the test adventure",
   "game.title": "Game",
   "game.sampleTitle": "Sample adventure",
   "game.sampleAuthor": "Unknown author",

@@ -240,10 +240,13 @@ The core screen. It must feel like reading an ebook.
 text area never changes size), in three rows:
 
 1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
-2. **Verbs**: Look, Inventory, Examine…, Take…, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
+2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
    Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
    excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
+
+Rows never wrap nor cut a label: on narrow screens (phones), the directions and verbs that do not fit move, from the
+end of the lists above, into the ⋯ and "More…" dialogs, and only the noun chips that fit are shown.
 3. **Command field** + Enter; ↑ / ↓ browse the history. While it has focus the reader stays on the last page, so
    the virtual keyboard shrinking the page re-paginates without hiding the field.
 
@@ -381,7 +384,7 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link.
 5. **Validate** — JSON schema checks, sizes budget (each shard < 150 KB), sanity counts vs previous build
    (fail if > 20 % drop).
-6. **Deploy** — commit to a `catalog` data branch or upload as a Pages artifact together with the app.
+6. **Deploy** — commit to a `catalog` data branch or publish together with the app on the `gh-pages` branch.
 
 Client side: `meta.json` + index shards are loaded when the Library opens (with a "Loading catalogue…"
 page), cached in memory, and in IndexedDB on class C devices. Filtering, sorting and search run over the
@@ -513,7 +516,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Engines | ZVM + Quixe (Parchment, MIT), inkjs (MIT) | Mature, pure JS. |
 | Unit tests | Vitest | Fast, TS-native. |
 | E2E tests | Playwright | Device emulation, network mocking. |
-| Hosting | GitHub Pages (project site, deployed by `.github/workflows/deploy.yml` after CI passes on `main`) | Free, static. |
+| Hosting | GitHub Pages (project site, served from the `gh-pages` branch: `main` at the root, deployed by `.github/workflows/deploy.yml` after CI passes; each pull request under `pr-preview/pr-<n>/` by `preview.yml`) | Free, static; PRs can be tried on a device before merging. |
 | CI/CD | GitHub Actions | Tests, build, catalogue job, ebook build. |
 
 ```
@@ -604,7 +607,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 
 | Milestone | Content | Stories |
 |---|---|---|
-| **M0 — Foundations & spikes** | Scaffold, CI, deploy, capability probe on Kindle, design system, i18n, storage, size budgets | S0.1–S0.7 |
+| **M0 — Foundations & spikes** | Scaffold, CI, deploy, capability probe on Kindle, design system, i18n, storage, size budgets, PR previews | S0.1–S0.8 |
 | **M1 — Playable Z-machine** | Paginated reader, settings, ZVM, command bar & chips, saves, status line | S1.1–S1.6 |
 | **M2 — Catalogue pipeline** | IFDB crawl, playability, index, featured | S2.1–S2.4 |
 | **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings & export | S3.1–S3.4, S4.1–S4.2, S5.1–S5.2 |

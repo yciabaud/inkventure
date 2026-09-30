@@ -31,4 +31,7 @@ npm run test:e2e    # Playwright (set PW_WEBKIT=1 to include WebKit locally; CI 
 ## Deployment
 
 `.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages when the CI workflow succeeds on `main` (or when run
-manually). One-time setup: repository **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+manually), by pushing it to the root of the `gh-pages` branch. `.github/workflows/preview.yml` publishes every pull
+request to `https://yciabaud.github.io/inkventure/pr-preview/pr-<number>/` (the link is commented on the PR) and
+removes it when the PR is closed. One-time setup: repository **Settings → Pages → Build and deployment → Source:
+Deploy from a branch → `gh-pages` / `(root)`**.
