@@ -51,7 +51,10 @@ export function viewgameUrl(tuid: string): string {
   return IFDB_ROOT + 'viewgame?json&id=' + encodeURIComponent(tuid);
 }
 
-/** IFDB answers errors (bad query, unknown game) with HTTP 200 and `{"error": "…"}`. */
+/**
+ * IFDB answers errors with HTTP 200: `{"error": "…"}` from search (bad query), `{"errorCode", "errorMessage"}` from
+ * viewgame (unknown game).
+ */
 export class IfdbError extends Error {}
 
 function parseJson(body: string, what: string): unknown {
@@ -61,8 +64,11 @@ function parseJson(body: string, what: string): unknown {
   } catch {
     throw new IfdbError(what + ': response is not JSON');
   }
-  if (data && typeof data === 'object' && 'error' in data) {
-    throw new IfdbError(what + ': ' + String((data as { error: unknown }).error));
+  if (data && typeof data === 'object') {
+    const error = data as { error?: unknown; errorMessage?: unknown };
+    if (error.error !== undefined || error.errorMessage !== undefined) {
+      throw new IfdbError(what + ': ' + String(error.error ?? error.errorMessage));
+    }
   }
   return data;
 }

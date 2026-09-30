@@ -160,17 +160,21 @@ describe('offline run on the recorded fixtures', () => {
     const second = await run();
     expect(JSON.stringify(second.dataset)).toBe(JSON.stringify(first.dataset));
 
-    expect(first.candidates).toBe(7);
+    expect(first.candidates).toBe(11);
     expect(first.dataset.games.map((g) => g.tuid)).toEqual([
+      'fxadlt0000000008',
       'fxbell0000000002',
       'fxcave0000000003',
+      'fxexcl0000000011',
+      'fxhttp0000000010',
       'fxinky0000000007',
       'fxlamp0000000001',
+      'fxnofl0000000009',
       'fxtwin0000000006',
       'fxzork0000000005',
     ]);
     expect(first.result.failed.map((f) => f.tuid)).toEqual(['fxgone0000000004']);
-    const bells = first.dataset.games[0];
+    const bells = first.dataset.games[1];
     expect(bells.queries).toEqual(['downloadable:yes system:inform']);
     expect(bells.record.ifdb.downloads!.links![0].format).toBe('blorb/glulx');
   });
@@ -189,6 +193,6 @@ describe('offline run on the recorded fixtures', () => {
     expect(counting.urls.filter((url) => url.indexOf('viewgame') >= 0)).toEqual([
       viewgameUrl('fxgone0000000004'),
     ]);
-    expect(again.result.reused).toBe(6);
+    expect(again.result.reused).toBe(10);
   });
 });

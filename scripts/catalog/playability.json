@@ -1,0 +1,4 @@
+{
+  "comment": "Story formats the app can play (SPEC §4). Enable a format in the same PR as its engine: zcode (S1.3), glulx (S1.7), ink (S1.8), twine (S1.9). Games in other formats are left out of the catalogue and counted in the report.",
+  "enabledFormats": ["zcode"]
+}

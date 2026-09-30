@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxexcl0000000011",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXEXCL0000000011\"]},\"bibliographic\":{\"title\":\"Needs Review\",\"author\":\"J. Test\",\"language\":\"en\",\"firstpublished\":\"2018\",\"description\":\"Synthetic listing for the catalogue tests.\"},\"contacts\":[],\"ifdb\":{\"tuid\":\"fxexcl0000000011\",\"pageversion\":5,\"link\":\"https://ifdb.org/viewgame?id=fxexcl0000000011\",\"downloads\":{\"links\":[{\"url\":\"https://ifarchive.org/if-archive/games/zcode/review.z5\",\"title\":\"review.z5\",\"isGame\":true,\"format\":\"zcode\"}]},\"averageRating\":1,\"starRating\":1,\"ratingCountAvg\":1,\"ratingCountTot\":1,\"tags\":[]}}"
+}
