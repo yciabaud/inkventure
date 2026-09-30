@@ -57,14 +57,9 @@ export const CARD_GAP = 16;
 /** Height under a card's cover: badge, two lines of title, three of pitch. */
 export const CARD_TEXT_HEIGHT = 136;
 
-/** Height under a compact card's cover: two lines of title (Home shelves when both are shown). */
-export const COMPACT_TEXT_HEIGHT = 50;
-
 /** Card cover height bounds (2:3 covers), and the narrowest card (its text needs room). */
 export const MAX_COVER_HEIGHT = 250;
 export const MIN_COVER_HEIGHT = 96;
-/** Compact cards may get smaller covers (two shelves share the screen). */
-export const MIN_COMPACT_COVER_HEIGHT = 72;
 export const MIN_CARD_WIDTH = 112;
 
 export interface ShelfLayout {
@@ -77,16 +72,12 @@ export interface ShelfLayout {
 
 /**
  * Card size for a shelf row of `width` × `height` px: the cover as tall as the row allows (within bounds) once the
- * text is placed under it, then as many cards per page as fit side by side, at least one. `compact` cards only show
- * their title under the cover.
+ * text is placed under it, then as many cards per page as fit side by side, at least one.
  */
-export function shelfLayout(width: number, height: number, compact = false): ShelfLayout {
+export function shelfLayout(width: number, height: number): ShelfLayout {
   const coverHeight = Math.max(
-    compact ? MIN_COMPACT_COVER_HEIGHT : MIN_COVER_HEIGHT,
-    Math.min(
-      MAX_COVER_HEIGHT,
-      Math.floor(height - (compact ? COMPACT_TEXT_HEIGHT : CARD_TEXT_HEIGHT)),
-    ),
+    MIN_COVER_HEIGHT,
+    Math.min(MAX_COVER_HEIGHT, Math.floor(height - CARD_TEXT_HEIGHT)),
   );
   const coverWidth = Math.floor(coverHeight / 1.5);
   const cardWidth = Math.max(coverWidth, MIN_CARD_WIDTH);

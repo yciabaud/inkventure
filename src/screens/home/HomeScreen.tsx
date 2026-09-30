@@ -13,6 +13,7 @@ import {
   type ShelfLayout,
 } from '../../catalog/featured';
 import { thumbnailUrl } from '../../catalog/game';
+import { gridLayout, type GridLayout } from '../../catalog/layout';
 import { paginate } from '../../catalog/search';
 import { formatRelativeDate, t, useLocale } from '../../i18n/i18n';
 import {
@@ -334,13 +335,13 @@ function AdventureCard({
   onMore,
 }: {
   game: Adventure;
-  layout: ShelfLayout;
+  layout: GridLayout;
   onMore: (game: Adventure) => void;
 }) {
   return (
-    <li class="shelf__item shelf__item--more" style={{ width: layout.cardWidth + 'px' }}>
+    <li class="tiles__item">
       <a
-        class="shelf-card"
+        class="tile"
         href={formatHash({ name: 'game', tuid: game.tuid })}
         aria-label={label(game.title, game.author)}
       >
@@ -352,7 +353,7 @@ function AdventureCard({
             game.cover ? thumbnailUrl(game.tuid, layout.coverWidth, layout.coverHeight) : undefined
           }
         />
-        <span class="shelf-card__title">{game.title}</span>
+        <span class="tile__title">{game.title}</span>
       </a>
       <button
         type="button"
@@ -372,7 +373,7 @@ function AdventureCard({
   );
 }
 
-/** My adventures: covers, last played first, a page at a time. */
+/** My adventures: a grid of covers like the Library's (as many rows as fit), last played first, a page at a time. */
 function AdventuresShelf({
   games,
   heading,
@@ -386,8 +387,7 @@ function AdventuresShelf({
   const [menuFor, setMenuFor] = useState<Adventure | null>(null);
   const [removing, setRemoving] = useState<Adventure | null>(null);
   const [area, areaRef] = useArea();
-  // Title only under the covers (the menu shows the rest).
-  const layout = shelfLayout(area.width, area.height, true);
+  const layout = gridLayout(area.width, area.height);
   const shown = paginate(sortRecent(games), page, layout.perPage);
   return (
     <>
@@ -399,7 +399,13 @@ function AdventuresShelf({
         onPage={setPage}
         rowRef={areaRef}
       >
-        <ul class="shelf__cards" aria-label={t('home.adventures')}>
+        <ul
+          class="tiles"
+          aria-label={t('home.adventures')}
+          style={{
+            gridTemplateColumns: 'repeat(' + layout.columns + ', ' + layout.coverWidth + 'px)',
+          }}
+        >
           {shown.items.map((game) => (
             <AdventureCard key={game.tuid} game={game} layout={layout} onMore={setMenuFor} />
           ))}

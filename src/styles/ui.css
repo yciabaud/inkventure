@@ -1566,12 +1566,9 @@ button.pager__btn {
   margin-top: 12px;
 }
 
-.shelf__item--more {
+/* A cover of My adventures: its ⋮ is placed over it. */
+.tiles__item {
   position: relative;
-}
-
-.shelf__item--more .shelf-card {
-  width: 100%;
 }
 
 /* "⋮" over the bottom right corner of a cover (placed inline), in a 48 px target. */

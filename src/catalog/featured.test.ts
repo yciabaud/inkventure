@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   CARD_GAP,
   CARD_TEXT_HEIGHT,
-  COMPACT_TEXT_HEIGHT,
   featuredFor,
   loadFeatured,
   MAX_COVER_HEIGHT,
@@ -59,7 +58,6 @@ describe('shelfLayout', () => {
       coverHeight: MAX_COVER_HEIGHT,
     });
     expect(shelfLayout(604, 250).coverHeight).toBe(250 - CARD_TEXT_HEIGHT);
-    expect(shelfLayout(604, 250, true).coverHeight).toBe(250 - COMPACT_TEXT_HEIGHT);
     const small = shelfLayout(328, 200);
     expect(small.cardWidth).toBe(MIN_CARD_WIDTH);
     expect(small.perPage).toBe(Math.floor((328 + CARD_GAP) / (MIN_CARD_WIDTH + CARD_GAP)));
