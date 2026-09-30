@@ -61,7 +61,7 @@ export const CARD_TEXT_HEIGHT = 136;
 export const COMPACT_TEXT_HEIGHT = 50;
 
 /** Card cover height bounds (2:3 covers), and the narrowest card (its text needs room). */
-export const MAX_COVER_HEIGHT = 204;
+export const MAX_COVER_HEIGHT = 250;
 export const MIN_COVER_HEIGHT = 96;
 /** Compact cards may get smaller covers (two shelves share the screen). */
 export const MIN_COMPACT_COVER_HEIGHT = 72;

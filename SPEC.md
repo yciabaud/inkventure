@@ -165,15 +165,17 @@ Purpose: get back into a game in one tap, or start a recommended one.
   too much for a shelf). A "⋮" over the bottom right corner of each cover, like the Kindle library, opens the game's
   menu: the game (cover, title, author, progress), then Continue / Play, its page, *Remove from Home* (keeps saves and
   progress unless "also delete saves" is checked; the cached story file stays either way).
-- Shelves share the height left under the hero: each has its title and a compact "‹ 2 / 5 ›" pager on one header row
-  (the title is shortened if needed); when My adventures and Featured are both shown, cards show only the title under
-  the cover.
+- **One shelf at a time** (so its covers can be large): when the player has adventures and there are featured games,
+  a tab row "My adventures | Featured" replaces the shelf title (`#/home?shelf=featured`, replaced in the history);
+  the shelf takes the height left under the hero, with a compact "‹ 2 / 5 ›" pager on the same header row (without
+  the page number on narrow screens). My adventures cards show only the title; Featured cards keep their pitch.
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
   one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
 - Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
   paged guide that also offers the test adventure), Featured shelf first.
-- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–204 px tall) and as many
+- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–250 px tall, the
+  largest IFDB thumbnail) and as many
   cards as fit side by side make a page. It loads only `catalog/featured.json`, not the index.
 - Shelves are paginated horizontally with explicit ‹ › buttons, never scrolled.
 

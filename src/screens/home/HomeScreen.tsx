@@ -72,18 +72,18 @@ function progressText(game: Adventure): string {
   return parts.join(' · ');
 }
 
-/** A shelf: its title and ‹ › in one header row, then a row of items sized to the height left. */
+/** A shelf: its heading (title or tabs) and ‹ › in one header row, then a row of items sized to the height left. */
 function Shelf({
-  id,
-  title,
+  label,
+  heading,
   page,
   pageCount,
   onPage,
   rowRef,
   children,
 }: {
-  id: string;
-  title: string;
+  label: string;
+  heading: ComponentChildren;
   page: number;
   pageCount: number;
   onPage: (page: number) => void;
@@ -91,11 +91,9 @@ function Shelf({
   children: ComponentChildren;
 }) {
   return (
-    <section class="shelf" aria-labelledby={id}>
+    <section class="shelf" aria-label={label}>
       <div class="shelf__head">
-        <h2 class="shelf__title" id={id}>
-          {title}
-        </h2>
+        {heading}
         <Pager page={page} pageCount={pageCount} onPage={onPage} compact />
       </div>
       <div class="shelf__row" ref={rowRef}>
@@ -105,15 +103,43 @@ function Shelf({
   );
 }
 
-function FeaturedCard({
-  game,
-  layout,
-  compact,
-}: {
-  game: FeaturedRow;
-  layout: ShelfLayout;
-  compact: boolean;
-}) {
+type ShelfName = 'adventures' | 'featured';
+
+/** A shelf's title, when it is alone on Home. */
+function ShelfTitle({ title }: { title: string }) {
+  return <h2 class="shelf__title">{title}</h2>;
+}
+
+/**
+ * My adventures | Featured, when the player has both: one shelf at a time, so its covers can be large. The tab is
+ * in the hash (`?shelf=featured`), replaced rather than pushed, so Back leaves Home as usual.
+ */
+function ShelfTabs({ current }: { current: ShelfName }) {
+  const tab = (name: ShelfName, title: string) => {
+    const href = formatHash({ name: 'home' }, name === 'featured' ? { shelf: 'featured' } : {});
+    return (
+      <a
+        class={'tabs__tab' + (current === name ? ' tabs__tab--on' : '')}
+        href={href}
+        aria-current={current === name ? 'page' : undefined}
+        onClick={(event) => {
+          event.preventDefault();
+          window.location.replace(href);
+        }}
+      >
+        {title}
+      </a>
+    );
+  };
+  return (
+    <nav class="tabs" aria-label={t('home.shelves')}>
+      {tab('adventures', t('home.adventures'))}
+      {tab('featured', t('home.featured'))}
+    </nav>
+  );
+}
+
+function FeaturedCard({ game, layout }: { game: FeaturedRow; layout: ShelfLayout }) {
   return (
     <li class="shelf__item">
       <a
@@ -130,24 +156,24 @@ function FeaturedCard({
             game.c ? thumbnailUrl(game.t, layout.coverWidth, layout.coverHeight) : undefined
           }
         />
-        {!compact && game.st && <span class="badge shelf-card__badge">{t('filters.start')}</span>}
+        {game.st && <span class="badge shelf-card__badge">{t('filters.start')}</span>}
         <span class="shelf-card__title">{game.n}</span>
-        {!compact && <span class="shelf-card__text">{game.pi || game.a}</span>}
+        <span class="shelf-card__text">{game.pi || game.a}</span>
       </a>
     </li>
   );
 }
 
-/** Featured games; `compact` (title only under the cover) when My adventures shares the screen. */
-function FeaturedShelf({ games, compact }: { games: FeaturedRow[]; compact: boolean }) {
+/** Featured games, with their pitch. */
+function FeaturedShelf({ games, heading }: { games: FeaturedRow[]; heading: ComponentChildren }) {
   const [area, areaRef] = useArea();
   const [page, setPage] = useState(1);
-  const layout = shelfLayout(area.width, area.height, compact);
+  const layout = shelfLayout(area.width, area.height);
   const shown = paginate(games, page, layout.perPage);
   return (
     <Shelf
-      id="featured-title"
-      title={t('home.featured')}
+      label={t('home.featured')}
+      heading={heading}
       page={shown.page}
       pageCount={shown.pageCount}
       onPage={setPage}
@@ -155,7 +181,7 @@ function FeaturedShelf({ games, compact }: { games: FeaturedRow[]; compact: bool
     >
       <ul class="shelf__cards" aria-label={t('home.featured')}>
         {shown.items.map((game) => (
-          <FeaturedCard key={game.t} game={game} layout={layout} compact={compact} />
+          <FeaturedCard key={game.t} game={game} layout={layout} />
         ))}
       </ul>
     </Shelf>
@@ -347,19 +373,27 @@ function AdventureCard({
 }
 
 /** My adventures: covers, last played first, a page at a time. */
-function AdventuresShelf({ games, onChange }: { games: Adventure[]; onChange: () => void }) {
+function AdventuresShelf({
+  games,
+  heading,
+  onChange,
+}: {
+  games: Adventure[];
+  heading: ComponentChildren;
+  onChange: () => void;
+}) {
   const [page, setPage] = useState(1);
   const [menuFor, setMenuFor] = useState<Adventure | null>(null);
   const [removing, setRemoving] = useState<Adventure | null>(null);
   const [area, areaRef] = useArea();
-  // Title only under the covers: the shelf shares the screen with the hero and Featured.
+  // Title only under the covers (the menu shows the rest).
   const layout = shelfLayout(area.width, area.height, true);
   const shown = paginate(sortRecent(games), page, layout.perPage);
   return (
     <>
       <Shelf
-        id="adventures-title"
-        title={t('home.adventures')}
+        label={t('home.adventures')}
+        heading={heading}
         page={shown.page}
         pageCount={shown.pageCount}
         onPage={setPage}
@@ -388,7 +422,7 @@ function AdventuresShelf({ games, onChange }: { games: Adventure[]; onChange: ()
   );
 }
 
-export function HomeScreen() {
+export function HomeScreen({ query = {} }: { query?: Record<string, string> }) {
   const locale = useLocale();
   const featured = useFeatured();
   const store = getStore();
@@ -402,6 +436,11 @@ export function HomeScreen() {
     featured.status === 'ready'
       ? featuredFor(featured.file, locale, (tuid) => !!inProgress[tuid])
       : [];
+  // One shelf at a time: My adventures, unless the Featured tab is chosen or there are no adventures.
+  const both = adventures.length > 0 && games.length > 0;
+  let shelf: ShelfName | null = null;
+  if (adventures.length && (query.shelf !== 'featured' || !games.length)) shelf = 'adventures';
+  else if (games.length) shelf = 'featured';
 
   return (
     <div class="screen home">
@@ -418,15 +457,22 @@ export function HomeScreen() {
         </section>
       )}
       {hero && <ContinueHero game={hero} />}
-      {adventures.length > 0 && (
+      {shelf === 'adventures' && (
         <AdventuresShelf
           key={version}
           games={adventures}
+          heading={
+            both ? <ShelfTabs current={shelf} /> : <ShelfTitle title={t('home.adventures')} />
+          }
           onChange={() => setVersion((n) => n + 1)}
         />
       )}
-      {games.length > 0 && (
-        <FeaturedShelf key={locale} games={games} compact={adventures.length > 0} />
+      {shelf === 'featured' && (
+        <FeaturedShelf
+          key={locale}
+          games={games}
+          heading={both ? <ShelfTabs current={shelf} /> : <ShelfTitle title={t('home.featured')} />}
+        />
       )}
       {featured.status === 'loading' && (
         <p class="library__status" role="status">

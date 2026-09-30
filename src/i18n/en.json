@@ -26,6 +26,7 @@
   "home.turn": "Turn {turn}",
   "home.lastPlayed": "last played {date}",
   "home.adventures": "My adventures",
+  "home.shelves": "Home shelves",
   "home.moreFor": "More for {title}",
   "home.menuTitle": "Options",
   "home.removeTitle": "Remove “{title}” from Home?",

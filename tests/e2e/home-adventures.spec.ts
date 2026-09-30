@@ -106,6 +106,55 @@ test('My adventures lists the last played first; the ⋮ menu shows the game and
   await expect(page).toHaveURL(/#\/play\/fxzork0000000005$/);
 });
 
+test('with adventures, Featured is a tab: one shelf at a time', async ({ page }) => {
+  // The sample's English featured games are both in the seeded adventures: offer another one.
+  await page.route('**/catalog/featured.json', (route) =>
+    route.fulfill({
+      json: {
+        version: 1,
+        built: 'x',
+        locales: {
+          en: [
+            {
+              t: 'other000000001',
+              n: 'Another Game',
+              a: 'Writer',
+              f: 'zcode',
+              l: 'en',
+              pi: 'A pitch.',
+            },
+          ],
+          fr: [],
+        },
+      },
+    }),
+  );
+  await seed(page);
+  const tabs = page.getByRole('navigation', { name: 'Home shelves' });
+  await expect(tabs.getByRole('link', { name: 'My adventures' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await expect(adventures(page)).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Featured' })).toHaveCount(0);
+
+  await press(tabs.getByRole('link', { name: 'Featured' }));
+  await expect(page).toHaveURL(/#\/home\?shelf=featured$/);
+  await expect(page.getByRole('list', { name: 'Featured' })).toContainText('A pitch.');
+  await expect(adventures(page)).toHaveCount(0);
+  // The Continue hero stays; Featured cards keep their pitch when the shelf is alone.
+  await expect(page.getByRole('region', { name: 'Continue' })).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollHeight > document.documentElement.clientHeight,
+    ),
+  ).toBe(false);
+
+  await press(tabs.getByRole('link', { name: 'My adventures' }));
+  await expect(page).toHaveURL(/#\/home$/);
+  await expect(adventures(page)).toBeVisible();
+});
+
 test('Remove from Home keeps the saves, unless asked to delete them', async ({ page }) => {
   await seed(page);
   const saved = (key: string) =>

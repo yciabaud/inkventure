@@ -1574,7 +1574,7 @@ button.pager__btn {
   width: 100%;
 }
 
-/* "⋮" over the bottom right corner of a cover (placed inline): a 48 px target around a small white tab. */
+/* "⋮" over the bottom right corner of a cover (placed inline), in a 48 px target. */
 .more-btn {
   position: absolute;
   display: flex;
@@ -1588,19 +1588,18 @@ button.pager__btn {
   cursor: pointer;
 }
 
+/* No frame over the cover: black dots with a white halo, readable on any cover. */
 .more-btn__dots {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 34px;
-  border: 1px solid #000;
-  border-radius: 4px 0 0;
-  background: #fff;
+  padding: 0 6px 4px 0;
   color: #000;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 700;
   line-height: 1;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 2px #fff,
+    0 0 3px #fff,
+    0 0 4px #fff;
 }
 
 /* A game's menu: the game, then its actions. */
@@ -1672,4 +1671,44 @@ button.pager__btn {
   width: 24px;
   height: 24px;
   margin: 0 12px 0 0;
+}
+
+/* My adventures | Featured (Home, when the player has both). */
+.tabs {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.tabs__tab {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  margin-right: 16px;
+  border-bottom: 3px solid transparent;
+  color: #555;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabs__tab--on {
+  border-bottom-color: #000;
+  color: #000;
+}
+
+/* Narrow screens: the tabs and ‹ › keep one line without the page number. The old max-width notation: older
+   e-reader browsers do not know the range syntax. */
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (max-width: 420px) {
+  .pager--compact .pager__status {
+    display: none;
+  }
+
+  .tabs__tab {
+    margin-right: 12px;
+    font-size: 18px;
+  }
 }

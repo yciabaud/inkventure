@@ -26,6 +26,7 @@
   "home.turn": "Tour {turn}",
   "home.lastPlayed": "joué {date}",
   "home.adventures": "Mes aventures",
+  "home.shelves": "Étagères de l’accueil",
   "home.moreFor": "Plus d’options pour {title}",
   "home.menuTitle": "Options",
   "home.removeTitle": "Retirer « {title} » de l’accueil ?",
