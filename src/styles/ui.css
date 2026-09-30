@@ -5,6 +5,10 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+
+  /* Mobile browsers make 100vh the height without their toolbars, taller than what is visible: the dynamic viewport
+     keeps the pagers at the bottom of the screen in view. Browsers without dvh keep 100vh. */
+  min-height: 100dvh;
 }
 
 .app__main {
