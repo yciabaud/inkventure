@@ -49,7 +49,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
-| [S2.4](stories/S2.4-featured-json.md) | Featured selection file & validation | E2 | M2 | S2.3 | todo |
+| [S2.4](stories/S2.4-featured-json.md) | Featured selection file & validation | E2 | M2 | S2.3 | done |
 | [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | todo |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | todo |

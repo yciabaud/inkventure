@@ -1,10 +1,13 @@
 // The sample catalogue committed in public/catalog/ for local development and tests (story S2.3): the synthetic IFDB
 // fixtures run through the whole pipeline (crawl offline → resolve → emit). The weekly workflow replaces it with the
 // real catalogue in deployed builds.
+// It includes featured.json, made from the curated sample games of tests/fixtures/featured.json (S2.4).
 import { readFileSync } from 'node:fs';
 import { crawl, type CacheEntry } from './crawler.ts';
 import { emit, type CatalogFiles } from './emitter.ts';
+import { buildFeatured, catalogView, type CuratedFile } from './featured.ts';
 import { offlineFetcher } from './fetcher.ts';
+import { uiLocales } from './locales.ts';
 import { resolve, type ContentPolicyConfig, type StoryFormat } from './resolver.ts';
 
 /** Fixed, so the committed sample only changes when the pipeline or the fixtures do. */
@@ -30,5 +33,14 @@ export async function sampleCatalog(): Promise<CatalogFiles> {
     policy: 'general',
     config: readJson<ContentPolicyConfig>('scripts/catalog/content-policy.json'),
   });
-  return emit(resolution.games, { built: SAMPLE_BUILT, policy: 'general' });
+  const files = emit(resolution.games, { built: SAMPLE_BUILT, policy: 'general' });
+  // The featured lists, from a curated file of sample games (content/featured.json names real ones).
+  files['featured.json'] = buildFeatured(
+    readJson<CuratedFile>('tests/fixtures/featured.json'),
+    catalogView(files),
+    readJson<ContentPolicyConfig>('scripts/catalog/content-policy.json'),
+    uiLocales(),
+    SAMPLE_BUILT,
+  ).file;
+  return files;
 }

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "tuid": "fxlamp0000000001",
+      "starter": true,
+      "pitch": {
+        "en": "A lighthouse keeper's last night. Fifteen minutes, a gentle first game.",
+        "fr": "La dernière nuit d'un gardien de phare. Quinze minutes, un premier jeu tout en douceur."
+      }
+    },
+    {
+      "tuid": "fxcave0000000003",
+      "pitch": {
+        "en": "Echoes answer you in a cave. In French.",
+        "fr": "Des échos vous répondent au fond d'une grotte."
+      }
+    }
+  ]
+}
