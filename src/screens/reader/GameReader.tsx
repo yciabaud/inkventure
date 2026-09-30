@@ -11,6 +11,7 @@ import { applyNoun } from '../../reader/commands/compose';
 import { recentNouns } from '../../reader/commands/nouns';
 import { verbTable } from '../../reader/commands/verbs';
 import { readerBlocks } from '../../reader/fromTranscript';
+import { settingsKey, textStyle } from '../../reader/settings';
 import { PagedText } from '../../reader/PagedText';
 import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
@@ -198,8 +199,8 @@ export function GameReader({ language }: { language?: string }) {
   }
 
   return (
-    <ReaderFrame heading={heading}>
-      {(closeBar) =>
+    <ReaderFrame tuid={FIXTURE_Z_TUID} heading={heading}>
+      {(closeBar, settings) =>
         state.phase === 'loading' ? (
           <p class="reader__loading ui-font">{t('reader.loading')}</p>
         ) : (
@@ -208,6 +209,8 @@ export function GameReader({ language }: { language?: string }) {
             focus={focus}
             lastPageSlot={slot}
             slotClass="reader__slot--game"
+            textStyle={textStyle(settings)}
+            layoutKey={settingsKey(settings)}
             pinToLast={typing}
             interceptTap={(isLastPage, point) => {
               if (closeBar()) return true;

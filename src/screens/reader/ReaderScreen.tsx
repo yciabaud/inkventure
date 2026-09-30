@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { formatHash } from '../../app/router';
 import { t } from '../../i18n/i18n';
 import { PagedText } from '../../reader/PagedText';
+import { settingsKey, textStyle } from '../../reader/settings';
 import type { ReaderBlock } from '../../reader/paginator';
 import { LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
@@ -61,12 +62,15 @@ function DemoReader() {
 
   return (
     <ReaderFrame
+      tuid={DEMO_TUID}
       heading={<span class="reader__title">{story ? story.title : t('play.title')}</span>}
     >
-      {(closeBar) =>
+      {(closeBar, settings) =>
         story ? (
           <PagedText
             blocks={story.blocks}
+            textStyle={textStyle(settings)}
+            layoutKey={settingsKey(settings)}
             lastPageSlot={<p class="reader__input-slot">{t('reader.inputSlot')}</p>}
             interceptTap={closeBar}
           />
