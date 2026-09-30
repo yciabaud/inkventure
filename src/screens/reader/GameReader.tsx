@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import type { Engine, InputRequest } from '../../engines/engine';
+import type { Engine, InputRequest, OutputBlock } from '../../engines/engine';
 import {
   applyOutput,
   EMPTY_TRANSCRIPT,
@@ -7,16 +7,20 @@ import {
   type Transcript,
 } from '../../engines/transcript';
 import { t } from '../../i18n/i18n';
+import type { GameSnapshot, SlotInfo } from '../../storage/saves';
+import { getStore, isStorageFullError } from '../../storage';
 import { applyNoun } from '../../reader/commands/compose';
 import { recentNouns } from '../../reader/commands/nouns';
 import { verbTable } from '../../reader/commands/verbs';
 import { readerBlocks } from '../../reader/fromTranscript';
 import { settingsKey, textStyle } from '../../reader/settings';
 import { PagedText } from '../../reader/PagedText';
+import { UndoStack } from '../../reader/undoStack';
 import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
 import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
 import { ReaderFrame } from './ReaderFrame';
+import { RestartDialog, RestoreDialog, SaveDialog, type SaveMessage } from './SaveDialogs';
 // The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
 
@@ -53,6 +57,43 @@ function glkKey(event: KeyboardEvent): string | null {
   return event.key && event.key.length === 1 ? event.key : null;
 }
 
+type SavesModule = typeof import('../../storage/saves');
+
+/** The game at the start of a turn: engine state, turn number and the transcript up to there. */
+interface TurnState {
+  state: Uint8Array;
+  turn: number;
+  transcript: Transcript;
+}
+
+function toGameSnapshot(turnState: TurnState): GameSnapshot {
+  return {
+    state: turnState.state,
+    turn: turnState.turn,
+    paragraphs: turnState.transcript.paragraphs.map((p) => p.runs),
+    status: turnState.transcript.status,
+  };
+}
+
+function fromGameSnapshot(saved: GameSnapshot): TurnState {
+  const blocks: OutputBlock[] = saved.paragraphs.map((runs) => ({ type: 'paragraph', runs: runs }));
+  blocks.push({ type: 'status', lines: saved.status });
+  return {
+    state: saved.state,
+    turn: saved.turn,
+    transcript: applyOutput(EMPTY_TRANSCRIPT, blocks),
+  };
+}
+
+/** The block the pages open on after going back in time: the last command, so the last page is shown. */
+function lastTurnFocus(transcript: Transcript): number {
+  const blocks = readerBlocks(transcript.paragraphs, true);
+  for (let i = blocks.length - 1; i >= 0; i--) if (blocks[i].kind === 'input') return i;
+  return 0;
+}
+
+type Dialogs = 'save' | 'restore' | 'restart' | null;
+
 type State =
   | { phase: 'loading' }
   | { phase: 'failed'; message: string }
@@ -72,21 +113,106 @@ export function GameReader({ language }: { language?: string }) {
   const [typing, setTyping] = useState(false);
   const engineRef = useRef<Engine | null>(null);
   const table = useMemo(() => verbTable(language || FIXTURE_Z_LANGUAGE), [language]);
+  const tuid = FIXTURE_Z_TUID;
+
+  // The session outside React state, so snapshots read it as the engine is (not as last rendered).
+  const transcriptRef = useRef<Transcript>(EMPTY_TRANSCRIPT);
+  const turnRef = useRef(0);
+  const savesRef = useRef<SavesModule | null>(null);
+  const [undoStack] = useState(() => new UndoStack<TurnState>());
+  // Input requests while restoring a state do not start a new turn.
+  const restoringRef = useRef(false);
+  const [canUndo, setCanUndo] = useState(false);
+  const [dialog, setDialog] = useState<Dialogs>(null);
+  const [message, setMessage] = useState<SaveMessage>(null);
+  const [slots, setSlots] = useState<Array<SlotInfo | null>>([]);
+  // Name proposed in the Save dialog: the location, else the turn.
+  const [saveName, setSaveName] = useState('');
+
+  function showTranscript(next: Transcript) {
+    transcriptRef.current = next;
+    setTranscript(next);
+  }
+
+  /** Autosave (the last turn on disk) and the progress record for Home. Storage full: the StorageNotice says so. */
+  function persist(turnState: TurnState) {
+    const saves = savesRef.current;
+    if (!saves) return;
+    const store = getStore();
+    const now = Date.now();
+    try {
+      saves.updateProgress(store, tuid, {
+        turns: turnState.turn,
+        lastPlayed: now,
+        location: splitStatus(turnState.transcript.status).left,
+      });
+      saves.writeAutosave(store, tuid, toGameSnapshot(turnState), now);
+    } catch (error) {
+      if (!isStorageFullError(error)) console.error('Autosave failed', error);
+    }
+  }
+
+  /** A new turn begins (the game waits for a command): snapshot it for Undo and autosave it. */
+  function snapshotTurn(engine: Engine) {
+    // After the page has drawn the reply: saving is the slowest part of a turn on an e-reader.
+    setTimeout(() => {
+      if (engineRef.current !== engine) return;
+      const turn = turnRef.current;
+      const transcript = transcriptRef.current;
+      engine.saveState().then(
+        (state) => {
+          if (engineRef.current !== engine) return;
+          const turnState = { state: state, turn: turn, transcript: transcript };
+          undoStack.push(turnState);
+          setCanUndo(undoStack.canUndo);
+          persist(turnState);
+        },
+        () => undefined, // no longer between turns (a key is expected, or the story ended)
+      );
+    }, 0);
+  }
+
+  /** Continues from `turnState` (resume, restore, undo). Rejects, leaving the game as it was, when it cannot. */
+  function restore(engine: Engine, turnState: TurnState): Promise<void> {
+    restoringRef.current = true;
+    return engine.restoreState(turnState.state).then(
+      () => {
+        restoringRef.current = false;
+        turnRef.current = turnState.turn;
+        showTranscript(turnState.transcript);
+        setFocus(lastTurnFocus(turnState.transcript));
+        setState({ phase: 'playing' });
+      },
+      (error) => {
+        restoringRef.current = false;
+        throw error;
+      },
+    );
+  }
+
+  const snapshotRef = useRef(snapshotTurn);
+  useEffect(() => {
+    snapshotRef.current = snapshotTurn;
+  });
 
   useEffect(() => {
     let cancelled = false;
-    // The engine is its own lazy chunk; the story file is fetched alongside it.
+    // The engine and the saves are lazy chunks; the story file is fetched alongside them.
     const story = fetch(fixtureZUrl).then((response) => {
       if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.arrayBuffer();
     });
-    Promise.all([import('../../engines/zvm/zvmEngine'), story])
-      .then(([module, data]) => {
+    Promise.all([import('../../engines/zvm/zvmEngine'), import('../../storage/saves'), story])
+      .then(([module, saves, data]) => {
         if (cancelled) return;
+        savesRef.current = saves;
         const engine = module.createZvmEngine();
         engineRef.current = engine;
-        engine.onOutput((blocks) => setTranscript((current) => applyOutput(current, blocks)));
-        engine.onInputRequest((req) => setRequest(req));
+        engine.onOutput((blocks) => showTranscript(applyOutput(transcriptRef.current, blocks)));
+        engine.onInputRequest((req) => {
+          setRequest(req);
+          if (req.type === 'line' && !restoringRef.current) snapshotRef.current(engine);
+        });
         engine.onExit(() => {
           setRequest(null);
           setState({ phase: 'ended' });
@@ -95,8 +221,22 @@ export function GameReader({ language }: { language?: string }) {
           setRequest(null);
           setState({ phase: 'failed', message: t('reader.engineError', { message: message }) });
         });
-        setState({ phase: 'playing' });
-        return engine.load(data, { columns: COLUMNS });
+        return engine.load(data, { columns: COLUMNS }).then(() => {
+          // Resume from the autosave; if it does not restore, the story starts afresh.
+          const saved = saves.readAutosave(getStore(), tuid);
+          if (!saved || cancelled) return;
+          const turnState = fromGameSnapshot(saved);
+          return restore(engine, turnState).then(
+            () => {
+              undoStack.reset(turnState);
+              setCanUndo(false);
+            },
+            () => undefined,
+          );
+        });
+      })
+      .then(() => {
+        if (!cancelled) setState((s) => (s.phase === 'loading' ? { phase: 'playing' } : s));
       })
       .catch(() => {
         if (!cancelled) setState({ phase: 'failed', message: t('reader.gameLoadFailed') });
@@ -105,7 +245,98 @@ export function GameReader({ language }: { language?: string }) {
       cancelled = true;
       engineRef.current = null;
     };
+    // Mount only: the callbacks read the session through refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function openSlots(which: 'save' | 'restore') {
+    const saves = savesRef.current;
+    if (!saves) return;
+    setSlots(saves.listSlots(getStore(), tuid));
+    setSaveName(
+      splitStatus(transcriptRef.current.status).left ||
+        t('saves.defaultName', { turn: turnRef.current }),
+    );
+    setMessage(null);
+    setDialog(which);
+  }
+
+  function saveSlot(slot: number, name: string) {
+    const engine = engineRef.current;
+    const saves = savesRef.current;
+    if (!engine || !saves) return;
+    const turn = turnRef.current;
+    const transcript = transcriptRef.current;
+    engine
+      .saveState()
+      .then((state) => {
+        const store = getStore();
+        const snapshot = toGameSnapshot({ state: state, turn: turn, transcript: transcript });
+        saves.writeSlot(store, tuid, slot, name, snapshot, Date.now());
+        setSlots(saves.listSlots(store, tuid));
+        setMessage({ kind: 'done', text: t('saves.saved', { slot: slot }) });
+      })
+      .catch((error) => {
+        setMessage({
+          kind: 'error',
+          text: isStorageFullError(error) ? t('saves.full') : t('saves.failed'),
+        });
+      });
+  }
+
+  function restoreSlot(slot: number) {
+    const engine = engineRef.current;
+    const saves = savesRef.current;
+    if (!engine || !saves) return;
+    const saved = saves.readSlot(getStore(), tuid, slot);
+    const failed = () => setMessage({ kind: 'error', text: t('saves.restoreFailed') });
+    if (!saved) {
+      failed();
+      return;
+    }
+    const turnState = fromGameSnapshot(saved);
+    restore(engine, turnState).then(() => {
+      // Earlier turns belong to another timeline: Undo starts again from here.
+      undoStack.reset(turnState);
+      setCanUndo(false);
+      persist(turnState);
+      setDialog(null);
+    }, failed);
+  }
+
+  function undo() {
+    const engine = engineRef.current;
+    if (!engine) return;
+    engine.undo().then((done) => {
+      if (done) return;
+      // The engine cannot: go back to the previous turn's snapshot.
+      const previous = undoStack.undo();
+      setCanUndo(undoStack.canUndo);
+      if (!previous) return;
+      restore(engine, previous).then(
+        () => persist(previous),
+        () => undefined,
+      );
+    });
+  }
+
+  function restart() {
+    const engine = engineRef.current;
+    const saves = savesRef.current;
+    setDialog(null);
+    if (!engine) return;
+    turnRef.current = 0;
+    undoStack.reset();
+    setCanUndo(false);
+    setFocus(0);
+    setRequest(null);
+    showTranscript(EMPTY_TRANSCRIPT);
+    if (saves) saves.clearAutosave(getStore(), tuid);
+    setState({ phase: 'playing' });
+    engine
+      .restart()
+      .catch(() => setState({ phase: 'failed', message: t('reader.gameLoadFailed') }));
+  }
 
   const awaitingLine = request !== null && request.type === 'line';
   const awaitingChar = request !== null && request.type === 'char';
@@ -137,6 +368,7 @@ export function GameReader({ language }: { language?: string }) {
     setRequest(null);
     setCommand('');
     if (text.trim()) setHistory((current) => current.concat(text.trim()));
+    turnRef.current++;
     engine.sendLine(text);
   }
 
@@ -198,43 +430,83 @@ export function GameReader({ language }: { language?: string }) {
     );
   }
 
+  const dialogs =
+    dialog === 'save' ? (
+      <SaveDialog
+        slots={slots}
+        defaultName={saveName}
+        message={message}
+        onSave={saveSlot}
+        onClose={() => setDialog(null)}
+      />
+    ) : dialog === 'restore' ? (
+      <RestoreDialog
+        slots={slots}
+        message={message}
+        onRestore={restoreSlot}
+        onClose={() => setDialog(null)}
+      />
+    ) : dialog === 'restart' ? (
+      <RestartDialog onConfirm={restart} onClose={() => setDialog(null)} />
+    ) : null;
+
   return (
-    <ReaderFrame tuid={FIXTURE_Z_TUID} heading={heading}>
-      {(closeBar, settings) =>
-        state.phase === 'loading' ? (
-          <p class="reader__loading ui-font">{t('reader.loading')}</p>
-        ) : (
-          <PagedText
-            blocks={blocks}
-            focus={focus}
-            lastPageSlot={slot}
-            lastSlotHeight={COMMAND_BAR_HEIGHT}
-            textStyle={textStyle(settings)}
-            layoutKey={settingsKey(settings)}
-            pinToLast={typing}
-            interceptTap={(isLastPage, point) => {
-              if (closeBar()) return true;
-              // A tapped word of the story goes to the command field (or completes "take …").
-              if (awaitingLine && isLastPage && point) {
-                const root = document.querySelector('.reader__text');
-                const word = root && wordAt(root, point.x, point.y);
-                if (word) {
-                  const action = applyNoun(command, word, table.verbs);
-                  if ('send' in action) sendLine(action.send);
-                  else setCommand(action.field);
+    <>
+      <ReaderFrame
+        tuid={tuid}
+        heading={heading}
+        actions={
+          state.phase === 'loading'
+            ? []
+            : [
+                {
+                  label: t('reader.save'),
+                  onSelect: () => openSlots('save'),
+                  disabled: !awaitingLine,
+                },
+                { label: t('reader.restore'), onSelect: () => openSlots('restore') },
+                { label: t('reader.undo'), onSelect: undo, disabled: !canUndo },
+                { label: t('reader.restart'), onSelect: () => setDialog('restart') },
+              ]
+        }
+      >
+        {(closeBar, settings) =>
+          state.phase === 'loading' ? (
+            <p class="reader__loading ui-font">{t('reader.loading')}</p>
+          ) : (
+            <PagedText
+              blocks={blocks}
+              focus={focus}
+              lastPageSlot={slot}
+              lastSlotHeight={COMMAND_BAR_HEIGHT}
+              textStyle={textStyle(settings)}
+              layoutKey={settingsKey(settings)}
+              pinToLast={typing}
+              interceptTap={(isLastPage, point) => {
+                if (closeBar()) return true;
+                // A tapped word of the story goes to the command field (or completes "take …").
+                if (awaitingLine && isLastPage && point) {
+                  const root = document.querySelector('.reader__text');
+                  const word = root && wordAt(root, point.x, point.y);
+                  if (word) {
+                    const action = applyNoun(command, word, table.verbs);
+                    if ('send' in action) sendLine(action.send);
+                    else setCommand(action.field);
+                    return true;
+                  }
+                }
+                // "Press any key" / [MORE]: a tap on the last page answers it.
+                if (awaitingChar && isLastPage) {
+                  sendChar('return');
                   return true;
                 }
-              }
-              // "Press any key" / [MORE]: a tap on the last page answers it.
-              if (awaitingChar && isLastPage) {
-                sendChar('return');
-                return true;
-              }
-              return false;
-            }}
-          />
-        )
-      }
-    </ReaderFrame>
+                return false;
+              }}
+            />
+          )
+        }
+      </ReaderFrame>
+      {dialogs}
+    </>
   );
 }

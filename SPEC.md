@@ -270,7 +270,7 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
   text alignment (left / justified) — saved as reader defaults (`prefs.reader`), or for one game only
   ("For this game only", stored in `progress:<tuid>.reader`). Every change re-paginates at once, keeping the reading
   position. "Easy reading" is a wide system sans with extra letter and word spacing: a real dyslexia font
-  (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10).
+  (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10), which the owner decided not to raise.
 - Save… (named slots, max 5 + autosave) · Restore… · Undo · Restart (confirm)
 - Transcript (full, paginated, read-only) · Help (how to play, common commands) · Game info
 - Refresh screen
@@ -310,9 +310,10 @@ interface Engine {
   sendLine(text: string): void;
   sendChar(key: string): void;
   choose(index: number): void;
-  saveState(): Promise<Uint8Array>;   // Quetzal for Z/Glulx, ink JSON state for Ink
+  saveState(): Promise<Uint8Array>;   // between turns; Quetzal-based for Z/Glulx, ink JSON state for Ink
   restoreState(data: Uint8Array): Promise<void>;
-  undo(): Promise<boolean>;
+  restart(): Promise<void>;
+  undo(): Promise<boolean>;           // false: the reader restores its previous turn snapshot instead
 }
 ```
 
@@ -343,6 +344,16 @@ runs synchronously until it waits for input.
 - Ink: `story.state.toJson()`.
 - Undo: engine undo where available, else restore the previous autosave (keep last 10 turn snapshots in memory,
   last 1 on disk).
+- Z-machine state: ZVM's own autosave snapshot (the RAM and stacks as a Quetzal file with uncompressed memory, plus the
+  Glk library state, so a pending line input resumes), in a small JSON envelope naming the story; a plain Quetzal file
+  can only be resumed by the game's own `@restore`. The game's SAVE / RESTORE commands are cancelled: saves go through
+  the reader menu.
+- A turn begins when the game waits for a command: its state is snapshotted (after the page is drawn) for Undo and
+  written as the autosave with the transcript tail (≈ 8,000 characters, enough for the last page), and the progress
+  record is updated. Opening the game resumes from the autosave on the page of the last command. Restoring a slot
+  resets Undo; Restart asks first, clears the autosave and keeps the named slots.
+- A save is one storage entry: when the storage is full the write fails as a whole, the previous save stays intact and
+  the Save dialog says so.
 
 ### 4.5 Performance
 
@@ -449,9 +460,9 @@ All keys are prefixed and versioned:
 |---|---|
 | `ik:v1:prefs` | UI language, reader defaults (font, size, margins, spacing, align), list/grid choices |
 | `ik:v1:home` | ordered list of tuids in *My adventures* with added/last-played dates |
-| `ik:v1:progress:<tuid>` | turn count, last played, location, per-game reader overrides |
-| `ik:v1:save:<tuid>:auto` | latest autosave (compressed, base64) |
-| `ik:v1:save:<tuid>:<slot>` | named save slots (name, date, turn, data) |
+| `ik:v1:progress:<tuid>` | `turns`, `lastPlayed`, `location`, per-game reader overrides (`reader`) |
+| `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
+| `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
 | `ik:v1:file:<tuid>` | cached story file (small files only) |
 | `ik:v1:lru` | access order for evictable entries |
 

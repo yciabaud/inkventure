@@ -504,6 +504,82 @@
   font-size: 20px;
 }
 
+/* Unavailable reader actions (Save between turns only, Undo without an earlier turn). */
+.reader__action:disabled {
+  border-color: #767676;
+  color: #767676;
+  cursor: default;
+}
+
+/* Save / Restore / Restart dialogs. */
+.saves {
+  padding: 8px 16px;
+}
+
+.saves__label {
+  display: block;
+  font-weight: 700;
+}
+
+.saves__field {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  padding: 8px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  font-weight: 400;
+}
+
+.saves__hint {
+  margin: 8px 0 0;
+}
+
+.saves__slot {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.saves__slot-title {
+  font-weight: 700;
+}
+
+.saves__slot-details {
+  font-size: 16px;
+}
+
+.saves__slot:disabled {
+  color: #767676;
+  cursor: default;
+}
+
+.saves__message {
+  margin: 0;
+  padding: 12px 16px;
+  border-top: 2px solid #000;
+  font-weight: 700;
+}
+
+.saves__message--error {
+  border-left: 8px solid #000;
+}
+
+.saves__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.saves__buttons > * {
+  margin: 0 8px 8px 0;
+}
+
 /* Text settings ("Aa") dialog. */
 .settings {
   padding: 8px 16px 16px;

@@ -146,4 +146,72 @@ describe('ZVM adapter', () => {
     const engine = createZvmEngine();
     await expect(engine.load(new ArrayBuffer(64), {})).rejects.toThrow(/not a Z-Code file/);
   });
+
+  it('saves between turns and restores into the same game or a fresh engine', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    await expect(s.engine.saveState()).resolves.toBeInstanceOf(Uint8Array);
+    send(s, 'take can');
+    send(s, 'north');
+    const state = await s.engine.saveState();
+    s.take();
+
+    // Play on, then go back: the paraffin can is carried again and the lamp still dry.
+    send(s, 'up');
+    send(s, 'fill lamp');
+    const before = s.transcript().paragraphs.length;
+    await s.engine.restoreState(state);
+    // No text replayed: the reader keeps its own transcript.
+    expect(s.transcript().paragraphs).toHaveLength(before);
+    expect(splitStatus(s.transcript().status).left).toBe('Foot of the Tower');
+    expect(s.input()).toMatchObject({ type: 'line' });
+    expect(send(s, 'inventory')).toContain('paraffin');
+
+    // Another engine (a page reload) resumes from the same bytes.
+    const t = await start();
+    await t.engine.restoreState(state);
+    t.take();
+    expect(splitStatus(t.transcript().status).right).toMatch(/Score: 1\s+Moves: 2$/);
+    expect(send(t, 'up')).toContain('Lamp Room');
+    expect(send(t, 'fill lamp')).toContain('You pour the paraffin');
+    expect(s.errors).toEqual([]);
+    expect(t.errors).toEqual([]);
+  });
+
+  it('refuses to save while a key is expected', async () => {
+    const s = await start();
+    await expect(s.engine.saveState()).rejects.toThrow(/between turns/);
+  });
+
+  it('rejects data that is not a state of this story, and keeps playing', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    send(s, 'take can');
+    await expect(s.engine.restoreState(new Uint8Array([1, 2, 3]))).rejects.toThrow(
+      /Not a saved game/,
+    );
+    const state = await s.engine.saveState();
+    const other = JSON.parse(new TextDecoder().decode(state));
+    other.signature = '00' + other.signature.slice(2);
+    await expect(
+      s.engine.restoreState(new TextEncoder().encode(JSON.stringify(other))),
+    ).rejects.toThrow(/another story/);
+    expect(send(s, 'inventory')).toContain('paraffin');
+  });
+
+  it('restarts from the beginning', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    send(s, 'take can');
+    s.take();
+    await s.engine.restart();
+    expect(s.take()).toContain('[Press any key to begin.]');
+    s.engine.sendChar(' ');
+    expect(send(s, 'inventory')).toContain("You're carrying nothing.");
+  });
+
+  it('leaves undo to the reader', async () => {
+    const s = await start();
+    await expect(s.engine.undo()).resolves.toBe(false);
+  });
 });
