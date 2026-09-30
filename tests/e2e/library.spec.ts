@@ -97,6 +97,9 @@ test('the grid is the default; the chosen view is remembered', async ({ page }) 
   await routeCatalog(page);
   await page.goto('/#/library');
   await expect(page.locator('.tile').first()).toBeVisible();
+  // Every cover has its title under it (IFDB cover art does not always show it).
+  await expect(page.locator('.tile__title')).toHaveCount(await page.locator('.tile').count());
+  await expect(page.locator('.tile__title').first()).not.toBeEmpty();
   await press(page.getByRole('button', { name: 'List view' }));
   await expect(page.locator('.result').first()).toBeVisible();
   await page.reload();

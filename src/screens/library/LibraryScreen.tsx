@@ -122,6 +122,8 @@ function Tile({ row, layout }: { row: IndexRow; layout: GridLayout }) {
           width={layout.coverWidth}
           imageUrl={row.c ? thumbnailUrl(row.t, layout.coverWidth, layout.coverHeight) : undefined}
         />
+        {/* Always shown: IFDB cover art does not always carry the title. */}
+        <span class="tile__title">{row.n}</span>
       </a>
     </li>
   );

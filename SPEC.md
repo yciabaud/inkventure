@@ -185,8 +185,8 @@ Purpose: find the next adventure in the playable catalogue.
   - "Start here" (newcomer-friendly: featured or tagged)
 - **Sort**: best rated (IFDB star sort), most rated, newest, title A–Z.
 - **Results**, paginated, as many as fit the screen (no scrolling), in two views remembered in the preferences:
-  - **Grid** (default, like the Kindle library): covers only, IFDB thumbnail or typographic cover (4 × 2 on a
-    600 × 800 e-reader);
+  - **Grid** (default, like the Kindle library): covers (IFDB thumbnail or typographic cover) with the title under
+    each, on two lines at most, since cover art does not always show it (4 × 2 on a 600 × 800 e-reader);
   - **List**: small cover, title, then author, year, ★ rating (n), playtime, format (8 rows on 600 × 800).
   Tap → game detail.
 - Only playable games appear (see [§5.2](#52-catalogue-index)). Result count shown ("214 adventures").
