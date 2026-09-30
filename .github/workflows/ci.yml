@@ -27,7 +27,23 @@ jobs:
       - run: npm run build
       - run: npm run check:es5
       - run: npm run check:size
-      - run: npx playwright install --with-deps chromium webkit
+
+  # Runs in parallel with the job above, in the official Playwright image: its browsers and their system libraries are
+  # preinstalled, so there is no `playwright install --with-deps` (several minutes of apt) on every run.
+  # The tag must match @playwright/test in package.json: bump both together (Playwright stops with an explicit
+  # "please update docker image" error when they differ).
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
