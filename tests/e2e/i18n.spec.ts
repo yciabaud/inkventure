@@ -12,7 +12,7 @@ test.describe('French browser', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible();
     await expect(nav(page).getByRole('link', { name: 'Accueil' })).toBeVisible();
     await expect(nav(page).getByRole('link', { name: 'Bibliothèque' })).toBeVisible();
-    await expect(nav(page).getByRole('link', { name: 'Réglages' })).toBeVisible();
+    await expect(nav(page).getByRole('button', { name: 'Menu' })).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', 'fr');
   });
 

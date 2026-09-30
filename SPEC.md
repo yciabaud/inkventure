@@ -137,8 +137,9 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
 #/settings  (UI language, reader defaults, data export/import/reset, about & credits)
 ```
 
-A persistent top bar (like the Kindle header) shows: app name/Home, Library, Settings (icon buttons,
-≥ 48 px). In the reader the bar is hidden until the top zone is tapped.
+A persistent top bar (like the Kindle header) shows: app name/Home, Library and a ⋯ Menu (icon buttons,
+≥ 48 px); the menu holds Settings and Refresh screen. A focus outline is only drawn for keyboard focus
+(`:focus-visible`), never after a tap. In the reader the bar is hidden until the top zone is tapped.
 
 Deep links: `#/game/:tuid` and `#/play/:tuid` must work from a cold start (used by the ebook).
 

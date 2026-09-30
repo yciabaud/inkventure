@@ -41,6 +41,9 @@ export function useFitCount(row: RefObject<HTMLElement>, min = 0): number {
   const [count, setCount] = useState(Infinity);
   const [, setTick] = useState(0);
 
+  // No dependency list on purpose: measure after every render (labels, items or fonts may have changed). It only sets
+  // state when the count changes, which converges after one extra render.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     const element = row.current;
     if (!element) return;

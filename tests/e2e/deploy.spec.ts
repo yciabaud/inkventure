@@ -33,9 +33,10 @@ test('the production build works from the GitHub Pages sub-path', async ({ page,
 
   await page.goto(site + '/inkventure/#/library');
   await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
+  await page.getByRole('button', { name: 'Menu' }).click();
   await page
-    .getByRole('navigation', { name: 'Main navigation' })
-    .getByRole('link', { name: 'Settings' })
+    .getByRole('dialog', { name: 'Menu' })
+    .getByRole('button', { name: 'Settings' })
     .click();
   await expect(page).toHaveURL(site + '/inkventure/#/settings');
   await expect(page.getByRole('heading', { level: 1, name: 'Settings' })).toBeVisible();
