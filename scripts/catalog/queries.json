@@ -1,0 +1,10 @@
+{
+  "comment": "IFDB game searches the crawler unions (SPEC §5.2). `system:` matches part of the development system name; the playable file format is decided later from each game's download links (S2.2).",
+  "queries": [
+    "downloadable:yes system:inform",
+    "downloadable:yes system:zil",
+    "downloadable:yes system:dialog",
+    "downloadable:yes system:twine",
+    "downloadable:yes system:ink"
+  ]
+}

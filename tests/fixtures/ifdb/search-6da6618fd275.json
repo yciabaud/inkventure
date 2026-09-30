@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Azil&sortby=ttl&pg=2",
+  "status": 200,
+  "body": "{\"games\":[]}"
+}

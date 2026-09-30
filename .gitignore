@@ -5,3 +5,6 @@ playwright-report/
 test-results/
 *.log
 .DS_Store
+
+# Catalogue pipeline output and record cache (scripts/catalog)
+data/

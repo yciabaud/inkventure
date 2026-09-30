@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Ainform&sortby=ttl&pg=2",
+  "status": 200,
+  "body": "{\"games\":[{\"tuid\":\"fxgone0000000004\",\"title\":\"Deleted Listing\",\"link\":\"https://ifdb.org/viewgame?id=fxgone0000000004\",\"author\":\"C. Missing\",\"hasCoverArt\":false,\"devsys\":\"Inform 6\",\"published\":{\"machine\":\"2001\",\"printable\":\"2001\"},\"averageRating\":2,\"numRatings\":1,\"starRating\":2,\"starSort\":2}]}"
+}

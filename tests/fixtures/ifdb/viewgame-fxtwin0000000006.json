@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxtwin0000000006",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXTWIN0000000006\"]},\"bibliographic\":{\"title\":\"Paper Lanterns\",\"author\":\"E. Instance\",\"language\":\"en\",\"firstpublished\":\"2023\",\"genre\":\"Romance\",\"description\":\"Synthetic listing for the crawler tests.\"},\"ifdb\":{\"tuid\":\"fxtwin0000000006\",\"pageversion\":5,\"link\":\"https://ifdb.org/viewgame?id=fxtwin0000000006\",\"downloads\":{\"links\":[{\"url\":\"https://ifarchive.org/if-archive/games/twine/lanterns.html\",\"title\":\"lanterns.html\",\"desc\":\"\",\"isGame\":true,\"format\":\"hypertext\"}]},\"averageRating\":3.75,\"starRating\":4,\"ratingCountAvg\":4,\"ratingCountTot\":4,\"tags\":[{\"name\":\"choice-based\",\"tagcnt\":1,\"gamecnt\":10}]}}"
+}

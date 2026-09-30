@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxcave0000000003",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXCAVE0000000003\"]},\"bibliographic\":{\"title\":\"Cave of Echoes\",\"author\":\"B. Sample\",\"language\":\"fr\",\"firstpublished\":\"2022\",\"genre\":\"Aventure\",\"description\":\"Synthetic listing for the crawler tests.\"},\"ifdb\":{\"tuid\":\"fxcave0000000003\",\"pageversion\":7,\"link\":\"https://ifdb.org/viewgame?id=fxcave0000000003\",\"coverart\":{\"url\":\"https://ifdb.org/coverart?id=fxcave0000000003&version=7\"},\"downloads\":{\"links\":[{\"url\":\"https://ifarchive.org/if-archive/games/zcode/echoes.z5\",\"title\":\"echoes.z5\",\"desc\":\"\",\"isGame\":true,\"format\":\"zcode\"}]},\"averageRating\":null,\"starRating\":0,\"ratingCountAvg\":0,\"ratingCountTot\":0,\"tags\":[]}}"
+}
