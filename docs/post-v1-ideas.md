@@ -183,20 +183,16 @@ Built on the `featured.json` pattern (S2.4): a hand-maintained file, validated i
 - The cost is human, mostly writing to authors. There is a precedent: Ragzouken's bitsy-archive collected ~450
   games with permission.
 
-### Option C — User-supplied games
+### Rejected — User-supplied games
 
-An "Open a file or URL" entry point: the player brings a `.deck`, `.bitsy` or exported `.html` file, and the app
-extracts the embedded game data.
-
-- There is no redistribution by us, so this covers the long tail.
-- URLs need CORS. itch.zone will not work, so in practice this means a file on the device or a CORS-friendly host.
+An "Open a file or URL" entry point (the player brings a `.deck`, `.bitsy` or `.html` file) was considered and
+**rejected by the product owner** (2026-09-30).
 
 ### Recommendation: hybrid
 
 1. **A CI metadata scraper that produces a candidate list for us, not for the app.** For each game it records tags,
    declared licence, engine and whether it is HTML5. It is rate limited and stores no game files.
 2. **Human curation** from that list, with permission requests, into a curated file (Option B).
-3. **Option C as a complement**, once at least one of the Decker/Bitsy players exists.
 
 Open questions:
 
@@ -207,6 +203,6 @@ Open questions:
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.
-2. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf,
-   then user-supplied files.
+2. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
+   (no user-supplied files).
 3. Record the ZVM/Quixe maintenance risk in SPEC §13.
