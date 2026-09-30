@@ -17,9 +17,13 @@ export function isImmersive(tuid: string): boolean {
   return tuid === DEMO_TUID || tuid === FIXTURE_Z_TUID;
 }
 
-export function ReaderScreen({ tuid }: { tuid: string }) {
+/**
+ * `language` overrides the game language for the command chips (`?lang=fr`), until games carry it in their catalogue
+ * metadata (S3.3).
+ */
+export function ReaderScreen({ tuid, language }: { tuid: string; language?: string }) {
   if (tuid === DEMO_TUID) return <DemoReader />;
-  if (tuid === FIXTURE_Z_TUID) return <GameReader />;
+  if (tuid === FIXTURE_Z_TUID) return <GameReader language={language} />;
   // Placeholder for real games (S1.3 onwards).
   return (
     <div class="screen">

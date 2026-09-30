@@ -2,7 +2,7 @@ import type { ComponentChildren } from 'preact';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../i18n/i18n';
 import { blockClass, runClass } from './measure';
-import { PageTurner, type PageView } from './pageTurner';
+import { PageTurner, type PageView, type TapInterceptor } from './pageTurner';
 import { pageFragments, type ReaderBlock } from './paginator';
 
 interface Props {
@@ -10,7 +10,11 @@ interface Props {
   /** Shown under the text on the last page only (command bar, choices). */
   lastPageSlot: ComponentChildren;
   /** Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu). */
-  interceptTap?: (isLastPage: boolean) => boolean;
+  interceptTap?: TapInterceptor;
+  /** Stay on the last page across re-layouts (the command field has focus). */
+  pinToLast?: boolean;
+  /** Extra class for the slot under the text (its height is the same on every page). */
+  slotClass?: string;
   /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
   focus?: number;
 }
@@ -19,7 +23,14 @@ interface Props {
  * Game text laid out in pages that exactly fit the text area (no scrolling), turned by tap zones, swipes or the
  * arrow keys. The reading position survives re-pagination (resize, rotation, font changes).
  */
-export function PagedText({ blocks, lastPageSlot, interceptTap, focus }: Props) {
+export function PagedText({
+  blocks,
+  lastPageSlot,
+  interceptTap,
+  focus,
+  pinToLast,
+  slotClass,
+}: Props) {
   const areaRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<PageView>({ pages: [], index: 0 });
@@ -27,6 +38,7 @@ export function PagedText({ blocks, lastPageSlot, interceptTap, focus }: Props) 
 
   useLayoutEffect(() => {
     turner.setInterceptTap(interceptTap);
+    turner.setPinLast(!!pinToLast);
   });
 
   // Declared before the blocks effect so the first layout finds the elements; both run before the browser paints.
@@ -76,7 +88,7 @@ export function PagedText({ blocks, lastPageSlot, interceptTap, focus }: Props) 
           ))}
         </div>
       </div>
-      <div class="reader__slot">
+      <div class={'reader__slot' + (slotClass ? ' ' + slotClass : '')}>
         {loading ? null : isLast ? (
           lastPageSlot
         ) : (

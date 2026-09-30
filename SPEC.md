@@ -236,18 +236,22 @@ The core screen. It must feel like reading an ebook.
   share one text-area height.
 - `[MORE]` / "press any key" prompts from the game are satisfied by a tap on the page.
 
-**Command input (parser games)**
+**Command input (parser games)** — a command bar of fixed height under the text (the same on every page, so the
+text area never changes size), in three rows:
 
-- Text field + Enter button; opening the keyboard must not break the layout (text area shrinks, pagination
-  recalculated).
-- **Shortcut chips** — tap-only play for most turns:
-  - Compass: N, S, E, W, NE, NW, SE, SW, Up, Down, In, Out (collapsed into a compass popover on small screens).
-  - Verbs: Look, Inventory, Examine…, Take…, Drop…, Open…, Talk to…, Wait, Again, Undo.
-  - Verbs ending with "…" insert the verb into the field; then **noun chips** (recently mentioned nouns,
-    extracted from the last outputs and the status line) complete it. Tapping a word in the transcript
-    also inserts it into the command field.
-  - Verb set is localised per *game* language (EN/FR/ES/DE/IT verb tables), not UI language.
-- Command history (previous/next buttons in the "More" menu).
+1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
+2. **Verbs**: Look, Inventory, Examine…, Take…, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
+   Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
+   row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
+   excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
+3. **Command field** + Enter; ↑ / ↓ browse the history. While it has focus the reader stays on the last page, so
+   the virtual keyboard shrinking the page re-paginates without hiding the field.
+
+- **Tapping a word** of the text on the last page puts it in the field, or completes and sends a waiting "Take …".
+  (Taps on words therefore do not turn the page there; swipes and the margins still do.)
+- Chip labels and commands follow the *game* language (EN/FR verified against the Inform libraries; ES/DE/IT stubs to
+  verify), not the UI language; dialog titles and hints follow the UI language. Until the catalogue gives each game
+  its language (S3.3), `?lang=xx` on a fixture route overrides it.
 
 **Choice games (Ink / Twine)**
 
