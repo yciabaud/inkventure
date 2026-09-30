@@ -389,6 +389,32 @@ button.pager__btn {
   margin: 0 16px 16px 0;
 }
 
+/* Download of a game (S3.4): status, a plain meter (redrawn in steps, never animated) and Cancel. */
+.play__status {
+  margin: 24px 0 16px;
+  line-height: 1.4;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 18px;
+  text-align: center;
+}
+
+.play__meter {
+  height: 16px;
+  border: 2px solid #000;
+  background: #fff;
+}
+
+.play__bar {
+  height: 100%;
+  background: #000;
+}
+
+.play__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
 /* Game detail (S3.3): cover and facts, actions, the blurb in pages (one CSS column per page), credits. */
 .game__head {
   display: flex;

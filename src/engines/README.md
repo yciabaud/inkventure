@@ -6,6 +6,7 @@ Engine abstraction and adapters (SPEC §4).
 - `transcript.ts`: builds the transcript (paragraphs + status line) from `OutputBlock`s.
 - `glkote-bridge/`: our GlkOte-compatible display layer. The Glk library drives it with GlkOte JSON updates; it turns
   them into `OutputBlock`s and input requests, and sends the player's input back as GlkOte events. No DOM.
+- `formats.ts`: catalogue format → engine, the lazy loader of each shipped engine, and a header check of story files.
 - `zvm/`: the Z-machine engine (lazy chunk). Later: `quixe/`, `ink/`, `twine/`.
 
 ## Third-party code

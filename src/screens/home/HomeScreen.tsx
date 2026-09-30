@@ -2,7 +2,7 @@ import { formatHash } from '../../app/router';
 import { t } from '../../i18n/i18n';
 import { LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
-import { FIXTURE_Z_TUID } from '../reader/GameReader';
+import { FIXTURE_Z_TUID } from '../reader/ReaderScreen';
 
 // Placeholder: Featured, My adventures and Continue arrive in S4.1 / S4.2.
 export function HomeScreen() {

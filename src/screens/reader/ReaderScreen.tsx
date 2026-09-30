@@ -1,43 +1,57 @@
 import { useEffect, useState } from 'preact/hooks';
-import { formatHash } from '../../app/router';
 import { t } from '../../i18n/i18n';
 import { PagedText } from '../../reader/PagedText';
 import { settingsKey, textStyle } from '../../reader/settings';
 import type { ReaderBlock } from '../../reader/paginator';
-import { LinkButton } from '../../ui/Button';
-import { EmptyState } from '../../ui/EmptyState';
 import { ErrorPage } from '../../ui/ErrorPage';
-import { FIXTURE_Z_TUID, GameReader } from './GameReader';
+import { GameReader } from './GameReader';
+import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
+// The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
+import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
 
-/** `#/play/demo`: a long static text in the paginated reader, until the engines arrive (S1.3). */
+/** `#/play/demo`: a long static text in the paginated reader. */
 export const DEMO_TUID = 'demo';
 
-/** Whether the reader takes the whole screen for this game (no app top bar until the top zone is tapped). */
-export function isImmersive(tuid: string): boolean {
-  return tuid === DEMO_TUID || tuid === FIXTURE_Z_TUID;
-}
+/** `#/play/fixture-z`: the bundled Z-machine fixture game (tests, and a game that needs no network). */
+export const FIXTURE_Z_TUID = 'fixture-z';
 
 /**
- * `language` overrides the game language for the command chips (`?lang=fr`), until games carry it in their catalogue
- * metadata (S3.3).
+ * The reader takes the whole screen (no app top bar until its top zone is tapped); the pages before a catalogue game
+ * starts bring the app's chrome themselves. `language` overrides the game language for the command chips (`?lang=fr`).
  */
 export function ReaderScreen({ tuid, language }: { tuid: string; language?: string }) {
   if (tuid === DEMO_TUID) return <DemoReader />;
-  if (tuid === FIXTURE_Z_TUID) return <GameReader language={language} />;
-  // Placeholder for real games (S1.3 onwards).
+  if (tuid === FIXTURE_Z_TUID) return <FixtureReader language={language} />;
+  return <PlayScreen tuid={tuid} language={language} />;
+}
+
+function FixtureReader({ language }: { language?: string }) {
+  const [story, setStory] = useState<Uint8Array | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    fetch(fixtureZUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.arrayBuffer();
+      })
+      .then(
+        (data) => setStory(new Uint8Array(data)),
+        () => setFailed(true),
+      );
+  }, []);
+
+  if (failed) return <ErrorPage message={t('reader.gameLoadFailed')} />;
+  if (!story) return <p class="reader__loading ui-font">{t('reader.loading')}</p>;
   return (
-    <div class="screen">
-      <h1 class="screen__title">{t('play.title')}</h1>
-      <EmptyState title={t('play.emptyTitle')} text={t('play.emptyText', { tuid })}>
-        <LinkButton variant="secondary" href={formatHash({ name: 'game', tuid })}>
-          {t('play.back')}
-        </LinkButton>
-        <LinkButton variant="secondary" href={formatHash({ name: 'play', tuid: DEMO_TUID })}>
-          {t('reader.demo')}
-        </LinkButton>
-      </EmptyState>
-    </div>
+    <GameReader
+      tuid={FIXTURE_Z_TUID}
+      title="The Lamp at Saltmere"
+      language={language || 'en'}
+      kind="zmachine"
+      story={story}
+    />
   );
 }
 
