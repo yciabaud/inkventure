@@ -4,7 +4,7 @@ import { getPrefs, getStore, setPrefs, type Prefs } from '../storage';
 
 declare global {
   interface Window {
-    /** Debug / e2e hook: prefs and UI locale without a UI (the Settings screen arrives in S5.1). */
+    /** Debug / e2e hook: prefs and UI locale without going through the Settings screen. */
     __inkventure?: {
       getPrefs(): Prefs;
       setPrefs(patch: Partial<Prefs>): Prefs;

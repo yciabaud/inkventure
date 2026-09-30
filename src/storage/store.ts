@@ -1,5 +1,6 @@
 import { isQuotaError, type KeyValueBackend } from './backend';
 import { autosaveTuid, isEvictable, isFileKey, keys, PREFIX } from './keys';
+import { computeUsage, isAppKey, type StorageUsage } from './usage';
 
 /** Autosaves of games not played for this long may be evicted when the storage is full. */
 export const STALE_AUTOSAVE_MS = 90 * 24 * 60 * 60 * 1000;
@@ -41,6 +42,10 @@ export interface Store {
   /** All keys of this schema version, without the prefix. */
   keys(): string[];
   subscribe(listener: (event: StorageEvent) => void): () => void;
+  /** Space used by the app's entries (SPEC §6.1), for Settings. */
+  usage(): StorageUsage;
+  /** Removes every `ik:` entry (all schema versions and the schema key) and nothing else: back to a first launch. */
+  clearAll(): void;
 }
 
 export interface SetOptions {
@@ -176,6 +181,26 @@ export function createStore(backend: KeyValueBackend, options: Options = {}): St
     },
 
     keys: allKeys,
+
+    usage() {
+      const entries: Array<{ key: string; length: number }> = [];
+      for (let i = 0; i < backend.length; i++) {
+        const key = backend.key(i);
+        const value = key === null ? null : backend.getItem(key);
+        if (key !== null && value !== null) entries.push({ key: key, length: value.length });
+      }
+      return computeUsage(entries);
+    },
+
+    clearAll() {
+      // Collected first: removing while walking the indices would skip entries.
+      const doomed: string[] = [];
+      for (let i = 0; i < backend.length; i++) {
+        const key = backend.key(i);
+        if (key !== null && isAppKey(key)) doomed.push(key);
+      }
+      for (let i = 0; i < doomed.length; i++) backend.removeItem(doomed[i]);
+    },
 
     subscribe(listener) {
       listeners.push(listener);

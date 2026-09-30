@@ -1683,3 +1683,82 @@ button.pager__btn {
   font-size: 12px;
   white-space: nowrap;
 }
+
+/* Settings (S5.1): the language on the first page, then one page per section. */
+.settings-page__title {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0;
+  margin-bottom: 16px;
+}
+
+.settings-page__back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+  margin-left: -12px;
+  font-size: 32px;
+  text-decoration: none;
+}
+
+.settings-page__hint {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.settings-page__sections {
+  margin-top: 16px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+}
+
+a.menu__item {
+  box-sizing: border-box;
+  color: #000;
+  text-decoration: none;
+}
+
+.settings--page {
+  padding: 0;
+}
+
+/* Tighter than in the "Aa" dialog so the page and its preview fit on the baseline screen. */
+.settings--page .settings__row {
+  margin-bottom: 8px;
+}
+
+.settings-page__sample {
+  /* A fixed height, so the largest size never pushes the page into scrolling: the preview is clipped instead. */
+  box-sizing: border-box;
+  height: 96px;
+  margin: 8px 0 0;
+  overflow: hidden;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+}
+
+.settings-page__usage,
+.settings-page__version {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.settings-page__list {
+  margin: 0 0 24px;
+  padding-left: 24px;
+  font-size: 16px;
+}
+
+.settings-page__list li {
+  margin-bottom: 4px;
+}
+
+.settings-page__danger {
+  padding-top: 16px;
+  border-top: 2px solid #000;
+}

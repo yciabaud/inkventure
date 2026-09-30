@@ -18,7 +18,7 @@ function Screen({ location }: { location: Location }) {
     case 'game':
       return <GameScreen tuid={route.tuid} />;
     case 'settings':
-      return <SettingsScreen />;
+      return <SettingsScreen query={query} />;
     case 'help':
       return <HelpScreen />;
     default:

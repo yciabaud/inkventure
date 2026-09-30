@@ -137,6 +137,10 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
 #/settings  (UI language, reader defaults, data export/import/reset, about & credits)
 ```
 
+Settings keeps every page scroll-free: its first page holds the UI language (Automatic / English / Français) and
+links to one page per section, `#/settings?s=reading` (reader defaults, with a preview), `?s=data` (storage usage,
+reset) and `?s=about` (version, credits, privacy).
+
 A persistent top bar (like the Kindle header) shows: app name/Home, Library and a ⋯ Menu (icon buttons,
 ≥ 48 px); the menu holds Settings and Refresh screen. A focus outline is only drawn for keyboard focus
 (`:focus-visible`), never after a tap. In the reader the bar is hidden until the top zone is tapped.
@@ -541,6 +545,8 @@ All keys are prefixed and versioned:
   story files (LRU) first, then old autosaves of games not played for 90 days; never evict named saves
   silently — warn the user instead.
 - **Schema migrations:** a `ik:schema` key and ordered migration functions.
+- **Reset all data** (Settings, two confirmations) removes every `ik:` key (any schema version and `ik:schema`) and
+  nothing else, then shows Home as on a first launch.
 - **Storage unavailable** (disabled site data, private mode): the app runs on an in-memory store and shows a
   non-blocking warning that progress will not be kept.
 
@@ -565,7 +571,7 @@ All keys are prefixed and versioned:
   locale) and plurals written as `{ "one": …, "other": … }` chosen by the `count` parameter (CLDR rules: EN one = 1,
   FR one = 0–1). Missing keys fall back to EN; a unit test enforces key, message-kind and placeholder parity.
 - Locale chosen from the browser's preferred languages (`navigator.languages` / `language`), overridable in
-  Settings, persisted in prefs (`locale`); the choice is applied before the first render and sets `<html lang>`.
+  Settings ("Automatic" removes the override), persisted in prefs (`locale`); the choice is applied before the first render and sets `<html lang>`.
 - Dates and numbers formatted with small helpers (no reliance on `Intl` on Kindle).
 - The **game language** (Library filter, verb chips) is independent from the UI language.
 - Featured pitches and ebook content are written per locale.

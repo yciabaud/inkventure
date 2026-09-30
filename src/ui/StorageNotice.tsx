@@ -23,7 +23,7 @@ export function StorageNotice({ store }: { store: Store }) {
       <p class="notice__text">{t(notice === 'full' ? 'storage.full' : 'storage.unavailable')}</p>
       <div class="notice__actions">
         {notice === 'full' && (
-          <a class="notice__btn" href={formatHash({ name: 'settings' })}>
+          <a class="notice__btn" href={formatHash({ name: 'settings' }, { s: 'data' })}>
             {t('storage.manage')}
           </a>
         )}
