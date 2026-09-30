@@ -31,7 +31,7 @@ Other options: `--out DIR` (default `data/raw`), `--cache DIR` (default `data/ca
 `--fixtures DIR`, `--max-pages N` (stop each search after N pages of 100 games: a partial crawl, for checks). `data/` is gitignored.
 
 To check the live API without a local setup, run the **Catalogue crawl (manual)** workflow from the Actions tab
-(`.github/workflows/catalog-crawl.yml`): it crawls with `--record` (by default 2 pages per search and 10 records)
+(`.github/workflows/catalog-crawl.yml`): it crawls with `--record` (by default 2 pages per search and 10 records; 0 in either field means no limit)
 and keeps `data/raw/games.json` and the recorded responses as the `catalog-crawl` artifact for 14 days.
 
 The live run is **never** executed in PR CI (tests only use the fixtures). It will run in the scheduled catalogue

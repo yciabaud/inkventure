@@ -7,11 +7,11 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: Games whose record is fetched (the searches are always crawled in full); empty for all
+        description: Games whose record is fetched, 0 for all (an empty field falls back to the default)
         required: false
         default: '10'
       max-pages:
-        description: Search pages per query at most (100 games each)
+        description: Search pages per query at most (100 games each), 0 for all
         required: false
         default: '2'
 
@@ -39,8 +39,9 @@ jobs:
           MAX_PAGES: ${{ inputs.max-pages }}
         run: |
           args=(--record --fixtures data/recorded --out data/raw)
-          if [ -n "$LIMIT" ]; then args+=(--limit "$LIMIT"); fi
-          if [ -n "$MAX_PAGES" ]; then args+=(--max-pages "$MAX_PAGES"); fi
+          # 0 (or empty) means no limit.
+          if [ -n "$LIMIT" ] && [ "$LIMIT" != 0 ]; then args+=(--limit "$LIMIT"); fi
+          if [ -n "$MAX_PAGES" ] && [ "$MAX_PAGES" != 0 ]; then args+=(--max-pages "$MAX_PAGES"); fi
           npm run catalog:crawl -- "${args[@]}" | tee data-crawl.log
       - name: Resolve playability
         run: npm run catalog:resolve -- --summary "$GITHUB_STEP_SUMMARY"
