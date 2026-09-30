@@ -270,7 +270,7 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
   text alignment (left / justified) — saved as reader defaults (`prefs.reader`), or for one game only
   ("For this game only", stored in `progress:<tuid>.reader`). Every change re-paginates at once, keeping the reading
   position. "Easy reading" is a wide system sans with extra letter and word spacing: a real dyslexia font
-  (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10).
+  (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10), which the owner decided not to raise.
 - Save… (named slots, max 5 + autosave) · Restore… · Undo · Restart (confirm)
 - Transcript (full, paginated, read-only) · Help (how to play, common commands) · Game info
 - Refresh screen
