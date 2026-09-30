@@ -109,6 +109,15 @@ test('French + Z-code + ★ 4+: the right games, and the filters survive reload 
   await expect(page.getByRole('button', { name: /^Rating/ })).toContainText('★ 4+');
   await expect(page.getByRole('button', { name: /^Language/ })).toContainText('Français');
 
+  // Reset and show sit on one line under the title, in view without scrolling.
+  const clear = await page.getByRole('button', { name: 'Clear filters' }).boundingBox();
+  const show = await page.getByRole('button', { name: 'Show 3 adventures' }).boundingBox();
+  const title = await page.getByRole('heading', { name: 'Filters', exact: true }).boundingBox();
+  expect(clear && show && title).toBeTruthy();
+  expect(Math.abs(clear!.y - show!.y)).toBeLessThan(2);
+  expect(show!.y).toBeGreaterThan(title!.y);
+  expect(show!.y + show!.height).toBeLessThan(title!.y + title!.height + 80);
+
   await press(page.getByRole('button', { name: 'Show 3 adventures' }));
   await expect(page).toHaveURL(/#\/library\?format=zcode&lang=fr&rating=4$/);
   await expect(page.getByText('3 adventures')).toBeVisible();

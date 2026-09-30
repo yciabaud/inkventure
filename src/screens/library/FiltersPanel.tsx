@@ -502,10 +502,11 @@ export function FiltersPanel({ panel, catalog, filters, sort, count, go }: Props
         )}
         <h1 class="screen__title filters__title">{t(TITLES[panel])}</h1>
       </div>
-      {content}
-      {/* The year page has its own Apply: showing the results there would drop what was typed. */}
+      {/* Under the title, on one line: always visible, whatever the height the browser gives the page (100vh can
+          exceed the visible area). The year page has its own Apply: showing the results there would drop what was
+          typed. */}
       {panel !== 'year' && (
-        <div class="filters__actions">
+        <div class="filters__actions filters__actions--top">
           {panel === 'filters' && activeCount(filters) > 0 && (
             <Button variant="secondary" onClick={() => go({ filters: cleared, panel: 'filters' })}>
               {t('library.clearFilters')}
@@ -514,6 +515,7 @@ export function FiltersPanel({ panel, catalog, filters, sort, count, go }: Props
           <Button onClick={() => go({})}>{t('filters.show', { count: count })}</Button>
         </div>
       )}
+      {content}
     </div>
   );
 }
