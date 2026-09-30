@@ -1,0 +1,60 @@
+:: StoryTitle
+The Lamp at Saltmere
+
+:: StoryData
+{
+  "ifid": "6D4C219B-7302-4B5F-B372-BE3545FC4EFE",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "Landing Stage"
+}
+
+:: Landing Stage
+{<!-- The Lamp at Saltmere, as a Harlowe story: a tiny fixture written for Inkventure (MIT). Built into
+   lamp-harlowe.html by scripts/fixtures/build-twine.ts. Walkthrough: take the can, climb, fill, light. -->
+(set: $hasCan to false, $filled to false)}
+The ferry leaves you on the landing stage of Saltmere. Night is falling, and the lighthouse above the harbour is dark.
+
+A paraffin can stands by the bollard.
+
+(link: "Take the paraffin can")[(set: $hasCan to true)(go-to: "Foot of the Tower")]
+[[Walk up to the lighthouse->Foot of the Tower]]
+
+:: Foot of the Tower
+The lighthouse door is ajar. A spiral stair climbs into the dark.(if: $hasCan)[ The paraffin can sloshes in your hand.]
+
+[[Climb the stair->Lamp Room]]
+[[Read the keeper's log->Keeper's Log]]
+[[Wait for morning->The Lamp Stays Dark]]
+
+:: Keeper's Log
+The log lies open on a shelf by the door. The last keeper wrote a line for every night of the season.
+
+//October the first.// Wind from the south-west, a heavy swell. Lit the lamp at dusk and trimmed the wick at midnight. The coaster from Harwick passed at two bells, well clear of the Teeth.
+
+//October the second.// Fog until noon. Rang the bell every quarter hour. The paraffin delivery is late again; I have enough for four nights, perhaps five if the weather holds.
+
+//October the third.// Clear and cold. The lens wants polishing. A seal on the landing stage all afternoon, watching the gulls.
+
+//October the fourth.// The delivery came at last. I left the can by the bollard, too tired to carry it up the stair tonight.
+
+//October the fifth.// Nothing more is written. The ink has run where the page got wet.
+
+[[Put the log back->Foot of the Tower]]
+
+:: Lamp Room
+The great lamp sits in its brass cradle, its reservoir (if: $filled)[full of paraffin](else:)[dry].
+
+(if: $hasCan and not $filled)[(link: "Fill the lamp")[(set: $filled to true)(go-to: "Lamp Room")]]
+(if: $filled)[ [[Light the lamp->The Lamp Is Lit]] ]
+[[Go back down->Foot of the Tower]]
+
+:: The Lamp Is Lit
+The wick catches, and the beam sweeps out over the water. Far off, a ship's horn answers.
+
+''THE END'': you have lit the lamp.
+
+:: The Lamp Stays Dark
+You sit on the step and wait. No ship will find the harbour tonight.
+
+''THE END'': the lamp stays dark.

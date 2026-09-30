@@ -1,0 +1,47 @@
+:: StoryTitle
+The Lamp at Saltmere
+
+:: StoryData
+{
+  "ifid": "5899174B-383C-46EE-B139-132D3446FDD6",
+  "format": "SugarCube",
+  "format-version": "2.37.3",
+  "start": "Landing Stage"
+}
+
+:: StoryInit
+/* The Lamp at Saltmere, as a SugarCube story: a tiny fixture written for Inkventure (MIT). Built into
+   lamp-sugarcube.html by scripts/fixtures/build-twine.ts. Walkthrough: take the can, climb, fill, light. */
+<<set $hasCan to false>>
+<<set $filled to false>>
+
+:: Landing Stage
+The ferry leaves you on the landing stage of Saltmere. Night is falling, and the lighthouse above the harbour is dark.
+
+A paraffin can stands by the bollard.
+
+<<link "Take the paraffin can" "Foot of the Tower">><<set $hasCan to true>><</link>>
+[[Walk up to the lighthouse|Foot of the Tower]]
+
+:: Foot of the Tower
+The lighthouse door is ajar. A spiral stair climbs into the dark.<<if $hasCan>> The paraffin can sloshes in your hand.<</if>>
+
+[[Climb the stair|Lamp Room]]
+[[Wait for morning|The Lamp Stays Dark]]
+
+:: Lamp Room
+The great lamp sits in its brass cradle, its reservoir <<if $filled>>full of paraffin<<else>>dry<</if>>.
+
+<<if $hasCan and not $filled>><<link "Fill the lamp" "Lamp Room">><<set $filled to true>><</link>><</if>>
+<<if $filled>>[[Light the lamp|The Lamp Is Lit]]<</if>>
+[[Go back down|Foot of the Tower]]
+
+:: The Lamp Is Lit
+The wick catches, and the beam sweeps out over the water. Far off, a ship's horn answers.
+
+''THE END'': you have lit the lamp.
+
+:: The Lamp Stays Dark
+You sit on the step and wait. No ship will find the harbour tonight.
+
+''THE END'': the lamp stays dark.

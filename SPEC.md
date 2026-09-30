@@ -294,7 +294,7 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
   verify), not the UI language; dialog titles and hints follow the UI language. The game language comes from the
   catalogue (English when unknown); `?lang=xx` on the route overrides it.
 
-**Choice games (Ink / Twine)**
+**Choice games (Ink)** — Twine stories draw their own links in their frame (§4.3).
 
 - Choices rendered as full-width numbered buttons under the text; no command bar.
 - Same pagination rules; choices appear on the last page (the slot under the text grows to the list's measured height,
@@ -376,16 +376,29 @@ the ink functions of the same name.
 
 ### 4.3 Twine sandbox
 
-- Story HTML loaded into `<iframe sandbox="allow-scripts">` from a `blob:`/`srcdoc` URL.
-- An e-ink stylesheet is injected (black on white, serif, larger links, no animations) and a small script
-  converts scrolling to pages where possible.
-- Save/restore relies on the story format's own mechanism; Inkventure's save slots are disabled for Twine.
-- Flagged "Experimental" in the UI.
+- Story HTML loaded into `<iframe sandbox="allow-scripts">` from `srcdoc`: scripts run, but with an opaque origin, so
+  the story cannot reach the app's page, its storage, cookies or the top window, nor open pop-ups.
+- An e-ink stylesheet is injected first in its `<head>` (black on white, the reader's text settings with system fonts,
+  bold underlined links at least 48 px tall, no animations or transitions, SugarCube's UI bar and Harlowe's sidebar
+  restyled), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
+  previous screenful, elsewhere the next one (one line of overlap), and the page number shows under the frame.
+  Scrolling is hidden only once that script runs, so a story that breaks it still scrolls. "Aa" changes are sent to
+  the frame as a new stylesheet (the story is not reloaded). Relative links (images) resolve where the story was
+  downloaded from (`<base>`).
+- Save/restore relies on the story format's own mechanism; Inkventure's Save, Restore, Undo and Transcript are not
+  offered for Twine. The sandbox has no storage of its own: the injected script stands in for `localStorage` and
+  `sessionStorage` and sends every change to the reader, which keeps it under `save:<tuid>:twine` (at most 1 M
+  characters; a named-save entry: never evicted). So the format's save slots persist and a SugarCube story resumes
+  where it was after a reload. Restart reloads the story, keeping its `localStorage` (its saves) and dropping its
+  session.
+- Flagged "Experimental" in the UI (game page and the reader's top zone). Twine has no `Engine`: the reader runs it
+  directly (`TwineReader`, lazy chunk).
 
 ### 4.4 Saves
 
 - Z-machine / Glulx: in-memory snapshots produced via the engine's autosave (after each turn), plus up to 5 named
   slots.
+- Twine: the story format's own saves, in its storage kept by the reader (§4.3).
 - Ink: `story.state.toJson()`, in a JSON envelope naming the story (a hash of its JSON); Undo restores the reader's
   previous turn snapshot. A turn begins at each choice.
 - Undo: engine undo where available, else restore the previous autosave (keep last 10 turn snapshots in memory,
@@ -551,6 +564,7 @@ All keys are prefixed and versioned:
 | `ik:v1:progress:<tuid>` | `turns`, `lastPlayed`, `location`, per-game reader overrides (`reader`) |
 | `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
+| `ik:v1:save:<tuid>:twine` | a Twine story's own storage (§4.3): `{v, date, local, session}` (string maps), counted with the saves |
 | `ik:v1:file:<tuid>` | cached story file (small files only) |
 | `ik:v1:lru` | access order for evictable entries |
 

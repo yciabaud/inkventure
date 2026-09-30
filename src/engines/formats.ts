@@ -21,7 +21,7 @@ export function engineFor(format: string): EngineKind | null {
 
 type Loader = () => Promise<() => Engine>;
 
-/** Engines shipped so far; Twine arrives with its story (S1.9). */
+/** The engines. Twine stories are not run by an `Engine`: they play in their own sandboxed frame (TwineReader). */
 const LOADERS: Partial<Record<EngineKind, Loader>> = {
   zmachine: () => import('./zvm/zvmEngine').then((module) => module.createZvmEngine),
   glulx: () => import('./quixe/quixeEngine').then((module) => () => module.createQuixeEngine()),
@@ -30,13 +30,13 @@ const LOADERS: Partial<Record<EngineKind, Loader>> = {
 
 /** Whether this build can play games of `kind`. */
 export function isAvailable(kind: EngineKind): boolean {
-  return !!LOADERS[kind];
+  return kind === 'twine' || !!LOADERS[kind];
 }
 
-/** Loads the engine's chunk and returns its factory. Rejects for an engine not shipped yet. */
+/** Loads the engine's chunk and returns its factory. Rejects for Twine, which has no `Engine`. */
 export function loadEngine(kind: EngineKind): Promise<() => Engine> {
   const loader = LOADERS[kind];
-  return loader ? loader() : Promise.reject(new Error('No engine for ' + kind + ' yet'));
+  return loader ? loader() : Promise.reject(new Error('No engine for ' + kind));
 }
 
 function fourCC(bytes: Uint8Array, offset: number): string {
@@ -48,11 +48,27 @@ function fourCC(bytes: Uint8Array, offset: number): string {
   );
 }
 
+/** Whether the ASCII text `needle` occurs in `bytes`. */
+function containsAscii(bytes: Uint8Array, needle: string): boolean {
+  const first = needle.charCodeAt(0);
+  const last = bytes.length - needle.length;
+  outer: for (let i = 0; i <= last; i++) {
+    if (bytes[i] !== first) continue;
+    for (let j = 1; j < needle.length; j++)
+      if (bytes[i + j] !== needle.charCodeAt(j)) continue outer;
+    return true;
+  }
+  return false;
+}
+
 /**
- * Whether `bytes` look like a story file for `kind`: a Blorb (IFF `FORM…IFRS`), else the format's own header. Catches a
- * web page or a wrong file before the engine chokes on it. Formats without a binary header pass.
+ * Whether `bytes` look like a story file for `kind`: a Blorb (IFF `FORM…IFRS`), else the format's own header; a Twine
+ * story holds its story data (Twine 2) or store area (Twine 1). Catches a web page or a wrong file before the engine
+ * chokes on it. Formats without a header pass.
  */
 export function looksLikeStory(kind: EngineKind, bytes: Uint8Array): boolean {
+  if (kind === 'twine')
+    return containsAscii(bytes, '<tw-storydata') || containsAscii(bytes, 'storeArea');
   if (bytes.length >= 12 && fourCC(bytes, 0) === 'FORM') return fourCC(bytes, 8) === 'IFRS';
   if (kind === 'zmachine') return bytes.length >= 64 && bytes[0] >= 1 && bytes[0] <= 8;
   if (kind === 'glulx') return bytes.length >= 36 && fourCC(bytes, 0) === 'Glul';

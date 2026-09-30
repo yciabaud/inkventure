@@ -172,11 +172,14 @@ export function readProgress(store: Store, tuid: string): Progress {
   return progress && typeof progress === 'object' ? progress : {};
 }
 
-/** Updates the game's progress record, keeping its other fields (e.g. the reader's per-game settings). */
+/**
+ * Updates the game's progress record, keeping its other fields (e.g. the reader's per-game settings). Without `turns`
+ * (a Twine story counts none) the stored count stays.
+ */
 export function updateProgress(
   store: Store,
   tuid: string,
-  patch: { turns: number; lastPlayed: number; location?: string },
+  patch: { turns?: number; lastPlayed: number; location?: string },
 ) {
   const progress: Progress = { ...readProgress(store, tuid), ...patch };
   if (!patch.location) delete progress.location;
