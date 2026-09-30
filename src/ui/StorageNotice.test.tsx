@@ -42,6 +42,6 @@ describe('StorageNotice', () => {
       expect(() => store.set('prefs', { locale: 'fr' })).toThrow(/^Storage full/);
     });
     expect(container.textContent).toContain('Storage is full');
-    expect(container.querySelector('a')?.getAttribute('href')).toBe('#/settings');
+    expect(container.querySelector('a')?.getAttribute('href')).toBe('#/settings?s=data');
   });
 });

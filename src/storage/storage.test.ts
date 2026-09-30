@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { isQuotaError, MemoryBackend, openBackend, type KeyValueBackend } from './backend';
 import { compressBytes, compressText, decompressBytes, decompressText } from './compress';
 import { keys, PREFIX, SCHEMA_KEY } from './keys';
-import { latestVersion, runMigrations, type Migration } from './migrations';
+import { latestVersion, MIGRATIONS, runMigrations, type Migration } from './migrations';
 import { getPrefs, setPrefs } from './prefs';
 import { createStore, isStorageFullError, STALE_AUTOSAVE_MS, type StorageEvent } from './store';
 
@@ -323,5 +323,72 @@ describe('prefs', () => {
     const { store } = setup();
     store.set(keys.prefs, 'oops');
     expect(getPrefs(store)).toEqual({});
+  });
+});
+
+describe('usage and reset (Settings)', () => {
+  function filled() {
+    const { backend, store } = setup();
+    backend.setItem(SCHEMA_KEY, '1');
+    backend.setItem('ik:v0:old', 'x');
+    backend.setItem('ik:probe', '1');
+    backend.setItem('someone-else', 'keep me');
+    backend.setItem('ikea', 'not ours');
+    store.set(keys.prefs, { locale: 'fr' });
+    store.set(keys.home, []);
+    store.set(keys.progress('g1'), { turns: 3 });
+    store.set(keys.autosave('g1'), { data: 'abc' });
+    store.set(keys.save('g1', '1'), { data: 'abcd' });
+    store.set(keys.save('g1', '2'), { data: 'abcdef' });
+    store.set(keys.file('g1'), 'zzzz', { cache: true });
+    return { backend, store };
+  }
+
+  function size(backend: MemoryBackend, key: string) {
+    return key.length + backend.getItem(key)!.length;
+  }
+
+  it('sums keys and values per group, ignoring keys outside ik:', () => {
+    const { backend, store } = filled();
+    const usage = store.usage();
+    expect(usage.saves).toEqual({
+      count: 2,
+      size: size(backend, 'ik:v1:save:g1:1') + size(backend, 'ik:v1:save:g1:2'),
+    });
+    expect(usage.autosaves).toEqual({ count: 1, size: size(backend, 'ik:v1:save:g1:auto') });
+    expect(usage.files).toEqual({ count: 1, size: size(backend, 'ik:v1:file:g1') });
+    // prefs, home, progress, lru, schema, the old version's key and the probe key.
+    expect(usage.other.count).toBe(7);
+    expect(usage.total).toBe(
+      backend.used() - size(backend, 'someone-else') - size(backend, 'ikea'),
+    );
+    expect(usage.total).toBe(
+      usage.saves.size + usage.autosaves.size + usage.files.size + usage.other.size,
+    );
+  });
+
+  it('is empty for an empty storage', () => {
+    const { store } = setup();
+    expect(store.usage().total).toBe(0);
+    expect(store.usage().saves.count).toBe(0);
+  });
+
+  it('reset removes every ik: key, of any version, and nothing else', () => {
+    const { backend, store } = filled();
+    store.clearAll();
+    const left: string[] = [];
+    for (let i = 0; i < backend.length; i++) left.push(backend.key(i)!);
+    expect(left.sort()).toEqual(['ikea', 'someone-else']);
+    expect(backend.getItem('someone-else')).toBe('keep me');
+    expect(store.keys()).toEqual([]);
+    expect(getPrefs(store)).toEqual({});
+    expect(store.usage().total).toBe(0);
+  });
+
+  it('a reset storage migrates like a fresh one', () => {
+    const { backend, store } = filled();
+    store.clearAll();
+    expect(runMigrations(backend)).toBe(latestVersion(MIGRATIONS));
+    expect(backend.getItem(SCHEMA_KEY)).toBe(String(latestVersion(MIGRATIONS)));
   });
 });

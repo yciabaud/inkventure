@@ -17,6 +17,7 @@ export {
   type HomeEntry,
 } from './home';
 export { getPrefs, setPrefs, type Prefs } from './prefs';
+export type { StorageUsage, UsageGroup } from './usage';
 export { isStorageFullError, type StorageEvent, type StorageFullError, type Store } from './store';
 
 let instance: Store | undefined;

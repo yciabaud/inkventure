@@ -58,7 +58,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S3.4](stories/S3.4-game-file-loader.md) | Game file loader from IF Archive | E3 | M3 | S3.3, S1.3, S0.6 | done |
 | [S4.1](stories/S4.1-home-featured.md) | Home: Featured shelf & first-launch state | E4 | M3 | S2.4, S3.3 | done |
 | [S4.2](stories/S4.2-home-my-adventures.md) | Home: My adventures & Continue hero | E4 | M3 | S4.1, S1.5 | done |
-| [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | todo |
+| [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | done |
 | [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | todo |
 | [S6.1](stories/S6.1-ebook-build.md) | Ebook build pipeline (EPUB + KF8) | E6 | M5 | S2.4 | todo |
 | [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | todo |
