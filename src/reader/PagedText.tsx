@@ -5,6 +5,12 @@ import { blockClass, runClass } from './measure';
 import { PageTurner, type PageView, type TapInterceptor } from './pageTurner';
 import { pageFragments, type ReaderBlock } from './paginator';
 
+/**
+ * Height in px of the slot under the text ("Back to the present", the choices or input of the demo). The text area is
+ * the same on every page, so it never has to be measured again when turning pages.
+ */
+export const SLOT_HEIGHT = 64;
+
 interface Props {
   blocks: ReaderBlock[];
   /** Shown under the text on the last page only (command bar, choices). */
@@ -13,8 +19,11 @@ interface Props {
   interceptTap?: TapInterceptor;
   /** Stay on the last page across re-layouts (the command field has focus). */
   pinToLast?: boolean;
-  /** Extra class for the slot under the text (its height is the same on every page). */
-  slotClass?: string;
+  /**
+   * Height in px of the slot on the last page, when it needs more than the `SLOT_HEIGHT` of the others (the command
+   * bar): it then covers the bottom of the text area, which holds less text on that page.
+   */
+  lastSlotHeight?: number;
   /** Inline style of the text area (reader settings: font, size, spacing, margins, alignment). */
   textStyle?: Record<string, string>;
   /** Changes whenever `textStyle` changes the layout: the text is paginated again, keeping the reading position. */
@@ -33,7 +42,7 @@ export function PagedText({
   interceptTap,
   focus,
   pinToLast,
-  slotClass,
+  lastSlotHeight,
   textStyle,
   layoutKey,
 }: Props) {
@@ -42,9 +51,12 @@ export function PagedText({
   const [view, setView] = useState<PageView>({ pages: [], index: 0 });
   const [turner] = useState(() => new PageTurner(setView));
 
+  const reserve = lastSlotHeight && lastSlotHeight > SLOT_HEIGHT ? lastSlotHeight - SLOT_HEIGHT : 0;
+
   useLayoutEffect(() => {
     turner.setInterceptTap(interceptTap);
     turner.setPinLast(!!pinToLast);
+    turner.setLastPageReserve(reserve);
   });
 
   // Declared before the blocks effect so the first layout finds the elements; both run before the browser paints.
@@ -108,7 +120,14 @@ export function PagedText({
           ))}
         </div>
       </div>
-      <div class={'reader__slot' + (slotClass ? ' ' + slotClass : '')}>
+      <div
+        class={'reader__slot' + (isLast && reserve ? ' reader__slot--raised' : '')}
+        style={
+          isLast && reserve && !loading
+            ? { height: lastSlotHeight + 'px', marginTop: -reserve + 'px' }
+            : { height: SLOT_HEIGHT + 'px' }
+        }
+      >
         {loading ? null : isLast ? (
           lastPageSlot
         ) : (

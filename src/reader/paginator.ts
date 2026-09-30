@@ -71,20 +71,39 @@ function blockHeight(metrics: BlockMetrics): number {
  * `groupStarts[b]` marks blocks that start a group kept together when possible (a turn: the echoed command and the
  * game's reply). A group that does not fit in the rest of the page but fits on a page of its own starts a new page,
  * so the player reads the whole reply, with the command bar, without turning the page.
+ *
+ * `lastPageHeight` (≤ `pageHeight`) is the room on the last page, which shows the command bar: when the text left
+ * for it is taller, it is laid out again from that page on in pages of `lastPageHeight`. Earlier pages are unchanged.
  */
 export function paginate(
   metrics: BlockMetrics[],
   pageHeight: number,
   groupStarts?: boolean[],
+  lastPageHeight?: number,
 ): Page[] {
+  const first = layOut(metrics, groupStarts, () => pageHeight);
+  if (lastPageHeight === undefined || lastPageHeight >= pageHeight) return first.pages;
+  if (first.lastHeight <= lastPageHeight + EPSILON) return first.pages;
+  const from = first.pages.length - 1;
+  return layOut(metrics, groupStarts, (page) => (page < from ? pageHeight : lastPageHeight)).pages;
+}
+
+/** Lays the blocks out with `heightOf(page)` px for each page; also returns the height used on the last page. */
+function layOut(
+  metrics: BlockMetrics[],
+  groupStarts: boolean[] | undefined,
+  heightOf: (page: number) => number,
+): { pages: Page[]; lastHeight: number } {
   const pages: Page[] = [];
   let start: Position = { block: 0, offset: 0 };
   let y = 0;
+  let pageHeight = heightOf(0);
 
   function breakAt(position: Position) {
     pages.push({ start: start, end: position });
     start = position;
     y = 0;
+    pageHeight = heightOf(pages.length);
   }
 
   for (let b = 0; b < metrics.length; b++) {
@@ -95,7 +114,7 @@ export function paginate(
       for (let g = b + 1; g < metrics.length && !groupStarts[g]; g++) {
         group += metrics[g - 1].gapAfter + blockHeight(metrics[g]);
       }
-      if (y + gap + group > pageHeight + EPSILON && group <= pageHeight + EPSILON) {
+      if (y + gap + group > pageHeight + EPSILON && group <= heightOf(pages.length + 1) + EPSILON) {
         breakAt({ block: b, offset: 0 });
       }
     }
@@ -109,7 +128,7 @@ export function paginate(
     }
   }
   pages.push({ start: start, end: { block: metrics.length, offset: 0 } });
-  return pages;
+  return { pages: pages, lastHeight: y };
 }
 
 /** Index of the page showing `position` (the last page starting at or before it). */

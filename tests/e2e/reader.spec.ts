@@ -50,6 +50,14 @@ async function fragments(page: Page): Promise<Fragment[]> {
   );
 }
 
+/** Page 1's fragments and the page count: the fallback and reading fonts can end page 1 at the same place. */
+async function layoutOf(page: Page): Promise<{ fragments: Fragment[]; indicator: string }> {
+  return {
+    fragments: await fragments(page),
+    indicator: (await page.locator('.reader__indicator').textContent()) || '',
+  };
+}
+
 /** Whether every Literata face (regular and bold) has loaded. Not `fonts.check()`: WebKit answers true too early. */
 async function literataLoaded(page: Page): Promise<boolean> {
   return page.evaluate(() => {
@@ -332,7 +340,7 @@ test('re-paginates when a font face finishes loading, even if load(), ready and 
   // Reference: the demo loaded normally, laid out in the reading font.
   const reference = await context.newPage();
   await open(reference);
-  const expected = await fragments(reference);
+  const expected = await layoutOf(reference);
   await reference.close();
 
   // Worst case seen on WebKit: every FontFaceSet signal says "done" before the faces have loaded. Only each face's
@@ -353,10 +361,10 @@ test('re-paginates when a font face finishes loading, even if load(), ready and 
   await expect(page.locator('.reader__block').first()).toBeVisible();
   // First layout done at once, in the fallback font: page 1 holds different text.
   expect(await literataLoaded(page)).toBe(false);
-  expect(await fragments(page)).not.toEqual(expected);
+  expect(await layoutOf(page)).not.toEqual(expected);
   // Once the faces have loaded, page 1 is laid out exactly as with the fonts from the start.
   await expect.poll(() => literataLoaded(page), { timeout: 10_000 }).toBe(true);
-  await expect.poll(() => fragments(page)).toEqual(expected);
+  await expect.poll(() => layoutOf(page)).toEqual(expected);
   expect((await overflow(page)).clipped).toBeLessThanOrEqual(0.5);
 });
 

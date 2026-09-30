@@ -233,12 +233,13 @@ The core screen. It must feel like reading an ebook.
   pages, a "▸ more" marker invites turning the page. A turn (echoed command + reply) that does not fit in the rest of
   the page but fits on a page of its own starts a new page, so most replies are read whole, with the command bar.
 - While the game waits for a command, its bare prompt (">") is not shown: the command field stands for it. The command bar is visible only on the **last** page
-  (on earlier pages the bar shows "Back to the present ›"); that slot has the same height on every page, so all pages
-  share one text-area height.
+  (on earlier pages a short slot shows "Back to the present ›"). All pages share one text-area height; on the last
+  page the taller command bar covers the bottom of it and the paginator gives that page less text, so earlier pages
+  are not left with an empty band.
 - `[MORE]` / "press any key" prompts from the game are satisfied by a tap on the page.
 
-**Command input (parser games)** — a command bar of fixed height under the text (the same on every page, so the
-text area never changes size), in three rows:
+**Command input (parser games)** — a command bar of fixed height under the text on the last page (the text area
+itself never changes size, see above), in three rows:
 
 1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
 2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,

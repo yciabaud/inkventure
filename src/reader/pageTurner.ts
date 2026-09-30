@@ -42,6 +42,8 @@ export class PageTurner {
   private interceptTap: TapInterceptor | undefined;
   /** Keep the last page open across re-layouts (the command field has focus, the keyboard may resize the page). */
   private pinLast = false;
+  /** Px of the text area covered on the last page by its taller slot (the command bar). */
+  private lastReserve = 0;
   private pages: Page[] = [];
   private index = 0;
   private blocks: ReaderBlock[] = [];
@@ -77,6 +79,13 @@ export class PageTurner {
     if (pin === this.pinLast) return;
     this.pinLast = pin;
     if (pin) this.last();
+  }
+
+  /** The last page's slot covers the bottom `px` of the text area: that page holds less text. */
+  setLastPageReserve(px: number): void {
+    if (px === this.lastReserve) return;
+    this.lastReserve = px;
+    this.layout(true);
   }
 
   /** New text. With `focus`, opens on the page where that block starts (e.g. the echoed command of a new turn). */
@@ -126,7 +135,12 @@ export class PageTurner {
     // Turns (an echoed command and its reply) are kept on one page when they fit.
     const turns: boolean[] = [];
     for (let i = 0; i < this.blocks.length; i++) turns.push(this.blocks[i].kind === 'input');
-    this.pages = paginate(measured.metrics, height, turns);
+    this.pages = paginate(
+      measured.metrics,
+      height,
+      turns,
+      this.lastReserve > 0 ? Math.max(height - this.lastReserve, 1) : undefined,
+    );
     this.index = this.pinLast ? this.pages.length - 1 : pageIndexOf(this.pages, this.anchor);
     if (this.pinLast && this.pages.length) this.anchor = this.pages[this.index].start;
     this.emit();
@@ -166,7 +180,8 @@ export class PageTurner {
     const last = text.lastElementChild;
     if (!last) return;
     const style = window.getComputedStyle(area);
-    const bottom = area.getBoundingClientRect().bottom - parseFloat(style.paddingBottom);
+    const reserve = this.index === this.pages.length - 1 ? this.lastReserve : 0;
+    const bottom = area.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - reserve;
     if (last.getBoundingClientRect().bottom - bottom <= 0.5) return;
     const key = this.laidOut + ':' + this.blocks.length + ':' + this.index;
     if (this.refits.key !== key) this.refits = { key: key, count: 0 };
