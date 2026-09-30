@@ -200,6 +200,14 @@ Open questions:
   browser; the research proxy blocked the terms page.
 - Where to keep permission records, e.g. a `permissions` field with the date and a link to the author's reply.
 
+## Moving saves between devices
+
+The V1 text-code export / import (S5.2) was built and dropped (closed PR #41): codes of tens of KB only travel by
+copy-paste or a file, which e-reader browsers rarely support. If players ask for it, better shapes would be a small
+sync service (against the "static only" rule, so a real decision) or a phone-to-reader hand-off via a short code or QR
+code. The PR #41 codec (`src/storage/transfer.ts`: CRC-checked deflate + base64, merge / overwrite rules, all-or-nothing
+import) can be reused.
+
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.

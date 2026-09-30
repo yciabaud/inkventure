@@ -6,7 +6,7 @@ and [SPEC.md](../SPEC.md) for the full specification.
 
 Ideas beyond V1 (not yet stories) are collected in [post-v1-ideas.md](post-v1-ideas.md).
 
-Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here **and** in the story file in sync.
+Statuses: `todo` · `in-progress` · `done` · `blocked` · `dropped`. Keep the status here **and** in the story file in sync.
 
 ## Epics
 
@@ -25,7 +25,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here *
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
 
 ## Stories
 
@@ -59,7 +59,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S4.1](stories/S4.1-home-featured.md) | Home: Featured shelf & first-launch state | E4 | M3 | S2.4, S3.3 | done |
 | [S4.2](stories/S4.2-home-my-adventures.md) | Home: My adventures & Continue hero | E4 | M3 | S4.1, S1.5 | done |
 | [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | done |
-| [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | todo |
+| [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | dropped |
 | [S6.1](stories/S6.1-ebook-build.md) | Ebook build pipeline (EPUB + KF8) | E6 | M5 | S2.4 | todo |
 | [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | todo |
 | [S7.1](stories/S7.1-device-checklist-perf.md) | Real-device checklist & performance budgets | E7 | M5 | S4.2, S3.4 | todo |

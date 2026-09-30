@@ -134,7 +134,7 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
    My adventures,   │         │
    Continue)        │   #/library?q=…&genre=…&page=…
                     └──> #/library
-#/settings  (UI language, reader defaults, data export/import/reset, about & credits)
+#/settings  (UI language, reader defaults, storage usage & reset, about & credits)
 ```
 
 Settings keeps every page scroll-free: its first page holds the UI language (Automatic / English / Français) and
@@ -556,12 +556,11 @@ All keys are prefixed and versioned:
   games. Feature-detected; never required. The Kindle measured in S0.3 exposes all three APIs, so this may reach
   class A too once it is shown to work there (§13 #11).
 
-### 6.3 Export / import
+### 6.3 Export / import (dropped from V1)
 
-- Settings → *Export my data*: produces a text code (compressed JSON of prefs, home, progress and saves, base64,
-  chunked into groups for readability) and a downloadable `.txt` where downloads work.
-- *Import*: paste a code; preview what will be replaced; merge or overwrite.
-- Purpose: move saves between devices or protect against the browser clearing its storage.
+A text-code export / import (S5.2) was built and then dropped: a code holding a single Z-machine autosave is tens of
+KB, so it can only travel by copy-paste or a file, which the Kindle's browser is unlikely to support, and the risk it
+covers (the browser clearing its storage) is low (§13 #9). See [post-v1-ideas.md](docs/post-v1-ideas.md).
 
 ---
 
@@ -583,7 +582,7 @@ All keys are prefixed and versioned:
 A free ebook, in EN and FR, is the main acquisition channel.
 
 - **Content:** what interactive fiction is; how to play (typing commands, common verbs, compass, saving);
-  how Inkventure works on your e-reader (Wi-Fi, experimental browser, exporting saves); a chapter of
+  how Inkventure works on your e-reader (Wi-Fi, experimental browser, where saves are kept); a chapter of
   **game cards** from `featured.json` (cover, pitch, length, difficulty, **"Play now" link** to
   `https://<host>/#/play/<tuid>` + QR code); credits (IFDB, IF Archive, authors).
 - **Formats:** EPUB 3 source built from Markdown in `ebook/`; KF8/AZW3 produced for Kindle
@@ -619,7 +618,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 │   ├── reader/         paginator, command bar, chips
 │   ├── engines/        engine.ts, glkote-bridge/, zvm/, quixe/, ink/, twine/
 │   ├── catalog/        index loader, filters, search
-│   ├── storage/        storage layer, migrations, export/import
+│   ├── storage/        storage layer, migrations
 │   ├── i18n/           en.json, fr.json, i18n.ts
 │   └── styles/
 ├── size-budget.json    asset size budgets (checked by scripts/size/)
@@ -659,7 +658,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 
 - Catalogue: filter combinations, sorting, pagination, search normalisation (accents, case).
 - i18n: lookup, interpolation, plurals, fallback, **no missing keys** between locales.
-- Storage: schema, migrations, quota handling & LRU eviction (mocked quota), export/import round-trip.
+- Storage: schema, migrations, quota handling & LRU eviction (mocked quota).
 - Router: hash parsing/serialising of library filters.
 - Paginator: text → pages for given sizes (jsdom with mocked measurements).
 - Chips: noun extraction from outputs; verb tables per language.
@@ -675,7 +674,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 - Scenarios (grow with the stories): Home Featured & My adventures; Library search, filters, sort,
   pagination, back button restores filters; Game detail → Add to Home → Play; play a Z-machine fixture
   (type a command, use chips, tap words, turn pages); Glulx and Ink fixtures; autosave + reload resumes;
-  save/restore slots; undo; export/import code; UI language switch; deep link cold start `#/play/<tuid>`;
+  save/restore slots; undo; UI language switch; deep link cold start `#/play/<tuid>`;
   storage-full and download-failure error pages.
 - Optional screenshot comparisons for key screens (stable, since there is no animation).
 
@@ -699,7 +698,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M0 — Foundations & spikes** | Scaffold, CI, deploy, capability probe on Kindle, design system, i18n, storage, size budgets, PR previews | S0.1–S0.8 |
 | **M1 — Playable Z-machine** | Paginated reader, settings, ZVM, command bar & chips, saves, status line | S1.1–S1.6 |
 | **M2 — Catalogue pipeline** | IFDB crawl, playability, index, featured | S2.1–S2.4 |
-| **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings & export | S3.1–S3.4, S4.1–S4.2, S5.1–S5.2 |
+| **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings | S3.1–S3.4, S4.1–S4.2, S5.1 |
 | **M4 — More formats** | Glulx, Ink, Twine | S1.7–S1.9 |
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
 
@@ -719,6 +718,6 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 6 | IFDB adult tagging incomplete. | Tag denylist + manual exclude list; report link. |
 | 7 | IFDB / IF Archive load and etiquette. | Weekly incremental crawl, rate limiting, contact IFTF. |
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
-| 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Export/import codes; prompt to export after N saves. |
+| 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
 | 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Candidate follow-up story after M1: offline app shell + recently played games, validated on the device. |
