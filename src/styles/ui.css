@@ -710,8 +710,12 @@
   margin-top: 8px;
 }
 
-/* One row of chips; labels shrink with an ellipsis rather than wrap, so the bar keeps its height. */
+/*
+ * One row of chips that never wraps, so the bar keeps its height: chips that do not fit move to a dialog
+ * (useFitCount); a single chip too long for the row shrinks with an ellipsis.
+ */
 .chips {
+  position: relative;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -748,6 +752,14 @@
 
 .chip--direction {
   flex-shrink: 0;
+}
+
+/* Out of the row but still laid out, so its width can be measured again when space frees up. */
+.fit-hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  visibility: hidden;
 }
 
 .chip--more {

@@ -3,8 +3,10 @@ import { t } from '../../i18n/i18n';
 import { LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 import { Pager } from '../../ui/Pager';
+import { FIXTURE_Z_TUID } from '../reader/GameReader';
 
-// Placeholder until the catalogue (S3.1): demonstrates paging through the hash query and links to a sample game.
+// Placeholder until the catalogue (S3.1): demonstrates paging through the hash query, links to a sample game and to
+// the bundled test adventure (so it can be played on a device without typing its URL).
 export const SAMPLE_TUID = 'sample';
 const SAMPLE_PAGES = 3;
 
@@ -14,6 +16,9 @@ export function LibraryScreen({ query }: { query: Query }) {
     <div class="screen">
       <h1 class="screen__title">{t('library.title')}</h1>
       <EmptyState title={t('library.emptyTitle')} text={t('library.emptyText')}>
+        <LinkButton href={formatHash({ name: 'play', tuid: FIXTURE_Z_TUID })}>
+          {t('library.playFixture')}
+        </LinkButton>
         <LinkButton variant="secondary" href={formatHash({ name: 'game', tuid: SAMPLE_TUID })}>
           {t('library.sample')}
         </LinkButton>

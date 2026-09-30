@@ -240,10 +240,13 @@ The core screen. It must feel like reading an ebook.
 text area never changes size), in three rows:
 
 1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
-2. **Verbs**: Look, Inventory, Examine…, Take…, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
+2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
    Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
    excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
+
+Rows never wrap nor cut a label: on narrow screens (phones), the directions and verbs that do not fit move, from the
+end of the lists above, into the ⋯ and "More…" dialogs, and only the noun chips that fit are shown.
 3. **Command field** + Enter; ↑ / ↓ browse the history. While it has focus the reader stays on the last page, so
    the virtual keyboard shrinking the page re-paginates without hiding the field.
 
