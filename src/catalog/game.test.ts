@@ -26,6 +26,15 @@ describe('blurbParagraphs', () => {
     ).toEqual(['A classic by Someone.Bold end']);
   });
 
+  it('is not fooled by nested or broken markup', () => {
+    // "<scr<script>" is one (unknown) tag; what follows is plain text, rendered as text anyway.
+    expect(blurbParagraphs('<scr<script>ipt>alert(1)</script>ok')).toEqual(['ipt>alert(1)ok']);
+    expect(blurbParagraphs('a<!--<script>x</script>-->b<SCRIPT >y</SCRIPT >c')).toEqual(['abc']);
+    expect(blurbParagraphs('2 < 3, 5 <= 6')).toEqual(['2 < 3, 5 <= 6']);
+    expect(blurbParagraphs('text <b unterminated')).toEqual(['text']);
+    expect(blurbParagraphs('<script>never closed')).toEqual([]);
+  });
+
   it('decodes entities once and collapses whitespace', () => {
     expect(
       blurbParagraphs(

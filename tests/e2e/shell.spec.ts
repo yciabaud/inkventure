@@ -35,7 +35,7 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
 
   // The committed sample catalogue: its first game by title.
   await press(page.getByRole('link', { name: /Cave of Echoes/ }));
-  await expectScreen(page, '#/game/fxcave0000000003', 'Game');
+  await expectScreen(page, '#/game/fxcave0000000003', 'Cave of Echoes');
 
   await press(page.getByRole('link', { name: 'Play' }));
   await expectScreen(page, '#/play/fxcave0000000003', 'Reader');
@@ -52,7 +52,7 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await page.goBack();
   await expectScreen(page, '#/play/fxcave0000000003', 'Reader');
   await page.goBack();
-  await expectScreen(page, '#/game/fxcave0000000003', 'Game');
+  await expectScreen(page, '#/game/fxcave0000000003', 'Cave of Echoes');
   await page.goBack();
   await expectScreen(page, '#/library', 'Library');
 });

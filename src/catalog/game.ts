@@ -79,6 +79,70 @@ function decodeEntities(text: string): string {
   });
 }
 
+/** Elements that end a paragraph (opening or closing), besides `<br>`. */
+const BLOCKS: Record<string, boolean> = {
+  br: true,
+  p: true,
+  div: true,
+  li: true,
+  ul: true,
+  ol: true,
+  blockquote: true,
+  h1: true,
+  h2: true,
+  h3: true,
+  h4: true,
+  h5: true,
+  h6: true,
+  tr: true,
+  table: true,
+};
+
+/** Elements dropped with their content. */
+const DROPPED: Record<string, boolean> = { script: true, style: true };
+
+/**
+ * The text of an HTML fragment, in one pass over it: tags are skipped (block elements and `<br>` become line
+ * breaks), comments and `<script>` / `<style>` elements are dropped with their content. A `<` that does not start a
+ * tag stays as text. Entities are left for `decodeEntities`.
+ */
+function htmlText(html: string): string {
+  const lower = html.toLowerCase();
+  let out = '';
+  let i = 0;
+  while (i < html.length) {
+    const lt = html.indexOf('<', i);
+    if (lt < 0) {
+      out += html.slice(i);
+      break;
+    }
+    out += html.slice(i, lt);
+    if (lower.substr(lt, 4) === '<!--') {
+      const end = html.indexOf('-->', lt + 4);
+      i = end < 0 ? html.length : end + 3;
+      continue;
+    }
+    const tag = /^<(\/?)([a-z][a-z0-9]*)/.exec(lower.substr(lt, 16));
+    const gt = html.indexOf('>', lt + 1);
+    if (!tag) {
+      out += '<';
+      i = lt + 1;
+      continue;
+    }
+    if (gt < 0) break; // an unterminated tag: nothing after it is text
+    const name = tag[2];
+    if (DROPPED[name] && !tag[1]) {
+      const close = lower.indexOf('</' + name, gt + 1);
+      const end = close < 0 ? -1 : html.indexOf('>', close);
+      i = end < 0 ? html.length : end + 1;
+      continue;
+    }
+    if (BLOCKS[name]) out += '\n';
+    i = gt + 1;
+  }
+  return out;
+}
+
 /**
  * IFDB's blurb (HTML) as plain paragraphs: line breaks and block elements separate paragraphs, other tags (links,
  * emphasis) keep only their text, scripts and styles are dropped, entities are decoded, whitespace is collapsed.
@@ -86,14 +150,8 @@ function decodeEntities(text: string): string {
  */
 export function blurbParagraphs(html: string | undefined): string[] {
   if (!html) return [];
-  const text = html
-    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, '')
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/?(p|div|li|ul|ol|blockquote|h[1-6]|tr|table)\b[^>]*>/gi, '\n')
-    .replace(/<[^>]*>/g, '');
   const paragraphs: string[] = [];
-  const lines = decodeEntities(text).split(/\n/);
+  const lines = decodeEntities(htmlText(html)).split(/\n/);
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].replace(/\s+/g, ' ').replace(/^ | $/g, '');
     if (line) paragraphs.push(line);
