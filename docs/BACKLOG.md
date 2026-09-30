@@ -4,6 +4,8 @@ Stories are sized for one working session / one pull request. Each story file is
 user story, scope, acceptance criteria, required tests, out of scope. See [CLAUDE.md](../CLAUDE.md) for the workflow
 and [SPEC.md](../SPEC.md) for the full specification.
 
+Ideas beyond V1 (not yet stories) are collected in [post-v1-ideas.md](post-v1-ideas.md).
+
 Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here **and** in the story file in sync.
 
 ## Epics
