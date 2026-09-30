@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "tuid": "qzftg3j8nh5f34i2",
+      "starter": true,
+      "pitch": {
+        "en": "The phone rings and you are late for work. Twenty minutes, a perfect first game.",
+        "fr": "Le téléphone sonne, vous êtes en retard au travail. Vingt minutes : le premier jeu idéal."
+      }
+    },
+    {
+      "tuid": "mohwfk47yjzii14w",
+      "starter": true,
+      "pitch": {
+        "en": "Grunk the orc must find a lost pig. Funny, kind to beginners, much loved.",
+        "fr": "Grunk l'orque doit retrouver un cochon perdu. Drôle, indulgent avec les débutants, adoré de tous."
+      }
+    },
+    {
+      "tuid": "41cr9x95gu6tlfeu",
+      "starter": true,
+      "pitch": {
+        "en": "Six-year-old Emma turns housework into an adventure of peculiar proportions. Gentle puzzles.",
+        "fr": "Emma, six ans, fait du ménage une aventure aux proportions étranges. Énigmes tout en douceur."
+      }
+    },
+    {
+      "tuid": "4glrrfh7wrp9zz7b",
+      "starter": true,
+      "pitch": {
+        "en": "Write a thousand words of your thesis by tonight, from one small, very distracting room.",
+        "fr": "Écrire mille mots de votre thèse d'ici ce soir, dans une petite pièce pleine de distractions."
+      }
+    },
+    {
+      "tuid": "9p8kh3im2j9h2881",
+      "starter": true,
+      "pitch": {
+        "en": "Beauty and the Beast retold in a huge enchanted castle, with a novice mode.",
+        "fr": "La Belle et la Bête revisitée dans un immense château enchanté, avec un mode novice."
+      }
+    },
+    {
+      "tuid": "ju778uv5xaswnlpl",
+      "pitch": {
+        "en": "A short, moving story that plays with how it is told. An hour to remember.",
+        "fr": "Une histoire courte et émouvante qui joue avec sa propre narration. Une heure inoubliable."
+      }
+    },
+    {
+      "tuid": "2xyccw3pe0uovfad",
+      "pitch": {
+        "en": "A spy is caught and questioned. A clever classic for players who like a challenge.",
+        "fr": "Un espion capturé est interrogé. Un classique astucieux pour qui aime les défis."
+      }
+    },
+    {
+      "tuid": "op0uw1gn1tjqmjt7",
+      "pitch": {
+        "en": "Lovecraftian horror in a rain-soaked coastal town. Long, dark and gripping.",
+        "fr": "Horreur lovecraftienne dans une ville côtière battue par la pluie. Long, sombre et prenant."
+      }
+    },
+    {
+      "tuid": "9zmsjhige1naldhg",
+      "starter": true,
+      "pitch": {
+        "en": "The ship is sinking: grab all the treasure you can before it goes down. Short and funny. In French.",
+        "fr": "Le navire coule : raflez tout le trésor possible avant qu'il sombre. Court et drôle."
+      }
+    },
+    {
+      "tuid": "35yqdqy3ennlte69",
+      "pitch": {
+        "en": "Sole survivor of a crash on Mars, you must hold out five months. In French.",
+        "fr": "Seul survivant d'un crash sur Mars, vous devez tenir cinq mois en attendant les secours."
+      }
+    },
+    {
+      "tuid": "sqrtp4hlg5x7oli4",
+      "pitch": {
+        "en": "Margot's last days of school, in a tender slice of life. In French.",
+        "fr": "Les derniers jours d'école de Margot, une tranche de vie tendre."
+      }
+    },
+    {
+      "tuid": "qlw5xfl1g4l2i0sb",
+      "pitch": {
+        "en": "A one-room game in your own apartment, stranger than it looks. In French.",
+        "fr": "Un jeu dans votre propre appartement, plus étrange qu'il n'y paraît."
+      }
+    }
+  ]
+}

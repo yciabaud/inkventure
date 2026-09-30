@@ -21,7 +21,8 @@
     "catalog:crawl": "node scripts/catalog/crawl.ts",
     "catalog:resolve": "node scripts/catalog/resolve.ts",
     "catalog:emit": "node scripts/catalog/emit.ts",
-    "catalog:sample": "node scripts/catalog/build-sample.ts"
+    "catalog:sample": "node scripts/catalog/build-sample.ts",
+    "catalog:featured": "node scripts/catalog/build-featured.ts"
   },
   "dependencies": {
     "@fontsource/literata": "^5.3.0",

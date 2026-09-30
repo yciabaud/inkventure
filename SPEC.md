@@ -164,7 +164,8 @@ Purpose: get back into a game in one tap, or start a recommended one.
   (title, author, progress) toggle; sort by *recent* or *title*; long-press or "⋯" menu → *Remove from Home*
   (keeps saves unless "also delete saves" is checked).
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
-  one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles.
+  one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
+  in the UI language. Only games in the UI language, and never one already in progress.
 - Empty state (first launch): short welcome text, "How to play" link, Featured shelf first.
 - Shelves are paginated horizontally with explicit ‹ › buttons, never scrolled.
 
@@ -431,8 +432,22 @@ in-memory rows.
 }
 ```
 
-Validated at build (every tuid must exist in the index and be playable). Drives the Home Featured shelf
-and the game cards in the ebook.
+Each item needs a one-line pitch (≤ 140 characters) for every UI locale; `starter` gives the "Start here" badge.
+The curated file drives the game cards in the ebook and, with the ratings, the Home Featured shelf:
+
+- **Published lists** — deployment and preview builds (`scripts/catalog/use-published.sh`) write
+  `catalog/featured.json`: `{version, built, locales: {en: [...], fr: [...]}}`, one list per UI locale of index rows
+  (same short keys as the shards, so Home needs no shard) plus `pi` (pitch) and `st` (starter). Each list holds the
+  curated games **in that language** first, in file order, then the **best-rated games in that language** (IFDB star
+  sort; average ≥ 3 stars; at most 24), so the shelf never shows a game the reader cannot read and stays full when
+  the curation is thin. The sample catalogue has its own, from `tests/fixtures/featured.json`.
+- **Validation** — CI (`scripts/catalog/check-featured.sh`) checks the curated file against the catalogue published
+  on the `catalog` branch and fails on: bad schema, missing or overlong pitch, unknown tuid (or not playable),
+  excluded by hand or carrying an adult tag ([§5.4](#54-content-policy)), game language not a UI locale. At
+  deployment a curated game the catalogue no longer has is left out with a warning instead, so a withdrawn IFDB
+  game never blocks a deployment.
+- **Client** — the Home shelf shows the list of the UI locale **without the games already in progress** (a
+  progress record or in *My adventures*), which is why the lists are longer than a shelf.
 
 ### 5.4 Content policy
 

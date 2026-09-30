@@ -83,3 +83,19 @@ builds too). Without the branch, builds keep the committed sample.
 
 **Sample**: `npm run catalog:sample` rebuilds `public/catalog/` from the synthetic fixtures (`sample.ts`); a unit test
 fails while the committed sample is out of date.
+
+## Featured selection (S2.4)
+
+`content/featured.json` is hand-curated: `{ version: 1, items: [{ tuid, starter?, pitch: { en, fr } }] }`, a one-line
+pitch (≤ 140 characters) for every UI locale (`src/i18n/*.json`).
+
+`build-featured.ts` (`npm run catalog:featured -- --catalog DIR`) writes `DIR/featured.json`:
+`{ version, built, locales: { <locale>: [row…] } }`, index rows plus `pi` (pitch) and `st` (starter). Each locale's list
+holds the curated games in that language, then up to 24 of the best-rated games in that language (≥ 3 stars, by
+IFDB's star sort); the app leaves out the games already in progress. `use-published.sh` runs it after copying the
+published catalogue; the sample's comes from `tests/fixtures/featured.json` (`npm run catalog:sample`).
+
+- **Check** (`--check`, CI step `check-featured.sh` against the `catalog` branch): exit 1 on a schema problem, a
+  missing or overlong pitch, a TUID not in the catalogue (unknown or unplayable), a game excluded by hand or with an
+  adult tag, or a game in a language that is not a UI locale.
+- Without `--check`, only schema problems fail; curated games the catalogue cannot feature are dropped with a warning.

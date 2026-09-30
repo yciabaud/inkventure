@@ -22,6 +22,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+      # content/featured.json against the published catalogue (catalog branch); SPEC §5.3.
+      - run: scripts/catalog/check-featured.sh
       - run: npm run build
       - run: npm run check:es5
       - run: npm run check:size
