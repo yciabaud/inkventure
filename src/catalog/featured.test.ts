@@ -1,14 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
-  CARD_GAP,
-  CARD_TEXT_HEIGHT,
   featuredFor,
   loadFeatured,
-  MAX_COVER_HEIGHT,
-  MIN_CARD_WIDTH,
-  MIN_COVER_HEIGHT,
   resetFeatured,
-  shelfLayout,
   type FeaturedFile,
   type FeaturedRow,
 } from './featured';
@@ -38,30 +32,6 @@ describe('featuredFor', () => {
     expect(featuredFor(file, 'de', () => false)).toEqual([]);
     expect(featuredFor(file, 'en', (t) => t === 'a', 2).map((g) => g.t)).toEqual(['b', 'c']);
     expect(featuredFor(file, 'en', () => true)).toEqual([]);
-  });
-});
-
-describe('shelfLayout', () => {
-  it('makes covers as tall as the row allows, within bounds', () => {
-    expect(shelfLayout(604, 1000).coverHeight).toBe(MAX_COVER_HEIGHT);
-    expect(shelfLayout(604, CARD_TEXT_HEIGHT + 150).coverHeight).toBe(150);
-    expect(shelfLayout(604, 100).coverHeight).toBe(MIN_COVER_HEIGHT);
-    expect(shelfLayout(604, CARD_TEXT_HEIGHT + 150).coverWidth).toBe(100);
-  });
-
-  it('puts as many cards per page as fit, at least one, never narrower than the text needs', () => {
-    // 250 px tall covers are 166 px wide: (604 + 16) / (166 + 16) = 3.4.
-    expect(shelfLayout(604, 1000)).toEqual({
-      perPage: 3,
-      cardWidth: 166,
-      coverWidth: 166,
-      coverHeight: MAX_COVER_HEIGHT,
-    });
-    expect(shelfLayout(604, 250).coverHeight).toBe(250 - CARD_TEXT_HEIGHT);
-    const small = shelfLayout(328, 200);
-    expect(small.cardWidth).toBe(MIN_CARD_WIDTH);
-    expect(small.perPage).toBe(Math.floor((328 + CARD_GAP) / (MIN_CARD_WIDTH + CARD_GAP)));
-    expect(shelfLayout(50, 1000).perPage).toBe(1);
   });
 });
 

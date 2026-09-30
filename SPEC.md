@@ -169,10 +169,11 @@ Purpose: get back into a game in one tap, or start a recommended one.
 - **One shelf at a time** (so its covers can be large): when the player has adventures and there are featured games,
   a tab row "My adventures | Featured" replaces the shelf title (`#/home?shelf=featured`, replaced in the history);
   the shelf takes the height left under the hero, with a compact "‹ 2 / 5 ›" pager on the same header row (without
-  the page number on narrow screens). My adventures is a multi-row grid (title under each cover); Featured is one row
-  of cards with their pitch.
-- **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
-  one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
+  the page number on narrow screens). Both shelves use the same multi-row grid as the Library (title under each
+  cover, covers spaced evenly up to the screen edges), so covers have the same size in both tabs.
+- **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), a "Start here" badge
+  on newcomer-friendly titles (their one-line pitch is not shown on Home since S4.2, where the grid leaves room for
+  the title only; it stays for the ebook cards); then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
 - Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
   paged guide that also offers the test adventure), Featured shelf first.

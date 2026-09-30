@@ -140,9 +140,9 @@ test('with adventures, Featured is a tab: one shelf at a time', async ({ page })
 
   await press(tabs.getByRole('link', { name: 'Featured' }));
   await expect(page).toHaveURL(/#\/home\?shelf=featured$/);
-  await expect(page.getByRole('list', { name: 'Featured' })).toContainText('A pitch.');
+  await expect(page.getByRole('list', { name: 'Featured' })).toContainText('Another Game');
   await expect(adventures(page)).toHaveCount(0);
-  // The Continue hero stays; Featured cards keep their pitch when the shelf is alone.
+  // The Continue hero stays.
   await expect(page.getByRole('region', { name: 'Continue' })).toBeVisible();
   expect(
     await page.evaluate(

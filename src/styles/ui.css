@@ -1480,6 +1480,9 @@ button.pager__btn {
   display: flex;
   flex-shrink: 0;
   align-items: center;
+
+  /* The same height with or without a pager (52 px buttons), so both shelves' covers match. */
+  min-height: 52px;
   margin-bottom: 8px;
 }
 
@@ -1497,58 +1500,6 @@ button.pager__btn {
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   font-weight: 700;
-}
-
-.shelf__cards {
-  display: flex;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.shelf__item + .shelf__item {
-  margin-left: 16px;
-}
-
-.shelf-card {
-  display: flex;
-  flex-direction: column;
-  color: #000;
-  text-decoration: none;
-}
-
-.shelf-card__badge {
-  align-self: flex-start;
-  margin: 6px 0 0;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.shelf-card__title {
-  display: -webkit-box;
-  max-height: 40px;
-  margin-top: 6px;
-  overflow: hidden;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
-  overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.shelf-card__text {
-  display: -webkit-box;
-  max-height: 54px;
-  margin-top: 2px;
-  overflow: hidden;
-  font-size: 14px;
-  line-height: 18px;
-  overflow-wrap: break-word;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
 }
 
 .home__browse {
@@ -1719,4 +1670,16 @@ button.pager__btn {
 .tiles--even {
   column-gap: 0;
   justify-content: space-evenly;
+}
+
+/* "Start here" on a featured cover (top left corner). */
+.tile__badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  margin: 0;
+  background: #fff;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  white-space: nowrap;
 }

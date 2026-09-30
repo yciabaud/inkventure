@@ -31,7 +31,8 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
   await expect(page.getByRole('link', { name: 'How to play' })).toBeVisible();
   const lamp = shelf(page).getByRole('link', { name: 'The Lamp at Saltmere, Inkventure Fixtures' });
   await expect(lamp).toBeVisible();
-  await expect(lamp).toContainText("A lighthouse keeper's last night.");
+  // The same grid as My adventures: cover, title, and "Start here" on a curated starter.
+  await expect(lamp).toContainText('The Lamp at Saltmere');
   await expect(lamp).toContainText('Start here');
   await expect(shelf(page).getByRole('link')).toHaveCount(2);
   expect(await scrolls(page)).toBe(false);
@@ -57,16 +58,18 @@ test('games in progress are left out, and the welcome is gone', async ({ page })
 test.describe('French UI', () => {
   test.use({ locale: 'fr-FR' });
 
-  test('the shelf lists the French games with their French pitch', async ({ page }) => {
+  test('the shelf lists the French games', async ({ page }) => {
     await page.goto('/#/home');
     const cards = page.getByRole('list', { name: 'À la une' }).getByRole('link');
     await expect(cards).toHaveCount(1);
-    await expect(cards.first()).toContainText("Des échos vous répondent au fond d'une grotte.");
+    await expect(cards.first()).toHaveAttribute('aria-label', 'Cave of Echoes, B. Sample');
   });
 });
 
 test('a long shelf is paged with ‹ ›, never scrolled', async ({ page }) => {
-  const games = Array.from({ length: 12 }, (_, i) => ({
+  // A small e-reader: the shelf holds at most 24 games, which all fit on a large one.
+  await page.setViewportSize({ width: 600, height: 800 });
+  const games = Array.from({ length: 24 }, (_, i) => ({
     t: 'shelf' + i,
     n: 'Shelf game ' + (i + 1),
     a: 'Writer',
@@ -81,7 +84,7 @@ test('a long shelf is paged with ‹ ›, never scrolled', async ({ page }) => {
   await expect(first).toHaveAttribute('aria-label', 'Shelf game 1, Writer');
   const perPage = await shelf(page).getByRole('link').count();
   expect(perPage).toBeGreaterThan(0);
-  expect(perPage).toBeLessThan(12);
+  expect(perPage).toBeLessThan(24);
   expect(await scrolls(page)).toBe(false);
 
   await press(page.locator('.shelf').getByRole('button', { name: 'Next', exact: true }));

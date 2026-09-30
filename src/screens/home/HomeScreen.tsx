@@ -7,10 +7,8 @@ import { formatHash } from '../../app/router';
 import {
   featuredFor,
   loadFeatured,
-  shelfLayout,
   type FeaturedFile,
   type FeaturedRow,
-  type ShelfLayout,
 } from '../../catalog/featured';
 import { thumbnailUrl } from '../../catalog/game';
 import { gridLayout, type GridLayout } from '../../catalog/layout';
@@ -146,12 +144,38 @@ function ShelfTabs({ current }: { current: ShelfName }) {
   );
 }
 
-function FeaturedCard({ game, layout }: { game: FeaturedRow; layout: ShelfLayout }) {
+/** The shelves' grid: the Library's, sized for the page's content width, spaced evenly up to the screen edges. */
+function useShelfGrid(): [GridLayout, RefObject<HTMLDivElement>] {
+  const [area, areaRef] = useArea();
+  return [gridLayout(Math.max(area.width - 2 * PAGE_GUTTER, 0), area.height), areaRef];
+}
+
+function Tiles({
+  label,
+  layout,
+  children,
+}: {
+  label: string;
+  layout: GridLayout;
+  children: ComponentChildren;
+}) {
   return (
-    <li class="shelf__item">
+    <ul
+      class="tiles tiles--even"
+      aria-label={label}
+      style={{ gridTemplateColumns: 'repeat(' + layout.columns + ', ' + layout.coverWidth + 'px)' }}
+    >
+      {children}
+    </ul>
+  );
+}
+
+/** A featured game: its cover (with "Start here" on newcomer-friendly games) and title, like My adventures. */
+function FeaturedTile({ game, layout }: { game: FeaturedRow; layout: GridLayout }) {
+  return (
+    <li class="tiles__item">
       <a
-        class="shelf-card"
-        style={{ width: layout.cardWidth + 'px' }}
+        class="tile"
         href={formatHash({ name: 'game', tuid: game.t })}
         aria-label={label(game.n, game.a)}
       >
@@ -163,19 +187,17 @@ function FeaturedCard({ game, layout }: { game: FeaturedRow; layout: ShelfLayout
             game.c ? thumbnailUrl(game.t, layout.coverWidth, layout.coverHeight) : undefined
           }
         />
-        {game.st && <span class="badge shelf-card__badge">{t('filters.start')}</span>}
-        <span class="shelf-card__title">{game.n}</span>
-        <span class="shelf-card__text">{game.pi || game.a}</span>
+        <span class="tile__title">{game.n}</span>
+        {game.st && <span class="badge tile__badge">{t('filters.start')}</span>}
       </a>
     </li>
   );
 }
 
-/** Featured games, with their pitch. */
+/** Featured games, in the same grid as My adventures. */
 function FeaturedShelf({ games, heading }: { games: FeaturedRow[]; heading: ComponentChildren }) {
-  const [area, areaRef] = useArea();
+  const [layout, areaRef] = useShelfGrid();
   const [page, setPage] = useState(1);
-  const layout = shelfLayout(area.width, area.height);
   const shown = paginate(games, page, layout.perPage);
   return (
     <Shelf
@@ -185,12 +207,13 @@ function FeaturedShelf({ games, heading }: { games: FeaturedRow[]; heading: Comp
       pageCount={shown.pageCount}
       onPage={setPage}
       rowRef={areaRef}
+      bleed
     >
-      <ul class="shelf__cards" aria-label={t('home.featured')}>
+      <Tiles label={t('home.featured')} layout={layout}>
         {shown.items.map((game) => (
-          <FeaturedCard key={game.t} game={game} layout={layout} />
+          <FeaturedTile key={game.t} game={game} layout={layout} />
         ))}
-      </ul>
+      </Tiles>
     </Shelf>
   );
 }
@@ -392,10 +415,7 @@ function AdventuresShelf({
   const [page, setPage] = useState(1);
   const [menuFor, setMenuFor] = useState<Adventure | null>(null);
   const [removing, setRemoving] = useState<Adventure | null>(null);
-  const [area, areaRef] = useArea();
-  // Sized for the page's content width; the row itself spans the side margins so the covers are spaced evenly,
-  // between them and to the screen edges.
-  const layout = gridLayout(Math.max(area.width - 2 * PAGE_GUTTER, 0), area.height);
+  const [layout, areaRef] = useShelfGrid();
   const shown = paginate(sortRecent(games), page, layout.perPage);
   return (
     <>
@@ -408,17 +428,11 @@ function AdventuresShelf({
         rowRef={areaRef}
         bleed
       >
-        <ul
-          class="tiles tiles--even"
-          aria-label={t('home.adventures')}
-          style={{
-            gridTemplateColumns: 'repeat(' + layout.columns + ', ' + layout.coverWidth + 'px)',
-          }}
-        >
+        <Tiles label={t('home.adventures')} layout={layout}>
           {shown.items.map((game) => (
             <AdventureCard key={game.tuid} game={game} layout={layout} onMore={setMenuFor} />
           ))}
-        </ul>
+        </Tiles>
       </Shelf>
       {menuFor && (
         <GameMenu game={menuFor} onClose={() => setMenuFor(null)} onRemove={setRemoving} />
