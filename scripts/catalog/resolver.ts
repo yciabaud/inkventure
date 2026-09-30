@@ -273,6 +273,33 @@ export function normalizeLanguage(value: unknown): string | undefined {
   return LANGUAGE_NAMES[first.replace(/\s*\(.*\)$/, '')];
 }
 
+const ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: '\u00a0',
+};
+
+/**
+ * Plain text of an IFDB text field: IFDB HTML-escapes titles and authors in its JSON (`Lock &amp; Key`,
+ * `&quot;Calm, Mute, Moving&quot;`). Named entities above and numeric ones are decoded; others are left as they are.
+ */
+export function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#[0-9]+|[a-z]+);/gi, (entity, name: string) => {
+    if (name.charAt(0) === '#') {
+      const code =
+        name.charAt(1).toLowerCase() === 'x'
+          ? parseInt(name.slice(2), 16)
+          : parseInt(name.slice(1), 10);
+      return code > 0 && code < 0x110000 ? String.fromCodePoint(code) : entity;
+    }
+    const decoded = ENTITIES[name.toLowerCase()];
+    return decoded === undefined ? entity : decoded;
+  });
+}
+
 /** IFDB genres are free text, sometimes several (`Fantasy / Humor`, `Horror, Mystery`). */
 export function normalizeGenres(value: unknown): string[] {
   if (typeof value !== 'string') return [];
@@ -330,9 +357,9 @@ function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGa
   const search = game.search;
   const resolved: ResolvedGame = {
     tuid: game.tuid,
-    title: str(bib.title) || search.title,
-    author: str(bib.author) || search.author,
-    genres: normalizeGenres(bib.genre),
+    title: decodeEntities(str(bib.title) || search.title),
+    author: decodeEntities(str(bib.author) || search.author),
+    genres: normalizeGenres(typeof bib.genre === 'string' ? decodeEntities(bib.genre) : bib.genre),
     format: file.format,
     file: file.file,
     ifids: (record.identification && record.identification.ifids) || [],
@@ -382,7 +409,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
   };
 
   for (const game of dataset.games) {
-    const tags = tagNames(game.record);
+    const tags = tagNames(game.record).map(decodeEntities);
     const blocked = policyReason(game.tuid, tags, options.policy, options.config);
     if (blocked) {
       drop(game, blocked.reason, blocked.detail);

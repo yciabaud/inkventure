@@ -5,6 +5,7 @@ import { offlineFetcher } from './fetcher';
 import type { GameRecord } from './ifdb';
 import {
   chooseFile,
+  decodeEntities,
   linkFormat,
   normalizeGenres,
   normalizeLanguage,
@@ -192,6 +193,16 @@ describe('metadata', () => {
     expect(normalizeLanguage('es-AR')).toBe('es');
     expect(normalizeLanguage('Klingon')).toBeUndefined();
     expect(normalizeLanguage(undefined)).toBeUndefined();
+  });
+
+  it('decodes the HTML entities IFDB leaves in titles and authors', () => {
+    expect(decodeEntities('Lock &amp; Key')).toBe('Lock & Key');
+    expect(decodeEntities('&quot;Calm, Mute, Moving&quot; &gt; by @')).toBe(
+      '"Calm, Mute, Moving" > by @',
+    );
+    expect(decodeEntities('Caf&#233; &#x2014; ok &unknown; & alone')).toBe(
+      'Café — ok &unknown; & alone',
+    );
   });
 
   it('splits genres and reads years', () => {

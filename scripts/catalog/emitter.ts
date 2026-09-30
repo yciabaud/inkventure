@@ -65,9 +65,14 @@ export interface Meta {
 /** Published path (relative to the catalogue directory) → JSON content. */
 export type CatalogFiles = Record<string, unknown>;
 
+/** Sort key of a title: lower case, without leading punctuation (`"Calm…"`, `**COUGH**` sort by their words). */
+export function titleSortKey(title: string): string {
+  return title.toLowerCase().replace(/^[^\p{L}\p{N}]+/u, '');
+}
+
 function compareTitles(a: ResolvedGame, b: ResolvedGame): number {
-  const x = a.title.toLowerCase();
-  const y = b.title.toLowerCase();
+  const x = titleSortKey(a.title);
+  const y = titleSortKey(b.title);
   return x < y ? -1 : x > y ? 1 : a.tuid < b.tuid ? -1 : a.tuid > b.tuid ? 1 : 0;
 }
 

@@ -26,22 +26,19 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await page.goto('/');
   await expectScreen(page, '#/home', 'Home');
 
-  await press(nav(page, 'Library'));
-  await expectScreen(page, '#/library', 'Library');
-
-  await press(page.getByRole('link', { name: 'Next ›' }));
-  await expectScreen(page, '#/library?page=2', 'Library');
-  await expect(page.getByLabel('Page 2 of 3')).toBeVisible();
-
   await expect(page.getByRole('link', { name: 'Play the test adventure' })).toHaveAttribute(
     'href',
     '#/play/fixture-z',
   );
-  await press(page.getByRole('link', { name: 'Open a sample game' }));
-  await expectScreen(page, '#/game/sample', 'Game');
+  await press(nav(page, 'Library'));
+  await expectScreen(page, '#/library', 'Library');
+
+  // The committed sample catalogue: its first game by title.
+  await press(page.getByRole('link', { name: /Cave of Echoes/ }));
+  await expectScreen(page, '#/game/fxcave0000000003', 'Game');
 
   await press(page.getByRole('link', { name: 'Play' }));
-  await expectScreen(page, '#/play/sample', 'Reader');
+  await expectScreen(page, '#/play/fxcave0000000003', 'Reader');
 
   await openSettings(page);
   await expectScreen(page, '#/settings', 'Settings');
@@ -53,11 +50,11 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await page.goBack();
   await expectScreen(page, '#/settings', 'Settings');
   await page.goBack();
-  await expectScreen(page, '#/play/sample', 'Reader');
+  await expectScreen(page, '#/play/fxcave0000000003', 'Reader');
   await page.goBack();
-  await expectScreen(page, '#/game/sample', 'Game');
+  await expectScreen(page, '#/game/fxcave0000000003', 'Game');
   await page.goBack();
-  await expectScreen(page, '#/library?page=2', 'Library');
+  await expectScreen(page, '#/library', 'Library');
 });
 
 test('deep link cold start on #/settings', async ({ page }) => {

@@ -23,7 +23,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked`. Keep the status here *
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S2.4 → S3.1 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S5.2 → S1.7 → S1.8 → S1.9 → S6.1 → S6.2 → S7.1 → S7.2
 
 ## Stories
 
@@ -50,7 +50,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
 | [S2.4](stories/S2.4-featured-json.md) | Featured selection file & validation | E2 | M2 | S2.3 | todo |
-| [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | todo |
+| [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | todo |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | todo |
 | [S3.4](stories/S3.4-game-file-loader.md) | Game file loader from IF Archive | E3 | M3 | S3.3, S1.3, S0.6 | todo |

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { COVER_ORNAMENTS, COVER_VARIANTS, coverDesign, hashString } from './cover';
+import { COVER_ORNAMENTS, COVER_VARIANTS, coverDesign, hashString, shortAuthor } from './cover';
 
 describe('hashString', () => {
   it('matches the FNV-1a reference values', () => {
@@ -43,5 +43,18 @@ describe('coverDesign', () => {
     }
     expect(variants.size).toBe(COVER_VARIANTS.length);
     expect(ornaments.size).toBe(COVER_ORNAMENTS.length);
+  });
+});
+
+describe('shortAuthor', () => {
+  it('keeps short author lines and cuts long lists to the first author', () => {
+    expect(shortAuthor('Dave Lebling, Marc Blank')).toBe('Dave Lebling, Marc Blank');
+    expect(shortAuthor('Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling')).toBe(
+      'Tim Anderson…',
+    );
+    expect(shortAuthor('Whovian (Bruno Bucciotti) [programming], Ragfox [translation]')).toBe(
+      'Whovian…',
+    );
+    expect(shortAuthor('A'.repeat(40))).toBe('A'.repeat(31) + '…');
   });
 });
