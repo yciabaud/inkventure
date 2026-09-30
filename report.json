@@ -4,11 +4,12 @@
     "zcode"
   ],
   "counts": {
-    "kept": 1693,
+    "kept": 1498,
     "dropped": {
       "format-not-enabled": 1784,
       "unsupported-format": 1410,
       "adult-content": 157,
+      "unreadable-host": 195,
       "insecure-url": 271,
       "no-game-file": 9,
       "compressed-no-primary": 20
@@ -73,6 +74,12 @@
       "title": "Las Escondidas",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "0dbnusxunq7fw5ro",
+      "title": "Zork I",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/zork1-invclues-r52-s871125.z5"
     },
     {
       "tuid": "0dwctbtziwcnz1a3",
@@ -213,6 +220,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "14k36btoyy5f2tay",
+      "title": "Le Pantin Electrique : Prologue",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20131005053219if_/http://lempika.eu/LePantinElectriquePrologue.z8"
+    },
+    {
       "tuid": "14nc1mkpndddgtfe",
       "title": "Hill 160",
       "reason": "format-not-enabled",
@@ -241,6 +254,12 @@
       "title": "Another Cabin In The Woods",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "1615ilxrgpvu9c0c",
+      "title": "Good Bones",
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2024/202-202408011144.z5"
     },
     {
       "tuid": "165tn7xs2o8dp2ue",
@@ -339,6 +358,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "1cxkfxqeyxxxfr",
+      "title": "Empty Rooms",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20110409233433id_/http://dl.dropbox.com/u/3168842/INFORM/Emptyrooms/Empty%20rooms.zblorb"
+    },
+    {
       "tuid": "1cychtp58du1v5z0",
       "title": "Crow Quest",
       "reason": "unsupported-format",
@@ -379,6 +404,12 @@
       "title": "3XXX: NAKED HUMAN BOMBS",
       "reason": "adult-content",
       "detail": "erotic"
+    },
+    {
+      "tuid": "1elq80q2fb91e9dd",
+      "title": "Salvate lo Stregatto",
+      "reason": "unreadable-host",
+      "detail": "https://www.marcovallarino.it/sdc_download/5787/?key=wse51oxkx6povnury2i39cts4pbz74"
     },
     {
       "tuid": "1f3fz8kasbpe7mlm",
@@ -429,6 +460,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "1gffo5xsse2m3hw",
+      "title": "Seestraße",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20250428185854if_/http://frank-sorge.de/see/seestrasse.z5"
+    },
+    {
       "tuid": "1gsj8phi88bq6gyj",
       "title": "The Best Sex Hexes",
       "reason": "adult-content",
@@ -445,6 +482,12 @@
       "title": "The Haunted Help Desk",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "1iqmpkn009h9gbug",
+      "title": "Raising the Flag on Mount Yo Momma",
+      "reason": "unreadable-host",
+      "detail": "https://nitku.net/if/yomomma/yomomma.zblorb"
     },
     {
       "tuid": "1iupyekqpzjxijlz",
@@ -549,6 +592,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "1mspez4pljruogux",
+      "title": "The Lighthouse",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20250125125829id_/https://dist.saugus.net/IF/Lighthouse.z8"
+    },
+    {
       "tuid": "1n2bqo64pgy0rl",
       "title": "His Majesty's Royal Space Navy Service Handbook",
       "reason": "format-not-enabled",
@@ -637,6 +686,12 @@
       "title": "The Dying of the Light",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "1udmovti1bxa30y3",
+      "title": "when i was shot by elephants",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20120510202639/http://k003.kiwi6.com/hotlink/ug5n85n79b/when_i_was_shot_by_elephants.z5"
     },
     {
       "tuid": "1uykr63jimhzpee",
@@ -1010,6 +1065,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "2eneq2oz83wtsvig",
+      "title": "My Magic Tire Hoax",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20080106134439id_/http://distractionware.com/junk/textthehalls/mymagictirehoax.zblorb"
+    },
+    {
       "tuid": "2eu2h7lkf3qcci0c",
       "title": "pickles ponders... pats",
       "reason": "unsupported-format",
@@ -1052,6 +1113,12 @@
       "detail": "executable"
     },
     {
+      "tuid": "2fdamcy0kh9duoc",
+      "title": "The Tale of The Crazy Diaper Man",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/the_tale_of_the_crazzy_diaper_m.zblorb"
+    },
+    {
       "tuid": "2fl14wjyoar8n1p4",
       "title": "Cut the Sky",
       "reason": "format-not-enabled",
@@ -1062,6 +1129,12 @@
       "title": "Death on the Stormrider",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "2fz3geapcl5it9n5",
+      "title": "Trac",
+      "reason": "unreadable-host",
+      "detail": "https://www.fiction-interactive.fr/fi/otto/trac/trac.z8"
     },
     {
       "tuid": "2gh8bselanlyh6g",
@@ -1092,6 +1165,12 @@
       "title": "100,000 Years",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "2j917svthvyvtk2y",
+      "title": "Surfboard",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Surfboard.z8"
     },
     {
       "tuid": "2jbt24dmy2ayszvz",
@@ -1140,6 +1219,12 @@
       "title": "[Redacted]",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "2n17ziwqidyz5mn8",
+      "title": "The Whispered World",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20091010010147id_/http://www.daedalic.de/tww/april/twwonline.z5"
     },
     {
       "tuid": "2n3e85j1kvi82ief",
@@ -1232,10 +1317,22 @@
       "detail": "glulx"
     },
     {
+      "tuid": "2q8n2qeq5s3sdv4",
+      "title": "A1RL0CK",
+      "reason": "unreadable-host",
+      "detail": "https://www.andromedalegacy.com/A1RL0CK/A1RL0CK.z5"
+    },
+    {
       "tuid": "2qdo7frir4i7klj",
       "title": "The Planet Is Exploding!",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "2qgua5z7dr7ow9xf",
+      "title": "The Elements",
+      "reason": "unreadable-host",
+      "detail": "https://playfic.com/releases/6/69abf6e9-f722-40dd-9dfd-777914092028/69abf6e9-f722-40dd-9dfd-777914092028.z8"
     },
     {
       "tuid": "2qncmo4qmn6s6bst",
@@ -1310,6 +1407,12 @@
       "detail": "http://www.fiction-interactive.fr/fi/yoruk/celui-qui-voulait-decrocher-les-etoiles/celui-qui-voulait-decrocher-les-etoiles.z5"
     },
     {
+      "tuid": "2tzjnzrc97xpibq",
+      "title": "when i was shot by elephants conclusion: the decision",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20120510203302/http://k004.kiwi6.com/hotlink/684hv94z2f/when_i_was_shot_by_elephants_conclusion_the_decision.z8"
+    },
+    {
       "tuid": "2u58128vbk8k5u76",
       "title": "Red Fog",
       "reason": "format-not-enabled",
@@ -1320,6 +1423,12 @@
       "title": "Fantasy Opera: Mischief at the Masquerade",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "2vckwrsfqe6n5b8c",
+      "title": "Encierro",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Encierro.zip"
     },
     {
       "tuid": "2vikmop14n9l6m9u",
@@ -1370,6 +1479,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "30hxwjuxqtfwidcj",
+      "title": "The Fifth Continent",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20Fifth%20Continent.z8"
+    },
+    {
       "tuid": "30speeobxq42f7n",
       "title": "柳树街侦探社",
       "reason": "unsupported-format",
@@ -1392,6 +1507,12 @@
       "title": "Nonverbal Communication",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "32cgssxxwjijh3ai",
+      "title": "Coils of Hate",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/coils-of-hate/releases/latest/download/coilshate.z5"
     },
     {
       "tuid": "32id49lmaviphkas",
@@ -1488,6 +1609,12 @@
       "title": "Jetbike Gang",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "35yqdqy3ennlte69",
+      "title": "Life On Mars?",
+      "reason": "unreadable-host",
+      "detail": "https://www.hlabrande.fr/if/games/lifeonmars.z5"
     },
     {
       "tuid": "36js02hgz2yk10to",
@@ -1694,6 +1821,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "3h48r59mtw4i9l8e",
+      "title": "The Locked Room",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20240127031011if_/http://ftp.whtech.com/Users/Chris_Schneider/Adventures/inform/LOCKED.z3"
+    },
+    {
       "tuid": "3h5kkuatcqtrbghr",
       "title": "Divine Bonace",
       "reason": "insecure-url",
@@ -1892,6 +2025,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "3qq8rf555e8vf227",
+      "title": "The Road to Hell",
+      "reason": "unreadable-host",
+      "detail": "https://rbiondi.itch.io/the-road-to-hell"
+    },
+    {
       "tuid": "3r63uvc82jnvpjj1",
       "title": "Frammenti di Identità",
       "reason": "insecure-url",
@@ -1922,6 +2061,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "3s5oiwdqs9271t8",
+      "title": "Golden Shadow",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/GoldenShadow.zblorb"
+    },
+    {
       "tuid": "3t4gc0h9sbhtjtcw",
       "title": "Brrr!",
       "reason": "insecure-url",
@@ -1950,6 +2095,12 @@
       "title": "wood and bubblegum",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "3v4m4b5i01vzotbe",
+      "title": "The Computer Lady",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20Computer%20Lady.z8"
     },
     {
       "tuid": "3v4ywnmywddifoha",
@@ -2216,6 +2367,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "4ao65o1u0xuvj8jf",
+      "title": "Cutthroats",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/cutthroats-r23-s840809.z3"
+    },
+    {
       "tuid": "4baspe41nmg34wen",
       "title": "Tea and Toast",
       "reason": "insecure-url",
@@ -2294,6 +2451,12 @@
       "detail": "http://web.archive.org/web/20130416021827/http://aliendovecote.com/uploads/twine/others/finny/emoticons.html"
     },
     {
+      "tuid": "4dosh8oa6cn4ek7",
+      "title": "Micropuzzle",
+      "reason": "unreadable-host",
+      "detail": "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb"
+    },
+    {
       "tuid": "4doswi9s2j4ktntf",
       "title": "The Red Room",
       "reason": "format-not-enabled",
@@ -2352,6 +2515,12 @@
       "title": "Dr Ludwig and the Devil",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "4h62dvooeg9ajtfa",
+      "title": "A Mind Forever Voyaging",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/amfv-r77-s850814.z4"
     },
     {
       "tuid": "4hf2kmmpnkv4eaet",
@@ -2442,6 +2611,12 @@
       "title": "1NTERSTELLAR c0NQUEST: a textb00k",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "4mrbsemkx5sepjhy",
+      "title": "Couch of Doom",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/CouchOfDoom.z8"
     },
     {
       "tuid": "4mu1s1zto2185lba",
@@ -2804,6 +2979,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "56wb8hflec2isvzm",
+      "title": "Seastalker",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/seastalker-r16-s850603.z3"
+    },
+    {
       "tuid": "579gudoyrs0lejqj",
       "title": "¿Sin Sentido?",
       "reason": "format-not-enabled",
@@ -2862,6 +3043,12 @@
       "title": "Forever and Ever",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "58rq3js1fc9rvcp9",
+      "title": "Champion of Guitars",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090130003942if_/http://meltsner.com/random/Champion%20of%20Guitars.z5"
     },
     {
       "tuid": "59fhjn9z73jpv8aa",
@@ -2958,6 +3145,12 @@
       "title": "You are Standing at a Crossroads",
       "reason": "insecure-url",
       "detail": "http://astriddalmady.com/crossroads.html"
+    },
+    {
+      "tuid": "5ft7a2kq8w8qq5h8",
+      "title": "Il Diavolo a Venezia",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/blob/master/story-files/venice2.z5"
     },
     {
       "tuid": "5gbd6zz2hys54zl2",
@@ -3068,10 +3261,22 @@
       "detail": "glulx"
     },
     {
+      "tuid": "5oyuskkd7zv3h5g1",
+      "title": "Necklace of Skulls",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/necklace-skulls/releases/latest/download/necklace.z5"
+    },
+    {
       "tuid": "5p17to8jy6b1q4u2",
       "title": "Dark Communion",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "5pljbsl6q7ylfcjn",
+      "title": "Basic Train-ing",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/BasicTraining.zblorb"
     },
     {
       "tuid": "5pq108akfdqwzkot",
@@ -3260,6 +3465,12 @@
       "detail": "http://www.fiction-interactive.fr/fi/feldo/cite-des-eaux/archives/cite-des-eaux-1.zip"
     },
     {
+      "tuid": "62su2lhhj6blkw3p",
+      "title": "The Barber of Sadville",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/Barber.z5"
+    },
+    {
       "tuid": "63b8h4eak3po8kdf",
       "title": "Starfighter's Ballad",
       "reason": "unsupported-format",
@@ -3354,6 +3565,12 @@
       "title": "please tell me you love me",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "6963a47vqgms8wi0",
+      "title": "The Witness",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/witness-r22-s840924.z3"
     },
     {
       "tuid": "69i1h2j9d1b5k42l",
@@ -3608,6 +3825,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "6mioxlgjbferrtsz",
+      "title": "Greensboro Sit-In",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090417014439if_/http://www.historicalsimulations.net/inform/studentsims/Greensboro%20Sit-In.zblorb"
+    },
+    {
       "tuid": "6mxlh9ribxoary9q",
       "title": "Escape Room",
       "reason": "no-game-file"
@@ -3673,6 +3896,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "6secl4dir11omn4b",
+      "title": "Alien Extraction",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20100706232903if_/http://blogs.setonhill.edu/DennisJerz/EL405/Elian.z5"
+    },
+    {
       "tuid": "6snlb4pcw835uqxk",
       "title": "A Witch's Word",
       "reason": "unsupported-format",
@@ -3707,6 +3936,12 @@
       "title": "Noirbilis",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "6tplhv4kn3hfcaab",
+      "title": "Drama Class",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/drama_class.zblorb"
     },
     {
       "tuid": "6trpqzwfz89ga9t7",
@@ -3763,6 +3998,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "6w1z5nc81nw92pib",
+      "title": "The Virtual Grand National",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20Virtual%20Grand%20National.z8"
+    },
+    {
       "tuid": "6woo7479u4b5xgn4",
       "title": "Flexible Survival",
       "reason": "adult-content",
@@ -3815,6 +4056,12 @@
       "title": "a short walk in the spring",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "718q4m0ibedkkoge",
+      "title": "Robodud",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20060219054356if_/http://www.ifarchive.org/if-archive/games/zcode/robodud.zip"
     },
     {
       "tuid": "71k23xq83gec7dmv",
@@ -4110,6 +4357,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "7epwz167lgruvm0u",
+      "title": "Border Zone",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/borderzone-r9-s871008.z5"
+    },
+    {
       "tuid": "7f5e33ifrwtogmji",
       "title": "Concerto of Life 2nd Mvt.",
       "reason": "unsupported-format",
@@ -4198,6 +4451,12 @@
       "title": "MY REAL AND SINCERE APOLOGY TO MORAL CRUSADERS",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "7iv9yq3r4rszbak1",
+      "title": "Schief",
+      "reason": "unreadable-host",
+      "detail": "https://if-forum.org/pub/ifGP/2022/Schief2/Schief.zblorb"
     },
     {
       "tuid": "7jg22mxfhly1ri8",
@@ -4368,6 +4627,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "7so4c67b82qmnjqg",
+      "title": "Zork 285",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/heasm66/mdlzork/raw/master/zork_285/bin/zork_285.z5"
+    },
+    {
       "tuid": "7t6bcdrkbrs9r1de",
       "title": "Faute De Servo",
       "reason": "insecure-url",
@@ -4434,6 +4699,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "7w4byew43sgkwj2",
+      "title": "Awakening",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20240509025921id_/https://dist.saugus.net/IF/Awakening.z8"
+    },
+    {
       "tuid": "7x6fjua7uixmfn2x",
       "title": "Morris",
       "reason": "unsupported-format",
@@ -4476,10 +4747,22 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "7y7du3y8zp7cee1q",
+      "title": "One way out",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/One%20Way%20Out.z8"
+    },
+    {
       "tuid": "7ykzpem8720zd1c3",
       "title": "Aurora",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "7ylhba37cfbks70",
+      "title": "Phantom of the Arcade",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20181201214008id_/http://static.escapistmagazine.com/media/global/misc/inform/Phantom.z8"
     },
     {
       "tuid": "7ynd9q4bnqpwh97g",
@@ -4590,6 +4873,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "83ct0elfhzeqfuwl",
+      "title": "Apollo 11",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090417032443if_/http://www.historicalsimulations.net/inform/studentsims/Apollo%2011.zblorb"
+    },
+    {
       "tuid": "83i9brdoxn3byx54",
       "title": "the hanging heart",
       "reason": "unsupported-format",
@@ -4606,6 +4895,12 @@
       "title": "Yesterday, You Saved the World",
       "reason": "insecure-url",
       "detail": "http://astriddalmady.com/savedtheworld.html"
+    },
+    {
+      "tuid": "85kqi4y7k6mtot40",
+      "title": "Ponderances",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20211204131531if_/http://roadcrosser.xyz/Ponderances/Ponderances.zblorb"
     },
     {
       "tuid": "85nbrr94agjpu323",
@@ -4713,6 +5008,12 @@
       "title": "Miss No-Name",
       "reason": "insecure-url",
       "detail": "http://www.springthing.net/2021/play_online/MissNoName/index.html"
+    },
+    {
+      "tuid": "8b7u2sjik270mz1x",
+      "title": "Marie Waits",
+      "reason": "unreadable-host",
+      "detail": "https://www.springthing.net/2023/stories/MarieWaits/mariewaits.zip"
     },
     {
       "tuid": "8bdnbe9hbryftlwd",
@@ -4875,6 +5176,12 @@
       "title": "10 Lost Boys",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "8kuxdkciywxzfyuz",
+      "title": "Zugzwang",
+      "reason": "unreadable-host",
+      "detail": "https://html-classic.itch.zone/html/10869003-1076730/Zugzwang.zblorb"
     },
     {
       "tuid": "8l7ep0j70jl3zx1q",
@@ -5225,6 +5532,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "90ypzvpxs1auuqx8",
+      "title": "Requiem - An RPG Geek Adventure Across Space and Time",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20111012161857id_/http://home.comcast.net/~dbernazzani/requiem.z5"
+    },
+    {
       "tuid": "917icou6oyljr9je",
       "title": "The Chieftain",
       "reason": "format-not-enabled",
@@ -5543,6 +5856,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "9h6o1charof548ii",
+      "title": "Beyond Zork",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/beyondzork-r57-s871221.z5"
+    },
+    {
       "tuid": "9hbwfdprymfp8ot",
       "title": "The Good Egg Club",
       "reason": "unsupported-format",
@@ -5585,6 +5904,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "9l4qyjdnphghcs0",
+      "title": "Modus Vivendi",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/ModusVivendi.zip"
+    },
+    {
       "tuid": "9lgryf1pg3tv9r63",
       "title": "Try not to die ft. Tibib",
       "reason": "format-not-enabled",
@@ -5619,6 +5944,12 @@
       "title": "⏰",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "9nlbhqnlyb169uge",
+      "title": "Stationfall",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/stationfall-r107-s870430.z3"
     },
     {
       "tuid": "9ohhjci8uk88w6vt",
@@ -5855,6 +6186,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "9zmsjhige1naldhg",
+      "title": "Le butin du Capitaine Verdeterre",
+      "reason": "unreadable-host",
+      "detail": "https://rcveeder.net/if/verdeterref/Le%20butin%20du%20Capitaine%20Verdeterr.zblorb"
+    },
+    {
       "tuid": "9zvbx05cldkdv16b",
       "title": "Nights in Boulder",
       "reason": "unsupported-format",
@@ -5877,6 +6214,12 @@
       "title": "Ghosts Are Good Hosts",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "a0iqpsz74a0bx118",
+      "title": "The Moon Watch",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20131004184211/http://www.maroncelli.net/wp-content/uploads/2008/12/moonwatch.zip"
     },
     {
       "tuid": "a0wlyjvj2v58nipa",
@@ -6335,6 +6678,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "anu79a4n1jedg5mm",
+      "title": "Infidel",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/infidel-r22-s830916.z3"
+    },
+    {
       "tuid": "ao0f75d5wanxf7jp",
       "title": "The Library of Knowledge",
       "reason": "unsupported-format",
@@ -6351,6 +6700,12 @@
       "title": "The Color of the Fire",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "apo771qxl1ba4lsy",
+      "title": "Calypso",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/dave-f/calypso/raw/refs/heads/master/prebuilt/calypso_puny.z5"
     },
     {
       "tuid": "ar5x88sqx6qvef7g",
@@ -6479,6 +6834,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "b0i6bx7g4rkrekgg",
+      "title": "Ballyhoo",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/ballyhoo-r97-s851218.z3"
+    },
+    {
       "tuid": "b0lkophluy63nd9p",
       "title": "The Fire Party Penguins Mustn't Go Out",
       "reason": "format-not-enabled",
@@ -6519,6 +6880,12 @@
       "title": "Jadeite for the Queen",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "b30290h5ok3mq5ec",
+      "title": "From Thanet to New Romney",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/From%20Thanet%20to%20New%20Romney.z8"
     },
     {
       "tuid": "b34wzrxqwki92ibj",
@@ -6785,6 +7152,18 @@
       "detail": "glulx"
     },
     {
+      "tuid": "bnwz6o4pq0b3q2e",
+      "title": "Minimal Game",
+      "reason": "unreadable-host",
+      "detail": "https://bfxrtwj5.play.borogove.io/download?.z5"
+    },
+    {
+      "tuid": "bo2hi6a7c6mr10y6",
+      "title": "Healing Mia",
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org//introcomp2025/HealingMia/HealingMia.z5"
+    },
+    {
       "tuid": "bo3xmvm6h4ycfwn1",
       "title": "The Eyes That Look Back",
       "reason": "format-not-enabled",
@@ -6837,6 +7216,12 @@
       "title": "Children’s Story",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "bs0dmmo9585615vt",
+      "title": "The Lake",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/d9a5f8ea9eee405ed4c20be08835e24ac3a782a7/archives/rock.z5"
     },
     {
       "tuid": "bse2t636ftkc6spj",
@@ -6965,6 +7350,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "c0xfrh6rav1kr78",
+      "title": "Whoah Cubs Woe",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/07555fdaa3ba880c9bc4cd139af24fdcc683bf8f/Whoah_Cubs_Woe.zip"
+    },
+    {
       "tuid": "c1474qcnjcy4rrz2",
       "title": "Escape",
       "reason": "unsupported-format",
@@ -7001,6 +7392,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "c2eqwi7x217jhc2p",
+      "title": "Civil Mimic",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/Civil%20Mimic.zblorb"
+    },
+    {
       "tuid": "c2f251svzqb4pjru",
       "title": "Pick Your Gender",
       "reason": "unsupported-format",
@@ -7011,6 +7408,12 @@
       "title": "Secrets de pêcheurs",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "c2o5mrjdde5qj7gv",
+      "title": "Rats",
+      "reason": "unreadable-host",
+      "detail": "https://www.fiction-interactive.fr/fi/akien/rats/rats.z8"
     },
     {
       "tuid": "c35gzroxv9dphr",
@@ -7043,6 +7446,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "c66u816v8kx2jzm2",
+      "title": "Moonmist",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/moonmist-r9-s861022.z3"
+    },
+    {
       "tuid": "c6f1t9itflt5y08e",
       "title": "nine months out",
       "reason": "unsupported-format",
@@ -7065,6 +7474,12 @@
       "title": "Hand of God",
       "reason": "insecure-url",
       "detail": "http://www.springthing.net/2021/play_online/HandOfGod/Hand_of_God.html"
+    },
+    {
+      "tuid": "c7dydbtxh1hmmgkn",
+      "title": "Goteras",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Goteras.zip"
     },
     {
       "tuid": "c7wvo7453qvozsh3",
@@ -7451,6 +7866,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "cvrsp8jdh4x63isd",
+      "title": "Das Felleisen",
+      "reason": "unreadable-host",
+      "detail": "https://www.beimax.de/fileadmin/downloads/if/felleisen.z5"
+    },
+    {
       "tuid": "cvy76hm1db0zpnem",
       "title": "Additional Tales from Castle Balderstone",
       "reason": "format-not-enabled",
@@ -7504,6 +7925,18 @@
       "detail": "twine"
     },
     {
+      "tuid": "d01a4d4clbl7856j",
+      "title": "Puzzle",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/puzzle.z5"
+    },
+    {
+      "tuid": "d0psfju3r9vdd4ah",
+      "title": "The Unstoppable Vengeance of Doctor Bonesaw",
+      "reason": "unreadable-host",
+      "detail": "https://www.dropbox.com/s/5cwiyem7x1n2zeg/bonesaw.z8"
+    },
+    {
       "tuid": "d0qjd45i6ve5jjix",
       "title": "GUT THE MOVIE",
       "reason": "format-not-enabled",
@@ -7532,6 +7965,12 @@
       "title": "Solitary Stars",
       "reason": "adult-content",
       "detail": "sex"
+    },
+    {
+      "tuid": "d38iv9t84quc3be5",
+      "title": "Cheese, Go Home!",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20111103205259/http://www.fosters-home.com/games/cheese/cheesegohome.z5"
     },
     {
       "tuid": "d497rxjwtz5vjyj",
@@ -7750,10 +8189,28 @@
       "detail": "glulx"
     },
     {
+      "tuid": "ddagftras22bnz8h",
+      "title": "Plundered Hearts",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/plunderedhearts-r26-s870730.z3"
+    },
+    {
+      "tuid": "ddfjdi6lceupgcn",
+      "title": "Supermarket Robbery",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20130211095515if_/http://zmachinetaro.webstarts.com/uploads/Supermarket_Robbery_Last.z5"
+    },
+    {
       "tuid": "ddfop53h2m4d0zz3",
       "title": "La gema Karssakis",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "ddteat6razxljsz4",
+      "title": "Darkiss! Wrath of the Vampire - Chapter 2: Journey to Hell",
+      "reason": "unreadable-host",
+      "detail": "https://www.marcovallarino.it/sdc_download/5784/?key=0e17ah1ab3invg0dplmuqfw836anxy"
     },
     {
       "tuid": "denbn2zshbex2yl2",
@@ -7766,6 +8223,12 @@
       "title": "So You Think You Know Allusions?",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "dgpkz7fysr1ssp6b",
+      "title": "Sabotage!",
+      "reason": "unreadable-host",
+      "detail": "https://felix.plesoianu.ro/intfic/sabotage/sabotage.z5"
     },
     {
       "tuid": "dguc1et3bptoeatk",
@@ -7966,10 +8429,22 @@
       "detail": "glulx"
     },
     {
+      "tuid": "du9mfue4tj7zftww",
+      "title": "Semi Intelligent Design",
+      "reason": "unreadable-host",
+      "detail": "https://kevan.org/hoi/SemID.z8"
+    },
+    {
       "tuid": "dujhpaco04vwepvq",
       "title": "Willy's Manor",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "dujmrh6hbucjj9z3",
+      "title": "One Night in San Francisco",
+      "reason": "unreadable-host",
+      "detail": "https://lars.d.umn.edu/one_night_in_sf/untitledHeistGame.z5"
     },
     {
       "tuid": "dukdeacdo0wy1ku1",
@@ -8296,6 +8771,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "eegjmrx92od392jb",
+      "title": "Das Schneemädchen",
+      "reason": "unreadable-host",
+      "detail": "https://if-forum.org/pub/ifGP/2025/schnee.zip"
+    },
+    {
       "tuid": "eei2lzapbs7m1icf",
       "title": "Temple of God",
       "reason": "insecure-url",
@@ -8360,6 +8841,12 @@
       "title": "Transient Skies",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "ei414nqme8y7o55l",
+      "title": "Werner's Quest",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/heasm66/Werners-Quest-Revisited/raw/master/1.%20The%20Black%20Ladder/bin/werner1.z5"
     },
     {
       "tuid": "eiaxy9jwbjshrufb",
@@ -8450,6 +8937,12 @@
       "title": "And the Robot Horse You Rode in On",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "enwyyg6pugbcsdh6",
+      "title": "A Beginning",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/abeginning.z5"
     },
     {
       "tuid": "enx2agv9s4y27moq",
@@ -8692,6 +9185,12 @@
       "detail": "http://mattweiner.net/Shufflecomp%202014/Lobster%20Bucket.zblorb"
     },
     {
+      "tuid": "f4dfr0ebodg6e118",
+      "title": "fractalz",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/fractalz.z5"
+    },
+    {
       "tuid": "f4pv5jn8r1aeu02",
       "title": "Daddy's Birthday",
       "reason": "format-not-enabled",
@@ -8732,6 +9231,12 @@
       "title": "Yancy At The End Of The World!",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "f7fx44x2jw0dvqqm",
+      "title": "UMW",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/UMW.z8"
     },
     {
       "tuid": "f7zdhxmiraht53d1",
@@ -8836,6 +9341,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "fek70ft3caghc1mz",
+      "title": "A Clockwork Noir",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/noir.z5"
+    },
+    {
       "tuid": "fezkbf4xtiuwbe36",
       "title": "Quite Queer Night Near",
       "reason": "format-not-enabled",
@@ -8912,6 +9423,12 @@
       "title": "Captain Cutter's Treasure",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "fk4m3022wxy5z3vc",
+      "title": "Macetas",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Macetas.zip"
     },
     {
       "tuid": "fk7fdvt71199hnvz",
@@ -9026,6 +9543,12 @@
       "title": "Throne",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "fqglfvr75ck4zyrc",
+      "title": "Magic Travels",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20110410040905if_/http://zmachinetaro.webstarts.com/uploads/Magic_Travels.z5"
     },
     {
       "tuid": "fqhoqlh01ex5wwvo",
@@ -9220,6 +9743,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "g1gno99dv2qbfxib",
+      "title": "Virtuality",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/Virtuality.zblorb"
+    },
+    {
       "tuid": "g1oy1e92t47bdac4",
       "title": "Space Police",
       "reason": "unsupported-format",
@@ -9238,6 +9767,12 @@
       "detail": "storyfile"
     },
     {
+      "tuid": "g2s43ak6my3t7in3",
+      "title": "Homeland",
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2019/Homeland/homeland.z5"
+    },
+    {
       "tuid": "g2uhffjfi1pi2hpr",
       "title": "Calling of The Night",
       "reason": "format-not-enabled",
@@ -9248,6 +9783,12 @@
       "title": "Loud House 'game on'",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "g3lyn1smb9dvdy2v",
+      "title": "The Amazing Maze",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20amazing%20Maze.z8"
     },
     {
       "tuid": "g4abe0veqbhiv8tx",
@@ -10156,6 +10697,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "hd994pw7h6qmc0oz",
+      "title": "Cortes's Creed",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090417014433if_/http://www.historicalsimulations.net/inform/studentsims/Cortes%20Creed.zblorb"
+    },
+    {
       "tuid": "hdv742eg5mekfcsn",
       "title": "Freed from the Curse",
       "reason": "unsupported-format",
@@ -10366,6 +10913,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "ho7e5s10d3qida7u",
+      "title": "Visita al Marconi",
+      "reason": "unreadable-host",
+      "detail": "https://rebrand.ly/marconi"
+    },
+    {
       "tuid": "hob5n7frvzgxxach",
       "title": "Adventuring 101: Rogue Like",
       "reason": "format-not-enabled",
@@ -10448,6 +11001,12 @@
       "title": "Next in Line",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "hudzdw715cypkx13",
+      "title": "Dorm: Adventure at the 8-Bit Assembly",
+      "reason": "unreadable-host",
+      "detail": "https://carringtonvanston.net/games/dorm/downloads/dorm.z3"
     },
     {
       "tuid": "hukf9rzectwkla8i",
@@ -10762,6 +11321,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "ifup3whaqgfi4lbk",
+      "title": "Nostrils of Flesh and Clay",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20120510214956if_/http://aliendovecote.com/uploads/Nostrils%20of%20Flesh%20and%20Clay/Nostrils%20of%20Flesh%20and%20Clay.zblorb"
+    },
+    {
       "tuid": "ify2fa74spuft3kl",
       "title": "Excalibur",
       "reason": "unsupported-format",
@@ -10984,6 +11549,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "isj74n8pkhmufxu5",
+      "title": "ETO",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20040816155014if_/http://www.ifarchive.org/if-archive/games/zcode/eto.z5"
+    },
+    {
       "tuid": "itbz82mwebzqjfvm",
       "title": "El Archipiélago",
       "reason": "adult-content",
@@ -11024,6 +11595,12 @@
       "title": "Softporn Adventure",
       "reason": "adult-content",
       "detail": "Sexual Content"
+    },
+    {
+      "tuid": "iv5o2vhc8ibqus8l",
+      "title": "Wizard's Magic",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Wizard%E2%80%99s%20Magic.z8"
     },
     {
       "tuid": "ivjms7ovf1k39bsz",
@@ -11104,10 +11681,22 @@
       "detail": "glulx"
     },
     {
+      "tuid": "j0yvxmp7vn1yzw4z",
+      "title": "Inventory",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090417040120if_/http://wordeology.com/radix/Inventory/Inventory.z5"
+    },
+    {
       "tuid": "j10f35m2va268msd",
       "title": "You Feel Like You've Read this in a Book",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "j18kjz80hxjtyayw",
+      "title": "Trinity",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/trinity-r12-s860926.z4"
     },
     {
       "tuid": "j1l6trv70ny9bgrh",
@@ -11150,6 +11739,12 @@
       "title": "Dark as Blood",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "j3glq427sw56n3h",
+      "title": "Containment",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/Containment.z5"
     },
     {
       "tuid": "j3il4qr3qwx08md4",
@@ -11204,6 +11799,12 @@
       "title": "Greenteeth",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "j7bqfkj1t4jq5bnl",
+      "title": "Fischstäbchen",
+      "reason": "unreadable-host",
+      "detail": "https://if-forum.org/pub/ifGP/2023/fischstaeb.zip"
     },
     {
       "tuid": "j7sytvbfcbe95nzi",
@@ -11542,6 +12143,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "jnfkbgdgopwfqist",
+      "title": "Hollywood Hijinx",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/hollywoodhijinx-r37-s861215.z3"
+    },
+    {
       "tuid": "jnnk53iz2k195qqg",
       "title": "Overrun - en",
       "reason": "unsupported-format",
@@ -11704,6 +12311,12 @@
       "detail": "http://raddial.com/if/games/bandit.z5"
     },
     {
+      "tuid": "jvezsc1htulfbcan",
+      "title": "Crimson Witness",
+      "reason": "unreadable-host",
+      "detail": "https://xkqr.org/if/crimswit/crimswit.zblorb"
+    },
+    {
       "tuid": "jw4g00f1a4165tc7",
       "title": "Chloe Is Home",
       "reason": "unsupported-format",
@@ -11818,6 +12431,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "k1y9t9tm02vl1s",
+      "title": "Mrs. Crabtree's Geography Class",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Mrs_Crabtree's_Geography_Class.z8"
+    },
+    {
       "tuid": "k1ye3rs0n3thnb6u",
       "title": "Alone/Awake",
       "reason": "format-not-enabled",
@@ -11930,6 +12549,12 @@
       "title": "The Paper Magician",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "k7eyvakpq1ooynhk",
+      "title": "My Name is Jack Mills",
+      "reason": "unreadable-host",
+      "detail": "https://www.nitku.net/if/jackmills/JackMills.zblorb"
     },
     {
       "tuid": "k7gryitw24knktcc",
@@ -12093,6 +12718,18 @@
       "reason": "no-game-file"
     },
     {
+      "tuid": "kfxpc2jfv1u8bmf7",
+      "title": "The Argument-Winner's Ghost",
+      "reason": "unreadable-host",
+      "detail": "https://www.dropbox.com/s/4ni28ghjdum2pjx/ghost.zblorb"
+    },
+    {
+      "tuid": "kh1g12jie6qwgxoq",
+      "title": "when i was shot by elephants definiteive editiom",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20120510200548/http://k004.kiwi6.com/hotlink/pexmca8076/when_i_was_shot_by_elephants_definiteive_editiom.z5"
+    },
+    {
       "tuid": "kh6vr9sqvmqlo4uu",
       "title": "Et il fallut donc",
       "reason": "unsupported-format",
@@ -12139,6 +12776,12 @@
       "title": "Marbles, D, and the Sinister Spotlight",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "kjfkh2f6cgnl8f9",
+      "title": "The Snowman",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20090416231110if_/http://www.alienrobotcritter.com/files/snowman.zblorb"
     },
     {
       "tuid": "kjiqeqoexco7rwsp",
@@ -12501,6 +13144,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "l0rjyx61erofk1dj",
+      "title": "The Magic Circle",
+      "reason": "unreadable-host",
+      "detail": "https://playfic.com/releases/5/5d61f34c-cd87-4735-9a57-fb25e9882f0f/5d61f34c-cd87-4735-9a57-fb25e9882f0f.z8"
+    },
+    {
       "tuid": "l0xbojrxh90tnz7g",
       "title": "Dérive I: Santander",
       "reason": "format-not-enabled",
@@ -12511,6 +13160,12 @@
       "title": "A Very Strong Gland",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "l2foa290644czfzm",
+      "title": "Drama Queen 7 - Mother knows best",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/DramaQueen.zblorb"
     },
     {
       "tuid": "l2gi25l9k8pokcos",
@@ -12699,6 +13354,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "lbfc6ngu1347s7rn",
+      "title": "Secret of the Knights",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/secret-knights/releases/latest/download/knights.z5"
+    },
+    {
       "tuid": "lbqlpste6oi6yb8",
       "title": "A Grim-ish Tale",
       "reason": "format-not-enabled",
@@ -12811,6 +13472,12 @@
       "title": "Bi Lines",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "lidg5nx9ig0bwk55",
+      "title": "Sorcerer",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/sorcerer-r15-s851108.z3"
     },
     {
       "tuid": "lis59ao3xfqnhnon",
@@ -12931,6 +13598,12 @@
       "title": "A few hours later in the day of The Egocentric",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "lmwi2ixg9a6jeu9",
+      "title": "Kentish Plover",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Kentish%20Plover.z8"
     },
     {
       "tuid": "ln7nb470z34dpcc",
@@ -13071,6 +13744,18 @@
       "detail": "twine"
     },
     {
+      "tuid": "lwsrqg4qxvuzo369",
+      "title": "when i was shot by elephants 2 super elephants",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20120510203256/http://k003.kiwi6.com/hotlink/bp3qvy7ypv/when_i_was_shot_by_elephants_2_super_elephants.z8"
+    },
+    {
+      "tuid": "lwydetlk1o0vc91q",
+      "title": "Craverly Heights",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Craverly%20Heights.z8"
+    },
+    {
       "tuid": "lx4mjpvd9zu1p3r",
       "title": "Final Call",
       "reason": "format-not-enabled",
@@ -13185,6 +13870,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "m3zc3zeilzs139w0",
+      "title": "Robopuppy Redux",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20081231052649if_/http://www.math.psu.edu:80/clemens/IF/Robopuppy_redux/Robopuppy%20Redux.zblorb"
+    },
+    {
       "tuid": "m45vzlhwskc69pkd",
       "title": "Mon voisin est un gros scarabée",
       "reason": "insecure-url",
@@ -13273,6 +13964,12 @@
       "title": "Bluebeard's Not-Wives",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "mafzs0iiqv27rs88",
+      "title": "Fracture",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/Fracture.z8"
     },
     {
       "tuid": "mal27rms15du7x7b",
@@ -13479,6 +14176,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "mln9d9wf5lvba7t3",
+      "title": "EGC Paper Chase",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/EGCPC.z8"
+    },
+    {
       "tuid": "mmrrf8zk7z8ugfos",
       "title": "The Morning Tea Party",
       "reason": "insecure-url",
@@ -13641,10 +14344,22 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "mtvfo8j8ezy0fyus",
+      "title": "The Wolf and the Seven Kids",
+      "reason": "unreadable-host",
+      "detail": "https://www.herr-rau.de/inform7/geisslein/The%20Wolf%20and%20the%20Seven%20Kids.zblorb"
+    },
+    {
       "tuid": "mu4j2entx3zb33gq",
       "title": "Escape from Terra",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "mu7pqivu7nioidpz",
+      "title": "Time and Dwarves",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/compiled/time.z5"
     },
     {
       "tuid": "mu8py0ovp7u6wfup",
@@ -13779,6 +14494,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "mzbe0tjn05c3pgh2",
+      "title": "Pub Hubbub",
+      "reason": "unreadable-host",
+      "detail": "https://christopherdrum.itch.io/pub-hubbub"
+    },
+    {
       "tuid": "n0weq1argql30tcl",
       "title": "Segundas oportunidades",
       "reason": "unsupported-format",
@@ -13795,6 +14516,12 @@
       "title": "Room 9",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "n1rob5dkybki2mfu",
+      "title": "Die erste Nacht",
+      "reason": "unreadable-host",
+      "detail": "https://if-forum.org/pub/ifGP/2022/"
     },
     {
       "tuid": "n1vr8lh59i0lb53a",
@@ -13910,10 +14637,22 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "n5i618v5xowmum91",
+      "title": "La Mansión",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Mansion.zip"
+    },
+    {
       "tuid": "n5qtz6v5zuswsxit",
       "title": "Weird Grief",
       "reason": "adult-content",
       "detail": "Sexual Content"
+    },
+    {
+      "tuid": "n5rtj88n8p9inqw",
+      "title": "Class Challenge",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/Class%20Challenge.z8"
     },
     {
       "tuid": "n5wf4w7cok3a64pl",
@@ -13932,6 +14671,12 @@
       "title": "Deformuseum",
       "reason": "insecure-url",
       "detail": "http://www.pageturner.de/adventure/deformus4.zip"
+    },
+    {
+      "tuid": "n6h4jzbiaw8fdztu",
+      "title": "A small & simple text adventure",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/A%20Small%20and%20Simple%20Text%20Adventure.z8"
     },
     {
       "tuid": "n6rn74qhujur4uwm",
@@ -14012,6 +14757,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "narh8d4zgv7fa9is",
+      "title": "Afuera",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Afuera.zip"
+    },
+    {
       "tuid": "navfdme0hrwzmbdp",
       "title": "The Wrath of Anubis",
       "reason": "unsupported-format",
@@ -14052,6 +14803,12 @@
       "title": "Disturbance",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "ndqdjcn4ze5kk8",
+      "title": "Navigatio",
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2020/Navigatio/Navigatio.zblorb"
     },
     {
       "tuid": "ndz3efz782n3ml",
@@ -14148,6 +14905,12 @@
       "title": "Panorama Park",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "nkajyqultjxmiwe7",
+      "title": "Robot Gardening",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20091010001418if_/http://www.dessgeega.com/robotgardening.zip"
     },
     {
       "tuid": "nkkdbqaomij8wgcy",
@@ -14402,6 +15165,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "nwxi6reml171cr0",
+      "title": "Reflejos blancos",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/ReflejosBlancos.zip"
+    },
+    {
       "tuid": "nxhpyvk6m7h83vsg",
       "title": "what happens if we never talk again?",
       "reason": "unsupported-format",
@@ -14430,6 +15199,12 @@
       "title": "The Fairy Woods",
       "reason": "insecure-url",
       "detail": "http://stories.amcorbin.com/the-fairy-woods.html"
+    },
+    {
+      "tuid": "nybdw0bt75c716v3",
+      "title": "IF Progressive One",
+      "reason": "unreadable-host",
+      "detail": "https://www.panix.com/~limax/if/ifp1/progressive1.zip"
     },
     {
       "tuid": "o04ilixxtn4djoeo",
@@ -14576,6 +15351,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "o6iksmr9gx8d99bj",
+      "title": "Light into Darkness",
+      "reason": "unreadable-host",
+      "detail": "https://doopnet.com/games/Light%20into%20Darkness.zblorb"
+    },
+    {
       "tuid": "o6kvclutag67skou",
       "title": "Scroll Thief",
       "reason": "insecure-url",
@@ -14702,6 +15483,12 @@
       "detail": "http://v6p9d9t4.ssl.hwcdn.net/html/2909135/Release%202/Ritus%20Sacri.gblorb"
     },
     {
+      "tuid": "odjsxly7ynbn5kc5",
+      "title": "True Hero: Quest for the Banshee Heart",
+      "reason": "unreadable-host",
+      "detail": "https://playfic.com/releases/e/ec824862-b9bf-4cde-87b0-815d7288774b/ec824862-b9bf-4cde-87b0-815d7288774b.z8"
+    },
+    {
       "tuid": "odpw5ap4rys1dndx",
       "title": "Underwall: An Arcane Mystery",
       "reason": "adult-content",
@@ -14736,6 +15523,12 @@
       "title": "Breathless at CEH: A curious case of Christmas party",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "ogkbvh7c4k43picy",
+      "title": "Forrajeo",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Forrajeo.zip"
     },
     {
       "tuid": "ogu4w3aaepmpa7x",
@@ -14780,6 +15573,18 @@
       "detail": "sexual content"
     },
     {
+      "tuid": "ojmkb4zz9igsj1h7",
+      "title": "The War-Torn Kingdom",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/war-torn-kingdom/releases/download/2020091602/wartorn.z5"
+    },
+    {
+      "tuid": "ojp9uarmyuw4eusj",
+      "title": "Pan de ajo",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/PanAjo.zip"
+    },
+    {
       "tuid": "ojrite4w4lrl41la",
       "title": "The Moon wed Saturn",
       "reason": "unsupported-format",
@@ -14790,6 +15595,12 @@
       "title": "Homeland Security",
       "reason": "insecure-url",
       "detail": "http://ifiction.free.fr/concours2011/homelandsecurity/homelandsecurity.z5"
+    },
+    {
+      "tuid": "oks2ll4ysbeu37c0",
+      "title": "In the Navy",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/inthenavy.z5"
     },
     {
       "tuid": "okvelssfvrn0huu6",
@@ -14990,6 +15801,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "ouv80gvsl32xlion",
+      "title": "The Hitchhiker's Guide to the Galaxy",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/hitchhiker-r59-s851108.z3"
+    },
+    {
       "tuid": "ov6zd9qcljchaunb",
       "title": "Back In Time",
       "reason": "unsupported-format",
@@ -15066,6 +15883,12 @@
       "title": "The Island of Doctor Wooby",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "oyhrzyml6z7yd2sm",
+      "title": "The Minimalist Game 2",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20201221195755if_/http://download1081.mediafire.com/q4cqmavgarbg/18qxf2wmp4wortw/The+Minimalist+Game+2.z5"
     },
     {
       "tuid": "oysoh0mrzanlxtby",
@@ -15362,6 +16185,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "pdeztll2c9m0a4uo",
+      "title": "The Storm",
+      "reason": "unreadable-host",
+      "detail": "https://stephanef.itch.io/the-storm"
+    },
+    {
       "tuid": "pdt3zwbu0rhzhy42",
       "title": "Lavabo",
       "reason": "adult-content",
@@ -15506,6 +16335,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "pmp2bvuoe6oknejw",
+      "title": "Lockout",
+      "reason": "unreadable-host",
+      "detail": "https://xkqr.org/if/lockout/lockout.zblorb"
+    },
+    {
       "tuid": "pmumdy360h9f82zh",
       "title": "La Source De Zig",
       "reason": "insecure-url",
@@ -15631,6 +16466,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "pslttnz7mplj42i",
+      "title": "Fingertips: The Day That Love Came To Play",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20160927095959if_/http://www222.pair.com/sjohn/free/lovecame.zip"
+    },
+    {
       "tuid": "psog8njnnckqu1ug",
       "title": "Plenty",
       "reason": "format-not-enabled",
@@ -15707,6 +16548,12 @@
       "title": "As the Eye Can See",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "pxs5jlc2cjxhnrd7",
+      "title": "Escapade!",
+      "reason": "unreadable-host",
+      "detail": "https://nitku.net/if/escapade/escapade.zblorb"
     },
     {
       "tuid": "pyc6502gxd98g918",
@@ -16123,6 +16970,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "qmbrpvv8qpm1eicl",
+      "title": "19 Once",
+      "reason": "unreadable-host",
+      "detail": "https://html-classic.itch.zone/html/10869001-1076727/19%20Once.zblorb"
+    },
+    {
       "tuid": "qmufyvv1dpkde9rl",
       "title": "Loadstone",
       "reason": "unsupported-format",
@@ -16285,6 +17138,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "qv0uxa6fgxftgsff",
+      "title": "Sfida all'ignoto",
+      "reason": "unreadable-host",
+      "detail": "https://rebrand.ly/sfida"
+    },
+    {
       "tuid": "qv5n205afbmzm03r",
       "title": "Smitten Kittens",
       "reason": "format-not-enabled",
@@ -16423,6 +17282,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "r1oi341f32uwg9n4",
+      "title": "Sail With Pirates",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/sail-with-pirates/releases/latest/download/pirates.z5"
+    },
+    {
       "tuid": "r1wgq6n56sh6bxzs",
       "title": "Crocodracula: What Happened to Calvin",
       "reason": "format-not-enabled",
@@ -16469,6 +17334,12 @@
       "title": "Affronter le silence",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "r465pozjtcqqcxdi",
+      "title": "Big Red Button",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20100409235810if_/http://s2.webstarts.com/ZMachineTaro/uploads/Big_Red_Button_Everlasting_Edition.z5"
     },
     {
       "tuid": "r4e3vmp4gogi1e0",
@@ -16639,10 +17510,22 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "rfbcdbw25d1ylmzd",
+      "title": "Die Akte Paul Bennet",
+      "reason": "unreadable-host",
+      "detail": "https://www.textpaeckchen.org/downloads/akte/akte.z8"
+    },
+    {
       "tuid": "rfmoj7b776ugoeoi",
       "title": "Congee",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "rfq76ctz2iepolbn",
+      "title": "The Jewel of Alithia",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20240107113549if_/https://html-classic.itch.zone/html/1797300/Release/The%20Jewel%20of%20Alithia.zblorb"
     },
     {
       "tuid": "rg7sieqyg1b9rxpt",
@@ -16715,6 +17598,12 @@
       "title": "Never Ending Story",
       "reason": "unsupported-format",
       "detail": "executable"
+    },
+    {
+      "tuid": "rjpiclh0l4dssvl8",
+      "title": "Carnival",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/d9a5f8ea9eee405ed4c20be08835e24ac3a782a7/archives/carnival.z5"
     },
     {
       "tuid": "rjvh70e0ap1rta7t",
@@ -16823,6 +17712,12 @@
       "title": "Dios en zapatillas",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "rsd9e0bw9s7iq4pe",
+      "title": "Mini-Zork II",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/eriktorbjorn/minizork2-renovated/raw/main/mini2.z3"
     },
     {
       "tuid": "rsil55edwyrtmohg",
@@ -16993,6 +17888,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "s3u4hp3iiw0d4v6",
+      "title": "Paint",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/Paint.z5"
+    },
+    {
       "tuid": "s42gm7v7v9873d72",
       "title": "Unknown Dimension",
       "reason": "unsupported-format",
@@ -17051,6 +17952,12 @@
       "title": "my bluetooth mouse won't connect",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "s90nz4mvo1kz5w2d",
+      "title": "Game Developers Conference 2009",
+      "reason": "unreadable-host",
+      "detail": "https://ifwizz.de/pub/play/games/2009/gdcgame.z8"
     },
     {
       "tuid": "s9nuslkgsb436b1q",
@@ -17245,6 +18152,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "sjiowm1bb9jnjfpa",
+      "title": "A Potion Labeled 'Time'",
+      "reason": "unreadable-host",
+      "detail": "https://ffabish.itch.io/a-potion-labeled-time"
+    },
+    {
       "tuid": "skkhclxl05fi3pkf",
       "title": "City of the Living Dead",
       "reason": "format-not-enabled",
@@ -17273,6 +18186,12 @@
       "title": "The Game of Midlife",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "smsxl8i2jjwaz0pq",
+      "title": "Thingimijig",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20110110025650if_/http://www.highmount.demon.co.uk/thingy.z5"
     },
     {
       "tuid": "sneq29eqyqq1bi2j",
@@ -17467,6 +18386,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "swkj9q8mps26hu24",
+      "title": "The Cogs of Westminster",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20Cogs%20of%20Westminster.z8"
+    },
+    {
       "tuid": "sxf6c25bwme74cw9",
       "title": "Jump",
       "reason": "adult-content",
@@ -17569,6 +18494,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "t300lmh66x5hgoz7",
+      "title": "Вечерня",
+      "reason": "unreadable-host",
+      "detail": "https://rinform.org/games/vespers/vespersr.z8"
+    },
+    {
       "tuid": "t33jbup1xnl0w2us",
       "title": "Wilhelm Tell",
       "reason": "compressed-no-primary",
@@ -17579,6 +18510,12 @@
       "title": "The Grown-Up Detective Agency",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "t47hei9uq10xoar8",
+      "title": "Suspended",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/suspended-mac-r8-s840521.z3"
     },
     {
       "tuid": "t4c3j1amzgsgcmt",
@@ -17755,6 +18692,12 @@
       "detail": "sexual content"
     },
     {
+      "tuid": "tdbss1ekrp4ua7h4",
+      "title": "Suspect",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/suspect-r14-s841005.z3"
+    },
+    {
       "tuid": "tdsbcqntb2rejda",
       "title": "Tours Roust Torus",
       "reason": "format-not-enabled",
@@ -17765,6 +18708,12 @@
       "title": "Nowheresville",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "terr6le4vg51c2zi",
+      "title": "Das Kopialbuch",
+      "reason": "unreadable-host",
+      "detail": "https://www.beimax.de/fileadmin/downloads/if/kopialbuch.z5"
     },
     {
       "tuid": "tezpont7mc2hg0uk",
@@ -17813,6 +18762,12 @@
       "title": "You Can't Save Her",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "ti37r5scihlc4n4b",
+      "title": "Down Among the Dead Men",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/dead-men/releases/latest/download/deadmen.z5"
     },
     {
       "tuid": "timqqpenul4q31bi",
@@ -18079,6 +19034,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "twh2vdqbb0hoakn",
+      "title": "A Knight's Quest",
+      "reason": "unreadable-host",
+      "detail": "https://playfic.com/releases/2/21492ff4-d6a7-4343-956b-1383363b9686/21492ff4-d6a7-4343-956b-1383363b9686.z8"
+    },
+    {
       "tuid": "twof1jogz54zgsm1",
       "title": "whoami [es]",
       "reason": "format-not-enabled",
@@ -18133,6 +19094,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "tyuvsh5fa7d5g7x6",
+      "title": "> by @",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20210226220618id_/http://templaro.com/games/greater-than-by-at-sign.zblorb"
+    },
+    {
       "tuid": "tyvagb75y0tc09wg",
       "title": "What Remains",
       "reason": "unsupported-format",
@@ -18167,6 +19134,12 @@
       "title": "Cozy Simulation 2999",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "u16mpjnk07d3l8i2",
+      "title": "Tethered",
+      "reason": "unreadable-host",
+      "detail": "https://hd0.linusakesson.net/files/tethered-rel1.zblorb"
     },
     {
       "tuid": "u1kmutsdwp8uys1h",
@@ -18311,6 +19284,12 @@
       "title": "Rainbows and Dance Parties!",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "u9sj80jwi94avixb",
+      "title": "Gen Norden",
+      "reason": "unreadable-host",
+      "detail": "https://if-forum.org/pub/ifGP/2023/gennord/Gen%20Norden.z5"
     },
     {
       "tuid": "ua5w205yarpb0c8",
@@ -18523,6 +19502,12 @@
       "detail": "glulx"
     },
     {
+      "tuid": "uq1rwidpqanywymi",
+      "title": "El Protector",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Protector.zip"
+    },
+    {
       "tuid": "uqn7k9tnwic57fal",
       "title": "Winter-Over",
       "reason": "unsupported-format",
@@ -18539,6 +19524,12 @@
       "title": "Anne of Green Cables",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "ur7o5zonjzbhxsty",
+      "title": "The Grand Tour",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/playfic/The%20Grand%20Tour.z8"
     },
     {
       "tuid": "urjcjog9m5civu9t",
@@ -18581,6 +19572,12 @@
       "title": "Dead Man's Chest",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "utd2or64zwqfaa7",
+      "title": "Lieux Communs",
+      "reason": "unreadable-host",
+      "detail": "https://www.fiction-interactive.fr/fi/multiples/lieux-communs/lieux-communs.z8"
     },
     {
       "tuid": "utvptfkvquzo8jou",
@@ -18629,6 +19626,12 @@
       "title": "Please Answer Carefully",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "uv4kabquylio5ak0",
+      "title": "A Sadly Hopeless Deja Vu",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20100709233706if_/http://s2.webstarts.com/ZMachineTaro/uploads/Deja_Vu.z5"
     },
     {
       "tuid": "uv7zle9662t1n69l",
@@ -18799,6 +19802,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "v544gu618y3or7nr",
+      "title": "Lonely Places",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20101010002252id_/http://www.nick-marsh.co.uk/assets/files/Lonely%20Places.zblorb"
+    },
+    {
       "tuid": "v5axn7tkg52m9g1a",
       "title": "When the Land Goes Under the Water",
       "reason": "format-not-enabled",
@@ -18919,6 +19928,12 @@
       "detail": "http://brightsidemc.co.za/img/tallesttrees/tallesttreesrelease.html"
     },
     {
+      "tuid": "vchsmiok2zmrsnze",
+      "title": "The Bean Stalker",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/dhakajack/bean/releases/download/v1.0/jack.z5"
+    },
+    {
       "tuid": "vd51ff8tybufnnsm",
       "title": "My Desk",
       "reason": "unsupported-format",
@@ -19009,6 +20024,12 @@
       "detail": "erotic"
     },
     {
+      "tuid": "vfrr7qopqk2z5n6e",
+      "title": "Heart of Ice",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/heart-of-ice/releases/latest/download/heartice.z5"
+    },
+    {
       "tuid": "vg3uvt6bx9grqwtp",
       "title": "Saltwrack",
       "reason": "format-not-enabled",
@@ -19025,6 +20046,12 @@
       "title": "Light Beta",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "vgtc3lf4bqap9oym",
+      "title": "Phantom of the Arcade 2: Shadows, Darkness, and Dread",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20100109233420id_/http://static.escapistmagazine.com/media/global/misc/inform/POTA2.z8"
     },
     {
       "tuid": "vgvr5hc46w4x8zey",
@@ -19189,6 +20216,12 @@
       "detail": "http://www.edlbauer.de/textadventures/occasiones/dichter.zip"
     },
     {
+      "tuid": "vrsot1zgy1wfcdru",
+      "title": "Zork III",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/zork3-r17-s840727.z3"
+    },
+    {
       "tuid": "vrxmz58qi6ef6si",
       "title": "A Long Drink",
       "reason": "format-not-enabled",
@@ -19229,6 +20262,12 @@
       "title": "A Room of One's Own",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "vu4xhul3abknifcr",
+      "title": "Enchanter",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/enchanter-r29-s860820.z3"
     },
     {
       "tuid": "vuhgkl55q2xxa8b5",
@@ -19295,6 +20334,12 @@
       "title": "Gassy Encounters (1.2)",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "vx2cilsf59ku6kuf",
+      "title": "Horatio's Story",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/horatios_story.zblorb"
     },
     {
       "tuid": "vxvxnfs836ijpkm0",
@@ -19770,10 +20815,22 @@
       "detail": "twine"
     },
     {
+      "tuid": "wmn1law968j3a1y",
+      "title": "Green Blood",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/green-blood/releases/latest/download/greenblood.z5"
+    },
+    {
       "tuid": "wmsgmenpdjm48fel",
       "title": "At Night",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "wn764nzuit2wwpng",
+      "title": "Over the Blood-Dark Sea",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/daelsepara/over-blood-dark-sea/releases/download/2022072901/bloodsea.z5"
     },
     {
       "tuid": "wnt74l7z3i9vctsy",
@@ -19798,6 +20855,12 @@
       "title": "The Broken Crown",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "wqsmrahzozosu3r",
+      "title": "Spellbreaker",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/spellbreaker-r87-s860904.z3"
     },
     {
       "tuid": "wrj546hmha8jk82k",
@@ -19930,6 +20993,12 @@
       "title": "Deep Below",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "wy1z1sfw55rdbolu",
+      "title": "The Grumpy Cricket (And Other Enormous Creatures)",
+      "reason": "unreadable-host",
+      "detail": "https://archive.org/download/the-grumpy-cricket-v1-2023-12-25/the-grumpy-cricket.z8"
     },
     {
       "tuid": "wy9kkzim2mrs9svo",
@@ -20190,6 +21259,18 @@
       "detail": "twine"
     },
     {
+      "tuid": "xe5kgu2835eyak8",
+      "title": "Once upon a winter night, the ragman came singing under your window",
+      "reason": "unreadable-host",
+      "detail": "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb"
+    },
+    {
+      "tuid": "xe6kb3cuqwie2q38",
+      "title": "Planetfall",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/planetfall-r37-s851003.z3"
+    },
+    {
       "tuid": "xel5hjoss54ii7c4",
       "title": "Recorded",
       "reason": "format-not-enabled",
@@ -20436,6 +21517,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "xq8p7dv13os8emon",
+      "title": "Moon Goon",
+      "reason": "unreadable-host",
+      "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/MoonGoon.zblorb"
+    },
+    {
       "tuid": "xqclhn6oaz3gkkqo",
       "title": "Verses",
       "reason": "format-not-enabled",
@@ -20652,6 +21739,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "y42oje3ryqi6lohn",
+      "title": "Starcross",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/starcross-r17-s821021.z3"
+    },
+    {
       "tuid": "y4i5r6sqj3zqcrkh",
       "title": "Starship Fabulous",
       "reason": "format-not-enabled",
@@ -20742,6 +21835,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "y7t917n50bqw1dt4",
+      "title": "Fajfeta sur la Luno",
+      "reason": "unreadable-host",
+      "detail": "https://plover.net/~davidw/games/fajfe01/fajfeta.z5"
+    },
+    {
       "tuid": "y8ygvywrfwrdwigv",
       "title": "Several Other Tales from Castle Balderstone",
       "reason": "unsupported-format",
@@ -20764,6 +21863,12 @@
       "title": "A Beauty Cold and Austere",
       "reason": "format-not-enabled",
       "detail": "glulx"
+    },
+    {
+      "tuid": "yaf1muzvpfzb2rxd",
+      "title": "My Uncle George",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20091010005327id_/http://www.nomediakings.org/agi/My%20Uncle%20George.zblorb"
     },
     {
       "tuid": "yam36bzdijywxok9",
@@ -20898,6 +22003,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "yghs5x72086bkewt",
+      "title": "Ofrenda a la Pincoya",
+      "reason": "unreadable-host",
+      "detail": "https://incanus.caad.club/Pincoya.zip"
+    },
+    {
       "tuid": "ygq8n9z522yapghj",
       "title": "Klub Karisma",
       "reason": "insecure-url",
@@ -20950,6 +22061,12 @@
       "title": "Please Don't Reap my Soul, Mr. Grim Reaper",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "ykccumi5xc5rltev",
+      "title": "Hoist Sail for the Heliopause and Home",
+      "reason": "unreadable-host",
+      "detail": "https://www.eblong.com/zarf/ftp/Heliopause.zblorb"
     },
     {
       "tuid": "ykdy3tnq1aaotkos",
@@ -21088,6 +22205,12 @@
       "title": "Resist!",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "yqpysrld1p16we16",
+      "title": "Secret of the Starry Depths",
+      "reason": "unreadable-host",
+      "detail": "https://felix.plesoianu.ro/intfic/starry-depths/starry-depths.z5"
     },
     {
       "tuid": "yqta6aqqhmx698t8",
@@ -21280,6 +22403,18 @@
       "title": "The Contortionist",
       "reason": "format-not-enabled",
       "detail": "twine"
+    },
+    {
+      "tuid": "yzzm4puxyjakk8c4",
+      "title": "Zork II",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/zork2-r48-s840904.z3"
+    },
+    {
+      "tuid": "z02joykzh66wfhcl",
+      "title": "Wishbringer",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/wishbringer-r69-s850920.z3"
     },
     {
       "tuid": "z037d2za84esavrg",
@@ -21486,6 +22621,12 @@
       "detail": "twine"
     },
     {
+      "tuid": "zcjqy4gcuw344x7o",
+      "title": "The Quaking of WarCrysis 3: Resistance of Black Doom",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20131006144311id_/http://www.shamusyoung.com/if/sps2.z8"
+    },
+    {
       "tuid": "zcxqr5azmarc68jl",
       "title": "Doppeljobs",
       "reason": "unsupported-format",
@@ -21594,6 +22735,24 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "zjlhfdjjb3dmhij",
+      "title": "Hippo on Elm Street",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20151103172836if_/http://genericgeekgirl.com/games/hippo-on-elm-street/hippo-on-elm-street.z8"
+    },
+    {
+      "tuid": "zjn2nf7h0i8u2zow",
+      "title": "I Never Promised You A Nose Guard",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/1000if_/http://www.ministryofpeace.com/if/SpeedIF7/games/nose.zip"
+    },
+    {
+      "tuid": "zjyxds3s57pgis3x",
+      "title": "Bureaucracy",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/bureaucracy-r116-s870602.z4"
+    },
+    {
       "tuid": "zk2660u5krvwm3l5",
       "title": "It can't be true it mustn't be true",
       "reason": "format-not-enabled",
@@ -21694,6 +22853,12 @@
       "title": "Underneath the Same Moon",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "zorhryuoy2iuafem",
+      "title": "Yak Shaving for Kicks and Giggles!",
+      "reason": "unreadable-host",
+      "detail": "https://www.jjguest.com/Yak_Shaving/Yak%20Shaving%20for%20Kicks%20and%20Giggl.zblorb"
     },
     {
       "tuid": "zp26o8weiphxjlby",
@@ -21868,6 +23033,12 @@
       "title": "Karen's Secret",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "zxb8pq3qrkvdob4i",
+      "title": "Nord and Bert Couldn't Make Head or Tail of It",
+      "reason": "unreadable-host",
+      "detail": "https://eblong.com/infocom/gamefiles/nordandbert-r19-s870722.z4"
     },
     {
       "tuid": "zxwc7n3lc16svhve",

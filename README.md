@@ -4,4 +4,5 @@ Published by the Catalogue workflow (.github/workflows/catalog.yml) on main. Do 
 
 - `catalog/`: the files the app loads (copied into public/catalog/ by deployment builds).
 - `cache/viewgame/`: IFDB records, reused while their page version is unchanged.
+- `cache/cors.json`: whether the app can read each story file outside the IF Archive (CORS).
 - `report.json`: games left out, with their reasons.
