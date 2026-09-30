@@ -1474,7 +1474,6 @@ button.pager__btn {
 .shelf__head {
   display: flex;
   flex-shrink: 0;
-  flex-wrap: wrap;
   align-items: center;
   margin-bottom: 8px;
 }
@@ -1484,7 +1483,12 @@ button.pager__btn {
 }
 
 .shelf__title {
-  margin: 0 12px 0 0;
+  flex: 1;
+  min-width: 0;
+  margin: 0 8px 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -1562,38 +1566,6 @@ button.pager__btn {
   margin-top: 12px;
 }
 
-.shelf__tools {
-  display: flex;
-}
-
-.shelf-tool {
-  min-width: 48px;
-  min-height: 48px;
-  margin-right: 8px;
-  padding: 0 10px;
-  border: 1px solid #000;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.more-btn {
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border: 1px solid #000;
-  background: #fff;
-  color: #000;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-}
-
 .shelf__item--more {
   position: relative;
 }
@@ -1602,57 +1574,61 @@ button.pager__btn {
   width: 100%;
 }
 
-/* On a grid card: the top right corner of the cover. */
-.shelf__item--more .more-btn {
+/* "⋮" over the bottom right corner of a cover (placed inline): a 48 px target around a small white tab. */
+.more-btn {
   position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.adventures {
-  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 48px;
+  height: 48px;
   padding: 0;
-  list-style: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
 }
 
-.adventure {
+.more-btn__dots {
   display: flex;
   align-items: center;
-  height: 56px;
-  border-bottom: 1px solid #767676;
-}
-
-.adventure__link {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   justify-content: center;
-  min-width: 0;
-  height: 100%;
+  width: 22px;
+  height: 34px;
+  border: 1px solid #000;
+  border-radius: 4px 0 0;
+  background: #fff;
   color: #000;
-  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
-  text-decoration: none;
-}
-
-.adventure__title,
-.adventure__details {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.adventure__title {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
+  line-height: 1;
 }
 
-.adventure__details {
-  font-size: 14px;
+/* A game's menu: the game, then its actions. */
+.game-menu__game {
+  display: flex;
+  align-items: center;
+  padding: 4px 16px 12px;
+  border-bottom: 1px solid #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
 }
 
-.adventure .more-btn {
-  flex-shrink: 0;
-  margin-left: 8px;
+.game-menu__text {
+  flex: 1;
+  min-width: 0;
+  margin-left: 12px;
+}
+
+.game-menu__title {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.game-menu__meta {
+  margin: 4px 0 0;
+  font-size: 15px;
 }
 
 .hero {

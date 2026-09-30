@@ -8,7 +8,7 @@ import {
   isInHome,
   myAdventures,
   removeFromHome,
-  sortAdventures,
+  sortRecent,
   type Adventure,
 } from './home';
 import { keys } from './keys';
@@ -129,9 +129,8 @@ describe('sorting and Continue', () => {
     game('c', 'beta', 200, 3000),
   ];
 
-  it('sorts by last played (or added), or by title ignoring case and leading punctuation', () => {
-    expect(sortAdventures(list, 'recent').map((g) => g.tuid)).toEqual(['a', 'c', 'b']);
-    expect(sortAdventures(list, 'title').map((g) => g.tuid)).toEqual(['b', 'c', 'a']);
+  it('sorts by last played, or added for a game never played', () => {
+    expect(sortRecent(list).map((g) => g.tuid)).toEqual(['a', 'c', 'b']);
     expect(list.map((g) => g.tuid)).toEqual(['a', 'b', 'c']);
   });
 

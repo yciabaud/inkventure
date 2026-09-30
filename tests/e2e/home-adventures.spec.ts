@@ -85,36 +85,25 @@ test('after playing, Home offers Continue, which resumes at the same turn', asyn
   await expect(statusLine(page)).toContainText('Moves: 2');
 });
 
-test('grid or list and the sort are remembered', async ({ page }) => {
+test('My adventures lists the last played first; the ⋮ menu shows the game and continues it', async ({
+  page,
+}) => {
   await seed(page);
   const hero = page.getByRole('region', { name: 'Continue' });
   await expect(hero).toContainText('The Lamp at Saltmere');
   await expect(hero).toContainText('Turn 5');
-  // Recent first by default.
-  await expect(adventures(page).getByRole('link').first()).toHaveAttribute(
-    'aria-label',
-    /^The Lamp at Saltmere/,
-  );
+  const cards = adventures(page).getByRole('link');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.first()).toHaveAttribute('aria-label', /^The Lamp at Saltmere/);
+  await expect(cards.nth(1)).toHaveAttribute('aria-label', /^Hollow Mountain/);
 
-  await press(page.getByRole('button', { name: 'List view' }));
-  await expect(adventures(page).locator('.adventure').first()).toContainText(
-    'Inkventure Fixtures · Turn 5 · last played today',
-  );
-  await press(page.getByRole('button', { name: 'Sort by title' }));
-  await expect(adventures(page).getByRole('link').first()).toHaveAttribute(
-    'aria-label',
-    /^Hollow Mountain/,
-  );
-
-  await page.reload();
-  await expect(adventures(page).locator('.adventure')).toHaveCount(2);
-  await expect(adventures(page).getByRole('link').first()).toHaveAttribute(
-    'aria-label',
-    /^Hollow Mountain/,
-  );
-  await press(page.getByRole('button', { name: 'Grid view' }));
-  await page.reload();
-  await expect(adventures(page).locator('.shelf-card')).toHaveCount(2);
+  await press(page.getByRole('button', { name: 'More for Hollow Mountain' }));
+  const menu = page.getByRole('dialog', { name: 'Options' });
+  await expect(menu).toContainText('Hollow Mountain');
+  await expect(menu).toContainText('D. Placeholder');
+  await expect(menu).toContainText('Turn 2 · last played 3 days ago');
+  await press(menu.getByRole('button', { name: 'Continue' }));
+  await expect(page).toHaveURL(/#\/play\/fxzork0000000005$/);
 });
 
 test('Remove from Home keeps the saves, unless asked to delete them', async ({ page }) => {
@@ -123,7 +112,9 @@ test('Remove from Home keeps the saves, unless asked to delete them', async ({ p
     page.evaluate((k) => localStorage.getItem('ik:v1:' + k) !== null, key);
 
   await press(page.getByRole('button', { name: 'More for The Lamp at Saltmere' }));
-  await press(page.getByRole('dialog').getByRole('button', { name: 'Remove from Home' }));
+  await press(
+    page.getByRole('dialog', { name: 'Options' }).getByRole('button', { name: 'Remove from Home' }),
+  );
   await expect(
     page.getByRole('dialog', { name: 'Remove “The Lamp at Saltmere” from Home?' }),
   ).toBeVisible();
@@ -135,7 +126,9 @@ test('Remove from Home keeps the saves, unless asked to delete them', async ({ p
   await expect(page.getByRole('region', { name: 'Continue' })).toContainText('Hollow Mountain');
 
   await press(page.getByRole('button', { name: 'More for Hollow Mountain' }));
-  await press(page.getByRole('dialog').getByRole('button', { name: 'Remove from Home' }));
+  await press(
+    page.getByRole('dialog', { name: 'Options' }).getByRole('button', { name: 'Remove from Home' }),
+  );
   await press(page.getByRole('checkbox', { name: 'Also delete its saves and progress' }));
   await press(page.getByRole('button', { name: 'Remove', exact: true }));
   await expect(page.getByRole('list', { name: 'My adventures' })).toHaveCount(0);

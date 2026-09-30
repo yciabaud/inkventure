@@ -12,9 +12,8 @@ export {
   isInHome,
   myAdventures,
   removeFromHome,
-  sortAdventures,
+  sortRecent,
   type Adventure,
-  type AdventureSort,
   type HomeEntry,
 } from './home';
 export { getPrefs, setPrefs, type Prefs } from './prefs';

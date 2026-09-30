@@ -67,8 +67,6 @@ export interface Adventure extends HomeEntry {
   turns?: number;
 }
 
-export type AdventureSort = 'recent' | 'title';
-
 /** My adventures with their progress (turns, last played), in the stored order (most recently added first). */
 export function myAdventures(store: Store): Adventure[] {
   return getHome(store).map((entry) => {
@@ -83,21 +81,10 @@ export function myAdventures(store: Store): Adventure[] {
   });
 }
 
-function titleKey(title: string): string {
-  return title.toLowerCase().replace(/^[^a-z0-9\u00c0-\u024f]+/, '');
-}
-
-/** `recent`: last played (or added, if never played) first; `title`: A–Z, leading punctuation ignored. */
-export function sortAdventures(list: Adventure[], sort: AdventureSort): Adventure[] {
+/** Last played (or added, for a game never played) first. */
+export function sortRecent(list: Adventure[]): Adventure[] {
   const recent = (a: Adventure) => Math.max(a.lastPlayed || 0, a.added || 0);
-  return list.slice().sort((a, b) => {
-    if (sort === 'title') {
-      const x = titleKey(a.title);
-      const y = titleKey(b.title);
-      return x < y ? -1 : x > y ? 1 : 0;
-    }
-    return recent(b) - recent(a);
-  });
+  return list.slice().sort((a, b) => recent(b) - recent(a));
 }
 
 /** The game the Continue hero offers: the last one played among My adventures, if any was started. */

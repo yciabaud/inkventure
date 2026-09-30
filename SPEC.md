@@ -161,11 +161,13 @@ Purpose: get back into a game in one tap, or start a recommended one.
 - **Continue** hero: last played game — cover, title, "Turn 142 · last played 2 days ago", big **Continue** button.
   Hidden if no game started.
 - **My adventures** shelf: games the player added from the library or started (a game is added on its first turn,
-  again if it was removed). Grid (covers) / list (title, author, progress) toggle; sort by *recent* (last played, or
-  added) or *title*; both remembered in the prefs. A "⋯" button per game → its page or *Remove from Home* (keeps saves
-  and progress unless "also delete saves" is checked; the cached story file stays either way).
-- Shelves share the height left under the hero: each has its title, tools and a compact "‹ 2 / 5 ›" pager in one
-  header row; when My adventures and Featured are both shown, cards show only the title under the cover.
+  again if it was removed). Covers, last played (or added) first; no list view or sort on Home (decided in S4.2 review:
+  too much for a shelf). A "⋮" over the bottom right corner of each cover, like the Kindle library, opens the game's
+  menu: the game (cover, title, author, progress), then Continue / Play, its page, *Remove from Home* (keeps saves and
+  progress unless "also delete saves" is checked; the cached story file stays either way).
+- Shelves share the height left under the hero: each has its title and a compact "‹ 2 / 5 ›" pager on one header row
+  (the title is shortened if needed); when My adventures and Featured are both shown, cards show only the title under
+  the cover.
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
   one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
