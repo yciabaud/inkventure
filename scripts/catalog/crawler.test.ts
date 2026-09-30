@@ -66,7 +66,12 @@ describe('pagination', () => {
 
   it('gives up on a search that never ends', async () => {
     const fetcher: Fetcher = async () => ({ status: 200, body: page('a') });
-    await expect(searchAll(fetcher, 'q', 3)).rejects.toThrow(/after 3 pages/);
+    await expect(searchAll(fetcher, 'q', undefined, 3)).rejects.toThrow(/after 3 pages/);
+  });
+
+  it('stops quietly at a page limit given on purpose', async () => {
+    const fetcher: Fetcher = async () => ({ status: 200, body: page('a') });
+    expect(await searchAll(fetcher, 'q', 2)).toHaveLength(2);
   });
 
   it('unions searches, one candidate per TUID sorted by TUID, remembering which searches found it', async () => {
