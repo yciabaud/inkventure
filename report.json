@@ -2,7 +2,8 @@
   "policy": "general",
   "enabledFormats": [
     "zcode",
-    "glulx"
+    "glulx",
+    "ink"
   ],
   "counts": {
     "kept": 2104,

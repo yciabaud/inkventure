@@ -19,7 +19,7 @@
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "HTTP 522",
     "transient": true
   },
@@ -102,7 +102,7 @@
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -303,7 +303,7 @@
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -922,7 +922,7 @@
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1253,25 +1253,25 @@
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1382,9 +1382,8 @@
   },
   "https://web.archive.org/web/20100409235810if_/http://s2.webstarts.com/ZMachineTaro/uploads/Big_Red_Button_Everlasting_Edition.z5": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-09-30T23:18:03.440Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20100706232903if_/http://blogs.setonhill.edu/DennisJerz/EL405/Elian.z5": {
     "ok": false,
@@ -1488,9 +1487,8 @@
   },
   "https://web.archive.org/web/20150729061925id_/http://www.sibylmoon.com:80/if/rainbows/release/Rainbows%20and%20Dance%20Parties!.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-09-30T23:18:03.440Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20150915044444if_/http://frezned.com/responsibility/It%20Is%20Your%20Responsibility.gblorb": {
     "ok": false,
@@ -1534,9 +1532,8 @@
   },
   "https://web.archive.org/web/20221213061430/http://www.caad.es/jarel/games/Venenarius_Verborum.zip": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-09-30T23:18:03.440Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20240107113549if_/https://html-classic.itch.zone/html/1797300/Release/The%20Jewel%20of%20Alithia.zblorb": {
     "ok": false,
@@ -1700,7 +1697,7 @@
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1726,7 +1723,7 @@
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
     "ok": false,
-    "checked": "2026-09-30T22:55:25.690Z",
+    "checked": "2026-09-30T23:18:03.440Z",
     "detail": "network: fetch failed",
     "transient": true
   },
