@@ -32,14 +32,20 @@ jobs:
       - run: npm run check:size
 
   # Runs in parallel with the job above, in the official Playwright image: its browsers and their system libraries are
-  # preinstalled, so there is no `playwright install --with-deps` (several minutes of apt) on every run.
+  # preinstalled, so there is no `playwright install --with-deps` (its apt step took from 40 s to 7 min) on every run.
   # The tag must match @playwright/test in package.json: bump both together (Playwright stops with an explicit
   # "please update docker image" error when they differ).
-  e2e:
+  # The tests are split into shards that run on separate runners; each shard builds the app itself (webServer).
+  e2e-shard:
+    name: e2e (${{ matrix.shard }}/3)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,10 +53,18 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run test:e2e
+      - run: npm run test:e2e -- --shard=${{ matrix.shard }}/3
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.shard }}
           path: playwright-report/
           retention-days: 7
+
+  # One stable check name for branch protection, whatever the number of shards.
+  e2e:
+    if: always()
+    needs: e2e-shard
+    runs-on: ubuntu-latest
+    steps:
+      - run: test "${{ needs.e2e-shard.result }}" = success
