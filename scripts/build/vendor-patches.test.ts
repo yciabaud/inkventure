@@ -59,6 +59,12 @@ describe('Quixe patches', () => {
     expect(quixe).toContain('abandon: function() { self.abandoned = true; }');
   });
 
+  it('make sound calls silent instead of throwing', () => {
+    const glkapi = applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements);
+    expect(glkapi).not.toMatch(/throw\('glk_schannel_(?!get_rock)\w+: invalid schannel'\)/);
+    expect(glkapi.match(/return 0; \/\* no sound: nothing played \*\//g)).toHaveLength(3);
+  });
+
   it('leave no window, document or jQuery on the paths the app runs', () => {
     const glkapi = applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements);
     expect(glkapi).not.toMatch(/window\.GlkOteClass|document\.createElement/);

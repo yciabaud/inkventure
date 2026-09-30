@@ -14,6 +14,9 @@
 // - each file exports its class as an ES module instead, without creating the unused default instance;
 // - `qlog` no longer reads `window` (absent in unit tests);
 // - glkapi.js: GlkOte is always passed in, and it reports no canvas (Inkventure draws no graphics windows);
+// - glkapi.js: sound is silent. Upstream never creates a sound channel (`glk_schannel_create` returns null) and every
+//   other channel call throws "invalid schannel", which stops games that play sounds without checking the channel
+//   they got (or the Sound gestalt): these calls do nothing instead, and the play calls report failure (0);
 // - gi_dispa.js: `check_autosave` also allows the first prompt, before any event;
 // - gi_blorb.js: the IFmd (metadata) chunk is skipped: its parser needs jQuery, and the catalogue has the metadata;
 // - quixe.js: time slicing (SPEC §4.5). With the `slice_ms` option, `execute_loop` yields to the event loop once a
@@ -107,6 +110,14 @@ export const PATCHES: Patch[] = [
       [
         /^ {4}has_canvas = \(document\.createElement\('canvas'\)\.getContext != undefined\);$/m,
         '    has_canvas = false;',
+      ],
+      [
+        /^ {4}throw\('glk_schannel_(play|play_ext|play_multi): invalid schannel'\);$/gm,
+        '    return 0; /* no sound: nothing played */',
+      ],
+      [
+        /^ {4}throw\('glk_schannel_(destroy|stop|set_volume|pause|unpause|set_volume_ext): invalid schannel'\);$/gm,
+        '    /* no sound: nothing to do */',
       ],
     ],
   },
