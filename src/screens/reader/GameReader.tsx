@@ -19,6 +19,7 @@ import { PagedText } from '../../reader/PagedText';
 import { UndoStack } from '../../reader/undoStack';
 import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
+import { choicesHeight, ChoiceList } from './ChoiceList';
 import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
 import { ReaderFrame } from './ReaderFrame';
 import { TranscriptNav } from './TranscriptNav';
@@ -244,7 +245,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         engine.onInputRequest((req) => {
           turnEnded();
           setRequest(req);
-          if (req.type === 'line' && !restoringRef.current) snapshotRef.current(engine);
+          // A turn begins at a command or a choice (not at a key prompt).
+          if (req.type !== 'char' && !restoringRef.current) snapshotRef.current(engine);
         });
         engine.onExit(() => {
           turnEnded();
@@ -377,6 +379,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
 
   const awaitingLine = request !== null && request.type === 'line';
   const awaitingChar = request !== null && request.type === 'char';
+  const awaitingChoice = request !== null && request.type === 'choice';
+  // Height of the choice list under the text, as last measured.
+  const [choiceHeight, setChoiceHeight] = useState(0);
   const blocks = useMemo(
     () => readerBlocks(transcript.paragraphs, awaitingLine),
     [transcript, awaitingLine],
@@ -409,6 +414,17 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     turnRef.current++;
     turnStartRef.current = Date.now();
     engine.sendLine(text);
+  }
+
+  function choose(index: number) {
+    const engine = engineRef.current;
+    if (!engine || !awaitingChoice) return;
+    // The choice made is echoed: the new turn opens there.
+    setFocus(blocks.length);
+    setRequest(null);
+    turnRef.current++;
+    turnStartRef.current = Date.now();
+    engine.choose(index);
   }
 
   // Keys go to the game while it waits for one (outside text fields).
@@ -463,6 +479,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   } else if (state.phase === 'playing' && !request) {
     // A long turn (a slow Glulx game on an e-reader): the VM yields between slices, so this gets drawn.
     slot = <p class="reader__input-slot">{t('reader.working')}</p>;
+  } else if (awaitingChoice) {
+    slot = <ChoiceList choices={request.choices} onChoose={choose} onHeight={setChoiceHeight} />;
   } else if (awaitingLine) {
     slot = (
       <CommandBar
@@ -510,7 +528,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
                 {
                   label: t('reader.save'),
                   onSelect: () => openSlots('save'),
-                  disabled: !awaitingLine,
+                  disabled: !awaitingLine && !awaitingChoice,
                 },
                 { label: t('reader.restore'), onSelect: () => openSlots('restore') },
                 { label: t('reader.undo'), onSelect: undo, disabled: !canUndo },
@@ -547,7 +565,11 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               blocks={blocks}
               focus={focus}
               lastPageSlot={slot}
-              lastSlotHeight={COMMAND_BAR_HEIGHT}
+              lastSlotHeight={
+                kind === 'ink'
+                  ? choiceHeight || choicesHeight(awaitingChoice ? request.choices.length : 1)
+                  : COMMAND_BAR_HEIGHT
+              }
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
               pinToLast={typing}

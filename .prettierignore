@@ -7,3 +7,5 @@ public/catalog
 *.md
 public/probe/qrcode.js
 vendor
+# Compiled by scripts/fixtures/build-ink.sh, committed as the compiler writes it
+tests/fixtures/ink/lamp.json

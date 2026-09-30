@@ -297,7 +297,8 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
 **Choice games (Ink / Twine)**
 
 - Choices rendered as full-width numbered buttons under the text; no command bar.
-- Same pagination rules; choices appear on the last page.
+- Same pagination rules; choices appear on the last page (the slot under the text grows to the list's measured height,
+  at most 60 % of the screen). The choice made is shown in bold in the text, like an echoed command.
 
 **Reader menu** (tap on status line or ⋯)
 
@@ -369,7 +370,9 @@ runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its 
 downloaded unchanged at install time from the upstream `quixe-2.2.6` tag into `vendor/quixe/` (Quixe is not on npm;
 the files are checked against SHA-256 hashes kept in the repository, and ignored by git) and patched at build time; `.gblorb` files are unpacked
 client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input. Images in
-Glulx games are not shown yet (follow-up); sound is ignored.
+Glulx games are not shown yet (follow-up); sound is ignored. Ink runs on inkjs 2.4 (runtime only): each stop is a
+`ChoiceInput`; the `title` global tag and `chapter` line tags make the status line; external functions fall back to
+the ink functions of the same name.
 
 ### 4.3 Twine sandbox
 
@@ -383,7 +386,8 @@ Glulx games are not shown yet (follow-up); sound is ignored.
 
 - Z-machine / Glulx: in-memory snapshots produced via the engine's autosave (after each turn), plus up to 5 named
   slots.
-- Ink: `story.state.toJson()`.
+- Ink: `story.state.toJson()`, in a JSON envelope naming the story (a hash of its JSON); Undo restores the reader's
+  previous turn snapshot. A turn begins at each choice.
 - Undo: engine undo where available, else restore the previous autosave (keep last 10 turn snapshots in memory,
   last 1 on disk).
 - Z-machine state: ZVM's own autosave snapshot (the RAM and stacks as a Quetzal file with uncompressed memory, plus the
