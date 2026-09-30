@@ -1,0 +1,66 @@
+name: Catalogue crawl (manual)
+
+# Runs the IFDB crawler (scripts/catalog/crawl.ts) against ifdb.org on demand, to check the live API against the
+# fixtures. It records every response and keeps them, with the raw dataset, as an artifact; nothing is committed or
+# deployed. The scheduled catalogue build replaces it in S2.3. Never triggered by pull requests.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Games whose record is fetched (the searches are always crawled in full); empty for all
+        required: false
+        default: '10'
+      max-pages:
+        description: Search pages per query at most (100 games each)
+        required: false
+        default: '2'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: catalog-crawl
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Crawl ifdb.org, recording the responses
+        env:
+          LIMIT: ${{ inputs.limit }}
+          MAX_PAGES: ${{ inputs.max-pages }}
+        run: |
+          args=(--record --fixtures data/recorded --out data/raw)
+          if [ -n "$LIMIT" ]; then args+=(--limit "$LIMIT"); fi
+          if [ -n "$MAX_PAGES" ]; then args+=(--max-pages "$MAX_PAGES"); fi
+          npm run catalog:crawl -- "${args[@]}" | tee data-crawl.log
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo '### Catalogue crawl'
+            echo
+            echo '```'
+            tail -n 20 data-crawl.log 2>/dev/null || echo 'no log'
+            echo '```'
+            echo
+            echo "Recorded responses: $(ls data/recorded 2>/dev/null | wc -l)"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-crawl
+          path: |
+            data/raw/
+            data/recorded/
+            data-crawl.log
+          retention-days: 14
+          if-no-files-found: warn

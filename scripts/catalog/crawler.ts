@@ -39,31 +39,35 @@ async function getBody(fetcher: Fetcher, url: string): Promise<string> {
 
 /**
  * Every game row of a search. IFDB leaves hidden games out of a page without shortening the paging, so a short page
- * is not the last one: the search ends at the first empty page.
+ * is not the last one: the search ends at the first empty page. `pageLimit` stops earlier on purpose (a partial crawl
+ * to check the API); without it, a search still going after `safetyLimit` pages is an error.
  */
 export async function searchAll(
   fetcher: Fetcher,
   query: string,
-  maxPages = MAX_SEARCH_PAGES,
+  pageLimit?: number,
+  safetyLimit = MAX_SEARCH_PAGES,
 ): Promise<SearchRow[]> {
   const rows: SearchRow[] = [];
-  for (let page = 1; page <= maxPages; page++) {
+  const last = pageLimit !== undefined ? pageLimit : safetyLimit;
+  for (let page = 1; page <= last; page++) {
     const games = parseSearch(await getBody(fetcher, searchUrl(query, page)));
     if (!games.length) return rows;
     rows.push(...games);
   }
-  throw new IfdbError('search "' + query + '" still has results after ' + maxPages + ' pages');
+  if (pageLimit !== undefined) return rows;
+  throw new IfdbError('search "' + query + '" still has results after ' + safetyLimit + ' pages');
 }
 
 /** The union of the searches, one candidate per TUID, sorted by TUID. */
 export async function collectCandidates(
   fetcher: Fetcher,
   queries: string[],
-  maxPages = MAX_SEARCH_PAGES,
+  pageLimit?: number,
 ): Promise<Candidate[]> {
   const byTuid = new Map<string, Candidate>();
   for (const query of queries) {
-    for (const row of await searchAll(fetcher, query, maxPages)) {
+    for (const row of await searchAll(fetcher, query, pageLimit)) {
       const known = byTuid.get(row.tuid);
       if (!known) byTuid.set(row.tuid, { row: row, queries: [query] });
       else if (known.queries.indexOf(query) < 0) known.queries.push(query);
