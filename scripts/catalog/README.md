@@ -60,3 +60,26 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
   `adult-content`, `excluded`.
 - `--summary FILE` appends a Markdown summary, including the distribution of the raw IFDB fields (link formats,
   compression, languages, genres); the manual workflow writes it to the job summary.
+
+## Index and publication (S2.3)
+
+`emit.ts` (`npm run catalog:emit`) turns `data/resolved/games.json` into the files the app loads, validates them and
+writes them to `data/catalog/` (`--out`):
+
+- `meta.json`: `{ version, built, policy, count, shards, facets: { languages, genres, formats } }` (facets as
+  `[value, count]`, most frequent first; `und` for an unknown language).
+- `index-<n>.json`: `{ rows: [...] }`, 500 rows per shard sorted by title, short keys `t` TUID, `n` title, `a` author,
+  `y` year, `l` language, `g` genres, `f` format, `r` rating, `rc` rating count, `s` star sort, `p` play time (min),
+  `c` has cover, `sl` slow. Unknown values are left out; `fg` (forgiveness) is reserved (not in IFDB's JSON API).
+- `games/<tuid>.json`: the resolved game (file URL and zip entry, IFIDs, tags, description, cover, IFDB link…).
+- **Validation** (exit 1): row and detail schema, every row has its detail, HTTPS file URLs, each shard under the
+  `catalogShard` budget of `size-budget.json`, and no drop of more than 20 % of the games against `--previous`
+  (the `meta.json` currently published).
+
+**Weekly workflow** (`.github/workflows/catalog.yml`, Mondays 04:17 UTC, or Run workflow): full crawl reusing the
+record cache, resolve, emit, then commits `catalog/`, `cache/viewgame/` and `report.json` to the **`catalog` branch**.
+The deployment runs after it: `use-published.sh` copies that catalogue into `public/catalog/` before the build (preview
+builds too). Without the branch, builds keep the committed sample.
+
+**Sample**: `npm run catalog:sample` rebuilds `public/catalog/` from the synthetic fixtures (`sample.ts`); a unit test
+fails while the committed sample is out of date.
