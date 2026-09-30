@@ -31,12 +31,20 @@ export interface Store {
   readonly persistent: boolean;
   /** Parsed value, or undefined when missing or unreadable. Reading a file or autosave marks it as used. */
   get<T>(key: string): T | undefined;
-  /** Serialises to JSON; evicts per SPEC §6.1 when full. Throws a `StorageFullError` when nothing can be evicted. */
-  set(key: string, value: unknown): void;
+  /**
+   * Serialises to JSON; evicts per SPEC §6.1 when full. Throws a `StorageFullError` when nothing can be evicted.
+   * With `cache`, the entry is optional (a cached story file): only other cached files are evicted for it, and failing
+   * to store it raises no `full` event.
+   */
+  set(key: string, value: unknown, options?: SetOptions): void;
   remove(key: string): void;
   /** All keys of this schema version, without the prefix. */
   keys(): string[];
   subscribe(listener: (event: StorageEvent) => void): () => void;
+}
+
+export interface SetOptions {
+  cache?: boolean;
 }
 
 interface Options {
@@ -100,7 +108,7 @@ export function createStore(backend: KeyValueBackend, options: Options = {}): St
   }
 
   /** Next entry to evict (never `protect`): LRU cached files first, then the oldest stale autosave. */
-  function nextVictim(protect: string): StorageEvent | undefined {
+  function nextVictim(protect: string, filesOnly: boolean): StorageEvent | undefined {
     const all = allKeys();
     const lru = readLru();
     const files = all.filter((key) => isFileKey(key) && key !== protect);
@@ -109,6 +117,7 @@ export function createStore(backend: KeyValueBackend, options: Options = {}): St
       files.sort((a, b) => lru.indexOf(a) - lru.indexOf(b));
       return { type: 'evicted', key: files[0], reason: 'lru-file' };
     }
+    if (filesOnly) return undefined;
     const threshold = now() - STALE_AUTOSAVE_MS;
     let victim: string | undefined;
     let oldest = Infinity;
@@ -139,7 +148,8 @@ export function createStore(backend: KeyValueBackend, options: Options = {}): St
       return value;
     },
 
-    set(key: string, value: unknown) {
+    set(key: string, value: unknown, setOptions?: SetOptions) {
+      const cache = !!(setOptions && setOptions.cache);
       const raw = JSON.stringify(value);
       for (;;) {
         try {
@@ -147,9 +157,9 @@ export function createStore(backend: KeyValueBackend, options: Options = {}): St
           break;
         } catch (error) {
           if (!isQuotaError(error)) throw error;
-          const victim = nextVictim(key);
+          const victim = nextVictim(key, cache);
           if (!victim) {
-            emit({ type: 'full', key });
+            if (!cache) emit({ type: 'full', key });
             throw storageFullError(key);
           }
           backend.removeItem(PREFIX + victim.key);

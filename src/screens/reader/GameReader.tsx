@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
-import type { Engine, InputRequest, OutputBlock } from '../../engines/engine';
+import type { Engine, EngineKind, InputRequest, OutputBlock } from '../../engines/engine';
+import { loadEngine } from '../../engines/formats';
 import {
   applyOutput,
   EMPTY_TRANSCRIPT,
@@ -22,13 +23,8 @@ import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
 import { ReaderFrame } from './ReaderFrame';
 import { TranscriptNav } from './TranscriptNav';
 import { RestartDialog, RestoreDialog, SaveDialog, type SaveMessage } from './SaveDialogs';
-// The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
-import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
-
-/** `#/play/fixture-z`: the bundled Z-machine fixture game, until real games are downloaded (S3.4). */
-export const FIXTURE_Z_TUID = 'fixture-z';
-const FIXTURE_Z_TITLE = 'The Lamp at Saltmere';
-const FIXTURE_Z_LANGUAGE = 'en';
+/** Chips follow the game's language; English when the catalogue does not know it. */
+const DEFAULT_LANGUAGE = 'en';
 
 /** Paragraphs scanned for noun chips: the latest turns only. */
 const NOUN_PARAGRAPHS = 12;
@@ -104,8 +100,19 @@ type State =
   | { phase: 'playing' }
   | { phase: 'ended' };
 
-/** `language`: the game's language, for the command chips (defaults to the fixture's). */
-export function GameReader({ language }: { language?: string }) {
+interface Props {
+  tuid: string;
+  /** Shown in the top zone until the game draws its status line. */
+  title: string;
+  /** The game's language, for the command chips. */
+  language?: string;
+  kind: EngineKind;
+  /** The story file. */
+  story: Uint8Array;
+}
+
+/** A game in the reader: the engine of its format runs `story`; the session is autosaved under `tuid`. */
+export function GameReader({ tuid, title, language, kind, story }: Props) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [transcript, setTranscript] = useState<Transcript>(EMPTY_TRANSCRIPT);
   const [request, setRequest] = useState<InputRequest | null>(null);
@@ -116,8 +123,7 @@ export function GameReader({ language }: { language?: string }) {
   // The command field has focus: stay on the last page when the virtual keyboard resizes it.
   const [typing, setTyping] = useState(false);
   const engineRef = useRef<Engine | null>(null);
-  const table = useMemo(() => verbTable(language || FIXTURE_Z_LANGUAGE), [language]);
-  const tuid = FIXTURE_Z_TUID;
+  const table = useMemo(() => verbTable(language || DEFAULT_LANGUAGE), [language]);
 
   // The session outside React state, so snapshots read it as the engine is (not as last rendered).
   const transcriptRef = useRef<Transcript>(EMPTY_TRANSCRIPT);
@@ -202,16 +208,12 @@ export function GameReader({ language }: { language?: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    // The engine and the saves are lazy chunks; the story file is fetched alongside them.
-    const story = fetch(fixtureZUrl).then((response) => {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.arrayBuffer();
-    });
-    Promise.all([import('../../engines/zvm/zvmEngine'), import('../../storage/saves'), story])
-      .then(([module, saves, data]) => {
+    // The engine and the saves are lazy chunks.
+    Promise.all([loadEngine(kind), import('../../storage/saves')])
+      .then(([createEngine, saves]) => {
         if (cancelled) return;
         savesRef.current = saves;
-        const engine = module.createZvmEngine();
+        const engine = createEngine();
         engineRef.current = engine;
         engine.onOutput((blocks) => showTranscript(applyOutput(transcriptRef.current, blocks)));
         engine.onInputRequest((req) => {
@@ -226,7 +228,9 @@ export function GameReader({ language }: { language?: string }) {
           setRequest(null);
           setState({ phase: 'failed', message: t('reader.engineError', { message: message }) });
         });
-        return engine.load(data, { columns: COLUMNS }).then(() => {
+        // The engine keeps the buffer: give it a copy that is exactly the story.
+        const data = story.buffer.slice(story.byteOffset, story.byteOffset + story.byteLength);
+        return engine.load(data as ArrayBuffer, { columns: COLUMNS }).then(() => {
           // Resume from the autosave; if it does not restore, the story starts afresh.
           const saved = saves.readAutosave(getStore(), tuid);
           if (!saved || cancelled) return;
@@ -412,7 +416,7 @@ export function GameReader({ language }: { language?: string }) {
         {status.right && <span class="reader__score">{status.right}</span>}
       </span>
     ) : (
-      <span class="reader__title">{FIXTURE_Z_TITLE}</span>
+      <span class="reader__title">{title}</span>
     );
 
   let slot = null;

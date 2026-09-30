@@ -1,7 +1,7 @@
 import { GameScreen } from '../screens/game/GameScreen';
 import { HomeScreen } from '../screens/home/HomeScreen';
 import { LibraryScreen } from '../screens/library/LibraryScreen';
-import { isImmersive, ReaderScreen } from '../screens/reader/ReaderScreen';
+import { ReaderScreen } from '../screens/reader/ReaderScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { useLocale } from '../i18n/i18n';
 import { getStore } from '../storage';
@@ -16,8 +16,6 @@ function Screen({ location }: { location: Location }) {
       return <LibraryScreen query={query} />;
     case 'game':
       return <GameScreen tuid={route.tuid} />;
-    case 'play':
-      return <ReaderScreen tuid={route.tuid} language={query.lang} />;
     case 'settings':
       return <SettingsScreen />;
     default:
@@ -30,7 +28,7 @@ export function App() {
   // Re-render the whole tree when the UI language changes (t() reads the current locale).
   const locale = useLocale();
   const route = location.route;
-  if (route.name === 'play' && isImmersive(route.tuid)) {
+  if (route.name === 'play') {
     // The reader takes the whole screen and shows the top bar itself when its top zone is tapped.
     return (
       <div class="app" lang={locale}>

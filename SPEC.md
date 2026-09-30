@@ -274,8 +274,8 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
 - **Tapping a word** of the text on the last page puts it in the field, or completes and sends a waiting "Take …".
   (Taps on words therefore do not turn the page there; swipes and the margins still do.)
 - Chip labels and commands follow the *game* language (EN/FR verified against the Inform libraries; ES/DE/IT stubs to
-  verify), not the UI language; dialog titles and hints follow the UI language. Until the catalogue gives each game
-  its language (S3.3), `?lang=xx` on a fixture route overrides it.
+  verify), not the UI language; dialog titles and hints follow the UI language. The game language comes from the
+  catalogue (English when unknown); `?lang=xx` on the route overrides it.
 
 **Choice games (Ink / Twine)**
 
@@ -481,8 +481,14 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
   CORS-enabled mirror; (2) the pipeline mirrors files whose licence allows redistribution into `public/games/`
   (freeware/open licences only, recorded in the index); (3) a tiny, documented CORS relay (e.g. Cloudflare
   Worker) — last resort because it breaks "100 % static".
-- Files are cached in localStorage only if small (< 512 KB, LRU, see §6); larger files are re-downloaded
-  per session on Kindle.
+- Download (S3.4): XHR `arraybuffer` with a progress page (KB received, of the total when known; Cancel), abandoned
+  after **30 s without receiving anything** (not a fixed total time: Wi-Fi can be slow). A zip is unzipped client-side
+  (the `primary` file the catalogue names). The file must look like a story for its engine (Blorb or the format's
+  header). Failures show an error page: Try again, Open on IFDB, Report a problem (a prefilled GitHub issue). Formats
+  whose engine has not shipped yet say "Not playable yet" without downloading.
+- Files are cached in localStorage only if small (< 512 KB after unzipping, deflated, keyed by file URL so a new
+  version is re-downloaded; LRU, see §6); larger files are re-downloaded per session on Kindle. Caching a file only
+  ever evicts other cached files, never saves.
 
 ### 5.6 Attribution & terms
 
