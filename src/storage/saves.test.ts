@@ -13,6 +13,7 @@ import {
   readProgress,
   readSlot,
   SLOT_COUNT,
+  TAIL_BLOCKS,
   TAIL_CHARS,
   transcriptTail,
   updateProgress,
@@ -166,15 +167,23 @@ describe('game saves', () => {
     expect(readAutosave(store, TUID)).toEqual(fake(2));
   });
 
-  it('keeps a transcript tail: whole last paragraphs up to the character budget', () => {
+  it('keeps a transcript tail: whole last paragraphs up to the block and character budgets', () => {
     const paragraph = (n: number, length: number): TextRun[] => [
       { text: String(n).padEnd(length, '.'), style: 'normal' },
     ];
+    const blank: TextRun[] = [{ text: '', style: 'normal' }];
+    // Short paragraphs separated by blank lines: capped by the number of blocks, blank lines not counted.
+    const short = [];
+    for (let i = 0; i < 300; i++) short.push(paragraph(i, 20), blank);
+    let tail = transcriptTail(short);
+    expect(tail[tail.length - 1]).toBe(short[599]);
+    expect(tail.filter((runs) => runs[0].text).length).toBe(TAIL_BLOCKS);
+    // Long paragraphs: capped by the characters.
     const many = [];
-    for (let i = 0; i < 300; i++) many.push(paragraph(i, 100));
-    const tail = transcriptTail(many);
+    for (let i = 0; i < 300; i++) many.push(paragraph(i, 400));
+    tail = transcriptTail(many);
     expect(tail[tail.length - 1]).toBe(many[299]);
-    expect(tail.length).toBe(TAIL_CHARS / 100);
+    expect(tail.length).toBe(TAIL_CHARS / 400);
     // A single paragraph longer than the budget is still kept.
     expect(transcriptTail([paragraph(1, 10), paragraph(2, TAIL_CHARS * 2)])).toHaveLength(1);
     expect(transcriptTail([])).toEqual([]);

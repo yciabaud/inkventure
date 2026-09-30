@@ -273,6 +273,8 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
   (OpenDyslexic, 128 KB as woff) does not fit the font budget (§10), which the owner decided not to raise.
 - Save… (named slots, max 5 + autosave) · Restore… · Undo · Restart (confirm)
 - Transcript (full, paginated, read-only) · Help (how to play, common commands) · Game info
+  The Transcript view pages through the whole session (after a reload: the tail kept with the autosave), opens on the
+  latest turn and has « Start, End » and "Back to the game" under every page; no command bar, taps on words do nothing.
 - Refresh screen
 
 **Status line**: location and score/turns from the game (Z-machine status line / Glk status window);
@@ -349,7 +351,8 @@ runs synchronously until it waits for input.
   can only be resumed by the game's own `@restore`. The game's SAVE / RESTORE commands are cancelled: saves go through
   the reader menu.
 - A turn begins when the game waits for a command: its state is snapshotted (after the page is drawn) for Undo and
-  written as the autosave with the transcript tail (≈ 8,000 characters, enough for the last page), and the progress
+  written as the autosave with the transcript tail (the last 200 paragraphs with text, at most ≈ 20,000 characters),
+  and the progress
   record is updated. Opening the game resumes from the autosave on the page of the last command. Restoring a slot
   resets Undo; Restart asks first, clears the autosave and keeps the named slots.
 - A save is one storage entry: when the storage is full the write fails as a whole, the previous save stays intact and

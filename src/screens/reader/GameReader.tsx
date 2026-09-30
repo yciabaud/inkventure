@@ -20,6 +20,7 @@ import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
 import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
 import { ReaderFrame } from './ReaderFrame';
+import { TranscriptNav } from './TranscriptNav';
 import { RestartDialog, RestoreDialog, SaveDialog, type SaveMessage } from './SaveDialogs';
 // The fixture game (tests/fixtures/zmachine), served with the app for `#/play/fixture-z`.
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
@@ -94,6 +95,9 @@ function lastTurnFocus(transcript: Transcript): number {
 
 type Dialogs = 'save' | 'restore' | 'restart' | null;
 
+/** The game, or the Transcript view (the whole session, read-only). */
+type View = 'game' | 'transcript';
+
 type State =
   | { phase: 'loading' }
   | { phase: 'failed'; message: string }
@@ -124,6 +128,7 @@ export function GameReader({ language }: { language?: string }) {
   const restoringRef = useRef(false);
   const [canUndo, setCanUndo] = useState(false);
   const [dialog, setDialog] = useState<Dialogs>(null);
+  const [view, setView] = useState<View>('game');
   const [message, setMessage] = useState<SaveMessage>(null);
   const [slots, setSlots] = useState<Array<SlotInfo | null>>([]);
   // Name proposed in the Save dialog: the location, else the turn.
@@ -325,6 +330,7 @@ export function GameReader({ language }: { language?: string }) {
     const saves = savesRef.current;
     setDialog(null);
     if (!engine) return;
+    setView('game');
     turnRef.current = 0;
     undoStack.reset();
     setCanUndo(false);
@@ -397,14 +403,17 @@ export function GameReader({ language }: { language?: string }) {
   if (state.phase === 'failed') return <ErrorPage message={state.message} />;
 
   const status = splitStatus(transcript.status);
-  const heading = status.left ? (
-    <span class="reader__status">
-      <span class="reader__title">{status.left}</span>
-      {status.right && <span class="reader__score">{status.right}</span>}
-    </span>
-  ) : (
-    <span class="reader__title">{FIXTURE_Z_TITLE}</span>
-  );
+  const heading =
+    view === 'transcript' ? (
+      <span class="reader__title">{t('transcript.title')}</span>
+    ) : status.left ? (
+      <span class="reader__status">
+        <span class="reader__title">{status.left}</span>
+        {status.right && <span class="reader__score">{status.right}</span>}
+      </span>
+    ) : (
+      <span class="reader__title">{FIXTURE_Z_TITLE}</span>
+    );
 
   let slot = null;
   if (state.phase === 'ended') {
@@ -467,14 +476,35 @@ export function GameReader({ language }: { language?: string }) {
                 { label: t('reader.restore'), onSelect: () => openSlots('restore') },
                 { label: t('reader.undo'), onSelect: undo, disabled: !canUndo },
                 { label: t('reader.restart'), onSelect: () => setDialog('restart') },
+                view === 'transcript'
+                  ? { label: t('transcript.close'), onSelect: () => setView('game') }
+                  : {
+                      label: t('reader.transcript'),
+                      onSelect: () => {
+                        setTyping(false);
+                        setView('transcript');
+                      },
+                    },
               ]
         }
       >
         {(closeBar, settings) =>
           state.phase === 'loading' ? (
             <p class="reader__loading ui-font">{t('reader.loading')}</p>
+          ) : view === 'transcript' ? (
+            <PagedText
+              key="transcript"
+              blocks={blocks}
+              // Opens on the last page: the latest turns.
+              focus={blocks.length}
+              textStyle={textStyle(settings)}
+              layoutKey={settingsKey(settings)}
+              interceptTap={closeBar}
+              pageSlot={(nav) => <TranscriptNav nav={nav} onClose={() => setView('game')} />}
+            />
           ) : (
             <PagedText
+              key="game"
               blocks={blocks}
               focus={focus}
               lastPageSlot={slot}

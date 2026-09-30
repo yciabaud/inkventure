@@ -7,9 +7,12 @@ import type { Store } from './store';
 
 export const SLOT_COUNT = 5;
 
-/** The transcript tail kept with a save: enough text for the last page, whatever the font size. */
-export const TAIL_CHARS = 8000;
-export const TAIL_PARAGRAPHS = 80;
+/**
+ * The transcript tail kept with a save (the Transcript view after a reload): the last TAIL_BLOCKS paragraphs with text,
+ * up to TAIL_CHARS characters, far more than the last page needs at any font size.
+ */
+export const TAIL_CHARS = 20000;
+export const TAIL_BLOCKS = 200;
 
 /** What a save holds, uncompressed. */
 export interface GameSnapshot {
@@ -50,14 +53,21 @@ export interface Progress {
   [other: string]: unknown;
 }
 
-/** Keeps the last paragraphs, up to TAIL_CHARS characters (at least one paragraph) and TAIL_PARAGRAPHS. */
+/**
+ * Keeps the last paragraphs: up to TAIL_BLOCKS with text (blank lines between them are free) and TAIL_CHARS
+ * characters, but at least one paragraph.
+ */
 export function transcriptTail(paragraphs: TextRun[][]): TextRun[][] {
   let chars = 0;
+  let blocks = 0;
   let from = paragraphs.length;
-  while (from > 0 && paragraphs.length - from < TAIL_PARAGRAPHS) {
+  while (from > 0) {
     const runs = paragraphs[from - 1];
-    for (let i = 0; i < runs.length; i++) chars += runs[i].text.length;
-    if (chars > TAIL_CHARS && from < paragraphs.length) break;
+    let text = '';
+    for (let i = 0; i < runs.length; i++) text += runs[i].text;
+    chars += text.length;
+    if (text.trim()) blocks++;
+    if ((chars > TAIL_CHARS || blocks > TAIL_BLOCKS) && from < paragraphs.length) break;
     from--;
   }
   return paragraphs.slice(from);

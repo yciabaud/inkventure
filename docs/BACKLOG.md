@@ -42,7 +42,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |
 | [S1.4](stories/S1.4-command-bar-chips.md) | Command bar, shortcut chips & history | E1 | M1 | S1.3 | done |
 | [S1.5](stories/S1.5-saves-autosave-undo.md) | Autosave, resume, save slots & undo | E1 | M1 | S1.3, S0.6 | done |
-| [S1.6](stories/S1.6-status-line-transcript.md) | Status line & transcript view | E1 | M1 | S1.3 | todo |
+| [S1.6](stories/S1.6-status-line-transcript.md) | Status line & transcript view | E1 | M1 | S1.3 | done |
 | [S1.7](stories/S1.7-engine-glulx.md) | Glulx support (Quixe) & performance flag | E1 | M4 | S1.5, S1.4 | todo |
 | [S1.8](stories/S1.8-engine-ink.md) | Ink support (inkjs) & choice buttons | E1 | M4 | S1.5 | todo |
 | [S1.9](stories/S1.9-engine-twine.md) | Twine support in a sandboxed iframe (experimental) | E1 | M4 | S1.1, S3.4 | todo |
