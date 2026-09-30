@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryBackend } from './backend';
-import { addToHome, getHome, isInHome, removeFromHome } from './home';
+import { addToHome, getHome, inProgressTuids, isInHome, removeFromHome } from './home';
 import { keys } from './keys';
 import { createStore, isStorageFullError } from './store';
 
@@ -58,5 +58,15 @@ describe('My adventures (ik:v1:home)', () => {
       error = e;
     }
     expect(isStorageFullError(error)).toBe(true);
+  });
+
+  it('lists the games in progress: progress record, autosave or in My adventures', () => {
+    const store = createStore(new MemoryBackend());
+    expect(inProgressTuids(store)).toEqual({});
+    store.set(keys.progress('started'), { turns: 3 });
+    store.set(keys.autosave('saved'), { v: 1 });
+    store.set(keys.save('slotonly', '1'), { v: 1 });
+    addToHome(store, lamp, 1000);
+    expect(inProgressTuids(store)).toEqual({ started: true, saved: true, lamp: true });
   });
 });

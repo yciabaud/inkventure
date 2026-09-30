@@ -28,6 +28,8 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await page.goto('/');
   await expectScreen(page, '#/home', 'Home');
 
+  await expect(page.getByRole('link', { name: 'How to play' })).toHaveAttribute('href', '#/help');
+  await page.goto('/#/help');
   await expect(page.getByRole('link', { name: 'Play the test adventure' })).toHaveAttribute(
     'href',
     '#/play/fixture-z',

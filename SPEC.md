@@ -166,7 +166,10 @@ Purpose: get back into a game in one tap, or start a recommended one.
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
   one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
-- Empty state (first launch): short welcome text, "How to play" link, Featured shelf first.
+- Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
+  paged guide that also offers the test adventure), Featured shelf first.
+- The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–204 px tall) and as many
+  cards as fit side by side make a page. It loads only `catalog/featured.json`, not the index.
 - Shelves are paginated horizontally with explicit ‹ › buttons, never scrolled.
 
 ### 3.4 Library (`#/library`)

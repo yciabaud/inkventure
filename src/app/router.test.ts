@@ -6,6 +6,7 @@ describe('parseHash', () => {
     expect(parseHash('#/home').route).toEqual({ name: 'home' });
     expect(parseHash('#/library').route).toEqual({ name: 'library' });
     expect(parseHash('#/settings').route).toEqual({ name: 'settings' });
+    expect(parseHash('#/help').route).toEqual({ name: 'help' });
   });
 
   it('parses routes with a TUID', () => {
