@@ -1,0 +1,14 @@
+{
+  "comment": "SPEC §3.4 \"Start here\": IFDB tags (case-insensitive) that mark a newcomer-friendly game; such games get `st: 1` in the index. Curated starters in content/featured.json are added by the app.",
+  "tags": [
+    "recommended for beginners",
+    "good for beginners",
+    "for beginners",
+    "beginner",
+    "beginner-friendly",
+    "beginner friendly",
+    "newcomer friendly",
+    "newbie friendly",
+    "good first game"
+  ]
+}

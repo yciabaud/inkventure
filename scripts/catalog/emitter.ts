@@ -1,6 +1,7 @@
 // Catalogue emitter and validation (SPEC §5.2 steps 4–5; story S2.3). Pure: turns the resolved games into the static
 // files the app loads (meta.json, index-<n>.json shards of compact rows, games/<tuid>.json details) and checks them.
 import type { ResolvedGame, StoryFormat } from './resolver.ts';
+import starterTags from './starter-tags.json' with { type: 'json' };
 
 /** Bump when the shape of the published files changes, so the app can refuse a catalogue it cannot read. */
 export const CATALOG_VERSION = 1;
@@ -42,6 +43,10 @@ export interface IndexRow {
   c?: 1;
   /** slow on e-readers (1) */
   sl?: 1;
+  /** newcomer-friendly (1): an IFDB tag of starter-tags.json; the app adds the curated starters */
+  st?: 1;
+  /** forgiveness (Merciful…Cruel), reserved: not emitted yet */
+  fg?: string;
 }
 
 /** Full detail of one game, loaded when its page opens. */
@@ -81,6 +86,13 @@ function round(value: number, digits: number): number {
   return Math.round(value * factor) / factor;
 }
 
+const STARTER_TAGS = starterTags.tags.map((tag) => tag.toLowerCase());
+
+/** Whether IFDB tags mark a newcomer-friendly game (SPEC §3.4 "Start here"). */
+export function isStarter(tags: string[]): boolean {
+  return tags.some((tag) => STARTER_TAGS.indexOf(tag.toLowerCase()) >= 0);
+}
+
 export function indexRow(game: ResolvedGame): IndexRow {
   const row: IndexRow = { t: game.tuid, n: game.title, a: game.author, f: game.format };
   if (game.year !== undefined) row.y = game.year;
@@ -94,6 +106,7 @@ export function indexRow(game: ResolvedGame): IndexRow {
   if (game.playtimeMinutes) row.p = game.playtimeMinutes;
   if (game.cover) row.c = 1;
   if (game.slow) row.sl = 1;
+  if (isStarter(game.tags)) row.st = 1;
   return row;
 }
 
@@ -156,7 +169,7 @@ export function rowProblems(row: unknown): string[] {
   const problems: string[] = [];
   if (!row || typeof row !== 'object') return ['not an object'];
   const r = row as Record<string, unknown>;
-  const known = ['t', 'n', 'a', 'y', 'l', 'g', 'f', 'r', 'rc', 's', 'p', 'fg', 'c', 'sl'];
+  const known = ['t', 'n', 'a', 'y', 'l', 'g', 'f', 'r', 'rc', 's', 'p', 'fg', 'c', 'sl', 'st'];
   for (const key of Object.keys(r)) if (known.indexOf(key) < 0) problems.push('unknown key ' + key);
   if (typeof r.t !== 'string' || !TUID.test(r.t)) problems.push('t: TUID expected');
   if (typeof r.n !== 'string' || !r.n) problems.push('n: title expected');
@@ -176,7 +189,8 @@ export function rowProblems(row: unknown): string[] {
       problems.push(key);
   }
   if (r.s !== undefined && typeof r.s !== 'number') problems.push('s: number');
-  for (const key of ['c', 'sl'])
+  if (r.fg !== undefined && typeof r.fg !== 'string') problems.push('fg: string');
+  for (const key of ['c', 'sl', 'st'])
     if (r[key] !== undefined && r[key] !== 1) problems.push(key + ': 1');
   return problems;
 }

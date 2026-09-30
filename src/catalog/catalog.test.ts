@@ -125,10 +125,23 @@ describe('loader', () => {
       'catalog/meta.json',
       'catalog/index-0.json',
       'catalog/index-1.json',
+      'catalog/featured.json',
     ]);
     expect(catalog.rows.map((r) => r.t)).toEqual(['a', 'b', 'c']);
+    expect(catalog.rows.filter((r) => r.st)).toEqual([]);
     expect(catalog.keys[0]).toBe(' alpha someone ');
     expect(progress).toEqual(['0/2', '1/2', '2/2']);
+  });
+
+  it('flags the starters of featured.json, in every locale', async () => {
+    const featured = {
+      version: 1,
+      built: 'x',
+      locales: { en: [{ t: 'a', st: 1 }, { t: 'b' }], fr: [{ t: 'c', st: 1 }] },
+    };
+    fakeXhr({ ...files, 'catalog/featured.json': { status: 200, body: JSON.stringify(featured) } });
+    const catalog = await fetchCatalog();
+    expect(catalog.rows.map((r) => r.st)).toEqual([1, undefined, 1]);
   });
 
   it('fails on a missing shard, an unsupported version or invalid JSON', async () => {

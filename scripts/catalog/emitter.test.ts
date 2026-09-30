@@ -34,6 +34,13 @@ const BUILT = '2026-09-30T00:00:00.000Z';
 const BUDGET = 150 * 1024;
 
 describe('index rows', () => {
+  it('flags the games tagged newcomer-friendly (starter-tags.json), ignoring case', () => {
+    expect(indexRow(game('a', 'A', { tags: ['Recommended for Beginners'] })).st).toBe(1);
+    expect(indexRow(game('b', 'B', { tags: ['introcomp', 'easy'] })).st).toBeUndefined();
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'zcode', st: 1 })).toEqual([]);
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'zcode', st: true })).toEqual(['st: 1']);
+  });
+
   it('uses short keys and leaves unknown values out', () => {
     const row = indexRow(
       game('abc', 'Title', {

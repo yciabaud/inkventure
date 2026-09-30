@@ -33,7 +33,10 @@ export function syntheticCatalog(count: number, shardSize = 25) {
 }
 
 /** Serves `catalog` for catalog/*.json and blocks IFDB cover thumbnails (no network in tests). */
-export async function routeCatalog(page: Page, catalog = syntheticCatalog(40)) {
+export async function routeCatalog(
+  page: Page,
+  catalog: { meta: unknown; shards: Record<string, unknown> } = syntheticCatalog(40),
+) {
   await page.route('https://ifdb.org/**', (route) => route.abort());
   await page.route(/\/catalog\/[^/]+\.json$/, (route) => {
     const name = new URL(route.request().url()).pathname.split('/').pop()!;
