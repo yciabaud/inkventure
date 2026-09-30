@@ -1,8 +1,7 @@
 // Settings (SPEC §3.1, §6, §7; story S5.1): the UI language on the first page, then one page per section (reading
 // defaults, data and storage, about) so that nothing scrolls.
-import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
-import { formatHash, navigate } from '../../app/router';
+import { navigate } from '../../app/router';
 import {
   detectLocale,
   formatDate,
@@ -16,12 +15,12 @@ import {
 import { changeLocale, initLocale } from '../../i18n/locale';
 import { getDefaults, setDefaults, textStyle, type ReaderSettings } from '../../reader/settings';
 import { getPrefs, getStore, type UsageGroup } from '../../storage';
-import { Button } from '../../ui/Button';
+import { Button, LinkButton } from '../../ui/Button';
 import { Dialog } from '../../ui/Dialog';
 import { PagedParagraphs } from '../../ui/PagedParagraphs';
 import { Choice, ReaderSettingsForm } from '../reader/TextSettings';
-
-type Section = 'reading' | 'data' | 'about';
+import { SectionPage, sectionHref, type Section } from './SectionPage';
+import { ExportPage, ImportPage } from './TransferPages';
 
 const SECTIONS: Array<{ name: Section; label: MessageKey }> = [
   { name: 'reading', label: 'settings.reading' },
@@ -48,25 +47,6 @@ export function formatSize(chars: number): string {
   const kb = chars / 1024;
   if (kb < 1024) return t('size.kb', { n: Math.ceil(kb) });
   return t('size.mb', { n: formatNumber(kb / 1024, getLocale(), 1) });
-}
-
-function sectionHref(section?: Section): string {
-  return formatHash({ name: 'settings' }, section ? { s: section } : {});
-}
-
-/** A section page: its title follows a "‹" back to the first page of Settings. */
-function SectionPage({ title, children }: { title: string; children: ComponentChildren }) {
-  return (
-    <div class="screen settings-page ui-font">
-      <h1 class="screen__title settings-page__title">
-        <a class="settings-page__back" href={sectionHref()} aria-label={t('settings.back')}>
-          ‹
-        </a>
-        <span>{title}</span>
-      </h1>
-      {children}
-    </div>
-  );
 }
 
 function savedLanguage(): LanguageChoice {
@@ -160,6 +140,14 @@ function Data() {
           <li>{t('settings.usageOther', { size: formatSize(usage.other.size) })}</li>
         )}
       </ul>
+      <div class="saves__buttons settings-page__transfer">
+        <LinkButton variant="secondary" href={sectionHref('export')}>
+          {t('transfer.export')}
+        </LinkButton>
+        <LinkButton variant="secondary" href={sectionHref('import')}>
+          {t('transfer.import')}
+        </LinkButton>
+      </div>
       <div class="settings-page__danger">
         <p class="settings-page__hint">{t('settings.resetHint')}</p>
         <Button variant="secondary" onClick={() => setStep(1)}>
@@ -232,6 +220,10 @@ export function SettingsScreen({ query = {} }: { query?: Record<string, string> 
       return <Data />;
     case 'about':
       return <About />;
+    case 'export':
+      return <ExportPage />;
+    case 'import':
+      return <ImportPage />;
     default:
       return <Home />;
   }

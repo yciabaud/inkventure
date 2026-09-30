@@ -558,9 +558,17 @@ All keys are prefixed and versioned:
 
 ### 6.3 Export / import
 
-- Settings → *Export my data*: produces a text code (compressed JSON of prefs, home, progress and saves, base64,
-  chunked into groups for readability) and a downloadable `.txt` where downloads work.
-- *Import*: paste a code; preview what will be replaced; merge or overwrite.
+- Settings → Data → *Export my data*: produces a text code (compressed JSON of prefs, home, progress and saves, base64,
+  chunked into groups for readability) and a downloadable `.txt` where downloads work. Cached story files are not
+  exported. The code starts with a header `INKVENTURE <format version> <CRC-32>`; the storage schema version travels
+  inside.
+- *Import*: paste a code (or open the `.txt`); it is checked (format version, checksum, schema) and a preview lists what
+  it holds and how many named saves of this device each choice replaces; then merge or overwrite.
+  - *Merge*: this device's settings win (the code only adds missing ones); My adventures is the union; a progress
+    record, autosave or named slot present on both sides is the newer one (`lastPlayed` / `date`, this device's on a
+    tie).
+  - *Replace everything*: this device's prefs, home, progress and saves become exactly the code's.
+  - All or nothing: if the storage fills up half-way, every changed entry is put back and nothing is imported.
 - Purpose: move saves between devices or protect against the browser clearing its storage.
 
 ---

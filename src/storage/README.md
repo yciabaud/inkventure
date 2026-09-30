@@ -14,4 +14,6 @@ This is the **only** place allowed to touch `localStorage` (enforced by ESLint).
   the same reason.
 - `files.ts`: cached story files (< 512 KB, keyed by URL), written with `set(key, value, { cache: true })`, which only
   evicts other cached files and raises no `full` event; imported directly, lazily.
+- `transfer.ts`: export / import code (SPEC §6.3): `collectBackup` + `encodeBackup`, `decodeBackup`, `planImport`
+  (merge / overwrite rules) and `applyImport` (all or nothing); imported directly, lazily.
 - `migrations.ts`: append to `MIGRATIONS` when the layout changes.

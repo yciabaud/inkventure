@@ -1762,3 +1762,67 @@ a.menu__item {
   padding-top: 16px;
   border-top: 2px solid #000;
 }
+
+/* Export / import (S5.2): the code in a fixed-height box (the page itself never scrolls). */
+.settings-page__transfer {
+  margin: 0 0 16px;
+}
+
+.transfer__code {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 144px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  line-height: 1.4;
+  resize: none;
+}
+
+.transfer .saves__buttons {
+  margin-top: 8px;
+}
+
+.transfer__file {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The native file input stays in the label (so a tap opens it) but is not drawn. */
+.transfer__file input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.transfer__contents {
+  margin-bottom: 16px;
+}
+
+.transfer__choice {
+  margin-bottom: 8px;
+}
+
+.transfer__choice .settings-page__hint {
+  margin-top: 4px;
+}
+
+.transfer__message {
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.transfer__message--error {
+  padding-left: 12px;
+  border-left: 8px solid #000;
+}

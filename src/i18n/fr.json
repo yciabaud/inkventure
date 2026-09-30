@@ -239,6 +239,60 @@
   "settings.about": "À propos",
   "settings.version": "Version {commit}, compilée le {date}",
   "settings.versionDev": "Version de développement",
+  "transfer.export": "Exporter mes données",
+  "transfer.import": "Importer",
+  "transfer.exportTitle": "Exporter mes données",
+  "transfer.exportHint": "Ce code contient vos réglages, Mes aventures, votre progression et vos parties sauvegardées. Copiez-le ou enregistrez-le dans un fichier, puis importez-le dans Inkventure sur un autre appareil.",
+  "transfer.code": "Code",
+  "transfer.preparing": "Préparation du code…",
+  "transfer.codeLength": {
+    "one": "{count} caractère.",
+    "other": "{count} caractères."
+  },
+  "transfer.copy": "Copier",
+  "transfer.download": "Enregistrer un fichier",
+  "transfer.copied": "Copié. Collez-le en lieu sûr ou sur votre autre appareil.",
+  "transfer.copyFailed": "Copie impossible : sélectionnez le code et copiez-le à la main.",
+  "transfer.loadFailed": "Impossible de charger cette page. Vérifiez votre connexion et réessayez.",
+  "transfer.importTitle": "Importer des données",
+  "transfer.importHint": "Collez un code exporté depuis Inkventure, ou ouvrez le fichier enregistré.",
+  "transfer.paste": "Collez le code ici",
+  "transfer.check": "Vérifier le code",
+  "transfer.openFile": "Ouvrir un fichier…",
+  "transfer.fileFailed": "Impossible de lire ce fichier.",
+  "transfer.errorEmpty": "Collez d’abord un code.",
+  "transfer.errorFormat": "Ce n’est pas un code Inkventure.",
+  "transfer.errorChecksum": "Ce code est abîmé ou incomplet. Copiez-le de nouveau, en entier.",
+  "transfer.errorNewer": "Ce code vient d’une version plus récente d’Inkventure. Rechargez la page et réessayez.",
+  "transfer.codeFrom": "Code créé le {date} :",
+  "transfer.adventures": {
+    "one": "{count} aventure",
+    "other": "{count} aventures"
+  },
+  "transfer.saves": {
+    "one": "{count} partie sauvegardée",
+    "other": "{count} parties sauvegardées"
+  },
+  "transfer.autosaves": {
+    "one": "{count} partie en cours",
+    "other": "{count} parties en cours"
+  },
+  "transfer.settings": "Vos réglages",
+  "transfer.nothing": "Rien à importer",
+  "transfer.merge": "Fusionner",
+  "transfer.mergeHint": "Ajoute les jeux du code à cet appareil ; si une sauvegarde existe des deux côtés, la plus récente est gardée.",
+  "transfer.mergeReplaces": {
+    "one": "{count} partie sauvegardée ici sera remplacée.",
+    "other": "{count} parties sauvegardées ici seront remplacées."
+  },
+  "transfer.overwrite": "Tout remplacer",
+  "transfer.overwriteHint": "Les réglages, Mes aventures, la progression et les sauvegardes de cet appareil deviennent ceux du code.",
+  "transfer.overwriteLoses": {
+    "one": "{count} partie sauvegardée ici sera perdue.",
+    "other": "{count} parties sauvegardées ici seront perdues."
+  },
+  "transfer.full": "Pas assez de place pour importer ce code : rien n’a été modifié. Libérez de l’espace et réessayez.",
+  "transfer.failed": "Ce code n’a pas pu être importé : rien n’a été modifié.",
   "about.intro": "Inkventure permet de jouer sur liseuse aux fictions interactives d’IFDB. C’est un logiciel libre et gratuit, sous licence MIT.",
   "about.ifdb": "Données du catalogue : IFDB, l’Interactive Fiction Database (ifdb.org). Les couvertures sont affichées depuis IFDB. Chaque jeu appartient à ses auteurs : voir sa page IFDB pour ses conditions.",
   "about.archive": "Les fichiers de jeu sont téléchargés depuis l’IF Archive (ifarchive.org), hébergée par l’Interactive Fiction Technology Foundation.",

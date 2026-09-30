@@ -239,6 +239,60 @@
   "settings.about": "About",
   "settings.version": "Version {commit}, built on {date}",
   "settings.versionDev": "Development version",
+  "transfer.export": "Export my data",
+  "transfer.import": "Import data",
+  "transfer.exportTitle": "Export my data",
+  "transfer.exportHint": "This code holds your settings, My adventures, progress and saved games. Copy it or save it as a file, then import it in Inkventure on another device.",
+  "transfer.code": "Code",
+  "transfer.preparing": "Preparing the code…",
+  "transfer.codeLength": {
+    "one": "{count} character.",
+    "other": "{count} characters."
+  },
+  "transfer.copy": "Copy",
+  "transfer.download": "Save as a file",
+  "transfer.copied": "Copied. Paste it somewhere safe or on your other device.",
+  "transfer.copyFailed": "Could not copy: select the code and copy it by hand.",
+  "transfer.loadFailed": "Could not load this page. Check your connection and try again.",
+  "transfer.importTitle": "Import data",
+  "transfer.importHint": "Paste a code exported from Inkventure, or open the file you saved.",
+  "transfer.paste": "Paste the code here",
+  "transfer.check": "Check the code",
+  "transfer.openFile": "Open a file…",
+  "transfer.fileFailed": "Could not read this file.",
+  "transfer.errorEmpty": "Paste a code first.",
+  "transfer.errorFormat": "This is not an Inkventure code.",
+  "transfer.errorChecksum": "This code is damaged or incomplete. Copy it again, in full.",
+  "transfer.errorNewer": "This code comes from a newer version of Inkventure. Refresh the page and try again.",
+  "transfer.codeFrom": "Code made on {date}:",
+  "transfer.adventures": {
+    "one": "{count} adventure",
+    "other": "{count} adventures"
+  },
+  "transfer.saves": {
+    "one": "{count} saved game",
+    "other": "{count} saved games"
+  },
+  "transfer.autosaves": {
+    "one": "{count} game in progress",
+    "other": "{count} games in progress"
+  },
+  "transfer.settings": "Your settings",
+  "transfer.nothing": "Nothing to import",
+  "transfer.merge": "Merge",
+  "transfer.mergeHint": "Adds the code’s games to this device; when both have the same save, the newer one is kept.",
+  "transfer.mergeReplaces": {
+    "one": "{count} saved game here will be replaced.",
+    "other": "{count} saved games here will be replaced."
+  },
+  "transfer.overwrite": "Replace everything",
+  "transfer.overwriteHint": "This device’s settings, My adventures, progress and saves become the code’s.",
+  "transfer.overwriteLoses": {
+    "one": "{count} saved game here will be lost.",
+    "other": "{count} saved games here will be lost."
+  },
+  "transfer.full": "Not enough space to import this code: nothing was changed. Free some space and try again.",
+  "transfer.failed": "This code could not be imported: nothing was changed.",
   "about.intro": "Inkventure lets you play interactive fiction from IFDB on an e-reader. It is free, open-source software under the MIT licence.",
   "about.ifdb": "Catalogue data from IFDB, the Interactive Fiction Database (ifdb.org). Cover art is shown from IFDB. Each game belongs to its authors: see its IFDB page for its terms.",
   "about.archive": "Game files are downloaded from the IF Archive (ifarchive.org), hosted by the Interactive Fiction Technology Foundation.",
