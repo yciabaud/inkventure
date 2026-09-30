@@ -20,6 +20,8 @@ export const SWIPE_MIN = 40;
  * out again when the fonts arrive.
  */
 export const FONT_WAIT_MS = 2000;
+/** Consecutive self-corrections allowed for one layout (see `checkFit`), so a measuring bug cannot loop. */
+const MAX_REFITS = 2;
 /** A swipe is followed by a click on the same element; ignore it. */
 const CLICK_AFTER_SWIPE_MS = 600;
 
@@ -52,6 +54,8 @@ export class PageTurner {
   private firstLayout: 'pending' | 'waiting' | 'done' = 'pending';
   /** Metrics of the blocks last measured, reused for unchanged blocks at the same width (a turn adds a few blocks). */
   private cache: { width: number; blocks: ReaderBlock[]; metrics: BlockMetrics[] } | null = null;
+  /** Layout the last self-corrections were for, and how many were made. */
+  private refits = { key: '', count: 0 };
 
   constructor(private readonly onChange: (view: PageView) => void) {}
 
@@ -135,6 +139,27 @@ export class PageTurner {
       cache && from > 0 ? cache.metrics.slice(0, from).concat(measured.metrics) : measured.metrics;
     this.cache = { width: width, blocks: blocks, metrics: metrics };
     return { metrics: metrics, fonts: measured.fonts };
+  }
+
+  /**
+   * Called after the page is drawn: if its text overflows the text area, the page was laid out with other metrics than
+   * the ones it is drawn with (typically a web font that finished loading in between), so measure again. Bounded by
+   * MAX_REFITS per layout.
+   */
+  checkFit(): void {
+    const area = this.area;
+    const text = this.text;
+    if (!area || !text || this.firstLayout !== 'done' || !this.pages.length) return;
+    const last = text.lastElementChild;
+    if (!last) return;
+    const style = window.getComputedStyle(area);
+    const bottom = area.getBoundingClientRect().bottom - parseFloat(style.paddingBottom);
+    if (last.getBoundingClientRect().bottom - bottom <= 0.5) return;
+    const key = this.laidOut + ':' + this.blocks.length + ':' + this.index;
+    if (this.refits.key !== key) this.refits = { key: key, count: 0 };
+    if (this.refits.count >= MAX_REFITS) return;
+    this.refits.count++;
+    this.remeasure();
   }
 
   /** Measures everything again (fonts changed). */
@@ -264,11 +289,18 @@ export class PageTurner {
     // The text area also changes size without a window resize (top bar, notices, later the keyboard).
     const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(relayout) : null;
     if (observer) observer.observe(area);
-    // Web fonts arrive after the first layout and change every line.
+    // Web fonts arrive after the first layout and change every line. WebKit may resolve `ready` early and fire
+    // `loadingdone` late or never, so each face's own `loaded` promise is watched too.
     const fonts = document.fonts;
     if (fonts) {
       if (fonts.addEventListener) fonts.addEventListener('loadingdone', relayoutAll);
       if (fonts.ready) fonts.ready.then(relayoutAll);
+      if (typeof fonts.forEach === 'function') {
+        fonts.forEach((face) => {
+          if (face.status !== 'loaded' && face.loaded)
+            face.loaded.then(relayoutAll, () => undefined);
+        });
+      }
     }
 
     this.detach = () => {
