@@ -7,6 +7,8 @@ interface Props {
   hrefFor?: (page: number) => string;
   /** Or buttons, for paging that stays out of the history (a panel's options). */
   onPage?: (page: number) => void;
+  /** "‹ 2 / 5 ›" with 48 px buttons, for a shelf header (the labels stay for screen readers). */
+  compact?: boolean;
 }
 
 function Step({
@@ -15,35 +17,36 @@ function Step({
   rel,
   hrefFor,
   onPage,
+  label,
   children,
-}: Props & { enabled: boolean; rel: string; children: string }) {
+}: Props & { enabled: boolean; rel: string; label?: string; children: string }) {
   if (!enabled) {
     return (
-      <span class="pager__btn pager__btn--disabled" aria-disabled="true">
+      <span class="pager__btn pager__btn--disabled" aria-disabled="true" aria-label={label}>
         {children}
       </span>
     );
   }
   if (onPage) {
     return (
-      <button type="button" class="pager__btn" onClick={() => onPage(page)}>
+      <button type="button" class="pager__btn" aria-label={label} onClick={() => onPage(page)}>
         {children}
       </button>
     );
   }
   return (
-    <a class="pager__btn" href={hrefFor ? hrefFor(page) : undefined} rel={rel}>
+    <a class="pager__btn" href={hrefFor ? hrefFor(page) : undefined} rel={rel} aria-label={label}>
       {children}
     </a>
   );
 }
 
 /** "‹ Prev  2 / 14  Next ›" — explicit paging instead of scrolling. */
-export function Pager({ page, pageCount, hrefFor, onPage }: Props) {
+export function Pager({ page, pageCount, hrefFor, onPage, compact }: Props) {
   if (pageCount <= 1) return null;
   const current = Math.min(Math.max(page, 1), pageCount);
   return (
-    <nav class="pager" aria-label={t('pager.label')}>
+    <nav class={compact ? 'pager pager--compact' : 'pager'} aria-label={t('pager.label')}>
       <Step
         page={current - 1}
         pageCount={pageCount}
@@ -51,8 +54,9 @@ export function Pager({ page, pageCount, hrefFor, onPage }: Props) {
         rel="prev"
         hrefFor={hrefFor}
         onPage={onPage}
+        label={compact ? t('pager.prev') : undefined}
       >
-        {'‹ ' + t('pager.prev')}
+        {compact ? '‹' : '‹ ' + t('pager.prev')}
       </Step>
       <span
         class="pager__status"
@@ -67,8 +71,9 @@ export function Pager({ page, pageCount, hrefFor, onPage }: Props) {
         rel="next"
         hrefFor={hrefFor}
         onPage={onPage}
+        label={compact ? t('pager.next') : undefined}
       >
-        {t('pager.next') + ' ›'}
+        {compact ? '›' : t('pager.next') + ' ›'}
       </Step>
     </nav>
   );

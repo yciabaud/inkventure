@@ -7,6 +7,9 @@ export interface Prefs {
   locale?: string;
   reader?: Record<string, string | number>;
   libraryView?: 'list' | 'grid';
+  /** My adventures on Home (S4.2). */
+  homeView?: 'list' | 'grid';
+  homeSort?: 'recent' | 'title';
 }
 
 export function getPrefs(store: Store): Prefs {

@@ -9,7 +9,7 @@ import {
 } from '../../engines/transcript';
 import { t } from '../../i18n/i18n';
 import type { GameSnapshot, SlotInfo } from '../../storage/saves';
-import { getStore, isStorageFullError } from '../../storage';
+import { addToHome, getStore, isStorageFullError } from '../../storage';
 import { applyNoun } from '../../reader/commands/compose';
 import { recentNouns } from '../../reader/commands/nouns';
 import { verbTable } from '../../reader/commands/verbs';
@@ -104,6 +104,10 @@ interface Props {
   tuid: string;
   /** Shown in the top zone until the game draws its status line. */
   title: string;
+  /** For My adventures, where the game is added on its first turn. */
+  author?: string;
+  /** IFDB has cover art for it. */
+  cover?: boolean;
   /** The game's language, for the command chips. */
   language?: string;
   kind: EngineKind;
@@ -112,7 +116,7 @@ interface Props {
 }
 
 /** A game in the reader: the engine of its format runs `story`; the session is autosaved under `tuid`. */
-export function GameReader({ tuid, title, language, kind, story }: Props) {
+export function GameReader({ tuid, title, author, cover, language, kind, story }: Props) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [transcript, setTranscript] = useState<Transcript>(EMPTY_TRANSCRIPT);
   const [request, setRequest] = useState<InputRequest | null>(null);
@@ -128,6 +132,8 @@ export function GameReader({ tuid, title, language, kind, story }: Props) {
   // The session outside React state, so snapshots read it as the engine is (not as last rendered).
   const transcriptRef = useRef<Transcript>(EMPTY_TRANSCRIPT);
   const turnRef = useRef(0);
+  // Added to My adventures (once per session: a game removed from Home comes back when played again).
+  const addedRef = useRef(false);
   const savesRef = useRef<SavesModule | null>(null);
   const [undoStack] = useState(() => new UndoStack<TurnState>());
   // Input requests while restoring a state do not start a new turn.
@@ -152,6 +158,10 @@ export function GameReader({ tuid, title, language, kind, story }: Props) {
     const store = getStore();
     const now = Date.now();
     try {
+      if (!addedRef.current) {
+        addToHome(store, { tuid: tuid, title: title, author: author || '', cover: cover }, now);
+        addedRef.current = true;
+      }
       saves.updateProgress(store, tuid, {
         turns: turnState.turn,
         lastPlayed: now,

@@ -84,7 +84,7 @@ test('a long shelf is paged with ‹ ›, never scrolled', async ({ page }) => {
   expect(perPage).toBeLessThan(12);
   expect(await scrolls(page)).toBe(false);
 
-  await press(page.locator('.shelf').getByRole('button', { name: 'Next ›' }));
+  await press(page.locator('.shelf').getByRole('button', { name: 'Next', exact: true }));
   await expect(first).toHaveAttribute('aria-label', 'Shelf game ' + (perPage + 1) + ', Writer');
   expect(await scrolls(page)).toBe(false);
 });

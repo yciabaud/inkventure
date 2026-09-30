@@ -6,10 +6,15 @@ export { compressBytes, compressText, decompressBytes, decompressText } from './
 export { keys } from './keys';
 export {
   addToHome,
+  continueGame,
   getHome,
   inProgressTuids,
   isInHome,
+  myAdventures,
   removeFromHome,
+  sortAdventures,
+  type Adventure,
+  type AdventureSort,
   type HomeEntry,
 } from './home';
 export { getPrefs, setPrefs, type Prefs } from './prefs';

@@ -1,6 +1,8 @@
-// Home (SPEC §3.3; story S4.1): a welcome on the first launch, then the Featured shelf of the UI language, without the
-// games already in progress. My adventures and the Continue hero arrive in S4.2.
-import { useEffect, useMemo, useState } from 'preact/hooks';
+// Home (SPEC §3.3; stories S4.1, S4.2): a welcome on the first launch; else the Continue hero (the last game played)
+// and My adventures; then the Featured shelf of the UI language, without the games already in progress. Shelves share
+// the height left on the screen and are paged with ‹ › in their header, never scrolled.
+import type { ComponentChildren, RefObject } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import { formatHash } from '../../app/router';
 import {
   featuredFor,
@@ -11,13 +13,29 @@ import {
   type ShelfLayout,
 } from '../../catalog/featured';
 import { thumbnailUrl } from '../../catalog/game';
+import { RESULT_ROW_HEIGHT } from '../../catalog/layout';
 import { paginate } from '../../catalog/search';
-import { t, useLocale } from '../../i18n/i18n';
-import { getStore, inProgressTuids } from '../../storage';
-import { LinkButton } from '../../ui/Button';
+import { formatRelativeDate, t, useLocale } from '../../i18n/i18n';
+import {
+  continueGame,
+  getPrefs,
+  getStore,
+  inProgressTuids,
+  isStorageFullError,
+  myAdventures,
+  removeFromHome,
+  setPrefs,
+  sortAdventures,
+  type Adventure,
+} from '../../storage';
+import { Button, LinkButton } from '../../ui/Button';
 import { Cover } from '../../ui/Cover';
+import { Dialog, Menu } from '../../ui/Dialog';
 import { Pager } from '../../ui/Pager';
 import { useArea } from '../library/useArea';
+
+/** Continue hero cover (2:3). */
+const HERO_COVER_WIDTH = 60;
 
 type FeaturedState =
   { status: 'loading' } | { status: 'ready'; file: FeaturedFile } | { status: 'error' };
@@ -37,14 +55,72 @@ function useFeatured(): FeaturedState {
   return state;
 }
 
-function Card({ game, layout }: { game: FeaturedRow; layout: ShelfLayout }) {
+function label(title: string, author: string): string {
+  return author ? title + ', ' + author : title;
+}
+
+/** "Turn 142 · last played 2 days ago" (or only the turn, or only the date). */
+function progressText(game: Adventure): string {
+  const parts: string[] = [];
+  if (game.turns) parts.push(t('home.turn', { turn: game.turns }));
+  if (game.lastPlayed) {
+    parts.push(t('home.lastPlayed', { date: formatRelativeDate(new Date(game.lastPlayed)) }));
+  }
+  return parts.join(' · ');
+}
+
+/** A shelf: its title, tools and ‹ › in one header row, then a row of items sized to the height left. */
+function Shelf({
+  id,
+  title,
+  tools,
+  page,
+  pageCount,
+  onPage,
+  rowRef,
+  children,
+}: {
+  id: string;
+  title: string;
+  tools?: ComponentChildren;
+  page: number;
+  pageCount: number;
+  onPage: (page: number) => void;
+  rowRef: RefObject<HTMLDivElement>;
+  children: ComponentChildren;
+}) {
+  return (
+    <section class="shelf" aria-labelledby={id}>
+      <div class="shelf__head">
+        <h2 class="shelf__title" id={id}>
+          {title}
+        </h2>
+        {tools}
+        <Pager page={page} pageCount={pageCount} onPage={onPage} compact />
+      </div>
+      <div class="shelf__row" ref={rowRef}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function FeaturedCard({
+  game,
+  layout,
+  compact,
+}: {
+  game: FeaturedRow;
+  layout: ShelfLayout;
+  compact: boolean;
+}) {
   return (
     <li class="shelf__item">
       <a
         class="shelf-card"
         style={{ width: layout.cardWidth + 'px' }}
         href={formatHash({ name: 'game', tuid: game.t })}
-        aria-label={game.a ? game.n + ', ' + game.a : game.n}
+        aria-label={label(game.n, game.a)}
       >
         <Cover
           title={game.n}
@@ -54,40 +130,293 @@ function Card({ game, layout }: { game: FeaturedRow; layout: ShelfLayout }) {
             game.c ? thumbnailUrl(game.t, layout.coverWidth, layout.coverHeight) : undefined
           }
         />
-        {game.st && <span class="badge shelf-card__badge">{t('filters.start')}</span>}
+        {!compact && game.st && <span class="badge shelf-card__badge">{t('filters.start')}</span>}
         <span class="shelf-card__title">{game.n}</span>
-        <span class="shelf-card__text">{game.pi || game.a}</span>
+        {!compact && <span class="shelf-card__text">{game.pi || game.a}</span>}
       </a>
     </li>
   );
 }
 
-/**
- * Featured games, a page of cards at a time, turned with ‹ › (no history entry per page). The shelf takes the height
- * left on the screen and sizes its covers to it; the pager has a slot of its own, so showing it never changes the
- * room measured for the cards.
- */
-function FeaturedShelf({ games }: { games: FeaturedRow[] }) {
+/** Featured games; `compact` (title only under the cover) when My adventures shares the screen. */
+function FeaturedShelf({ games, compact }: { games: FeaturedRow[]; compact: boolean }) {
   const [area, areaRef] = useArea();
   const [page, setPage] = useState(1);
-  const layout = shelfLayout(area.width, area.height);
+  const layout = shelfLayout(area.width, area.height, compact);
   const shown = paginate(games, page, layout.perPage);
   return (
-    <section class="shelf" aria-labelledby="featured-title">
-      <h2 class="shelf__title" id="featured-title">
-        {t('home.featured')}
-      </h2>
-      <div class="shelf__row" ref={areaRef}>
-        <ul class="shelf__cards" aria-label={t('home.featured')}>
-          {shown.items.map((game) => (
-            <Card key={game.t} game={game} layout={layout} />
-          ))}
-        </ul>
+    <Shelf
+      id="featured-title"
+      title={t('home.featured')}
+      page={shown.page}
+      pageCount={shown.pageCount}
+      onPage={setPage}
+      rowRef={areaRef}
+    >
+      <ul class="shelf__cards" aria-label={t('home.featured')}>
+        {shown.items.map((game) => (
+          <FeaturedCard key={game.t} game={game} layout={layout} compact={compact} />
+        ))}
+      </ul>
+    </Shelf>
+  );
+}
+
+function ContinueHero({ game }: { game: Adventure }) {
+  return (
+    <section class="hero" aria-label={t('home.continueTitle')}>
+      <Cover
+        title={game.title}
+        author={game.author}
+        width={HERO_COVER_WIDTH}
+        imageUrl={
+          game.cover ? thumbnailUrl(game.tuid, HERO_COVER_WIDTH, HERO_COVER_WIDTH * 1.5) : undefined
+        }
+      />
+      <div class="hero__text">
+        <p class="hero__title">{game.title}</p>
+        <p class="hero__meta">{progressText(game)}</p>
       </div>
-      <div class="shelf__pager">
-        <Pager page={shown.page} pageCount={shown.pageCount} onPage={setPage} />
-      </div>
+      <LinkButton href={formatHash({ name: 'play', tuid: game.tuid })}>
+        {t('game.continue')}
+      </LinkButton>
     </section>
+  );
+}
+
+/** The "⋯" of a game of My adventures: its page, or Remove from Home (then `RemoveDialog`). */
+function AdventureMenu({
+  game,
+  onClose,
+  onRemove,
+}: {
+  game: Adventure;
+  onClose: () => void;
+  onRemove: (game: Adventure) => void;
+}) {
+  return (
+    <Menu
+      title={game.title}
+      onClose={onClose}
+      items={[
+        {
+          label: t('game.details'),
+          onSelect: () => {
+            window.location.hash = formatHash({ name: 'game', tuid: game.tuid });
+          },
+        },
+        { label: t('game.removeFromHome'), onSelect: () => onRemove(game) },
+      ]}
+    />
+  );
+}
+
+/** Confirms Remove from Home, with the choice to delete the game's saves too (off by default). */
+function RemoveDialog({
+  game,
+  onClose,
+  onRemoved,
+}: {
+  game: Adventure;
+  onClose: () => void;
+  onRemoved: () => void;
+}) {
+  const [deleteSaves, setDeleteSaves] = useState(false);
+  const [failed, setFailed] = useState(false);
+  return (
+    <Dialog title={t('home.removeTitle', { title: game.title })} onClose={onClose}>
+      <div class="saves ui-font">
+        <p class="saves__hint">{t('home.removeText')}</p>
+        <label class="check">
+          <input
+            type="checkbox"
+            checked={deleteSaves}
+            onChange={(event) => setDeleteSaves((event.target as HTMLInputElement).checked)}
+          />
+          <span>{t('home.deleteSaves')}</span>
+        </label>
+        {failed && (
+          <p class="saves__message saves__message--error" role="alert">
+            {t('home.removeFailed')}
+          </p>
+        )}
+        <div class="saves__buttons">
+          <Button variant="secondary" onClick={onClose}>
+            {t('saves.cancel')}
+          </Button>
+          <Button
+            onClick={() => {
+              try {
+                removeFromHome(getStore(), game.tuid, { deleteSaves: deleteSaves });
+                onRemoved();
+              } catch (error) {
+                if (!isStorageFullError(error)) throw error;
+                setFailed(true);
+              }
+            }}
+          >
+            {t('home.remove')}
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+function MoreButton({ game, onOpen }: { game: Adventure; onOpen: (game: Adventure) => void }) {
+  return (
+    <button
+      type="button"
+      class="more-btn"
+      aria-label={t('home.moreFor', { title: game.title })}
+      onClick={() => onOpen(game)}
+    >
+      ⋯
+    </button>
+  );
+}
+
+function AdventureCard({
+  game,
+  layout,
+  onMore,
+}: {
+  game: Adventure;
+  layout: ShelfLayout;
+  onMore: (game: Adventure) => void;
+}) {
+  return (
+    <li class="shelf__item shelf__item--more" style={{ width: layout.cardWidth + 'px' }}>
+      <a
+        class="shelf-card"
+        href={formatHash({ name: 'game', tuid: game.tuid })}
+        aria-label={label(game.title, game.author)}
+      >
+        <Cover
+          title={game.title}
+          author={game.author}
+          width={layout.coverWidth}
+          imageUrl={
+            game.cover ? thumbnailUrl(game.tuid, layout.coverWidth, layout.coverHeight) : undefined
+          }
+        />
+        <span class="shelf-card__title">{game.title}</span>
+      </a>
+      <MoreButton game={game} onOpen={onMore} />
+    </li>
+  );
+}
+
+function AdventureRow({ game, onMore }: { game: Adventure; onMore: (game: Adventure) => void }) {
+  const details = [game.author, progressText(game)].filter((part) => !!part).join(' · ');
+  return (
+    <li class="adventure">
+      <a
+        class="adventure__link"
+        href={formatHash({ name: 'game', tuid: game.tuid })}
+        aria-label={label(game.title, game.author)}
+      >
+        <span class="adventure__title">{game.title}</span>
+        <span class="adventure__details">{details}</span>
+      </a>
+      <MoreButton game={game} onOpen={onMore} />
+    </li>
+  );
+}
+
+/** My adventures: grid (covers) or list (title, author, progress), sorted by recent or title, both remembered. */
+function AdventuresShelf({ games, onChange }: { games: Adventure[]; onChange: () => void }) {
+  const store = getStore();
+  const prefs = getPrefs(store);
+  const [view, setView] = useState(prefs.homeView || 'grid');
+  const [sort, setSort] = useState(prefs.homeSort || 'recent');
+  const [page, setPage] = useState(1);
+  const [menuFor, setMenuFor] = useState<Adventure | null>(null);
+  const [removing, setRemoving] = useState<Adventure | null>(null);
+  const [area, areaRef] = useArea();
+  // Title only under the covers: the shelf shares the screen with the hero and Featured.
+  const layout = shelfLayout(area.width, area.height, true);
+  const perPage =
+    view === 'grid' ? layout.perPage : Math.max(1, Math.floor(area.height / RESULT_ROW_HEIGHT));
+  const shown = paginate(sortAdventures(games, sort), page, perPage);
+
+  const remember = (patch: { homeView?: 'grid' | 'list'; homeSort?: 'recent' | 'title' }) => {
+    try {
+      setPrefs(store, patch);
+    } catch (error) {
+      if (!isStorageFullError(error)) throw error;
+    }
+  };
+  const tools = (
+    <span class="shelf__tools">
+      <button
+        type="button"
+        class="shelf-tool"
+        aria-label={view === 'grid' ? t('library.viewList') : t('library.viewGrid')}
+        onClick={() => {
+          const next = view === 'grid' ? 'list' : 'grid';
+          setView(next);
+          setPage(1);
+          remember({ homeView: next });
+        }}
+      >
+        {view === 'grid' ? t('home.list') : t('home.grid')}
+      </button>
+      <button
+        type="button"
+        class="shelf-tool"
+        aria-label={sort === 'recent' ? t('home.sortTitle') : t('home.sortRecent')}
+        onClick={() => {
+          const next = sort === 'recent' ? 'title' : 'recent';
+          setSort(next);
+          setPage(1);
+          remember({ homeSort: next });
+        }}
+      >
+        {sort === 'recent' ? t('home.byTitle') : t('home.byRecent')}
+      </button>
+    </span>
+  );
+
+  return (
+    <>
+      <Shelf
+        id="adventures-title"
+        title={t('home.adventures')}
+        tools={tools}
+        page={shown.page}
+        pageCount={shown.pageCount}
+        onPage={setPage}
+        rowRef={areaRef}
+      >
+        {view === 'grid' ? (
+          <ul class="shelf__cards" aria-label={t('home.adventures')}>
+            {shown.items.map((game) => (
+              <AdventureCard key={game.tuid} game={game} layout={layout} onMore={setMenuFor} />
+            ))}
+          </ul>
+        ) : (
+          <ul class="adventures" aria-label={t('home.adventures')}>
+            {shown.items.map((game) => (
+              <AdventureRow key={game.tuid} game={game} onMore={setMenuFor} />
+            ))}
+          </ul>
+        )}
+      </Shelf>
+      {menuFor && (
+        <AdventureMenu game={menuFor} onClose={() => setMenuFor(null)} onRemove={setRemoving} />
+      )}
+      {removing && (
+        <RemoveDialog
+          game={removing}
+          onClose={() => setRemoving(null)}
+          onRemoved={() => {
+            setRemoving(null);
+            onChange();
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -95,7 +424,11 @@ export function HomeScreen() {
   const locale = useLocale();
   const featured = useFeatured();
   const store = getStore();
-  const inProgress = useMemo(() => inProgressTuids(store), [store]);
+  // Read again after a removal.
+  const [version, setVersion] = useState(0);
+  const adventures = myAdventures(store);
+  const hero = continueGame(adventures);
+  const inProgress = inProgressTuids(store);
   const firstLaunch = Object.keys(inProgress).length === 0;
   const games =
     featured.status === 'ready'
@@ -116,14 +449,24 @@ export function HomeScreen() {
           </p>
         </section>
       )}
-      {games.length > 0 && <FeaturedShelf key={locale} games={games} />}
+      {hero && <ContinueHero game={hero} />}
+      {adventures.length > 0 && (
+        <AdventuresShelf
+          key={version}
+          games={adventures}
+          onChange={() => setVersion((n) => n + 1)}
+        />
+      )}
+      {games.length > 0 && (
+        <FeaturedShelf key={locale} games={games} compact={adventures.length > 0} />
+      )}
       {featured.status === 'loading' && (
         <p class="library__status" role="status">
           {t('home.loading')}
         </p>
       )}
       {/* Without a shelf (no list for this language, or it could not be loaded), point to the Library. */}
-      {featured.status !== 'loading' && !games.length && (
+      {featured.status !== 'loading' && !games.length && !adventures.length && (
         <p class="home__browse">
           <LinkButton href={formatHash({ name: 'library' })}>{t('home.browse')}</LinkButton>
         </p>

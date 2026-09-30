@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryBackend } from './backend';
-import { addToHome, getHome, inProgressTuids, isInHome, removeFromHome } from './home';
+import {
+  addToHome,
+  continueGame,
+  getHome,
+  inProgressTuids,
+  isInHome,
+  myAdventures,
+  removeFromHome,
+  sortAdventures,
+  type Adventure,
+} from './home';
 import { keys } from './keys';
 import { createStore, isStorageFullError } from './store';
 
@@ -68,5 +78,66 @@ describe('My adventures (ik:v1:home)', () => {
     store.set(keys.save('slotonly', '1'), { v: 1 });
     addToHome(store, lamp, 1000);
     expect(inProgressTuids(store)).toEqual({ started: true, saved: true, lamp: true });
+  });
+
+  it('removes a game with or without its saves and progress', () => {
+    const store = createStore(new MemoryBackend());
+    for (const game of [lamp, cave]) {
+      addToHome(store, game, 1000);
+      store.set(keys.progress(game.tuid), { turns: 3, lastPlayed: 2000 });
+      store.set(keys.autosave(game.tuid), { v: 1 });
+      store.set(keys.save(game.tuid, '2'), { v: 1 });
+    }
+    store.set(keys.file('cave'), { data: 'x' });
+    removeFromHome(store, 'lamp');
+    expect(store.get(keys.autosave('lamp'))).toEqual({ v: 1 });
+    expect(store.get(keys.progress('lamp'))).toEqual({ turns: 3, lastPlayed: 2000 });
+
+    removeFromHome(store, 'cave', { deleteSaves: true });
+    expect(getHome(store)).toEqual([]);
+    expect(store.get(keys.autosave('cave'))).toBeUndefined();
+    expect(store.get(keys.save('cave', '2'))).toBeUndefined();
+    expect(store.get(keys.progress('cave'))).toBeUndefined();
+    // The cached story file stays (evicted when room is needed); the other game's saves too.
+    expect(store.get(keys.file('cave'))).toEqual({ data: 'x' });
+    expect(store.get(keys.save('lamp', '2'))).toEqual({ v: 1 });
+  });
+
+  it('keeps the cover flag and reads the progress of each adventure', () => {
+    const store = createStore(new MemoryBackend());
+    addToHome(store, { ...lamp, cover: 'https://ifdb.org/coverart?id=lamp' }, 1000);
+    addToHome(store, cave, 2000);
+    store.set(keys.progress('lamp'), { turns: 7, lastPlayed: 5000, location: 'Kitchen' });
+    expect(myAdventures(store)).toEqual([
+      { tuid: 'cave', title: 'Cave', author: 'Other', added: 2000 },
+      { ...lamp, added: 1000, cover: true, turns: 7, lastPlayed: 5000 },
+    ]);
+  });
+});
+
+describe('sorting and Continue', () => {
+  const game = (tuid: string, title: string, added: number, lastPlayed?: number): Adventure => ({
+    tuid: tuid,
+    title: title,
+    author: '',
+    added: added,
+    lastPlayed: lastPlayed,
+  });
+  const list = [
+    game('a', 'The Zebra', 100, 5000),
+    game('b', '"Alpha"', 900),
+    game('c', 'beta', 200, 3000),
+  ];
+
+  it('sorts by last played (or added), or by title ignoring case and leading punctuation', () => {
+    expect(sortAdventures(list, 'recent').map((g) => g.tuid)).toEqual(['a', 'c', 'b']);
+    expect(sortAdventures(list, 'title').map((g) => g.tuid)).toEqual(['b', 'c', 'a']);
+    expect(list.map((g) => g.tuid)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('continues the game played last, none if none was started', () => {
+    expect(continueGame(list)!.tuid).toBe('a');
+    expect(continueGame([game('b', 'B', 900)])).toBeUndefined();
+    expect(continueGame([])).toBeUndefined();
   });
 });

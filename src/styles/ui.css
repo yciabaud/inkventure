@@ -172,6 +172,22 @@ button.pager__btn {
   padding: 0 16px;
 }
 
+/* In a shelf header: "‹ 2 / 5 ›". */
+.pager--compact {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.pager--compact .pager__btn {
+  min-width: 48px;
+  padding: 8px 12px;
+  font-size: 22px;
+}
+
+.pager--compact .pager__status {
+  padding: 0 10px;
+}
+
 /* Cover */
 .cover {
   position: relative;
@@ -1455,13 +1471,20 @@ button.pager__btn {
   overflow: hidden;
 }
 
-.shelf__pager {
+.shelf__head {
+  display: flex;
   flex-shrink: 0;
-  min-height: 64px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.shelf__head .pager {
+  margin-left: auto;
 }
 
 .shelf__title {
-  margin: 0 0 8px;
+  margin: 0 12px 0 0;
   font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   font-weight: 700;
@@ -1519,11 +1542,6 @@ button.pager__btn {
   -webkit-line-clamp: 3;
 }
 
-.shelf .pager {
-  margin-top: 0;
-  padding-top: 16px;
-}
-
 .home__browse {
   margin: 16px 0 0;
 }
@@ -1537,4 +1555,145 @@ button.pager__btn {
 
 .help__actions .btn {
   margin: 8px 8px 0 0;
+}
+
+/* Home (S4.2): Continue hero, My adventures (grid or list, a "⋯" per game). */
+.shelf + .shelf {
+  margin-top: 12px;
+}
+
+.shelf__tools {
+  display: flex;
+}
+
+.shelf-tool {
+  min-width: 48px;
+  min-height: 48px;
+  margin-right: 8px;
+  padding: 0 10px;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.more-btn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.shelf__item--more {
+  position: relative;
+}
+
+.shelf__item--more .shelf-card {
+  width: 100%;
+}
+
+/* On a grid card: the top right corner of the cover. */
+.shelf__item--more .more-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.adventures {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adventure {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  border-bottom: 1px solid #767676;
+}
+
+.adventure__link {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  height: 100%;
+  color: #000;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  text-decoration: none;
+}
+
+.adventure__title,
+.adventure__details {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.adventure__title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.adventure__details {
+  font-size: 14px;
+}
+
+.adventure .more-btn {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.hero {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #000;
+}
+
+.hero__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0 12px;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.hero__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.hero__meta {
+  margin: 4px 0 0;
+  font-size: 15px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-size: 17px;
+}
+
+.check input {
+  width: 24px;
+  height: 24px;
+  margin: 0 12px 0 0;
 }

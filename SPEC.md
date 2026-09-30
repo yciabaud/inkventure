@@ -160,9 +160,12 @@ Purpose: get back into a game in one tap, or start a recommended one.
 
 - **Continue** hero: last played game — cover, title, "Turn 142 · last played 2 days ago", big **Continue** button.
   Hidden if no game started.
-- **My adventures** shelf: games the player added from the library or started. Grid (covers) / list
-  (title, author, progress) toggle; sort by *recent* or *title*; long-press or "⋯" menu → *Remove from Home*
-  (keeps saves unless "also delete saves" is checked).
+- **My adventures** shelf: games the player added from the library or started (a game is added on its first turn,
+  again if it was removed). Grid (covers) / list (title, author, progress) toggle; sort by *recent* (last played, or
+  added) or *title*; both remembered in the prefs. A "⋯" button per game → its page or *Remove from Home* (keeps saves
+  and progress unless "also delete saves" is checked; the cached story file stays either way).
+- Shelves share the height left under the hero: each has its title, tools and a compact "‹ 2 / 5 ›" pager in one
+  header row; when My adventures and Featured are both shown, cards show only the title under the cover.
 - **Featured** shelf: editorial selection from `featured.json` ([§5.3](#53-featured-selection)), each with a
   one-line pitch in the UI language; a "Start here" badge on newcomer-friendly titles; then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
@@ -519,7 +522,7 @@ All keys are prefixed and versioned:
 | Key | Content |
 |---|---|
 | `ik:v1:prefs` | UI language, reader defaults (font, size, margins, spacing, align), list/grid choices |
-| `ik:v1:home` | *My adventures*, most recently added first: `[{tuid, title, author, added, lastPlayed?}]` (title and author so Home needs no catalogue) |
+| `ik:v1:home` | *My adventures*, most recently added first: `[{tuid, title, author, added, cover?}]` (title, author and whether IFDB has a cover, so Home needs no catalogue; turns and last played come from the progress record) |
 | `ik:v1:progress:<tuid>` | `turns`, `lastPlayed`, `location`, per-game reader overrides (`reader`) |
 | `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
