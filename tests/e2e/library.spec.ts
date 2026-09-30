@@ -33,8 +33,9 @@ test('search, page through the results, and come back with the back button', asy
 
   await press(page.getByRole('link', { name: 'Next ›' }));
   await expect(page).toHaveURL(/#\/library\?page=2&q=adventure$/);
+  // Wait for page 2 to be drawn before reading it.
+  await expect(results(page).first()).not.toHaveAttribute('aria-label', firstPage[0]!);
   const secondPage = await names(page);
-  expect(secondPage[0]).not.toBe(firstPage[0]);
 
   await press(results(page).first());
   await expect(page).toHaveURL(/#\/game\/syn\d+$/);
