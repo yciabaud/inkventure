@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxgone0000000004",
+  "status": 200,
+  "body": "{\"error\":\"No game was found matching the requested ID.\"}"
+}

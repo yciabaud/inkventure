@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Azil&sortby=ttl&pg=1",
+  "status": 200,
+  "body": "{\"games\":[{\"tuid\":\"fxzork0000000005\",\"title\":\"Hollow Mountain\",\"link\":\"https://ifdb.org/viewgame?id=fxzork0000000005\",\"author\":\"D. Placeholder\",\"hasCoverArt\":true,\"devsys\":\"ZIL\",\"published\":{\"machine\":\"1985\",\"printable\":\"1985\"},\"averageRating\":4,\"numRatings\":30,\"starRating\":4,\"starSort\":4,\"coverArtLink\":\"https://ifdb.org/coverart?id=fxzork0000000005&version=2\",\"playTimeInMinutes\":240}]}"
+}

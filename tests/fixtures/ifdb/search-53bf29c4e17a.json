@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Aink&sortby=ttl&pg=1",
+  "status": 200,
+  "body": "{\"games\":[{\"tuid\":\"fxinky0000000007\",\"title\":\"Ink and Tide\",\"link\":\"https://ifdb.org/viewgame?id=fxinky0000000007\",\"author\":\"F. Specimen\",\"hasCoverArt\":true,\"devsys\":\"ink\",\"published\":{\"machine\":\"2024\",\"printable\":\"2024\"},\"averageRating\":4.5,\"numRatings\":3,\"starRating\":4.5,\"starSort\":4.5,\"coverArtLink\":\"https://ifdb.org/coverart?id=fxinky0000000007&version=1\",\"playTimeInMinutes\":30}]}"
+}

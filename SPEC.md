@@ -385,9 +385,11 @@ deployed with the app. The app never calls IFDB directly (only links to it).
 Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
 
 1. **Crawl** — page through IFDB `search?json` for downloadable games, restricted per supported system
-   (`downloadable:yes system:…` / `format:…` queries), politely (≤ 1 request/s, `User-Agent` identifying the
-   project, conditional requests, incremental: only re-fetch games whose IFDB page version changed).
-2. **Resolve playability** — for each candidate fetch `viewgame?json` (or `?ifiction` XML) to get links,
+   (`downloadable:yes system:…` queries, `scripts/catalog/queries.json`), politely (≤ 1 request/s, `User-Agent` identifying the
+   project, retries with backoff, incremental: only re-fetch games whose IFDB page version changed). Search pages
+   hold 100 rows and leave hidden games out, so paging ends at the first empty page. The crawler also fetches each
+   candidate's `viewgame?json` record (cached per game, keyed by page version) into `data/raw/games.json`.
+2. **Resolve playability** — from each candidate's `viewgame?json` record (fetched by the crawler) get links,
    formats, IFID, genre, language, forgiveness, tags, cover art. Pick the best playable file
    (prefer `.zblorb/.gblorb` over bare story files; prefer IF Archive URLs). Drop games without a
    supported file.

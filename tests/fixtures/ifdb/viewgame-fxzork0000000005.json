@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/viewgame?json&id=fxzork0000000005",
+  "status": 200,
+  "body": "{\"colophon\":{\"generator\":\"ifdb.org/viewgame\",\"generatorversion\":1,\"originated\":\"2026-09-30\"},\"identification\":{\"ifids\":[\"FIXTURE-FXZORK0000000005\"]},\"bibliographic\":{\"title\":\"Hollow Mountain\",\"author\":\"D. Placeholder\",\"language\":\"en\",\"firstpublished\":\"1985\",\"genre\":\"Fantasy\",\"description\":\"Synthetic listing for the crawler tests.\"},\"ifdb\":{\"tuid\":\"fxzork0000000005\",\"pageversion\":2,\"link\":\"https://ifdb.org/viewgame?id=fxzork0000000005\",\"coverart\":{\"url\":\"https://ifdb.org/coverart?id=fxzork0000000005&version=2\"},\"playTimeInMinutes\":240,\"downloads\":{\"links\":[{\"url\":\"https://ifarchive.org/if-archive/games/zcode/hollow.z3\",\"title\":\"hollow.z3\",\"desc\":\"\",\"isGame\":true,\"format\":\"zcode\"}]},\"averageRating\":4,\"starRating\":4,\"ratingCountAvg\":30,\"ratingCountTot\":30,\"tags\":[{\"name\":\"classic\",\"tagcnt\":1,\"gamecnt\":10}]}}"
+}
