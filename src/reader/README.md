@@ -7,3 +7,4 @@ Paginator, command bar and shortcut chips (SPEC §3.6).
 - `pageTurner.ts`: page state, reading position, tap zones, swipes, keys and re-pagination triggers.
 - `PagedText.tsx`: the paged text view, with the last-page slot and the page indicator.
 - `demo/`: static text for `#/play/demo`.
+- `keys.ts`: the keys a single-key prompt names ("Press N", "1 or 2", menu legends), for the key chips.

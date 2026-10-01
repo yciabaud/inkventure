@@ -12,6 +12,7 @@ import { t } from '../../i18n/i18n';
 import type { GameSnapshot, SlotInfo } from '../../storage/saves';
 import { addToHome, getStore, isStorageFullError } from '../../storage';
 import { applyNoun } from '../../reader/commands/compose';
+import { findKeys, type KeyPrompt } from '../../reader/keys';
 import { recentNouns } from '../../reader/commands/nouns';
 import { verbTable } from '../../reader/commands/verbs';
 import { readerBlocks } from '../../reader/fromTranscript';
@@ -22,6 +23,7 @@ import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
 import { choicesHeight, ChoiceList } from './ChoiceList';
 import { COMMAND_BAR_HEIGHT, CommandBar } from './CommandBar';
+import { KeyBar } from './KeyBar';
 import { ReaderFrame } from './ReaderFrame';
 import { TranscriptNav } from './TranscriptNav';
 import { RestartDialog, RestoreDialog, SaveDialog, type SaveMessage } from './SaveDialogs';
@@ -30,6 +32,11 @@ const DEFAULT_LANGUAGE = 'en';
 
 /** Paragraphs scanned for noun chips: the latest turns only. */
 const NOUN_PARAGRAPHS = 12;
+
+/** Paragraphs scanned for the keys a single-key prompt names: the latest ones since the last command. */
+const KEY_PARAGRAPHS = 12;
+
+const NO_KEYS: KeyPrompt = { keys: [], space: false };
 
 // Status line width, in characters, asked of the game.
 const COLUMNS = 80;
@@ -137,6 +144,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const engineRef = useRef<Engine | null>(null);
   // When the input that started the running turn was sent, and how long the last turn took (ms).
   const turnStartRef = useRef<number | null>(null);
+  // Number of paragraphs when the last key was sent: a menu redrawn after it is read from there.
+  const keyMarkRef = useRef(-1);
   const [turnTime, setTurnTime] = useState<number | null>(null);
 
   /** The game waits for input again (or has ended): the running turn is over. */
@@ -218,6 +227,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   /** Continues from `turnState` (resume, restore, undo). Rejects, leaving the game as it was, when it cannot. */
   function restore(engine: Engine, turnState: TurnState): Promise<void> {
     restoringRef.current = true;
+    keyMarkRef.current = -1;
     return engine.restoreState(turnState.state).then(
       () => {
         restoringRef.current = false;
@@ -371,6 +381,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     if (!engine) return;
     setView('game');
     turnRef.current = 0;
+    keyMarkRef.current = -1;
     undoStack.reset();
     setCanUndo(false);
     setFocus(0);
@@ -400,6 +411,23 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return recentNouns(texts, table, splitStatus(transcript.status).left);
   }, [blocks, table, transcript.status]);
 
+  // The keys a single-key prompt names, in every status row and in the text since the last command. When the game printed
+  // keys after the last key sent (a new screen of a menu), only those: a "Press any key" that follows a menu does not.
+  const keyPrompt = useMemo(() => {
+    if (!awaitingChar) return NO_KEYS;
+    const paragraphs = transcript.paragraphs;
+    let start = paragraphs.length;
+    while (start > 0 && !paragraphs[start - 1].input && paragraphs.length - start < KEY_PARAGRAPHS)
+      start--;
+    const texts = (from: number) => paragraphs.slice(from).map((p) => p.text);
+    const mark = keyMarkRef.current;
+    if (mark > start && mark < paragraphs.length) {
+      const recent = findKeys(texts(mark), transcript.status);
+      if (recent.keys.length) return recent;
+    }
+    return findKeys(texts(start), transcript.status);
+  }, [transcript, awaitingChar]);
+
   /** The data of a picture of the story (Glulx), from the engine. */
   function imageUrl(id: number): string | null {
     const engine = engineRef.current;
@@ -411,6 +439,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     if (!engine || !awaitingChar) return;
     setFocus(blocks.length);
     setRequest(null);
+    keyMarkRef.current = transcriptRef.current.paragraphs.length;
     turnStartRef.current = Date.now();
     engine.sendChar(key);
   }
@@ -490,11 +519,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   if (state.phase === 'ended') {
     slot = <p class="reader__input-slot">{t('reader.ended')}</p>;
   } else if (awaitingChar) {
-    slot = (
-      <button type="button" class="reader__present" onClick={() => sendChar('return')}>
-        {t('reader.continue')} ›
-      </button>
-    );
+    slot = <KeyBar prompt={keyPrompt} onKey={sendChar} onFocusChange={setTyping} />;
   } else if (state.phase === 'playing' && !request) {
     // A long turn (a slow Glulx game on an e-reader): the VM yields between slices, so this gets drawn.
     slot = <p class="reader__input-slot">{t('reader.working')}</p>;
@@ -607,9 +632,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
                     return true;
                   }
                 }
-                // "Press any key" / [MORE]: a tap on the last page answers it.
-                if (awaitingChar && isLastPage) {
-                  sendChar('return');
+                // "Press any key" / [MORE]: a tap on the last page answers it, unless the game names its keys.
+                if (awaitingChar && isLastPage && !keyPrompt.keys.length) {
+                  sendChar(keyPrompt.space ? ' ' : 'return');
                   return true;
                 }
                 return false;

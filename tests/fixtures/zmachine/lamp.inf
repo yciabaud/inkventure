@@ -4,7 +4,8 @@
 ! compiled games may be distributed freely). Rebuild with scripts/fixtures/build-z.sh.
 !
 ! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
-! objects, a locked container, a score and a winning ending.
+! objects, a locked container, a score and a winning ending; single-key prompts naming their keys: HELP ("Choose 1 or
+! 2.") and LOGBOOK ("Press Q to quit the menu.", any other key turns a page).
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -103,3 +104,24 @@ Object -> Lens "lens"
   has  scenery;
 
 Include "Grammar";
+
+[ HelpSub key;
+    print "Choose 1 or 2.^";
+    for (::) {
+        key = KeyPress();
+        if (key == '1') "Hint: the lamp needs paraffin, and a flame.";
+        if (key == '2') "Credits: written for Inkventure's tests.";
+    }
+];
+
+[ LogbookSub key;
+    print "The keeper's logbook. Press Q to quit the menu.^";
+    for (::) {
+        key = KeyPress();
+        if (key == 'q' or 'Q') "You close the logbook.";
+        print "You turn a page (", (char) key, ").^";
+    }
+];
+
+Verb meta 'help' 'hint' 'hints' * -> Help;
+Verb meta 'logbook' 'log' * -> Logbook;
