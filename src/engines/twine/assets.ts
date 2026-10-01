@@ -171,6 +171,39 @@ function inElement(text: string, element: string): string {
 const INLINED = 'data-ik-inlined';
 
 /**
+ * Replaces each empty `<script src>` naming a kept script with a `<script>` holding its text. The end tag is found by
+ * scanning, not by a pattern: `</script` followed by anything up to `>`, as browsers read it.
+ */
+function inlineScripts(page: string, assets: StoryAssets): string {
+  const open = /<script\b([^>]*)>/gi;
+  let out = '';
+  let from = 0;
+  let match: RegExpExecArray | null;
+  while ((match = open.exec(page))) {
+    let at = open.lastIndex;
+    while (at < page.length && /\s/.test(page.charAt(at))) at++;
+    const close = page.slice(at, at + 8).toLowerCase() === '</script' ? page.indexOf('>', at) : -1;
+    const src = attribute(match[1], 'src');
+    const path = src !== undefined ? assets.resolve(src) : undefined;
+    if (close < 0 || !path || !/\.js$/i.test(path)) continue;
+    const rest = match[1].replace(
+      /\s(?:src|async|defer)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?/gi,
+      '',
+    );
+    out +=
+      page.slice(from, match.index) +
+      '<script' +
+      rest +
+      '>' +
+      inElement(assets.text(path), 'script') +
+      '</script>';
+    from = close + 1;
+    open.lastIndex = from;
+  }
+  return out + page.slice(from);
+}
+
+/**
  * The story's page with the files it names served from `assets`: linked stylesheets and scripts inlined, `<style>`
  * elements, `src` / `href` / `poster` attributes, `url(…)`s and SugarCube image links (`[img[…]]`, also inside the
  * passages' text) rewritten to `data:` URLs. References to anything else are left alone (the frame's <base> applies).
@@ -184,16 +217,7 @@ export function inlineAssets(html: string, assets: StoryAssets): string {
     const css = rewriteCss(assets.text(path), folderOf(path), assets, [path]);
     return '<style ' + INLINED + '>' + inElement(css, 'style') + '</style>';
   });
-  page = page.replace(/<script\b([^>]*)>\s*<\/script\b[^>]*>/gi, (tag, attributes: string) => {
-    const src = attribute(attributes, 'src');
-    const path = src !== undefined ? assets.resolve(src) : undefined;
-    if (!path || !/\.js$/i.test(path)) return tag;
-    const rest = attributes.replace(
-      /\s(?:src|async|defer)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'>]+))?/gi,
-      '',
-    );
-    return '<script' + rest + '>' + inElement(assets.text(path), 'script') + '</script>';
-  });
+  page = inlineScripts(page, assets);
   page = page.replace(
     /(<style\b)([^>]*)>([\s\S]*?)(<\/style\b[^>]*>)/gi,
     (_match, open: string, attributes: string, css: string, close: string) =>
