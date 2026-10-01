@@ -97,6 +97,9 @@ describe('the ebook page', () => {
     );
     expect(languages).toEqual(['?lang=en', '?lang=fr']);
     expect(root.querySelectorAll('a.button[download]').length).toBe(3);
+    expect(root.querySelector('a.button[download]')!.getAttribute('download')).toBe(
+      'inkventure-en.epub',
+    );
     expect(root.querySelectorAll('.button--disabled').length).toBe(1);
     expect(root.querySelector('.unavailable')).toBeNull();
 

@@ -39,7 +39,11 @@ async function serveBooks(page: Page, manifest: unknown) {
         })
       : route.fulfill({ status: 404, body: 'Not found' }),
   );
-  await page.route('**/ebook/inkventure-*.{epub,azw3}', (route) =>
+  // Served with the types a static host gives them.
+  await page.route('**/ebook/inkventure-*.epub', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/epub+zip', body: STUB }),
+  );
+  await page.route('**/ebook/inkventure-*.azw3', (route) =>
     route.fulfill({ status: 200, contentType: 'application/octet-stream', body: STUB }),
   );
   await page.route('**/ebook/inkventure-*-cover.jpg', (route) =>
@@ -76,6 +80,7 @@ test.describe('ebook download page', () => {
     const english = page.locator('.book[data-locale="en"]');
     const epub = english.getByRole('link', { name: 'Download EPUB' });
     await expect(epub).toHaveAttribute('href', 'inkventure-en.epub');
+    await expect(epub).toHaveAttribute('download', 'inkventure-en.epub');
     await expect(english.locator('[data-format="azw3"] .info')).toHaveText(
       '1.2 MB, built on October 1, 2026 — for e-readers that use the AZW3 (KF8) format',
     );

@@ -209,7 +209,8 @@ export function render(root: HTMLElement, model: PageModel, all: Record<string, 
       if (button.href) {
         const link = element(doc, 'a', 'button', button.label) as HTMLAnchorElement;
         link.href = button.href;
-        link.setAttribute('download', '');
+        // Named, so that no browser guesses another extension from the type it is served with.
+        link.setAttribute('download', button.href);
         row.appendChild(link);
         row.appendChild(element(doc, 'p', 'info', button.info + ' — ' + button.hint));
       } else {
