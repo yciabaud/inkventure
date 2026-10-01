@@ -7,6 +7,7 @@ const LABELS: Record<PerfLabel, MessageKey> = {
   home: 'perf.home',
   library: 'perf.library',
   page: 'perf.page',
+  turn: 'perf.turn',
 };
 
 export function PerfLine() {

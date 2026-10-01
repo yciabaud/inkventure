@@ -119,6 +119,8 @@ test('?perf=1 shows how long the last turn took, for measuring on a device', asy
   await expect(command(page)).toBeVisible();
   await send(page, 'look', 1);
   await expect(statusLine(page)).toContainText(/\(\d+ ms\)/);
+  // Also in the timings line (S7.1).
+  await expect(page.getByTestId('perf-line')).toHaveText(/^Turn played in \d+ ms$/);
 
   await page.goto('/#/play/fixture-z');
   await press(button(page, 'Continue ›'));

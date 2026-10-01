@@ -30,6 +30,10 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 Before each release, run the [device checklist](../device-checklist.md) and save it filled as
 `<YYYY-MM-DD>-<device>-checklist.md` here. Its timings come from *Settings → About → Timings*.
 
+| Date | Device | Version | Home | Library | Page turn | Report |
+|---|---|---|---|---|---|---|
+| 2026-10-01 | Kindle (as 2026-09-29) | `18e798a` | 1 918 ms | 2 225 ms | 109–191 ms | [2026-10-01-kindle-checklist.md](2026-10-01-kindle-checklist.md) |
+
 ## Measuring turn latency (story S1.7)
 
 1. On the e-reader, turn on **Settings → About → Timings: Shown** (editing the address is awkward in the Kindle
