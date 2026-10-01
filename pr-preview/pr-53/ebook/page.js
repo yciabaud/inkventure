@@ -146,7 +146,7 @@ function render(root, model, all) {
             if (button.href) {
                 var link = element(doc, 'a', 'button', button.label);
                 link.href = button.href;
-                link.setAttribute('download', '');
+                link.setAttribute('download', button.href);
                 row.appendChild(link);
                 row.appendChild(element(doc, 'p', 'info', button.info + ' — ' + button.hint));
             }
