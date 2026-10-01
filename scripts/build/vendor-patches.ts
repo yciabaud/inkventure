@@ -23,7 +23,10 @@
 // - gi_dispa.js: `check_autosave` also allows the first prompt, before any event;
 // - gi_blorb.js: the IFmd (metadata) chunk is skipped: its parser needs jQuery, and the catalogue has the metadata;
 // - quixe.js: time slicing (SPEC §4.5). With the `slice_ms` option, `execute_loop` yields to the event loop once a
-//   run has taken that long, and carries on from a timer; `abandon()` stops a VM that is being replaced.
+//   run has taken that long, and carries on from a timer; `abandon()` stops a VM that is being replaced;
+// - quixe.js: the autosave snapshot keeps the RAM as a `Uint8Array` (as Quixe's undo snapshots do), not as an array
+//   of numbers: a large game's RAM (1–2 MB) took 8 bytes per byte on every turn. Autorestore copies it with `set`
+//   either way.
 import type { Plugin } from 'vite';
 
 type Replacement = [RegExp, string];
@@ -91,6 +94,10 @@ export const PATCHES: Patch[] = [
           '                return;\n' +
           '            }\n' +
           '        }',
+      ],
+      [
+        /^ {4}snapshot\.ram = Array\.from\(memmap\.slice\(ramstart\)\);$/m,
+        '    snapshot.ram = memmap.slice(ramstart);',
       ],
       [
         /^ {4}do_autosave: vm_autosave$/m,

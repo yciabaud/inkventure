@@ -1,7 +1,7 @@
 // Glulx engine: Quixe (Andrew Plotkin, MIT) with its own Glk library, displayed through our GlkOte bridge. This module
 // is its own lazy chunk: only the reader of a Glulx game loads it. The Quixe files live in vendor/quixe/ and are
 // patched into ES modules at build time (scripts/build/vendor-patches.ts), with time slicing.
-import { strFromU8, strToU8 } from 'fflate';
+import { deflateSync, inflateSync, strFromU8, strToU8 } from 'fflate';
 import { BlorbClass } from '../../../vendor/quixe/gi_blorb.js';
 import { GiDispaClass } from '../../../vendor/quixe/gi_dispa.js';
 import { GlkClass } from '../../../vendor/quixe/glkapi.js';
@@ -19,13 +19,15 @@ export const SLICE_MS = 100;
 
 /** Marks our saved states: format and version of the envelope around Quixe's snapshot. */
 const FORMAT = 'inkventure-quixe';
-const VERSION = 1;
+const VERSION = 2;
 
 /** Quixe's autosave snapshot, as far as we touch it. */
 interface Snapshot {
   /** RAM from `ramstart` to `endmem`, as numbers. */
   ram?: number[] | Uint8Array;
-  /** Ours: the RAM XORed with the story's initial RAM (mostly zeros, so it compresses well), in base64. */
+  /** Ours: the RAM XORed with the story's initial RAM (mostly zeros), deflated, in base64 (version 2). */
+  ramz?: string;
+  /** Version 1: the same delta, not deflated. */
   ramx?: string;
   glk: { windows?: Array<{ reserve?: unknown[] }> };
   [other: string]: unknown;
@@ -283,11 +285,14 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
         if (!eventaddr) return Promise.reject(new Error('The game cannot be saved just now.'));
         current.vm.do_autosave(eventaddr);
         const snapshot = current.dialog.autosave as Snapshot;
+        // Not kept: the reader holds the states it needs (Undo), and a large game's RAM is 1–2 MB.
+        current.dialog.autosave = null;
         const ram = snapshot.ram as ArrayLike<number>;
-        // The RAM as a compact delta; the rest is copied through JSON, without the text Glk keeps for redrawing
-        // windows (the reader restores its own transcript).
+        // The RAM as a delta, deflated right away (mostly zeros: a few KB), so Undo's states and the autosave stay
+        // small; the rest is copied through JSON, without the text Glk keeps for redrawing windows (the reader
+        // restores its own transcript).
         const copy = JSON.parse(JSON.stringify({ ...snapshot, ram: undefined })) as Snapshot;
-        copy.ramx = toBase64(xorWithStory(ram, game));
+        copy.ramz = toBase64(deflateSync(xorWithStory(ram, game), { level: 1 }));
         const windows = copy.glk.windows || [];
         for (let i = 0; i < windows.length; i++) if (windows[i].reserve) windows[i].reserve = [];
         const envelope: Envelope = {
@@ -312,21 +317,27 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
       if (
         !envelope ||
         envelope.format !== FORMAT ||
-        envelope.version !== VERSION ||
+        (envelope.version !== 1 && envelope.version !== VERSION) ||
         !envelope.snapshot ||
-        typeof envelope.snapshot.ramx !== 'string'
+        typeof (envelope.version === 1 ? envelope.snapshot.ramx : envelope.snapshot.ramz) !==
+          'string'
       )
         return Promise.reject(new Error('Not a saved game.'));
       if (!game || envelope.signature !== hex(game, 64))
         return Promise.reject(new Error('This saved game belongs to another story.'));
       let ram: Uint8Array;
       try {
-        ram = xorWithStory(fromBase64(envelope.snapshot.ramx), game);
+        const delta =
+          envelope.version === 1
+            ? fromBase64(envelope.snapshot.ramx as string)
+            : inflateSync(fromBase64(envelope.snapshot.ramz as string));
+        ram = xorWithStory(delta, game);
       } catch {
         return Promise.reject(new Error('Not a saved game.'));
       }
       const snapshot: Snapshot = { ...envelope.snapshot, ram: ram };
       delete snapshot.ramx;
+      delete snapshot.ramz;
       return boot(snapshot);
     },
 

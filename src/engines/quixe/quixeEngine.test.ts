@@ -1,6 +1,7 @@
 // @vitest-environment node
 // Headless adapter test: the Glulx fixture game played through Quixe, its Glk library and our GlkOte bridge, no DOM.
 import { readFileSync } from 'node:fs';
+import { inflateSync } from 'fflate';
 import { describe, expect, it } from 'vitest';
 import type { Engine, InputRequest } from '../engine';
 import { applyOutput, EMPTY_TRANSCRIPT, splitStatus, type Transcript } from '../transcript';
@@ -217,6 +218,41 @@ describe('Quixe engine', () => {
     expect(await send(other, 'up')).toContain('Lamp Room');
     expect(await send(other, 'fill lamp')).toContain('You pour the paraffin into the reservoir.');
     expect(other.errors).toEqual([]);
+  });
+
+  it('keeps the state of a game with a large RAM small (deflated delta), and restores it', async () => {
+    // The fixture with 1.5 MB more RAM (endmem), the size of a medium Inform 7 game's.
+    const big = new Uint8Array(STORY);
+    const header = new DataView(big.buffer, big.byteOffset);
+    header.setUint32(16, header.getUint32(16) + 1536 * 1024);
+    const session = await start(big);
+    await begin(session);
+    await send(session, 'take can');
+    const state = await session.engine.saveState();
+    expect(state.length).toBeLessThan(32 * 1024);
+    await send(session, 'north');
+    await session.engine.restoreState(state);
+    session.take();
+    expect(await send(session, 'look')).toContain('Landing Stage');
+    expect(await send(session, 'inventory')).toContain('paraffin can');
+  });
+
+  it('still restores a version 1 state (the RAM delta not deflated)', async () => {
+    const session = await start();
+    await begin(session);
+    await send(session, 'take can');
+    const v2 = JSON.parse(new TextDecoder().decode(await session.engine.saveState()));
+    const delta = inflateSync(Buffer.from(v2.snapshot.ramz, 'base64'));
+    const v1 = {
+      ...v2,
+      version: 1,
+      snapshot: { ...v2.snapshot, ramz: undefined, ramx: Buffer.from(delta).toString('base64') },
+    };
+    await send(session, 'north');
+    await session.engine.restoreState(new TextEncoder().encode(JSON.stringify(v1)));
+    session.take();
+    expect(await send(session, 'look')).toContain('Landing Stage');
+    expect(await send(session, 'inventory')).toContain('paraffin can');
   });
 
   it('snapshots the very first prompt, before any command', async () => {
