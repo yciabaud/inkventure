@@ -54,6 +54,13 @@ export function TopBar({ current }: { current: RouteName }) {
                 location.hash = formatHash({ name: 'settings' });
               },
             },
+            {
+              // The ebook download page (S6.3), next to the app.
+              label: t('menu.ebook'),
+              onSelect: () => {
+                location.href = 'ebook/';
+              },
+            },
             { label: t('menu.refresh'), onSelect: () => refreshScreen() },
           ]}
         />

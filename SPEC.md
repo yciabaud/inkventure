@@ -142,7 +142,7 @@ links to one page per section, `#/settings?s=reading` (reader defaults, with a p
 reset) and `?s=about` (version, credits, privacy).
 
 A persistent top bar (like the Kindle header) shows: app name/Home, Library and a ⋯ Menu (icon buttons,
-≥ 48 px); the menu holds Settings and Refresh screen. A focus outline is only drawn for keyboard focus
+≥ 48 px); the menu holds Settings, Free ebook (the download page, `ebook/`) and Refresh screen. A focus outline is only drawn for keyboard focus
 (`:focus-visible`), never after a tap. In the reader the bar is hidden until the top zone is tapped.
 
 Deep links: `#/game/:tuid` and `#/play/:tuid` must work from a cold start (used by the ebook).
@@ -179,7 +179,8 @@ Purpose: get back into a game in one tap, or start a recommended one.
   on newcomer-friendly titles (their one-line pitch is not shown on Home since S4.2, where the grid leaves room for
   the title only; it stays for the ebook cards); then the best-rated games
   in the UI language. Only games in the UI language, and never one already in progress.
-- Empty state (first launch: no game started or added): short welcome text, "How to play" link (`#/help`, a short
+- Empty state (first launch: no game started or added): short welcome text, "Get the free ebook" link (the download
+  page, `ebook/`), "How to play" link (`#/help`, a short
   paged guide that also offers the test adventure), Featured shelf first.
 - The Featured shelf takes the height left on the screen: covers are sized to it (2:3, 96–250 px tall, the
   largest IFDB thumbnail) and as many
@@ -670,8 +671,11 @@ A free ebook, in EN and FR, is the main acquisition channel.
   service, in generic terms). Without `books.json` (failed build, PR previews, `vite preview`) it says the books are
   not available. Its strings are the `ebookPage.*` keys of `src/i18n/`; `scripts/build/ebook-page.ts` writes
   `ebook/index.html` with them and compiles `src/ebook-page/page.ts` to ES5 (`ebook/page.js`) at build time: not a
-  Vite entry, so the app's budgets do not count it. The ebooks have no size budget. Settings › About gives the
-  page's address as text; the README and the ebook's credits chapter link to it.
+  Vite entry, so the app's budgets do not count it. The ebooks have no size budget. Home's welcome and the ⋯ menu
+  link to the page; Settings › About gives its address as text; the README and the ebook's credits chapter link to
+  it.
+- **First page of the book:** a large "Open Inkventure" link to the app at the top of the welcome chapter: the
+  book's main use on the e-reader is to open the app with one tap.
 
 ---
 

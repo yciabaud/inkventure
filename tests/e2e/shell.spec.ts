@@ -29,6 +29,10 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await expectScreen(page, '#/home', 'Home');
 
   await expect(page.getByRole('link', { name: 'How to play' })).toHaveAttribute('href', '#/help');
+  await expect(page.getByRole('link', { name: 'Get the free ebook' })).toHaveAttribute(
+    'href',
+    'ebook/',
+  );
   await page.goto('/#/help');
   await expect(page.getByRole('link', { name: 'Play the test adventure' })).toHaveAttribute(
     'href',
@@ -83,6 +87,17 @@ test('menu offers Refresh screen, which flashes and restores the page', async ({
   await expect(dialog).toBeHidden();
   await expect(page.locator('.screen-flash')).toHaveCount(0);
   await expectScreen(page, '#/home', 'Home');
+});
+
+test('menu leads to the ebook download page', async ({ page }) => {
+  await page.route('**/ebook/books.json', (route) => route.fulfill({ status: 404, body: '' }));
+  await page.goto('/#/library');
+  await press(page.getByRole('button', { name: 'Menu' }));
+  await press(
+    page.getByRole('dialog', { name: 'Menu' }).getByRole('button', { name: 'Free ebook' }),
+  );
+  await expect(page).toHaveURL(/\/ebook\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'The Inkventure ebook' })).toBeVisible();
 });
 
 test('a tap leaves no focus outline; the keyboard still shows one', async ({ page }) => {
