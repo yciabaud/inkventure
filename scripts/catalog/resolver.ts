@@ -44,6 +44,8 @@ export interface ContentPolicyConfig {
   denyTags: string[];
   /** Games left out by hand, whatever the policy (untagged adult content, broken files…). */
   exclude: Array<{ tuid: string; reason: string }>;
+  /** Languages set by hand (S2.6), applied last: `{ tuid: { language: 'en', reason: '…' } }`. */
+  languages?: Record<string, { language: string; reason: string }>;
 }
 
 export type ContentPolicy = 'general' | 'adult';
@@ -108,6 +110,18 @@ export interface Dropped {
   detail?: string;
 }
 
+/** A game whose language is not IFDB's first one (S2.6). */
+export interface LanguageChange {
+  tuid: string;
+  title: string;
+  /** IFDB's first language. */
+  from?: string;
+  to: string;
+  source: 'rule' | 'override';
+  /** The file's description (rule) or the override's reason. */
+  detail: string;
+}
+
 export interface Resolution {
   policy: ContentPolicy;
   enabledFormats: StoryFormat[];
@@ -123,6 +137,12 @@ export interface Resolution {
     formats: Record<string, number>;
     pictures: { blorbs: number; inspected: number; illustrated: number };
   };
+  /**
+   * Languages (S2.6): the kept games whose language came from their file's description or from an override, the
+   * count of kept multi-language games left with IFDB's first language (to review by hand), and the overrides that
+   * name no kept game.
+   */
+  languages: { changed: LanguageChange[]; firstOfSeveral: number; unknownOverrides: string[] };
 }
 
 interface Link {
@@ -131,6 +151,7 @@ interface Link {
   isGame?: boolean;
   compression?: string;
   compressedPrimary?: string;
+  desc?: string;
 }
 
 interface Candidate {
@@ -140,6 +161,8 @@ interface Candidate {
   onArchive: boolean;
   compressed: boolean;
   index: number;
+  /** IFDB's description of the link. */
+  desc?: string;
 }
 
 const IF_ARCHIVE_HOST = /(^|\.)ifarchive\.org$/i;
@@ -230,6 +253,7 @@ export function chooseFile(
       onArchive: IF_ARCHIVE_HOST.test(hostOf(url)),
       compressed: !!link.compression,
       index: index,
+      desc: typeof link.desc === 'string' ? link.desc : undefined,
     });
   });
 
@@ -277,27 +301,64 @@ function unique<T>(items: T[]): T[] {
   return items.filter((item, i) => items.indexOf(item) === i);
 }
 
+/** Language names, in English and in the languages themselves (and in French), without accents. */
 const LANGUAGE_NAMES: Record<string, string> = {
   english: 'en',
+  anglais: 'en',
+  ingles: 'en',
+  inglese: 'en',
+  englisch: 'en',
   french: 'fr',
-  français: 'fr',
   francais: 'fr',
+  frances: 'fr',
+  francese: 'fr',
+  franzosisch: 'fr',
   german: 'de',
   deutsch: 'de',
+  allemand: 'de',
+  aleman: 'de',
+  tedesco: 'de',
   spanish: 'es',
   castilian: 'es',
-  español: 'es',
+  espanol: 'es',
+  castellano: 'es',
+  espagnol: 'es',
+  spagnolo: 'es',
+  spanisch: 'es',
   italian: 'it',
   italiano: 'it',
+  italien: 'it',
+  italienisch: 'it',
   portuguese: 'pt',
+  portugues: 'pt',
+  portugais: 'pt',
   dutch: 'nl',
+  nederlands: 'nl',
+  neerlandais: 'nl',
   russian: 'ru',
+  russe: 'ru',
   swedish: 'sv',
+  svenska: 'sv',
+  suedois: 'sv',
   polish: 'pl',
+  polski: 'pl',
+  polonais: 'pl',
   czech: 'cs',
+  cestina: 'cs',
+  tcheque: 'cs',
   japanese: 'ja',
+  japonais: 'ja',
   chinese: 'zh',
+  chinois: 'zh',
 };
+
+/** Lower case without accents: `Français` → `francais`. */
+function plain(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
 
 /**
  * Primary language subtag of IFDB's language field: `en-US` → `en`, `fr` → `fr`. IFDB gives the whole field when it
@@ -312,7 +373,46 @@ export function normalizeLanguage(value: unknown): string | undefined {
   const first = whole.split(/[,;/]/)[0].trim();
   const code = /^([a-z]{2,3})(?:[-_][a-z0-9]+)*$/.exec(first);
   if (code && !LANGUAGE_NAMES[first]) return code[1];
-  return LANGUAGE_NAMES[first.replace(/\s*\(.*\)$/, '')];
+  return LANGUAGE_NAMES[plain(first.replace(/\s*\(.*\)$/, ''))];
+}
+
+/**
+ * Every language of IFDB's language field, as primary subtags in IFDB's order: `French, English (fr, en)` →
+ * `['fr', 'en']`. Unknown names are left out.
+ */
+export function languagesOf(value: unknown): string[] {
+  if (typeof value !== 'string') return [];
+  const whole = value.trim().toLowerCase();
+  const bracketed = /\(([^()]*)\)$/.exec(whole);
+  const codes = bracketed ? bracketed[1].split(',') : [];
+  const parts =
+    codes.length && codes.every((code) => /^\s*[a-z]{2,3}(?:-[a-z0-9]+)*\s*$/.test(code))
+      ? codes
+      : whole.split(/[,;/]/);
+  return unique(
+    parts
+      .map((part) => normalizeLanguage(part))
+      .filter((code): code is string => code !== undefined),
+  );
+}
+
+const ONLY_AFTER = '(?:only|seulement|uniquement|solamente|soltanto|nur)';
+const ONLY_BEFORE = '(?:only in|seulement en|uniquement en|solo en|solo in|nur auf)';
+
+/**
+ * The language a file's description says it is limited to (`English only`, `(English only.)`,
+ * `en français seulement`, `only in French`…), when that language is one of `languages` and the only one named so.
+ */
+export function onlyLanguage(description: string, languages: string[]): string | undefined {
+  const text = plain(decodeEntities(description));
+  const found: string[] = [];
+  for (const name of Object.keys(LANGUAGE_NAMES)) {
+    const after = new RegExp('(?:^|[^a-z])' + name + '\\s+' + ONLY_AFTER + '(?![a-z])');
+    const before = new RegExp('(?:^|[^a-z])' + ONLY_BEFORE + '\\s+' + name + '(?![a-z])');
+    if (after.test(text) || before.test(text)) found.push(LANGUAGE_NAMES[name]);
+  }
+  const named = unique(found);
+  return named.length === 1 && languages.indexOf(named[0]) >= 0 ? named[0] : undefined;
 }
 
 const ENTITIES: Record<string, string> = {
@@ -392,7 +492,14 @@ function num(value: unknown): number | undefined {
   return typeof n === 'number' && isFinite(n) ? n : undefined;
 }
 
-function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGame {
+type LanguageNote = Omit<LanguageChange, 'tuid' | 'title'> | 'first-of-several' | undefined;
+
+function resolveGame(
+  game: RawGame,
+  file: Candidate,
+  tags: string[],
+): { game: ResolvedGame; language: LanguageNote } {
+  let change: LanguageNote;
   const record = game.record;
   const bib = (record.bibliographic || {}) as Record<string, unknown>;
   const ifdb = record.ifdb as Record<string, unknown>;
@@ -414,6 +521,16 @@ function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGa
   if (year !== undefined) resolved.year = year;
   const language = normalizeLanguage(bib.language);
   if (language) resolved.language = language;
+  const languages = languagesOf(bib.language);
+  if (languages.length > 1) {
+    const only = file.desc ? onlyLanguage(file.desc, languages) : undefined;
+    if (only) {
+      resolved.language = only;
+      change = { from: language, to: only, source: 'rule', detail: file.desc! };
+    } else {
+      change = 'first-of-several';
+    }
+  }
   const average = num(ifdb.averageRating);
   const count = num(ifdb.ratingCountAvg) ?? num(search.numRatings);
   if (average !== undefined && count) {
@@ -431,7 +548,7 @@ function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGa
   if (cover && str(cover.url)) resolved.cover = cover.url as string;
   const description = str(bib.description);
   if (description) resolved.description = description;
-  return resolved;
+  return { game: resolved, language: change };
 }
 
 /** Keeps the playable games allowed by the content policy; every other game is listed with its reason. */
@@ -447,7 +564,10 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       formats: {},
       pictures: { blorbs: 0, inspected: 0, illustrated: 0 },
     },
+    languages: { changed: [], firstOfSeveral: 0, unknownOverrides: [] },
   };
+  const overrides = options.config.languages || {};
+  const overridden: string[] = [];
   const drop = (game: RawGame, reason: DropReason, detail?: string) => {
     const entry: Dropped = { tuid: game.tuid, title: game.search.title, reason: reason };
     if (detail) entry.detail = detail;
@@ -479,7 +599,26 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       drop(game, enabledChoice.reason, enabledChoice.detail);
       continue;
     }
-    const resolved = resolveGame(game, enabledChoice.file, tags);
+    const resolution = resolveGame(game, enabledChoice.file, tags);
+    const resolved = resolution.game;
+    let language = resolution.language;
+    const override = overrides[game.tuid];
+    if (override) {
+      overridden.push(game.tuid);
+      language = {
+        from: language && language !== 'first-of-several' ? language.from : resolved.language,
+        to: override.language,
+        source: 'override',
+        detail: override.reason,
+      };
+      resolved.language = override.language;
+    }
+    if (language === 'first-of-several') result.languages.firstOfSeveral++;
+    else if (language) {
+      const change: LanguageChange = { tuid: game.tuid, title: resolved.title, ...language };
+      if (change.from === undefined) delete change.from;
+      result.languages.changed.push(change);
+    }
     if (isCandidate(resolved)) {
       const counts = result.counts.pictures;
       counts.blorbs++;
@@ -494,5 +633,8 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
     result.games.push(resolved);
   }
   result.counts.kept = result.games.length;
+  result.languages.unknownOverrides = Object.keys(overrides).filter(
+    (tuid) => overridden.indexOf(tuid) < 0,
+  );
   return result;
 }

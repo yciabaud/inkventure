@@ -1,5 +1,5 @@
 {
-  "comment": "SPEC §5.4. With CONTENT_POLICY=general (default) games carrying one of `denyTags` (IFDB tags, case-insensitive) are left out. `exclude` removes games by hand under every policy: IFDB tagging is incomplete. Each entry: { \"tuid\": \"…\", \"reason\": \"…\" }.",
+  "comment": "SPEC §5.4. With CONTENT_POLICY=general (default) games carrying one of `denyTags` (IFDB tags, case-insensitive) are left out. `exclude` removes games by hand under every policy: IFDB tagging is incomplete. Each entry: { \"tuid\": \"…\", \"reason\": \"…\" }. `languages` sets a game's language by hand (S2.6), after the rule that reads the chosen file's description, for cases the rule cannot read: { \"<tuid>\": { \"language\": \"en\", \"reason\": \"…\" } }; overrides naming no kept game are reported.",
   "denyTags": [
     "sexual content",
     "adult",
@@ -11,5 +11,6 @@
     "pornography",
     "sex"
   ],
-  "exclude": []
+  "exclude": [],
+  "languages": {}
 }

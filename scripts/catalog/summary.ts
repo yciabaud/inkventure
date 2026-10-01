@@ -16,6 +16,29 @@ function table(title: string, rows: Array<[string, number]>, max = 15): string {
   return `**${title}**\n\n| Value | Games |\n|---|---|\n${shown.join('\n')}${more}\n`;
 }
 
+function languages(resolution: Resolution): string {
+  const { changed, firstOfSeveral, unknownOverrides } = resolution.languages;
+  const rows = changed.map(
+    (change) =>
+      `| \`${change.tuid}\` | ${change.title.replace(/\|/g, '\\|')} | ${change.from || '(none)'} → ` +
+      `${change.to} | ${change.source} | ${change.detail.replace(/\|/g, '\\|')} |`,
+  );
+  const parts = [
+    rows.length
+      ? '**Language from the file (S2.6)**\n\n| Game | Title | IFDB first → kept | From | Why |\n|---|---|---|---|---|\n' +
+        rows.join('\n') +
+        '\n'
+      : '**Language from the file (S2.6)**: none\n',
+    `${firstOfSeveral} kept game(s) list several languages and keep IFDB's first one (to review by hand).\n`,
+  ];
+  if (unknownOverrides.length) {
+    parts.push(
+      `Language overrides naming no kept game: ${unknownOverrides.map((t) => '`' + t + '`').join(', ')}.\n`,
+    );
+  }
+  return parts.join('\n');
+}
+
 export function summarize(dataset: RawDataset, resolution: Resolution): string {
   const links = dataset.games.flatMap((game) => {
     const downloads = game.record.ifdb.downloads;
@@ -48,6 +71,7 @@ export function summarize(dataset: RawDataset, resolution: Resolution): string {
       'Kept games, by language',
       tally(resolution.games.map((game) => game.language || '(none)')),
     ),
+    languages(resolution),
     '### Raw IFDB fields',
     '',
     table(

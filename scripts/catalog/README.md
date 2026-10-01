@@ -54,6 +54,12 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
   upgraded to HTTPS; other plain-HTTP links are refused (mixed content).
 - **Metadata**: language reduced to its primary subtag (`en-US` → `en`, `English` → `en`), genres split on `/ , ;`,
   year, rating, play time, cover, IFIDs, tags. `slow` is false for every game (Glulx turns measured on the Kindle stay within the < 3 s target, S1.7).
+- **Language of the file played** (S2.6): IFDB's first language, unless IFDB lists several and the description of
+  the chosen download names one of them followed (or preceded) by "only" (`(English only.)`, `en français
+  seulement`, `only in Spanish`…, names in English, French and the game's languages): that one is kept.
+  `content-policy.json`'s `languages` map (`{ tuid: { language, reason } }`) overrides it last. `report.json`
+  (`languages`) and the summary list the games changed, count the multi-language games left with their first language
+  (to review by hand), and name the overrides that match no kept game.
 - **Content policy**: `CONTENT_POLICY=general` (default) drops games tagged with one of `content-policy.json`'s
   `denyTags` (case-insensitive); `adult` keeps them. The `exclude` list applies to every policy.
 - **Readable files** (`--cors FILE`): a file outside the IF Archive is used only when there is no IF Archive file and

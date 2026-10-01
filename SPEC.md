@@ -476,7 +476,11 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    candidate's `viewgame?json` record (cached per game, keyed by page version) into `data/raw/games.json`.
 2. **Resolve playability** (`scripts/catalog/resolve.ts`, offline) — from each candidate's `viewgame?json` record
    (fetched by the crawler) get links, formats, IFID, genre, language (primary subtag), tags, rating, play time, cover
-   art (forgiveness is only in the iFiction XML, not fetched yet). Pick the best playable file among the formats
+   art (forgiveness is only in the iFiction XML, not fetched yet). The language is the one of the file the app plays
+   (S2.6): IFDB's first language, unless IFDB lists several and the chosen file's description names one of them
+   "only" (`(English only.)`, `en français seulement`…), then a hand-kept override (`languages` in
+   `content-policy.json`); `report.json` lists the games changed and counts the multi-language games left with their
+   first language. Pick the best playable file among the formats
    enabled in `scripts/catalog/playability.json` (those with an engine): IF Archive URLs first, uncompressed before a
    zip (zips only when IFDB names the story file inside), `.zblorb/.gblorb` before bare story files; HTTPS only (IF
    Archive links upgraded). A file outside the IF Archive is used only if its host lets a browser page read it

@@ -1,0 +1,87 @@
+{
+  "tuid": "sh5jnhgsxwwu71t1",
+  "pageVersion": 6,
+  "fetchedAt": "2026-09-30T09:55:56.751Z",
+  "record": {
+    "colophon": {
+      "generator": "ifdb.org/viewgame",
+      "generatorversion": 1,
+      "originated": "2024-03-21"
+    },
+    "identification": {
+      "ifids": ["415494E3-2906-4D55-815D-04F9E60F448E", "253F28C1-7D11-48FB-BF69-B0418B2647F4"]
+    },
+    "bibliographic": {
+      "title": "Evita Sempai",
+      "author": "Florencia Rumpel Rodriguez",
+      "language": "English, Castilian (en, es)",
+      "firstpublished": "2016-04-06",
+      "description": "A woman in the fifties falls in love with an idealized version of a polemical political figure."
+    },
+    "contacts": { "url": "https://rumpelcita.itch.io/evitasempai" },
+    "ifdb": {
+      "tuid": "sh5jnhgsxwwu71t1",
+      "pageversion": 6,
+      "link": "https://ifdb.org/viewgame?id=sh5jnhgsxwwu71t1",
+      "coverart": { "url": "https://ifdb.org/coverart?id=sh5jnhgsxwwu71t1&version=6" },
+      "primaryPlayOnlineUrl": "https://rumpelcita.github.io/evitasempai/",
+      "downloads": {
+        "links": [
+          {
+            "url": "https://rumpelcita.github.io/evitasempai/",
+            "playOnlineUrl": "https://rumpelcita.github.io/evitasempai/",
+            "title": "Play online",
+            "desc": "At GitHub. (English, español)",
+            "isGame": true,
+            "format": "hypertextgame"
+          },
+          {
+            "url": "https://rumpel.itch.io/evitasempai",
+            "playOnlineUrl": "https://rumpel.itch.io/evitasempai",
+            "title": "Play online",
+            "desc": "At itch.io. (English, español)",
+            "isGame": true,
+            "format": "hypertextgame"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/springthing/2016/EvitaSempai.zip",
+            "playOnlineUrl": "https://unbox.ifarchive.org/?url=https%3A%2F%2Fifarchive.org%2Fif-archive%2Fgames%2Fspringthing%2F2016%2FEvitaSempai.zip&open=evita_sempai.html",
+            "title": "Spring Thing 2016 version",
+            "desc": "English only.",
+            "isGame": true,
+            "format": "hypertextgame",
+            "compression": "zip",
+            "compressedPrimary": "evita_sempai.html"
+          },
+          {
+            "url": "https://github.com/Rumpelcita/evitasempai",
+            "title": "GitHub repository",
+            "format": "html"
+          }
+        ]
+      },
+      "averageRating": 2.4,
+      "starRating": 2.5,
+      "ratingCountAvg": 10,
+      "ratingCountTot": 10,
+      "tags": [
+        { "name": "Argentina", "tagcnt": 1, "gamecnt": 3 },
+        { "name": "bilingual", "tagcnt": 1, "gamecnt": 9 },
+        { "name": "celebrity", "tagcnt": 1, "gamecnt": 9 },
+        { "name": "cover art", "tagcnt": 1, "gamecnt": 1775 },
+        { "name": "dictatorship", "tagcnt": 1, "gamecnt": 2 },
+        { "name": "dynamic fiction", "tagcnt": 1, "gamecnt": 55 },
+        { "name": "fandom", "tagcnt": 1, "gamecnt": 9 },
+        { "name": "female protagonist", "tagcnt": 1, "gamecnt": 930 },
+        { "name": "gay/queer protagonist", "tagcnt": 1, "gamecnt": 163 },
+        { "name": "lesbians", "tagcnt": 1, "gamecnt": 5 },
+        { "name": "LGBTQ+", "tagcnt": 1, "gamecnt": 366 },
+        { "name": "puzzleless", "tagcnt": 1, "gamecnt": 212 },
+        { "name": "slow", "tagcnt": 1, "gamecnt": 81 },
+        { "name": "Spring Thing 2016", "tagcnt": 1, "gamecnt": 17 },
+        { "name": "Spring Thing Game", "tagcnt": 1, "gamecnt": 352 },
+        { "name": "twine", "tagcnt": 1, "gamecnt": 1442 }
+      ]
+    }
+  }
+}

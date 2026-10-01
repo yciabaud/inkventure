@@ -1,14 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { crawl, type RecordCache } from './crawler';
+import { crawl, type RawDataset, type RawGame, type RecordCache } from './crawler';
 import { offlineFetcher } from './fetcher';
+import { summarize } from './summary';
 import type { GameRecord } from './ifdb';
 import {
   chooseFile,
   decodeEntities,
+  languagesOf,
   linkFormat,
   normalizeGenres,
   normalizeLanguage,
+  onlyLanguage,
   policyReason,
   resolve,
   secureUrl,
@@ -364,5 +367,163 @@ describe('resolution of the recorded fixtures', () => {
     expect(one.games.filter((game) => game.illustrated)).toEqual([]);
     expect(one.counts.pictures).toEqual({ blorbs: 1, inspected: 1, illustrated: 0 });
     expect(counted(undefined).counts.pictures).toEqual({ blorbs: 1, inspected: 0, illustrated: 0 });
+  });
+});
+
+describe('the language of the file played (S2.6)', () => {
+  /** A recorded IFDB record (tests/fixtures/ifdb-records), as the crawler would list it. */
+  const recorded = (tuid: string, devsys: string): RawGame => {
+    const cached = JSON.parse(readFileSync(`tests/fixtures/ifdb-records/${tuid}.json`, 'utf8')) as {
+      record: GameRecord;
+    };
+    const record = cached.record;
+    return {
+      tuid: tuid,
+      pageVersion: 1,
+      queries: [],
+      search: {
+        tuid: tuid,
+        title: String((record.bibliographic || {}).title),
+        link: '',
+        author: '',
+        hasCoverArt: false,
+        devsys: devsys,
+      },
+      record: record,
+    };
+  };
+  const JEANGILLE = 'rpis77r72fg8228';
+  const games = (): RawGame[] => [
+    recorded(JEANGILLE, 'Twine 2 (SugarCube)'),
+    recorded('grjll9wqgibm4xq1', 'Twine 2 (Harlowe)'),
+    recorded('sh5jnhgsxwwu71t1', 'Twine 2 (SugarCube)'),
+    recorded('8u7jw2gxr81ouoan', 'Twine 2 (Harlowe)'),
+    recorded('dhwpnm9nyae3jd8b', 'Inform 6'),
+  ];
+  const run = (dataset: RawGame[], languages?: ContentPolicyConfig['languages']) =>
+    resolve({ games: dataset } as RawDataset, {
+      enabledFormats: ['zcode', 'glulx', 'twine', 'ink'],
+      policy: 'general',
+      config: { ...CONFIG, languages: languages },
+    });
+  const languageOf = (result: ReturnType<typeof run>, tuid: string) =>
+    result.games.filter((game) => game.tuid === tuid)[0].language;
+
+  it("lists every language of IFDB's field", () => {
+    expect(languagesOf('French, English (fr, en)')).toEqual(['fr', 'en']);
+    expect(languagesOf('English, Castilian, Esperanto (en,es,eo)')).toEqual(['en', 'es', 'eo']);
+    expect(languagesOf('English, Chinese (en, zh-yue-Hant)')).toEqual(['en', 'zh']);
+    expect(languagesOf('&quot;Greek, Modern (1453-)&quot;, English (el, en)')).toEqual([
+      'el',
+      'en',
+    ]);
+    expect(languagesOf('English, Français')).toEqual(['en', 'fr']);
+    expect(languagesOf('en-US')).toEqual(['en']);
+    expect(languagesOf(undefined)).toEqual([]);
+  });
+
+  it('reads "only" after or before a language name, in English and in the game\'s languages', () => {
+    expect(
+      onlyLanguage('Spring Thing 2024 version, at the IF Archive. (English only.)', ['fr', 'en']),
+    ).toBe('en');
+    expect(onlyLanguage('IFComp release. (English only)', ['en', 'es'])).toBe('en');
+    expect(onlyLanguage('ENGLISH ONLY', ['en', 'es'])).toBe('en');
+    expect(onlyLanguage('Version en français seulement.', ['en', 'fr'])).toBe('fr');
+    expect(onlyLanguage('Uniquement en Français', ['en', 'fr'])).toBe('fr');
+    expect(onlyLanguage('Only in Spanish.', ['en', 'es'])).toBe('es');
+    expect(onlyLanguage('Sólo en español', ['en', 'es'])).toBe('es');
+    // A language the game does not list, no "only", or two languages each "only": nothing is read.
+    expect(onlyLanguage('German only.', ['en', 'fr'])).toBeUndefined();
+    expect(onlyLanguage('English version.', ['en', 'es'])).toBeUndefined();
+    expect(onlyLanguage('At GitHub. (English, español)', ['en', 'es'])).toBeUndefined();
+    expect(onlyLanguage('English only, or Spanish only.', ['en', 'es'])).toBeUndefined();
+    expect(onlyLanguage('Englishonly', ['en', 'es'])).toBeUndefined();
+  });
+
+  it('takes the language the chosen file\'s description names "only", on the recorded records', () => {
+    const result = run(games());
+    // Jeangille: IFDB lists `fr, en`; its IF Archive zip is "(English only.)".
+    expect(languageOf(result, JEANGILLE)).toBe('en');
+    expect(languageOf(result, 'grjll9wqgibm4xq1')).toBe('en');
+    expect(languageOf(result, 'sh5jnhgsxwwu71t1')).toBe('en');
+    // Several languages, no description: the first one, counted for review. One language: unchanged.
+    expect(languageOf(result, '8u7jw2gxr81ouoan')).toBe('en');
+    expect(languageOf(result, 'dhwpnm9nyae3jd8b')).toBe('fr');
+    expect(result.languages).toEqual({
+      changed: [
+        {
+          tuid: JEANGILLE,
+          title: 'Les lettres du Docteur Jeangille',
+          from: 'fr',
+          to: 'en',
+          source: 'rule',
+          detail: 'Spring Thing 2024 version, at the IF Archive. (English only.)',
+        },
+        expect.objectContaining({ tuid: 'grjll9wqgibm4xq1', from: 'en', to: 'en' }),
+        expect.objectContaining({ tuid: 'sh5jnhgsxwwu71t1', from: 'en', to: 'en' }),
+      ],
+      firstOfSeveral: 1,
+      unknownOverrides: [],
+    });
+  });
+
+  it('only reads the description of the file chosen, and only languages the game lists', () => {
+    const edited = (desc: string, language: string): RawGame => {
+      const game = recorded(JEANGILLE, 'Twine 2 (SugarCube)');
+      const record = JSON.parse(JSON.stringify(game.record)) as GameRecord;
+      const links = record.ifdb.downloads!.links as Array<{ desc?: string }>;
+      links[2].desc = desc;
+      record.bibliographic!.language = language;
+      return { ...game, record: record };
+    };
+    expect(
+      languageOf(
+        run([edited('Version en français seulement.', 'English, French (en, fr)')]),
+        JEANGILLE,
+      ),
+    ).toBe('fr');
+    expect(languageOf(run([edited('German only.', 'French, English (fr, en)')]), JEANGILLE)).toBe(
+      'fr',
+    );
+    // "Bilingual version." is the itch.io link's, which the app cannot download.
+    expect(
+      languageOf(run([edited('At the IF Archive.', 'French, English (fr, en)')]), JEANGILLE),
+    ).toBe('fr');
+  });
+
+  it('applies the overrides last and reports those naming no kept game', () => {
+    const result = run(games(), {
+      '8u7jw2gxr81ouoan': { language: 'fr', reason: 'The zip holds the French version.' },
+      [JEANGILLE]: { language: 'fr', reason: 'Checked by hand.' },
+      zzzzunknown00000: { language: 'en', reason: 'Gone from IFDB.' },
+    });
+    expect(languageOf(result, '8u7jw2gxr81ouoan')).toBe('fr');
+    expect(languageOf(result, JEANGILLE)).toBe('fr');
+    const changes = Object.fromEntries(result.languages.changed.map((c) => [c.tuid, c]));
+    expect(changes['8u7jw2gxr81ouoan']).toEqual({
+      tuid: '8u7jw2gxr81ouoan',
+      title: 'Clarence Street, 14.',
+      from: 'en',
+      to: 'fr',
+      source: 'override',
+      detail: 'The zip holds the French version.',
+    });
+    expect(changes[JEANGILLE]).toMatchObject({ from: 'fr', to: 'fr', source: 'override' });
+    expect(result.languages.firstOfSeveral).toBe(0);
+    expect(result.languages.unknownOverrides).toEqual(['zzzzunknown00000']);
+  });
+
+  it('lists the changed games and the multi-language games left as they were in the job summary', () => {
+    const dataset = { games: games() } as RawDataset;
+    const summary = summarize(
+      dataset,
+      run(dataset.games, { zzzzunknown00000: { language: 'en', reason: '' } }),
+    );
+    expect(summary).toContain(
+      '| `rpis77r72fg8228` | Les lettres du Docteur Jeangille | fr → en | rule | ' +
+        'Spring Thing 2024 version, at the IF Archive. (English only.) |',
+    );
+    expect(summary).toContain("1 kept game(s) list several languages and keep IFDB's first one");
+    expect(summary).toContain('Language overrides naming no kept game: `zzzzunknown00000`.');
   });
 });
