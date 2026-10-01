@@ -1,7 +1,8 @@
 name: Catalogue
 
 # Rebuilds the catalogue from IFDB every week (SPEC §5.2): crawl (incremental, with the record cache kept on the
-# `catalog` branch), resolve playability, emit and validate the index, then publish it on the `catalog` branch.
+# `catalog` branch), check CORS and count Blorb pictures (their caches kept there too), resolve playability, emit and
+# validate the index, then publish it on the `catalog` branch.
 # The deployment (deploy.yml) runs after it and builds the site with that catalogue. Never triggered by pull requests.
 on:
   schedule:
@@ -38,27 +39,34 @@ jobs:
           mkdir -p data/cache
           if [ -d catalog-data/cache/viewgame ]; then cp -R catalog-data/cache/viewgame data/cache/; fi
           if [ -f catalog-data/cache/cors.json ]; then cp catalog-data/cache/cors.json data/cache/; fi
+          if [ -f catalog-data/cache/pictures.json ]; then cp catalog-data/cache/pictures.json data/cache/; fi
       - name: Crawl ifdb.org
         run: npm run catalog:crawl
       - name: Check that the app can read the story files outside the IF Archive (CORS)
         run: npm run catalog:cors -- --summary "$GITHUB_STEP_SUMMARY"
+      - name: Count the pictures in the Blorbs (illustrated games)
+        run: npm run catalog:pictures -- --cors data/cache/cors.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Resolve playability
-        run: npm run catalog:resolve -- --cors data/cache/cors.json --summary "$GITHUB_STEP_SUMMARY"
+        run: |
+          npm run catalog:resolve -- --cors data/cache/cors.json --pictures data/cache/pictures.json \
+            --summary "$GITHUB_STEP_SUMMARY"
       - name: Emit and validate the catalogue
         run: npm run catalog:emit -- --previous catalog-data/catalog/meta.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Publish on the catalog branch
         run: |
-          rm -rf catalog-data/catalog catalog-data/cache/viewgame catalog-data/cache/cors.json
+          rm -rf catalog-data/catalog catalog-data/cache/viewgame catalog-data/cache/cors.json catalog-data/cache/pictures.json
           mkdir -p catalog-data/cache
           cp -R data/catalog catalog-data/catalog
           cp -R data/cache/viewgame catalog-data/cache/viewgame
           cp data/cache/cors.json catalog-data/cache/cors.json
+          cp data/cache/pictures.json catalog-data/cache/pictures.json
           cp data/resolved/report.json catalog-data/report.json
           printf '%s\n' '# Catalogue data' '' \
             'Published by the Catalogue workflow (.github/workflows/catalog.yml) on main. Do not edit by hand.' '' \
             '- `catalog/`: the files the app loads (copied into public/catalog/ by deployment builds).' \
             '- `cache/viewgame/`: IFDB records, reused while their page version is unchanged.' \
             '- `cache/cors.json`: whether the app can read each story file outside the IF Archive (CORS).' \
+            '- `cache/pictures.json`: pictures besides the cover in each Blorb that could hold some (illustrated games).' \
             '- `report.json`: games left out, with their reasons.' > catalog-data/README.md
           cd catalog-data
           git add -A

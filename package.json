@@ -22,6 +22,7 @@
     "catalog:crawl": "node scripts/catalog/crawl.ts",
     "catalog:resolve": "node scripts/catalog/resolve.ts",
     "catalog:cors": "node scripts/catalog/check-cors.ts",
+    "catalog:pictures": "node scripts/catalog/check-pictures.ts",
     "catalog:emit": "node scripts/catalog/emit.ts",
     "catalog:sample": "node scripts/catalog/build-sample.ts",
     "catalog:featured": "node scripts/catalog/build-featured.ts"

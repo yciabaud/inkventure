@@ -77,6 +77,13 @@ describe('index rows', () => {
     });
   });
 
+  it('flags illustrated games', () => {
+    expect(indexRow(game('a', 'A', { illustrated: true, pictures: 3 })).il).toBe(1);
+    expect(indexRow(game('b', 'B')).il).toBeUndefined();
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'glulx', il: 1 })).toEqual([]);
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'glulx', il: true })).toEqual(['il: 1']);
+  });
+
   it('reports schema problems', () => {
     expect(rowProblems({ t: 'abc', n: 'T', a: '', f: 'zcode' })).toEqual([]);
     expect(rowProblems({ t: 'ABC!', n: '', a: 1, f: 'tads', l: 'english', c: true, x: 0 })).toEqual(
@@ -108,6 +115,20 @@ describe('emit', () => {
     expect(titles).toEqual(['Alpha', 'Bravo', 'charlie', 'delta', 'echo']);
     expect(Object.keys(files).filter((path) => path.indexOf('games/') === 0)).toHaveLength(5);
     expect(meta).toMatchObject({ version: 1, built: BUILT, policy: 'general', count: 5 });
+  });
+
+  it('counts the illustrated games in meta.json, with their picture count in the detail', () => {
+    const files = emit([game('a', 'A', { illustrated: true, pictures: 3 }), game('b', 'B')], {
+      built: BUILT,
+      policy: 'general',
+    });
+    expect((files['meta.json'] as Meta).illustrated).toBe(1);
+    expect(files['games/a.json']).toMatchObject({ illustrated: true, pictures: 3 });
+    expect(validate(files, { shardBudgetBytes: BUDGET }).errors).toEqual([]);
+    (files['meta.json'] as Meta).illustrated = 2;
+    expect(validate(files, { shardBudgetBytes: BUDGET }).errors).toEqual([
+      'meta.json: 2 illustrated, but 1 rows with il',
+    ]);
   });
 
   it('sorts titles by their words, ignoring leading punctuation', () => {

@@ -2,6 +2,7 @@
 // dataset (data/raw/games.json) into the games the app can play, with the reason for every game left out.
 import type { GameRecord } from './ifdb.ts';
 import type { RawDataset, RawGame } from './crawler.ts';
+import { isCandidate, MIN_PICTURES } from './pictures.ts';
 
 /** Story formats the app knows. A format plays once its engine exists; `enabledFormats` lists those. */
 export type StoryFormat = 'zcode' | 'glulx' | 'twine' | 'ink';
@@ -56,6 +57,11 @@ export interface ResolveOptions {
    * `check-cors.ts`). Without it, every host is assumed readable (fixtures, local runs).
    */
   readable?: (url: string) => boolean;
+  /**
+   * Pictures besides the cover in a story file, when `pictures.ts` could read its Blorb index (undefined otherwise).
+   * Without it, no game is illustrated.
+   */
+  pictures?: (url: string) => number | undefined;
 }
 
 /** The file the app downloads. `archive`: the story is `primary` inside a zip. */
@@ -86,6 +92,10 @@ export interface ResolvedGame {
   cover?: string;
   /** Provisional (S1.7 will measure): every Glulx game, whose interpreter is slow on e-readers. */
   slow: boolean;
+  /** Its Blorb holds at least MIN_PICTURES pictures besides the cover, in a format whose engine draws them (S2.5). */
+  illustrated?: true;
+  /** Pictures besides the cover, for an illustrated game. */
+  pictures?: number;
   devsys: string;
   description?: string;
   ifdbLink: string;
@@ -103,11 +113,15 @@ export interface Resolution {
   enabledFormats: StoryFormat[];
   games: ResolvedGame[];
   dropped: Dropped[];
-  /** Counts of dropped games per reason, and of playable files per format (enabled or not). */
+  /**
+   * Counts of dropped games per reason, of playable files per format (enabled or not), and of the kept games whose
+   * Blorb could have pictures (`blorbs`), was inspected (`inspected`) and is illustrated.
+   */
   counts: {
     kept: number;
     dropped: Partial<Record<DropReason, number>>;
     formats: Record<string, number>;
+    pictures: { blorbs: number; inspected: number; illustrated: number };
   };
 }
 
@@ -427,7 +441,12 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
     enabledFormats: options.enabledFormats,
     games: [],
     dropped: [],
-    counts: { kept: 0, dropped: {}, formats: {} },
+    counts: {
+      kept: 0,
+      dropped: {},
+      formats: {},
+      pictures: { blorbs: 0, inspected: 0, illustrated: 0 },
+    },
   };
   const drop = (game: RawGame, reason: DropReason, detail?: string) => {
     const entry: Dropped = { tuid: game.tuid, title: game.search.title, reason: reason };
@@ -460,7 +479,19 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       drop(game, enabledChoice.reason, enabledChoice.detail);
       continue;
     }
-    result.games.push(resolveGame(game, enabledChoice.file, tags));
+    const resolved = resolveGame(game, enabledChoice.file, tags);
+    if (isCandidate(resolved)) {
+      const counts = result.counts.pictures;
+      counts.blorbs++;
+      const pictures = options.pictures ? options.pictures(resolved.file.url) : undefined;
+      if (pictures !== undefined) counts.inspected++;
+      if (pictures !== undefined && pictures >= MIN_PICTURES) {
+        resolved.illustrated = true;
+        resolved.pictures = pictures;
+        counts.illustrated++;
+      }
+    }
+    result.games.push(resolved);
   }
   result.counts.kept = result.games.length;
   return result;
