@@ -115,6 +115,13 @@ test.describe('English browser', () => {
       await press(next);
     }
     await expect(page.getByText(/^Free ebook:/)).toContainText(/http:\/\/localhost:\d+\/ebook\/$/);
+    // Last, the source code and the full licence texts, served next to the app (S7.2).
+    for (let i = 0; i < 10 && !(await page.getByText(/^Source code:/).isVisible()); i++) {
+      await press(next);
+    }
+    await expect(page.getByText(/^Source code:/)).toContainText(
+      /http:\/\/localhost:\d+\/licences\.txt$/,
+    );
   });
 
   test('reset needs two confirmations, clears only ik: keys and returns to the first launch', async ({

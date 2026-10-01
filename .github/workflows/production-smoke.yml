@@ -1,0 +1,39 @@
+name: Production smoke
+
+# Smoke test of the live site (S7.2), on demand: the deployed app, its catalogue, a game downloaded from the IF
+# Archive, and the ebooks (tests/production/, playwright.production.config.ts). Unlike CI's e2e tests, it uses the
+# real network. Run it after a deployment, before announcing a release.
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "Site address (default: the ebook's host in ebook/config.json)"
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Same image as CI's e2e jobs; the tag must match @playwright/test.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:production
+        env:
+          PROD_URL: ${{ inputs.url }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-production
+          path: playwright-report/
+          retention-days: 7
