@@ -62,9 +62,14 @@ const report = {
   policy: resolution.policy,
   enabledFormats: resolution.enabledFormats,
   counts: resolution.counts,
+  languages: resolution.languages,
   dropped: resolution.dropped,
 };
 writeFileSync(join(values.out, 'report.json'), JSON.stringify(report, null, 2) + '\n');
+
+for (const tuid of resolution.languages.unknownOverrides) {
+  console.warn(`content-policy.json: the language override of ${tuid} names no kept game.`);
+}
 
 const summary = summarize(dataset, resolution);
 console.log(summary);

@@ -1,19 +1,76 @@
 // Game detail (SPEC §3.5; story S3.3): `games/<tuid>.json`, loaded when a game's page opens, and its blurb as plain
 // paragraphs.
 import type { GameDetail } from '../../scripts/catalog/emitter';
+import type { StoryFile } from '../../scripts/catalog/resolver';
+import { gameId, parseGameId } from '../storage/keys';
 import { CATALOG_BASE, getJson } from './loader';
 
 export type { GameDetail };
 
+/** A file of a game in one language (S2.6): the default one has the game's TUID as id, the others `<tuid>-<lang>`. */
+export interface GameVersion {
+  id: string;
+  language?: string;
+  file: StoryFile;
+}
+
+/** The game's files, the default one first, then one per other language in the catalogue's order. */
+export function gameVersions(game: GameDetail): GameVersion[] {
+  const versions: GameVersion[] = [{ id: game.tuid, language: game.language, file: game.file }];
+  const others = game.versions || [];
+  for (let i = 0; i < others.length; i++) {
+    versions.push({
+      id: gameId(game.tuid, others[i].language),
+      language: others[i].language,
+      file: others[i].file,
+    });
+  }
+  return versions;
+}
+
+/** The version of a game id (see `gameId`), or undefined when the game has no file in that language. */
+export function versionOf(game: GameDetail, id: string): GameVersion | undefined {
+  const versions = gameVersions(game);
+  for (let i = 0; i < versions.length; i++) if (versions[i].id === id) return versions[i];
+  return undefined;
+}
+
+/**
+ * The version a game page opens on (S2.6): the one its link names (`<tuid>-<lang>`), else the one last played, else
+ * the one in the UI language, else the default file.
+ */
+export function initialVersion(
+  versions: GameVersion[],
+  id: string,
+  locale: string,
+  played: (id: string) => number,
+): GameVersion {
+  if (parseGameId(id).language) {
+    for (let i = 0; i < versions.length; i++) if (versions[i].id === id) return versions[i];
+  }
+  let best: GameVersion | undefined;
+  let bestTime = 0;
+  for (let i = 0; i < versions.length; i++) {
+    const time = played(versions[i].id);
+    if (time > bestTime) {
+      best = versions[i];
+      bestTime = time;
+    }
+  }
+  if (best) return best;
+  for (let i = 0; i < versions.length; i++) if (versions[i].language === locale) return versions[i];
+  return versions[0];
+}
+
 /**
  * IFDB cover thumbnail (SPEC §5.6: always a thumbnail, never the full-size image), rounded up to 10 px steps so
- * nearby sizes share cached images.
+ * nearby sizes share cached images. A game id in another language (S2.6) shows its game's cover.
  */
-export function thumbnailUrl(tuid: string, width: number, height: number): string {
+export function thumbnailUrl(id: string, width: number, height: number): string {
   const up = (n: number) => Math.ceil(n / 10) * 10;
   return (
     'https://ifdb.org/coverart?id=' +
-    encodeURIComponent(tuid) +
+    encodeURIComponent(parseGameId(id).tuid) +
     '&thumbnail=' +
     up(width) +
     'x' +

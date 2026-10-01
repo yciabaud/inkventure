@@ -34,7 +34,8 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
   // The same grid as My adventures: cover, title, and "Start here" on a curated starter.
   await expect(lamp).toContainText('The Lamp at Saltmere');
   await expect(lamp).toContainText('Start here');
-  await expect(shelf(page).getByRole('link')).toHaveCount(3);
+  // Cave of Echoes is in French with an English translation (S2.6): on the English shelf too.
+  await expect(shelf(page).getByRole('link')).toHaveCount(4);
   expect(await scrolls(page)).toBe(false);
 
   await press(lamp);
@@ -44,17 +45,24 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
 
 test('games in progress are left out, and the welcome is gone', async ({ page }) => {
   await page.goto('/#/home');
-  await expect(shelf(page).getByRole('link')).toHaveCount(3);
+  await expect(shelf(page).getByRole('link')).toHaveCount(4);
   await page.evaluate(
     (tuid) => localStorage.setItem('ik:v1:progress:' + tuid, JSON.stringify({ turns: 3 })),
     LAMP,
   );
   await page.reload();
-  await expect(shelf(page).getByRole('link')).toHaveCount(2);
+  await expect(shelf(page).getByRole('link')).toHaveCount(3);
   await expect(shelf(page).getByRole('link').first()).toHaveAttribute(
     'aria-label',
-    /^Hollow Mountain/,
+    /^Cave of Echoes/,
   );
+  // A game played in another language than its default one is in progress too (S2.6).
+  await page.evaluate(
+    (tuid) => localStorage.setItem('ik:v1:progress:' + tuid + '-en', JSON.stringify({ turns: 1 })),
+    'fxcave0000000003',
+  );
+  await page.reload();
+  await expect(shelf(page).getByRole('link')).toHaveCount(2);
   await expect(page.getByText('Welcome to Inkventure')).toHaveCount(0);
 });
 

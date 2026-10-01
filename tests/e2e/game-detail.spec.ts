@@ -63,14 +63,17 @@ test('from the library: details, Add to Home kept across a reload, Play opens th
 test('a deep link works on a cold start; a game with a save offers Continue', async ({ page }) => {
   await page.goto('/#/game/' + CAVE);
   await expect(page.getByRole('heading', { level: 1, name: 'Cave of Echoes' })).toBeVisible();
-  await expect(page.getByText('2022 · Français · Aventure')).toBeVisible();
+  // In French with an English translation (S2.6): the English UI opens on English.
+  await expect(page.getByText('2022 · English · Aventure')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Play' })).toBeVisible();
 
   await page.evaluate(
     (tuid) => localStorage.setItem('ik:v1:save:' + tuid + ':auto', JSON.stringify({ v: 1 })),
     CAVE,
   );
+  // The French file has a save: the page opens on it.
   await page.reload();
+  await expect(page.getByText('2022 · Français · Aventure')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Continue' })).toBeVisible();
 });
 

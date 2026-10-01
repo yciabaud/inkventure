@@ -479,6 +479,24 @@ button.pager__btn {
   font-weight: 700;
 }
 
+.game__languages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 16px 0 0;
+}
+
+.game__languages-label {
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+.game__languages .btn {
+  margin: 4px 8px 4px 0;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
 .game__actions {
   display: flex;
   flex-shrink: 0;

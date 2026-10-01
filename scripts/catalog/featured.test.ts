@@ -192,6 +192,28 @@ describe('buildFeatured', () => {
     expect(file.locales.fr[0].st).toBeUndefined();
   });
 
+  it('features a game with a file per language in each of its UI languages (S2.6)', () => {
+    const games = catalog([
+      row('es1', { l: 'es', lv: ['fr'], r: 4, rc: 10, s: 4 }),
+      row('en1', { lv: ['fr'], r: 4, rc: 10, s: 3 }),
+    ]);
+    expect(
+      featuredProblems(curated({ tuid: 'es1', pitch: pitch }), games, noPolicy, locales),
+    ).toEqual([]);
+    const { file } = buildFeatured(
+      curated({ tuid: 'en1', pitch: pitch }),
+      games,
+      noPolicy,
+      locales,
+      'x',
+    );
+    expect(file.locales.en.map((g) => [g.t, g.pi])).toEqual([['en1', pitch.en]]);
+    expect(file.locales.fr.map((g) => [g.t, g.pi])).toEqual([
+      ['en1', pitch.fr],
+      ['es1', undefined],
+    ]);
+  });
+
   it('keeps at most TOP_RATED_COUNT best-rated games per locale', () => {
     const rows: IndexRow[] = [];
     for (let i = 0; i < TOP_RATED_COUNT + 5; i++) rows.push(row('g' + i, { r: 4, rc: 10, s: i }));

@@ -1,0 +1,90 @@
+{
+  "tuid": "rpis77r72fg8228",
+  "pageVersion": 7,
+  "fetchedAt": "2026-09-30T09:55:56.751Z",
+  "record": {
+    "colophon": {
+      "generator": "ifdb.org/viewgame",
+      "generatorversion": 1,
+      "originated": "2025-10-29"
+    },
+    "identification": {
+      "ifids": ["2D1C5F52-0114-4609-B4DE-4DCF6FB5F2DB", "D251778B-84F4-4C6B-BE1D-322F017C8D1D"]
+    },
+    "bibliographic": {
+      "title": "Les lettres du Docteur Jeangille",
+      "author": "manonamora",
+      "language": "French, English (fr, en)",
+      "firstpublished": "2024-03-04",
+      "genre": "Slice of Life, Surreal",
+      "description": "La vie du Docteur Jeangille se boulversa, forcée de s&#039;installer dans le petit et calme village de Meaux. Des échanges avec son amante Olympia nous apprend beaucoup sur cette récluse personne, et des mystérieux évènements... <br> <br>15k mots environs en entier. Une douzaine de passages. 4 fins. Écrit en 1 1/2 semaines. <br> <br>❦ <br> <br>Forced to settle in the small and quiet village of Meaux, the life of Doctor Jeangille falls into turmoils. In the epistolary exchanges with Olympia, the lover, this recluse person comes to life, entangled in peculiar and mysterious events..."
+    },
+    "contacts": { "url": "https://manonamora.itch.io/les-lettres-du-docteur-jeangille" },
+    "ifdb": {
+      "tuid": "rpis77r72fg8228",
+      "pageversion": 7,
+      "link": "https://ifdb.org/viewgame?id=rpis77r72fg8228",
+      "coverart": { "url": "https://ifdb.org/coverart?id=rpis77r72fg8228&version=7" },
+      "playTimeInMinutes": 110,
+      "primaryPlayOnlineUrl": "https://manonamora.itch.io/les-lettres-du-docteur-jeangille",
+      "downloads": {
+        "links": [
+          {
+            "url": "https://manonamora.itch.io/les-lettres-du-docteur-jeangille",
+            "playOnlineUrl": "https://manonamora.itch.io/les-lettres-du-docteur-jeangille",
+            "title": "Play on itch.io",
+            "desc": "Bilingual version.",
+            "isGame": true,
+            "format": "hypertextgame"
+          },
+          {
+            "url": "https://www.springthing.net/2024/play.html#DoctorJeangillesLetters",
+            "playOnlineUrl": "https://www.springthing.net/2024/play.html#DoctorJeangillesLetters",
+            "title": "Spring Thing 2024 page",
+            "desc": "Play online. (Debut of English version.)",
+            "isGame": true,
+            "format": "hypertextgame"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/springthing/2024/DoctorJeangillesLetters.zip",
+            "playOnlineUrl": "https://unbox.ifarchive.org/?url=https%3A%2F%2Fifarchive.org%2Fif-archive%2Fgames%2Fspringthing%2F2024%2FDoctorJeangillesLetters.zip&open=DoctorJeangillesLetters%2Findex.html",
+            "title": "DoctorJeangillesLetters.zip",
+            "desc": "Spring Thing 2024 version, at the IF Archive. (English only.)",
+            "isGame": true,
+            "format": "hypertextgame",
+            "compression": "zip",
+            "compressedPrimary": "DoctorJeangillesLetters/index.html"
+          }
+        ]
+      },
+      "averageRating": 4.625,
+      "starRating": 4.5,
+      "ratingCountAvg": 8,
+      "ratingCountTot": 8,
+      "tags": [
+        { "name": "1800s", "tagcnt": 2, "gamecnt": 32 },
+        { "name": "countryside", "tagcnt": 1, "gamecnt": 2 },
+        { "name": "Doctor", "tagcnt": 1, "gamecnt": 18 },
+        { "name": "epistolary", "tagcnt": 2, "gamecnt": 32 },
+        { "name": "female protagonist", "tagcnt": 2, "gamecnt": 930 },
+        { "name": "France", "tagcnt": 1, "gamecnt": 31 },
+        { "name": "french", "tagcnt": 2, "gamecnt": 189 },
+        { "name": "historical", "tagcnt": 2, "gamecnt": 221 },
+        { "name": "lesbian", "tagcnt": 3, "gamecnt": 96 },
+        { "name": "letters", "tagcnt": 2, "gamecnt": 15 },
+        { "name": "LGBTQ+", "tagcnt": 3, "gamecnt": 366 },
+        { "name": "multilingual", "tagcnt": 2, "gamecnt": 11 },
+        { "name": "multiple endings", "tagcnt": 2, "gamecnt": 964 },
+        { "name": "multiple languages", "tagcnt": 2, "gamecnt": 7 },
+        { "name": "Mystery", "tagcnt": 1, "gamecnt": 530 },
+        { "name": "Spring Thing 2024", "tagcnt": 1, "gamecnt": 33 },
+        { "name": "Spring Thing Game", "tagcnt": 1, "gamecnt": 352 },
+        { "name": "Sugarcube", "tagcnt": 1, "gamecnt": 100 },
+        { "name": "trauma", "tagcnt": 1, "gamecnt": 23 },
+        { "name": "twist", "tagcnt": 2, "gamecnt": 24 },
+        { "name": "vampire", "tagcnt": 1, "gamecnt": 146 },
+        { "name": "village", "tagcnt": 1, "gamecnt": 19 }
+      ]
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "tuid": "k8fovtn8hqnlawnh",
+  "pageVersion": 5,
+  "fetchedAt": "2026-09-30T09:55:56.751Z",
+  "record": {
+    "colophon": {
+      "generator": "ifdb.org/viewgame",
+      "generatorversion": 1,
+      "originated": "2025-04-11"
+    },
+    "identification": {
+      "ifids": [
+        "ZCODE-1-050929-E13B",
+        "ZCODE-1-050929-3D3C",
+        "ZCODE-3-060113-C071",
+        "ZCODE-3-060113-D4CC"
+      ],
+      "bafn": 2849,
+      "format": "zcode"
+    },
+    "bibliographic": {
+      "title": "Hello Sword",
+      "author": "Andrea Rezzonico",
+      "language": "Italian, English (it, en)",
+      "firstpublished": "2005",
+      "genre": "Fantasy",
+      "description": "You didn&#039;t have the willpower to go out this morning: today is one of the hottest days of the month, the air is so damp it seems viscous and the bed appears to you as a valid alternative to anything. Despite all that, here you are on the street, an easy target for the sun. And who&#039;s guilty of it? Your friend Julius - damn it all! - asked you to deliver a message... Right now, the only thing you can do is read the note Julius left, deliver the message and then head back home..."
+    },
+    "contacts": [],
+    "ifdb": {
+      "tuid": "k8fovtn8hqnlawnh",
+      "pageversion": 5,
+      "link": "https://ifdb.org/viewgame?id=k8fovtn8hqnlawnh",
+      "primaryPlayOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fzcode%252FHelloSword.zip%26open%3Dhsengv3.z5",
+      "downloads": {
+        "links": [
+          {
+            "url": "https://ifarchive.org/if-archive/games/zcode/HelloSword.zip",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fzcode%252FHelloSword.zip%26open%3Dhsengv3.z5",
+            "title": "HelloSword.zip",
+            "desc": "Post-competition release. Contains English and Italian story files, and solutions.",
+            "isGame": true,
+            "format": "zcode",
+            "compression": "zip",
+            "compressedPrimary": "hsengv3.z5"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/competition2005/zcode/hs_eng/hs_eng.z5",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Fifarchive.org%2Fif-archive%2Fgames%2Fcompetition2005%2Fzcode%2Fhs_eng%2Fhs_eng.z5",
+            "title": "hs_eng.z5",
+            "desc": "IFComp 2005 version (English).",
+            "isGame": true,
+            "format": "zcode"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/competition2005/zcode/hs_eng/hs_ita.z5",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Fifarchive.org%2Fif-archive%2Fgames%2Fcompetition2005%2Fzcode%2Fhs_eng%2Fhs_ita.z5",
+            "title": "hs_ita.z5",
+            "desc": "IFComp 2005 version (Italian).",
+            "isGame": true,
+            "format": "zcode"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/competition2005/zcode/hs_eng/hs_solution.txt",
+            "title": "hs_solution.txt",
+            "desc": "Solution for IFComp 2005 version.",
+            "format": "text"
+          }
+        ]
+      },
+      "averageRating": 2.25,
+      "starRating": 2.5,
+      "ratingCountAvg": 4,
+      "ratingCountTot": 4,
+      "tags": [
+        { "name": "fantasy", "tagcnt": 1, "gamecnt": 1034 },
+        { "name": "IF Competition 2005", "tagcnt": 1, "gamecnt": 36 },
+        { "name": "IFComp Game", "tagcnt": 1, "gamecnt": 1574 },
+        { "name": "Italian", "tagcnt": 1, "gamecnt": 128 },
+        { "name": "translated game", "tagcnt": 1, "gamecnt": 31 },
+        { "name": "translation", "tagcnt": 1, "gamecnt": 65 },
+        { "name": "walkthrough", "tagcnt": 1, "gamecnt": 2072 }
+      ]
+    }
+  }
+}
