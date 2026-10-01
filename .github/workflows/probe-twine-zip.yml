@@ -1,0 +1,19 @@
+# TEMPORARY (S1.11 first step): inspects the real Twine zip from CI, where the IF Archive is reachable. Removed before
+# merge.
+name: Probe Twine zip
+on:
+  pull_request:
+    paths: ['.github/probe/**', '.github/workflows/probe-twine-zip.yml']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: npm install --no-save --ignore-scripts fflate
+      - run: node .github/probe/twine-zip.mjs
