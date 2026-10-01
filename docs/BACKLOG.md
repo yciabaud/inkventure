@@ -65,7 +65,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | done |
 | [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | dropped |
 | [S6.1](stories/S6.1-ebook-build.md) | Ebook build pipeline (EPUB + KF8) | E6 | M5 | S2.4 | done |
-| [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | in-progress |
+| [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | done |
 | [S6.3](stories/S6.3-ebook-download-page.md) | Ebook download page (desktop) | E6 | M5 | S6.1 | in-progress |
 | [S7.1](stories/S7.1-device-checklist-perf.md) | Real-device checklist & performance budgets | E7 | M5 | S4.2, S3.4 | todo |
 | [S7.2](stories/S7.2-launch.md) | Launch: domain, README, credits, licences | E7 | M5 | S7.1, S6.2, S6.3 | todo |
