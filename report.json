@@ -27,6 +27,167 @@
       "illustrated": 55
     }
   },
+  "languages": {
+    "changed": [
+      {
+        "tuid": "b8mb4fcwmf1hrxl",
+        "title": "Lime Ergot",
+        "from": "en",
+        "to": "es",
+        "source": "file",
+        "detail": "Traducido por Ruber Eaglenest (Clérigo Urbatain)"
+      },
+      {
+        "tuid": "k8fovtn8hqnlawnh",
+        "title": "Hello Sword",
+        "from": "it",
+        "to": "en",
+        "source": "file",
+        "detail": "IFComp 2005 version (English)."
+      },
+      {
+        "tuid": "ngcuiadqoqzy1yn0",
+        "title": "Tuuli",
+        "from": "es",
+        "to": "es",
+        "source": "file",
+        "detail": "Improved version of the game, but in Spanish",
+        "file": "https://www.ifarchive.org/if-archive/games/zcode/spanish/Tuuli.zblorb"
+      },
+      {
+        "tuid": "rg7sieqyg1b9rxpt",
+        "title": "Lux",
+        "from": "en",
+        "to": "pl",
+        "source": "file",
+        "detail": "Lux PL.html"
+      },
+      {
+        "tuid": "rpis77r72fg8228",
+        "title": "Les lettres du Docteur Jeangille",
+        "from": "fr",
+        "to": "en",
+        "source": "file",
+        "detail": "Spring Thing 2024 version, at the IF Archive. (English only.)"
+      },
+      {
+        "tuid": "veersv63ix9x8w",
+        "title": "The Sweetest Honey",
+        "from": "es",
+        "to": "en",
+        "source": "file",
+        "detail": "In English. Translated by Ricardo Sisnett."
+      },
+      {
+        "tuid": "woswslxcjsr2rf8r",
+        "title": "大鱼 | Big Fish",
+        "from": "zh",
+        "to": "en",
+        "source": "file",
+        "detail": "English version, as entered in IFComp 2024."
+      }
+    ],
+    "versions": [
+      {
+        "tuid": "12pkmwaekw4suh7g",
+        "title": "The Awakening",
+        "languages": [
+          "en",
+          "es"
+        ]
+      },
+      {
+        "tuid": "b87eumakxhjmhcif",
+        "title": "The Thorn",
+        "languages": [
+          "en",
+          "it"
+        ]
+      },
+      {
+        "tuid": "b8mb4fcwmf1hrxl",
+        "title": "Lime Ergot",
+        "languages": [
+          "es",
+          "en"
+        ]
+      },
+      {
+        "tuid": "c9ll6cr8zr1txtfe",
+        "title": "A Bear's Night Out",
+        "languages": [
+          "en",
+          "es"
+        ]
+      },
+      {
+        "tuid": "capk2kklo697oaip",
+        "title": "Dracula Episode 2: The Arrival",
+        "languages": [
+          "en",
+          "es"
+        ]
+      },
+      {
+        "tuid": "ju778uv5xaswnlpl",
+        "title": "Photopia",
+        "languages": [
+          "en",
+          "es"
+        ]
+      },
+      {
+        "tuid": "k8fovtn8hqnlawnh",
+        "title": "Hello Sword",
+        "languages": [
+          "en",
+          "it"
+        ]
+      },
+      {
+        "tuid": "ngcuiadqoqzy1yn0",
+        "title": "Tuuli",
+        "languages": [
+          "es",
+          "en"
+        ]
+      },
+      {
+        "tuid": "nnhm4yp172oivtd9",
+        "title": "The Reliques of Tolti-Aph",
+        "languages": [
+          "en",
+          "es"
+        ]
+      },
+      {
+        "tuid": "qbk3fo0jcawo1j7h",
+        "title": "Dracula Part 1: The First Night",
+        "languages": [
+          "es",
+          "en"
+        ]
+      },
+      {
+        "tuid": "sqrtp4hlg5x7oli4",
+        "title": "Filaments",
+        "languages": [
+          "fr",
+          "it"
+        ]
+      },
+      {
+        "tuid": "woswslxcjsr2rf8r",
+        "title": "大鱼 | Big Fish",
+        "languages": [
+          "en",
+          "zh"
+        ]
+      }
+    ],
+    "assumed": 31,
+    "unknownOverrides": []
+  },
   "dropped": [
     {
       "tuid": "03enp9z2oszblv5h",
