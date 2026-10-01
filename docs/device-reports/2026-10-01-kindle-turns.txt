@@ -1,0 +1,22 @@
+# Kindle (same device as 2026-09-29-kindle.txt), experimental browser, 2026-10-01.
+# Turn latency (story S1.7), "Turn times" shown in Settings. Reported by the owner; partial run.
+# A turn is timed from the command sent to the next input request: the VM only
+# (the page drawing and the autosave come after it and are not counted).
+
+game: Brain Guzzlers from Beyond! (Steph Cherrywell, 2014)
+tuid: f55km4uutt2cqwwz
+format: glulx (Inform 7), .gblorb
+story file: 3.21 MB
+first turn: not recorded
+turns: 40 ms to 3 s, depending on the location (the slowest seen around the Mercury Meteor)
+typical turn: not recorded
+worst turn: ~3 s
+verdict: acceptable to the owner (3 s at worst, now and then); within the SPEC §4.5 Glulx target (< 3 s)
+
+game: Three-Card Trick
+tuid: afy6ej5cn9hof20m
+format: glulx
+story file: 1.3 MB
+first turn: not recorded
+typical turn: 280-300 ms
+worst turn: not recorded

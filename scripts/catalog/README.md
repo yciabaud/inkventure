@@ -53,7 +53,7 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
   order. A zip is used only when IFDB names the story file inside it (`compressedPrimary`). IF Archive links are
   upgraded to HTTPS; other plain-HTTP links are refused (mixed content).
 - **Metadata**: language reduced to its primary subtag (`en-US` → `en`, `English` → `en`), genres split on `/ , ;`,
-  year, rating, play time, cover, IFIDs, tags. `slow` is provisional: every Glulx game (S1.7 will measure).
+  year, rating, play time, cover, IFIDs, tags. `slow` is false for every game (Glulx turns measured on the Kindle stay within the < 3 s target, S1.7).
 - **Content policy**: `CONTENT_POLICY=general` (default) drops games tagged with one of `content-policy.json`'s
   `denyTags` (case-insensitive); `adult` keeps them. The `exclude` list applies to every policy.
 - **Readable files** (`--cors FILE`): a file outside the IF Archive is used only when there is no IF Archive file and

@@ -38,6 +38,11 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
    and worst of the next turns. Save it as `docs/device-reports/<YYYY-MM-DD>-<device>-turns.txt` and add a line
    below.
 
+| Date | Device | Game (tuid) | Format, file size | First turn | Typical | Worst | Report |
+|---|---|---|---|---|---|---|---|
+| 2026-10-01 | Kindle (as 2026-09-29) | Brain Guzzlers from Beyond! (`f55km4uutt2cqwwz`) | Glulx (Inform 7), 3.21 MB | – | – | ~3 s (40 ms – 3 s depending on the location) | [2026-10-01-kindle-turns.txt](2026-10-01-kindle-turns.txt) |
+| 2026-10-01 | Kindle (as 2026-09-29) | Three-Card Trick (`afy6ej5cn9hof20m`) | Glulx, 1.3 MB | – | 280–300 ms | – | [2026-10-01-kindle-turns.txt](2026-10-01-kindle-turns.txt) |
+
 ## Reading the report
 
 | Line | Meaning |
