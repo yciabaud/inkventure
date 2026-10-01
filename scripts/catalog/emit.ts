@@ -44,7 +44,7 @@ const lines = [
   '',
   `${meta.count} games in ${meta.shards.length} shard(s)` +
     (previous ? ` (previous build: ${previous.count})` : '') +
-    `; largest game detail ${largestDetail} bytes.`,
+    `; ${meta.illustrated} illustrated; largest game detail ${largestDetail} bytes.`,
   '',
   '| Shard | Bytes |',
   '|---|---|',

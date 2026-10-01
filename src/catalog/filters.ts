@@ -36,6 +36,8 @@ export interface Filters {
   to?: number;
   /** Newcomer-friendly games only. */
   starter: boolean;
+  /** Illustrated games only (pictures besides the cover, S2.5). */
+  illustrated: boolean;
 }
 
 export const NO_FILTERS: Filters = {
@@ -45,6 +47,7 @@ export const NO_FILTERS: Filters = {
   times: [],
   forgiveness: [],
   starter: false,
+  illustrated: false,
 };
 
 /** Hash keys of the filters (a Library URL also has q, page, sort and panel). */
@@ -58,6 +61,7 @@ export const FILTER_KEYS = [
   'fg',
   'from',
   'to',
+  'ill',
   'start',
 ];
 
@@ -101,6 +105,7 @@ export function parseFilters(query: Record<string, string>): Filters {
     from: year(query.from),
     to: year(query.to),
     starter: query.start === '1',
+    illustrated: query.ill === '1',
   };
 }
 
@@ -116,6 +121,7 @@ export function formatFilters(filters: Filters): Record<string, string> {
   if (filters.forgiveness.length) query.fg = filters.forgiveness.join(',');
   if (filters.from !== undefined) query.from = String(filters.from);
   if (filters.to !== undefined) query.to = String(filters.to);
+  if (filters.illustrated) query.ill = '1';
   if (filters.starter) query.start = '1';
   return query;
 }
@@ -136,6 +142,7 @@ export function activeCount(filters: Filters): number {
   if (filters.forgiveness.length) n++;
   if (filters.from !== undefined || filters.to !== undefined) n++;
   if (filters.starter) n++;
+  if (filters.illustrated) n++;
   return n;
 }
 
@@ -181,6 +188,7 @@ export function matcher(filters: Filters): (row: IndexRow) => boolean {
     if (filters.from !== undefined && !(row.y && row.y >= filters.from)) return false;
     if (filters.to !== undefined && !(row.y && row.y <= filters.to)) return false;
     if (filters.starter && !row.st) return false;
+    if (filters.illustrated && !row.il) return false;
     return true;
   };
 }

@@ -33,6 +33,9 @@ export function summarize(dataset: RawDataset, resolution: Resolution): string {
     `${dataset.games.length} games crawled, **${resolution.counts.kept} kept** ` +
       `(policy \`${resolution.policy}\`, formats ${resolution.enabledFormats.map((f) => '`' + f + '`').join(', ')}).`,
     '',
+    `**Illustrated**: ${resolution.counts.pictures.illustrated} game(s), of ${resolution.counts.pictures.blorbs} ` +
+      `kept Blorb(s) that could hold pictures (${resolution.counts.pictures.inspected} with a known count).`,
+    '',
     table(
       'Dropped, by reason',
       Object.entries(resolution.counts.dropped) as Array<[string, number]>,

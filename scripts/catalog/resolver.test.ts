@@ -15,6 +15,7 @@ import {
   urlsToCheck,
   yearOf,
   type ContentPolicyConfig,
+  type StoryFormat,
 } from './resolver';
 
 const A = 'https://ifarchive.org/if-archive/games/';
@@ -337,5 +338,31 @@ describe('resolution of the recorded fixtures', () => {
     });
     expect(bells.language).toBeUndefined();
     expect(kept).not.toContain('fxexcl0000000011');
+  });
+
+  it('flags the games whose Blorb holds at least two pictures besides the cover, and counts them', async () => {
+    const { dataset } = await raw();
+    const BELLS = A + 'glulx/bells.gblorb';
+    const options = {
+      enabledFormats: ['zcode', 'glulx'] as StoryFormat[],
+      policy: 'general' as const,
+    };
+    const counted = (pictures: number | undefined) =>
+      resolve(dataset, {
+        ...options,
+        config: CONFIG,
+        pictures: (url) => (url === BELLS ? pictures : undefined),
+      });
+
+    const illustrated = counted(2);
+    const bells = illustrated.games.filter((game) => game.tuid === 'fxbell0000000002')[0];
+    expect(bells).toMatchObject({ illustrated: true, pictures: 2 });
+    expect(illustrated.games.filter((game) => game.illustrated)).toHaveLength(1);
+    expect(illustrated.counts.pictures).toEqual({ blorbs: 1, inspected: 1, illustrated: 1 });
+
+    const one = counted(1);
+    expect(one.games.filter((game) => game.illustrated)).toEqual([]);
+    expect(one.counts.pictures).toEqual({ blorbs: 1, inspected: 1, illustrated: 0 });
+    expect(counted(undefined).counts.pictures).toEqual({ blorbs: 1, inspected: 0, illustrated: 0 });
   });
 });

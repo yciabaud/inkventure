@@ -201,7 +201,8 @@ Purpose: find the next adventure in the playable catalogue.
   - Play time (< 30 min, 30 min–1 h, 1–2 h, 2 h+ — from IFDB median playtime when available)
   - Forgiveness (Merciful → Cruel; shown once the index carries it, see [§5.2](#52-catalogue-index))
   - Release year range
-  - Illustrated (games whose story file holds pictures besides the cover, see [§5.2](#52-catalogue-index); S2.5)
+  - Illustrated (games whose story file holds pictures besides the cover, see [§5.2](#52-catalogue-index); S2.5): a
+    single yes choice with its count, shown once the catalogue has illustrated games
   - "Start here" (newcomer-friendly: a curated starter of `featured.json`, or an IFDB tag listed in
     `scripts/catalog/starter-tags.json`, e.g. *recommended for beginners*)
 
@@ -469,18 +470,25 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    Archive links upgraded). A file outside the IF Archive is used only if its host lets a browser page read it
    (CORS, checked by `check-cors.ts` before resolving, see [§5.5](#55-game-files)). Drop games without such a file,
    recording the reason in `report.json`.
-   **Illustrated** (S2.5): for a Blorb in a format whose engine draws pictures, read the resource index from the
-   file's head (HTTP `Range`, full download as fallback; cached per file URL) and flag the game when it holds at
-   least two `Pict` resources besides the cover (`Fspc`).
+   **Illustrated** (S2.5, `check-pictures.ts` before resolving): for an uncompressed Blorb in a format whose engine
+   draws pictures (Glulx), read the resource index (`RIdx`, the first chunk) from the file's head — an HTTP `Range`
+   request for 4 KB (asked once more when the index is longer), or the first bytes of the whole response when the
+   host ignores `Range` — at ≤ 1 request/s with the project `User-Agent`, and flag the game when it holds at least two
+   `Pict` resources besides the cover (the `Fspc` chunk; when that chunk is not in the head, one picture is assumed to
+   be the cover). Results are cached per file URL with its size and `Last-Modified` in `cache/pictures.json` on the
+   `catalog` branch, reused for 90 days, then revalidated (`If-Modified-Since`); `report.json` counts the Blorbs
+   inspected and the illustrated games.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
-   - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.
+   - `meta.json` — build date, counts (games, illustrated games), facet values (genres, languages, formats) with
+     counts.
    - `index-<n>.json` — compact rows sharded by ~500 games (short keys to keep parse time low on Kindle):
      `{t: tuid, n: title, a: author, y: year, l: lang, g: [genres], f: format, r: avgRating, rc: ratingCount,
      s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag, st: starterFlag, il: illustrated}`, sorted by title;
      unknown values are left out (`fg` is not available from IFDB's JSON API yet; `st` marks the games carrying a
      newcomer-friendly IFDB tag of `scripts/catalog/starter-tags.json`).
-   - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link.
+   - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link;
+     `illustrated: true` and `pictures` (pictures besides the cover) for an illustrated game.
 5. **Validate** — JSON schema checks, sizes budget (each shard < 150 KB), sanity counts vs previous build
    (fail if > 20 % drop).
 6. **Deploy** — the weekly Catalogue workflow commits the files (and the crawler's record cache) to a `catalog`

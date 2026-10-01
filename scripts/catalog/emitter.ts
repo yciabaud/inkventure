@@ -45,6 +45,8 @@ export interface IndexRow {
   sl?: 1;
   /** newcomer-friendly (1): an IFDB tag of starter-tags.json; the app adds the curated starters */
   st?: 1;
+  /** illustrated (1): pictures besides the cover, drawn by the engine (S2.5) */
+  il?: 1;
   /** forgiveness (Merciful…Cruel), reserved: not emitted yet */
   fg?: string;
 }
@@ -58,6 +60,8 @@ export interface Meta {
   built: string;
   policy: string;
   count: number;
+  /** Illustrated games (S2.5; absent from catalogues built before it). */
+  illustrated?: number;
   shards: string[];
   /** Facet values with their game counts, most frequent first. */
   facets: {
@@ -107,6 +111,7 @@ export function indexRow(game: ResolvedGame): IndexRow {
   if (game.cover) row.c = 1;
   if (game.slow) row.sl = 1;
   if (isStarter(game.tags)) row.st = 1;
+  if (game.illustrated) row.il = 1;
   return row;
 }
 
@@ -145,6 +150,7 @@ export function emit(
     built: options.built,
     policy: options.policy,
     count: sorted.length,
+    illustrated: sorted.filter((game) => game.illustrated).length,
     shards: shards,
     facets: {
       languages: facet(sorted.map((game) => game.language || 'und')),
@@ -169,7 +175,24 @@ export function rowProblems(row: unknown): string[] {
   const problems: string[] = [];
   if (!row || typeof row !== 'object') return ['not an object'];
   const r = row as Record<string, unknown>;
-  const known = ['t', 'n', 'a', 'y', 'l', 'g', 'f', 'r', 'rc', 's', 'p', 'fg', 'c', 'sl', 'st'];
+  const known = [
+    't',
+    'n',
+    'a',
+    'y',
+    'l',
+    'g',
+    'f',
+    'r',
+    'rc',
+    's',
+    'p',
+    'fg',
+    'c',
+    'sl',
+    'st',
+    'il',
+  ];
   for (const key of Object.keys(r)) if (known.indexOf(key) < 0) problems.push('unknown key ' + key);
   if (typeof r.t !== 'string' || !TUID.test(r.t)) problems.push('t: TUID expected');
   if (typeof r.n !== 'string' || !r.n) problems.push('n: title expected');
@@ -190,7 +213,7 @@ export function rowProblems(row: unknown): string[] {
   }
   if (r.s !== undefined && typeof r.s !== 'number') problems.push('s: number');
   if (r.fg !== undefined && typeof r.fg !== 'string') problems.push('fg: string');
-  for (const key of ['c', 'sl', 'st'])
+  for (const key of ['c', 'sl', 'st', 'il'])
     if (r[key] !== undefined && r[key] !== 1) problems.push(key + ': 1');
   return problems;
 }
@@ -235,6 +258,7 @@ export function validate(
   if (meta.version !== CATALOG_VERSION) errors.push('meta.json: version ' + meta.version);
 
   let rows = 0;
+  let illustrated = 0;
   const seen: Record<string, boolean> = {};
   for (const shard of meta.shards) {
     const content = files[shard] as { rows?: unknown[] } | undefined;
@@ -252,6 +276,7 @@ export function validate(
       const tuid = (row as IndexRow).t;
       if (seen[tuid]) errors.push(`${shard} row ${i}: duplicate ${tuid}`);
       seen[tuid] = true;
+      if ((row as IndexRow).il) illustrated++;
       const detail = files['games/' + tuid + '.json'] as Record<string, unknown> | undefined;
       if (!detail) errors.push(`${shard} row ${i}: games/${tuid}.json missing`);
       else
@@ -260,6 +285,9 @@ export function validate(
     rows += content.rows.length;
   }
   if (rows !== meta.count) errors.push(`meta.json: count ${meta.count}, but ${rows} rows`);
+  if (meta.illustrated !== undefined && meta.illustrated !== illustrated) {
+    errors.push(`meta.json: ${meta.illustrated} illustrated, but ${illustrated} rows with il`);
+  }
   if (options.previousCount && rows < options.previousCount * MIN_KEPT_SHARE) {
     errors.push(
       `${rows} games, down from ${options.previousCount}: more than a ${Math.round((1 - MIN_KEPT_SHARE) * 100)} % drop`,

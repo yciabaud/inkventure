@@ -25,3 +25,6 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   The `.html` files are not committed: `npm install` builds them (`scripts/fixtures/build-twine.ts`, which downloads
   the formats once from the Story Format Archive into `vendor/twine/` and checks their SHA-256). Run that script again
   after editing a `.twee`.
+- `pictures.json`: picture counts in the shape of `data/cache/pictures.json` (what `scripts/catalog/check-pictures.ts`
+  records), read by the sample catalogue: the synthetic Glulx game "Bells of Aldermere" counts as illustrated (S2.5).
+  The Blorb parser's tests build their story files with `scripts/fixtures/build-blorb.ts`.
