@@ -13,7 +13,7 @@ typical turn: not recorded
 worst turn: ~3 s
 verdict: acceptable to the owner (3 s at worst, now and then); within the SPEC §4.5 Glulx target (< 3 s)
 
-game: (title not recorded)
+game: Three-Card Trick
 tuid: afy6ej5cn9hof20m
 format: glulx
 story file: 1.3 MB
