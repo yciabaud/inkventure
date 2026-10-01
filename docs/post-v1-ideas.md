@@ -208,6 +208,11 @@ sync service (against the "static only" rule, so a real decision) or a phone-to-
 code. The PR #41 codec (`src/storage/transfer.ts`: CRC-checked deflate + base64, merge / overwrite rules, all-or-nothing
 import) can be reused.
 
+## Promoted to V1
+
+- **Illustrated Glulx games** (static, detailed pictures that suit e-ink, with an engine and catalogue V1 already
+  has): detection, badge and Library filter in [S2.5](stories/S2.5-illustrated-games.md).
+
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.
