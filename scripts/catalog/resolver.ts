@@ -90,7 +90,7 @@ export interface ResolvedGame {
   playtimeMinutes?: number;
   /** Cover art URL (versioned); the app asks for a thumbnail of it. */
   cover?: string;
-  /** Provisional (S1.7 will measure): every Glulx game, whose interpreter is slow on e-readers. */
+  /** "May be slow" badge: no game for now (Glulx turns measured on the Kindle within the < 3 s target, S1.7). */
   slow: boolean;
   /** Its Blorb holds at least MIN_PICTURES pictures besides the cover, in a format whose engine draws them (S2.5). */
   illustrated?: true;
@@ -406,7 +406,7 @@ function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGa
     file: file.file,
     ifids: (record.identification && record.identification.ifids) || [],
     tags: tags,
-    slow: file.format === 'glulx',
+    slow: false,
     devsys: search.devsys || '',
     ifdbLink: str(ifdb.link) || search.link,
   };

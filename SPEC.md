@@ -227,7 +227,7 @@ Purpose: find the next adventure in the playable catalogue.
 - Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long: one CSS column per page, turned
   with the pager).
 - Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**.
-- "Experimental" / "May be slow on this device" notices when relevant (Twine, heavy Glulx).
+- "Experimental" / "May be slow on this device" notices when relevant (Twine; no game is flagged slow for now, §4.5).
 - Credits: "Data from IFDB" link to the IFDB page, licence info when known (not in the catalogue yet), link to the
   file on the IF Archive.
 - Loads `games/<tuid>.json` only (not the index), so a deep link opens fast on a cold start; a game no longer in the
@@ -328,7 +328,7 @@ for choice games, the story title and chapter if provided.
 | Format | Files | Engine | Notes |
 |---|---|---|---|
 | Z-machine | `.z3 .z4 .z5 .z8 .zblorb` | **ZVM** (Parchment project) | Infocom & Inform 6 games; lightest, first to ship. |
-| Glulx | `.ulx .gblorb` | **Quixe** (Parchment project) | Most Inform 7 games. May be slow on Kindle (see §4.5). |
+| Glulx | `.ulx .gblorb` | **Quixe** (Parchment project) | Most Inform 7 games. Turns up to ~3 s on a Kindle (see §4.5). |
 | Ink | compiled `.json` (ink story) | **inkjs** | Choice-based; rare on IFDB but ideal on e-ink. |
 | Twine | `.html` (published story) | Game's own runtime, **sandboxed iframe** | Experimental; best-effort restyling. |
 
@@ -436,9 +436,11 @@ the ink functions of the same name.
   run in one go.
 - Turn latency is measured on the device with the reader's `?perf=1` flag (`#/play/<tuid>?perf=1`): the status line
   shows the last turn's time in ms (and the console logs it). Targets: Z-machine turn < 1 s; Glulx turn < 3 s.
-- "May be slow" badge (`slow`, computed at index time): **provisional rule, every Glulx game** (the IFDB API gives no
-  file size). To be refined from Kindle measurements of 2–3 real Glulx games (story S1.7), e.g. by story file size
-  once the pipeline knows it.
+- Measured on the Kindle (S1.7, [device reports](docs/device-reports/README.md)): a large Inform 7 game (3.2 MB)
+  takes 40 ms to ~3 s per turn depending on the location, a 1.3 MB one 280–300 ms. Both are within the target, and
+  ~3 s now and then is acceptable.
+- "May be slow" badge (`slow`, computed at index time): **no game is flagged** (the field and badge stay for a
+  future rule, e.g. by story file size once the pipeline knows it; the IFDB API gives none).
 
 ---
 

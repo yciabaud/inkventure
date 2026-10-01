@@ -332,7 +332,7 @@ describe('resolution of the recorded fixtures', () => {
     const bells = result.games.filter((game) => game.tuid === 'fxbell0000000002')[0];
     expect(bells).toMatchObject({
       format: 'glulx',
-      slow: true,
+      slow: false,
       genres: ['Fantasy', 'Humor'],
       year: 2019,
     });
