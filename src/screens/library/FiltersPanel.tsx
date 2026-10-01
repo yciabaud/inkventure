@@ -280,6 +280,7 @@ export function FiltersPanel({ panel, catalog, filters, sort, count, go }: Props
   const any = t('filters.any');
   const join = (labels: string[]) => (labels.length ? labels.join(', ') : any);
   const hasForgiveness = rows.some((row) => !!row.fg);
+  const illustrated = rows.filter((row) => !!row.il).length;
 
   let content: VNode;
   if (panel === 'year') {
@@ -305,6 +306,22 @@ export function FiltersPanel({ panel, catalog, filters, sort, count, go }: Props
           onSelect: () => set({ starter: !filters.starter }),
         }}
       />,
+    ];
+    // Only once the catalogue has illustrated games (a single yes choice, like "Start here").
+    if (illustrated || filters.illustrated) {
+      sections.push(
+        <ChoiceRow
+          key="ill"
+          choice={{
+            label: t('filters.illustrated'),
+            count: illustrated,
+            selected: filters.illustrated,
+            onSelect: () => set({ illustrated: !filters.illustrated }),
+          }}
+        />,
+      );
+    }
+    sections.push(
       <SectionRow
         key="genre"
         label={t('filters.genre')}
@@ -341,7 +358,7 @@ export function FiltersPanel({ panel, catalog, filters, sort, count, go }: Props
         value={join(filters.times.map((time) => t(TIME_LABELS[time])))}
         onOpen={open('time')}
       />,
-    ];
+    );
     // IFDB's JSON API has no forgiveness yet: the filter shows once the index carries it.
     if (hasForgiveness || filters.forgiveness.length) {
       sections.push(

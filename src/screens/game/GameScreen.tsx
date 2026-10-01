@@ -107,6 +107,7 @@ function Details({ game }: { game: GameDetail }) {
           {ratings.length > 0 && <p class="game__facts">{ratings.join(' · ')}</p>}
           <p class="game__badges">
             <span class="badge">{formatName(game.format)}</span>
+            {game.illustrated && <span class="badge">{t('game.illustrated')}</span>}
             {game.format === 'twine' && <span class="badge">{t('game.experimental')}</span>}
             {game.slow && <span class="badge">{t('game.slow')}</span>}
           </p>

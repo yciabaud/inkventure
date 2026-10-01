@@ -23,7 +23,7 @@ function row(t: string, extra: Partial<IndexRow> = {}): IndexRow {
 const rows: IndexRow[] = [
   row('a', { l: 'en', g: ['Fantasy'], y: 1985, r: 4.5, rc: 40, s: 4.3, p: 20, st: 1 }),
   row('b', { l: 'fr', g: ['Horror', 'Science Fiction'], y: 2020, r: 4, rc: 8, s: 3.6, p: 45 }),
-  row('c', { l: 'fr', f: 'glulx', g: ['Science fiction'], y: 2001, r: 3, rc: 3, s: 2.5 }),
+  row('c', { l: 'fr', f: 'glulx', g: ['Science fiction'], y: 2001, r: 3, rc: 3, s: 2.5, il: 1 }),
   row('d', { l: 'en', y: 2020, p: 180, fg: 'Cruel' }),
   row('e', {}),
 ];
@@ -55,7 +55,7 @@ describe('filter predicates', () => {
     expect(ids({ minRating: 3, minVotes: 10 })).toEqual(['a']);
   });
 
-  it('matches play time buckets, forgiveness, the year range and starters', () => {
+  it('matches play time buckets, forgiveness, the year range, starters and illustrated games', () => {
     expect([10, 29, 30, 59, 60, 119, 120].map(playTime)).toEqual([
       'short',
       'short',
@@ -71,6 +71,8 @@ describe('filter predicates', () => {
     expect(ids({ to: 2001 })).toEqual(['a', 'c']);
     expect(ids({ from: 1990, to: 2010 })).toEqual(['c']);
     expect(ids({ starter: true })).toEqual(['a']);
+    expect(ids({ illustrated: true })).toEqual(['c']);
+    expect(ids({ illustrated: true, languages: ['en'] })).toEqual([]);
   });
 
   it('combines filters with AND and keeps the incoming order', () => {
@@ -120,10 +122,13 @@ describe('hash serialisation', () => {
     from: 1990,
     to: 1999,
     starter: true,
+    illustrated: true,
   };
 
   it('round-trips through the URL hash', () => {
     const hash = '#/library?' + formatQuery(formatFilters(filters));
+    expect(hash).toMatch(/[?&]ill=1(&|$)/);
+    expect(formatFilters({ ...NO_FILTERS, illustrated: true })).toEqual({ ill: '1' });
     expect(parseFilters(parseHash(hash).query)).toEqual(filters);
     expect(formatQuery(formatFilters(NO_FILTERS))).toBe('');
   });
@@ -139,6 +144,7 @@ describe('hash serialisation', () => {
         from: '19',
         to: '2001.5',
         start: 'yes',
+        ill: 'true',
       }),
     ).toEqual({
       ...NO_FILTERS,
@@ -151,7 +157,7 @@ describe('hash serialisation', () => {
 
   it('counts the filters set, a year range once', () => {
     expect(activeCount(NO_FILTERS)).toBe(0);
-    expect(activeCount(filters)).toBe(9);
+    expect(activeCount(filters)).toBe(10);
   });
 });
 

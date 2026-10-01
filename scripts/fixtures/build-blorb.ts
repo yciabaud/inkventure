@@ -68,10 +68,14 @@ function iffChunk(type: string, data: Uint8Array): Uint8Array {
   return concat([ascii(type), u32(data.length), data, new Uint8Array(data.length & 1)]);
 }
 
-/** A Blorb holding the Glulx game (Exec 0) and the pictures (Pict 1, 2…), with their alt texts. */
+/**
+ * A Blorb holding the Glulx game (Exec 0) and the pictures (Pict 1, 2…), with their alt texts. `cover` names the
+ * frontispiece picture (`Fspc` chunk), placed after the index (`head`) or at the end of the file (`end`).
+ */
 export function packBlorb(
   game: Uint8Array,
   pictures: Array<{ png: Uint8Array; alt?: string }>,
+  cover?: { picture: number; at: 'head' | 'end' },
 ): Uint8Array {
   const resources = [{ usage: 'Exec', number: 0, chunk: iffChunk('GLUL', game) }];
   pictures.forEach((picture, i) => {
@@ -86,16 +90,21 @@ export function packBlorb(
   const rdes = descriptions.length
     ? iffChunk('RDes', concat([u32(descriptions.length)].concat(descriptions)))
     : new Uint8Array(0);
-  // Offsets are from the start of the file: FORM header (12), then RIdx, then RDes, then the resources.
+  const fspc = cover ? iffChunk('Fspc', u32(cover.picture)) : new Uint8Array(0);
+  const fspcHead = cover && cover.at === 'head' ? fspc : new Uint8Array(0);
+  const fspcEnd = cover && cover.at === 'end' ? fspc : new Uint8Array(0);
+  // Offsets are from the start of the file: FORM header (12), then RIdx, RDes, Fspc (head), then the resources.
   const ridxSize = 8 + 4 + resources.length * 12;
-  let at = 12 + ridxSize + rdes.length;
+  let at = 12 + ridxSize + rdes.length + fspcHead.length;
   const index: Uint8Array[] = [u32(resources.length)];
   for (const resource of resources) {
     index.push(ascii(resource.usage), u32(resource.number), u32(at));
     at += resource.chunk.length;
   }
   const body = concat(
-    [ascii('IFRS'), iffChunk('RIdx', concat(index)), rdes].concat(resources.map((r) => r.chunk)),
+    [ascii('IFRS'), iffChunk('RIdx', concat(index)), rdes, fspcHead]
+      .concat(resources.map((r) => r.chunk))
+      .concat([fspcEnd]),
   );
   return concat([ascii('FORM'), u32(body.length), body]);
 }

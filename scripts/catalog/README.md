@@ -74,23 +74,38 @@ send `Access-Control-Allow-Origin: *` or that origin, and none may lead to plain
 answers are `transient` and checked again at the next run. The weekly workflow keeps the file on the `catalog` branch
 and passes it to `resolve.ts --cors`.
 
+## Illustrated games (S2.5)
+
+`check-pictures.ts` (`npm run catalog:pictures`, live network, ≤ 1 request/s, project `User-Agent`) resolves the raw
+dataset offline (same options as `resolve.ts`, `--cors FILE` included) and inspects the files of the kept games that
+are uncompressed Blorbs in a format whose engine draws pictures (`PICTURE_FORMATS`: Glulx). It reads the resource
+index (`RIdx`) from the head of the file: a `Range` request for 4 KB, asked once more when the index is longer (up to
+256 KB), or the first bytes of the whole response when the host ignores `Range` (closed as soon as they arrive). It
+counts the `Pict` resources besides the cover (`Fspc`; when that chunk is not in the head, one picture is assumed to
+be the cover). Results go to `data/cache/pictures.json` (`{ url: { checked, pictures?, size?, lastModified?, detail?,
+transient? } }`), reused for 90 days and then revalidated with `If-Modified-Since`; network errors and 5xx answers are
+`transient` and checked again at the next run. `resolve.ts --pictures FILE` flags the games with at least two
+pictures besides the cover (`illustrated: true`, `pictures`) and counts them in `report.json`
+(`counts.pictures: { blorbs, inspected, illustrated }`).
+
 ## Index and publication (S2.3)
 
 `emit.ts` (`npm run catalog:emit`) turns `data/resolved/games.json` into the files the app loads, validates them and
 writes them to `data/catalog/` (`--out`):
 
-- `meta.json`: `{ version, built, policy, count, shards, facets: { languages, genres, formats } }` (facets as
+- `meta.json`: `{ version, built, policy, count, illustrated, shards, facets: { languages, genres, formats } }` (facets as
   `[value, count]`, most frequent first; `und` for an unknown language).
 - `index-<n>.json`: `{ rows: [...] }`, 500 rows per shard sorted by title, short keys `t` TUID, `n` title, `a` author,
   `y` year, `l` language, `g` genres, `f` format, `r` rating, `rc` rating count, `s` star sort, `p` play time (min),
-  `c` has cover, `sl` slow. Unknown values are left out; `fg` (forgiveness) is reserved (not in IFDB's JSON API).
+  `c` has cover, `sl` slow, `st` starter, `il` illustrated. Unknown values are left out; `fg` (forgiveness) is reserved (not in IFDB's JSON API).
 - `games/<tuid>.json`: the resolved game (file URL and zip entry, IFIDs, tags, description, cover, IFDB link…).
 - **Validation** (exit 1): row and detail schema, every row has its detail, HTTPS file URLs, each shard under the
   `catalogShard` budget of `size-budget.json`, and no drop of more than 20 % of the games against `--previous`
   (the `meta.json` currently published).
 
 **Weekly workflow** (`.github/workflows/catalog.yml`, Mondays 04:17 UTC, or Run workflow): full crawl reusing the
-record cache, resolve, emit, then commits `catalog/`, `cache/viewgame/` and `report.json` to the **`catalog` branch**.
+record cache, CORS check, picture counts, resolve, emit, then commits `catalog/`, `cache/` (records, CORS, pictures) and
+`report.json` to the **`catalog` branch**.
 The deployment runs after it: `use-published.sh` copies that catalogue into `public/catalog/` before the build (preview
 builds too). Without the branch, builds keep the committed sample.
 
