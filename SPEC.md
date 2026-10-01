@@ -278,7 +278,13 @@ The core screen. It must feel like reading an ebook.
   (on earlier pages a short slot shows "Back to the present ›"). All pages share one text-area height; on the last
   page the taller command bar covers the bottom of it and the paginator gives that page less text, so earlier pages
   are not left with an empty band.
-- `[MORE]` / "press any key" prompts from the game are satisfied by a tap on the page.
+- **Single-key prompts** (the game waits for one key): the slot under the text shows chips for the **keys the text
+  names** ("Press N to begin", "R to restore", "Choose option 1 or 2", "Y/N", numbered options, a menu legend
+  "N = Next  Q = Quit Menu"), read from the paragraphs since the last command and from every status row, in the order
+  found, at most 8, each with a short label when the text gives one ("N — Next"). Under them, always, **Continue ›**
+  (Return, or a space when the game asks for the space bar) and **Key…**, a one-character field (virtual keyboard) that
+  sends the first character typed. Letters are sent in lower case. `[MORE]` / "press any key" prompts, where no key is
+  named, are also satisfied by a tap on the page.
 
 **Command input (parser games)** — a command bar of fixed height under the text on the last page (the text area
 itself never changes size, see above), in three rows:

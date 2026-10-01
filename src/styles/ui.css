@@ -1139,6 +1139,54 @@ button.pager__btn {
   font-size: 15px;
 }
 
+/*
+ * Single-key prompts: chips for the keys the game names (at most two rows; keys that do not fit can be typed in the
+ * field), then Continue and the one-key field.
+ */
+.key-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 40em;
+}
+
+.key-bar__keys {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 108px;
+  overflow: hidden;
+}
+
+.key-bar__chip {
+  max-width: 100%;
+  margin: 0 3px 6px;
+}
+
+.key-bar__label {
+  font-weight: 400;
+}
+
+.key-bar__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key-bar__field {
+  width: 7em;
+  min-height: 48px;
+  margin-left: 12px;
+  padding: 8px 12px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  background: #fff;
+  color: #000;
+  font: inherit;
+  text-align: center;
+}
+
 /* Dialogs listing more directions or actions. */
 .chip-grid {
   display: grid;
