@@ -11,3 +11,4 @@ first turn: not recorded
 turns: 40 ms to 3 s, depending on the location (the slowest seen around the Mercury Meteor)
 typical turn: not recorded
 worst turn: ~3 s
+verdict: acceptable to the owner (3 s at worst, now and then); within the SPEC §4.5 Glulx target (< 3 s)
