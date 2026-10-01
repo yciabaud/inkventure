@@ -9,7 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/fixtures/build-twine.ts",
+    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/fixtures/build-twine.ts && node scripts/fixtures/build-ink-export.ts",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -21,6 +21,7 @@
     "check:size": "node scripts/size/check-size.ts",
     "catalog:crawl": "node scripts/catalog/crawl.ts",
     "catalog:resolve": "node scripts/catalog/resolve.ts",
+    "catalog:ink": "node scripts/catalog/check-ink.ts",
     "catalog:cors": "node scripts/catalog/check-cors.ts",
     "catalog:pictures": "node scripts/catalog/check-pictures.ts",
     "catalog:emit": "node scripts/catalog/emit.ts",

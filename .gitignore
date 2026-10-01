@@ -17,5 +17,8 @@ vendor/twine/
 tests/fixtures/twine/*.html
 tests/fixtures/twine/*.zip
 
+# The zipped ink web export of the sample catalogue, built at install (scripts/fixtures/build-ink-export.ts)
+tests/fixtures/ink/*.zip
+
 # Ebook build output (scripts/ebook/build.ts)
 ebook/build/

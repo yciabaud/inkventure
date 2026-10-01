@@ -117,5 +117,5 @@ test('shows an error with a retry when the catalogue cannot be loaded', async ({
   fail = false;
   await press(page.getByRole('button', { name: 'Try again' }));
   // The committed sample catalogue (four Z-code games, a Glulx one and a Twine one).
-  await expect(page.getByText('6 adventures')).toBeVisible();
+  await expect(page.getByText('7 adventures')).toBeVisible();
 });

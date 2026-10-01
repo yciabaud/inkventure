@@ -333,12 +333,17 @@ for choice games, the story title and chapter if provided.
 |---|---|---|---|
 | Z-machine | `.z3 .z4 .z5 .z8 .zblorb` | **ZVM** (Parchment project) | Infocom & Inform 6 games; lightest, first to ship. |
 | Glulx | `.ulx .gblorb` | **Quixe** (Parchment project) | Most Inform 7 games. Turns up to ~3 s on a Kindle (see §4.5). |
-| Ink | compiled `.json` (ink story) | **inkjs** | Choice-based; rare on IFDB but ideal on e-ink. |
+| Ink | compiled `.json` (ink story), or Inky's web export (zip or page) holding it | **inkjs** | Choice-based; ideal on e-ink. Most are on itch.io only (out of scope). |
 | Twine | `.html` (published story) | Game's own runtime, **sandboxed iframe** | Experimental; best-effort restyling. |
 
 Out of scope V1: TADS, Hugo, ADRIFT, Alan, AGT, Quest, Adventuron, web-only games hosted on external sites.
 Games whose only download is a `.zip` are supported if the zip contains exactly one supported story file
 (unzipped client-side, or pre-resolved by the catalogue pipeline).
+**Ink web exports** (S2.7): authors of ink games rarely publish the compiled `.json`; they publish Inky's *Export for
+web* (`index.html`, `ink.js`, `main.js` and the story in a script, `var storyContent = {…};`, usually named after the
+project), zipped on the IF Archive or as a page. The app plays the compiled story it holds with its own choice
+buttons; the export's scripts and styles are never run, so an export whose `main.js` adds behaviour the story relies
+on (external functions, custom tags) may not play fully.
 
 ### 4.2 Engine abstraction
 
@@ -503,6 +508,15 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    be the cover). Results are cached per file URL with its size and `Last-Modified` in `cache/pictures.json` on the
    `catalog` branch, reused for 90 days, then revalidated (`If-Modified-Since`); `report.json` counts the Blorbs
    inspected and the illustrated games.
+   **Ink web exports** (S2.7, `check-ink.ts` before checking CORS): a link of an ink game (development system `ink`,
+   `Ink`, `Godot, Ink`…, not inklewriter or Binksi) is Ink when it is a compiled `.json`, a zip whose named file is a
+   page or script, or a web page (an IFDB `hypertextgame` or `.html` link) outside itch.io. Each such zip or page is
+   opened once (≤ 1 request/s): the file holding the story is the named file when it holds `storyContent` (or is the
+   compiled JSON), else the first of the page's own scripts that does (the ink runtime skipped). The result is cached
+   per link in `cache/ink.json` on the `catalog` branch for 90 days. The resolver then points the game's file at it
+   (`archive.primary` for a zip, the script's URL for a page, whose CORS is the one checked) and drops exports
+   without a story (`no-ink-story`). An HTML page of an ink game is never Twine. The job summary counts the ink games
+   kept and dropped, by reason.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts (games, illustrated games), facet values (genres, languages, formats) with
@@ -582,7 +596,9 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
 - Download (S3.4): XHR `arraybuffer` with a progress page (KB received, of the total when known; Cancel), abandoned
   after **30 s without receiving anything** (not a fixed total time: Wi-Fi can be slow). A zip is unzipped client-side
   (the `primary` file the catalogue names; for Twine, also the files it uses, §4.3). The file must look like a story for its engine (Blorb or the format's
-  header). Failures show an error page: Try again, Open on IFDB, Report a problem (a prefilled GitHub issue). Formats
+  header). For Ink (S2.7), the story is the compiled `.json`, or the object assigned to `storyContent` (`var`, `let`
+  or `const`) in a web export's script or page, read as JSON (never run); a file without one is "Not a story file".
+  Only the story's JSON is cached. Failures show an error page: Try again, Open on IFDB, Report a problem (a prefilled GitHub issue). Formats
   whose engine has not shipped yet say "Not playable yet" without downloading.
 - Files are cached in localStorage only if small (< 512 KB after unzipping, deflated, keyed by file URL so a new
   version is re-downloaded; LRU, see §6); larger files are re-downloaded per session on Kindle. A Twine story kept

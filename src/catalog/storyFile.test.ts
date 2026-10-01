@@ -1,4 +1,5 @@
-import { zipSync } from 'fflate';
+import { readFileSync } from 'node:fs';
+import { strFromU8, strToU8, zipSync } from 'fflate';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryBackend } from '../storage/backend';
 import { cacheFile } from '../storage/files';
@@ -330,5 +331,60 @@ describe('zipped Twine stories (S1.11)', () => {
     }).promise;
     expect(second).toEqual(first);
     expect(log).toEqual(['GET ' + URL_ZIP]);
+  });
+});
+
+describe('ink web exports (S2.7)', () => {
+  const now = (write: () => void) => write();
+  const json = readFileSync('tests/fixtures/ink/lamp.json', 'utf8').replace(/^\uFEFF/, '');
+  const URL_INK = 'https://ifarchive.org/if-archive/games/ink/tide.zip';
+  const exported = zipSync({
+    'tide/index.html': strToU8('<script src="ink.js"></script><script src="tide.js"></script>'),
+    'tide/tide.js': strToU8('var storyContent = ' + json + ';'),
+  });
+  const file = { url: URL_INK, archive: { type: 'zip' as const, primary: 'tide/tide.js' } };
+
+  it("takes the story out of a zipped export's script, an inline script or a .json", () => {
+    expect(strFromU8(storyData(file, 'ink', exported).bytes)).toBe(json);
+    const page = strToU8('<html><script>\nlet storyContent = ' + json + '\n</script></html>');
+    expect(strFromU8(storyData({ url: URL_INK }, 'ink', page).bytes)).toBe(json);
+    expect(strFromU8(storyData({ url: URL_INK }, 'ink', strToU8('\uFEFF' + json)).bytes)).toBe(
+      json,
+    );
+  });
+
+  it('fails as "Not a story file" without a compiled story', () => {
+    for (const bytes of [
+      strToU8('<html>Play on itch.io</html>'),
+      strToU8('var storyContent = {"inkVersion":21,'),
+      strToU8('var storyContent = {"root":[]};'),
+    ]) {
+      let error: unknown;
+      try {
+        storyData({ url: URL_INK }, 'ink', bytes);
+      } catch (e) {
+        error = e;
+      }
+      expect(isStoryFileError(error) && error.reason).toBe('format');
+      expect((error as Error).message).toMatch(/^Not a story file/);
+    }
+    const page = { ...file, archive: { type: 'zip' as const, primary: 'tide/index.html' } };
+    expect(() => storyData(page, 'ink', exported)).toThrow(/Not a story file/);
+  });
+
+  it('downloads the export once and caches the story alone', async () => {
+    const store = createStore(new MemoryBackend());
+    const log: string[] = [];
+    const game = { tuid: 'tide', file: file };
+    const first = await fetchStory(game, 'ink', store, {
+      createXhr: fakeXhr({ status: 200, body: exported }, log),
+      defer: now,
+    }).promise;
+    expect(strFromU8(first.bytes)).toBe(json);
+    const second = await fetchStory(game, 'ink', store, {
+      createXhr: fakeXhr({ status: 200, body: exported }, log),
+    }).promise;
+    expect(strFromU8(second.bytes)).toBe(json);
+    expect(log).toEqual(['GET ' + URL_INK]);
   });
 });

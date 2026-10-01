@@ -2,6 +2,7 @@
 // dataset (data/raw/games.json) into the games the app can play, with the reason for every game left out.
 import type { GameRecord } from './ifdb.ts';
 import type { RawDataset, RawGame } from './crawler.ts';
+import type { InkExport } from './ink.ts';
 import { isCandidate, MIN_PICTURES } from './pictures.ts';
 
 /** Story formats the app knows. A format plays once its engine exists; `enabledFormats` lists those. */
@@ -29,6 +30,14 @@ const EXTENSIONS: Array<[RegExp, StoryFormat, boolean]> = [
 const TWINE_SYSTEMS = /twine|harlowe|sugarcube|snowman|chapbook/i;
 const INK_SYSTEMS = /\bink(le)?\b/i;
 
+/** Whether a development system is ink (inkle's): `ink`, `Ink`, `Godot, Ink`… but not inklewriter (S2.7). */
+export function isInkSystem(devsys: string): boolean {
+  return INK_SYSTEMS.test(devsys);
+}
+
+/** Hosts whose game pages are not files the app can read (no CORS, no direct file): itch.io (S2.7). */
+const PAGE_HOSTS_REFUSED = /(^|\.)itch\.(io|zone)$/i;
+
 export type DropReason =
   | 'no-game-file'
   | 'unsupported-format'
@@ -36,6 +45,7 @@ export type DropReason =
   | 'compressed-no-primary'
   | 'insecure-url'
   | 'unreadable-host'
+  | 'no-ink-story'
   | 'adult-content'
   | 'excluded';
 
@@ -64,6 +74,12 @@ export interface ResolveOptions {
    * Without it, no game is illustrated.
    */
   pictures?: (url: string) => number | undefined;
+  /**
+   * Where the story of an ink web export is (S2.7: its path in the zip, or the URL of the page or script holding it),
+   * from the checks of `check-ink.ts`; null when the export has none or was not checked. Without it, the file IFDB
+   * names is assumed to hold the story (fixtures, local runs).
+   */
+  inkStory?: (link: InkExport) => string | null;
 }
 
 /** The file the app downloads. `archive`: the story is `primary` inside a zip. */
@@ -193,11 +209,14 @@ export function secureUrl(url: string): string | undefined {
   return undefined;
 }
 
-/** Story format of a download link, from IFDB's format id, else the file name and the development system. */
+/**
+ * Story format of a download link, from IFDB's format id, else the file name and the development system.
+ * `inkExport`: the link of an ink game is a web export (a zip or a page), whose story is found by `check-ink.ts`.
+ */
 export function linkFormat(
   link: Link,
   devsys: string,
-): { format: StoryFormat; blorb: boolean } | undefined {
+): { format: StoryFormat; blorb: boolean; inkExport?: true } | undefined {
   const name = (link.compressedPrimary || link.url).split(/[?#]/)[0];
   if (link.format && IFDB_FORMATS[link.format]) {
     return {
@@ -211,8 +230,16 @@ export function linkFormat(
   if (link.format === 'hypertextgame' && /\.html?$/i.test(name) && TWINE_SYSTEMS.test(devsys)) {
     return { format: 'twine', blorb: false };
   }
-  // A compiled ink story is JSON (the inkjs runtime plays it); web exports of ink games are not.
-  if (INK_SYSTEMS.test(devsys) && /\.json$/i.test(name)) return { format: 'ink', blorb: false };
+  if (INK_SYSTEMS.test(devsys)) {
+    // A compiled ink story is JSON (the inkjs runtime plays it).
+    if (/\.json$/i.test(name)) return { format: 'ink', blorb: false };
+    // Inky's web export (S2.7): a zip holding its page, or the page itself (not on a game store).
+    const page = link.compression
+      ? !link.compressedPrimary || /\.(html?|js)$/i.test(name)
+      : (link.format === 'hypertextgame' || /\.html?$/i.test(name)) &&
+        !PAGE_HOSTS_REFUSED.test(hostOf(link.url));
+    if (page) return { format: 'ink', blorb: false, inkExport: true };
+  }
   return undefined;
 }
 
@@ -231,6 +258,7 @@ export function chooseFile(
   devsys: string,
   enabled: StoryFormat[],
   readable?: (url: string) => boolean,
+  inkStory?: (link: InkExport) => string | null,
 ): Choice {
   const links = ((record.ifdb.downloads && record.ifdb.downloads.links) || []) as Link[];
   const candidates: Candidate[] = [];
@@ -256,11 +284,23 @@ export function chooseFile(
     const file: StoryFile = { url: url };
     if (link.format) file.ifdbFormat = link.format;
     if (link.compression) file.archive = { type: 'zip', primary: link.compressedPrimary! };
+    if (detected.inkExport && inkStory) {
+      // The file that holds the story of an ink web export (S2.7).
+      const story = inkStory(
+        file.archive ? { url: url, primary: file.archive.primary } : { url: url },
+      );
+      if (!story) {
+        problems.push({ reason: 'no-ink-story', detail: url });
+        return;
+      }
+      if (file.archive) file.archive.primary = story;
+      else file.url = story;
+    }
     candidates.push({
       format: detected.format,
       file: file,
       blorb: detected.blorb,
-      onArchive: IF_ARCHIVE_HOST.test(hostOf(url)),
+      onArchive: IF_ARCHIVE_HOST.test(hostOf(file.url)),
       compressed: !!link.compression,
       index: index,
       desc: typeof link.desc === 'string' ? link.desc : undefined,
@@ -277,7 +317,12 @@ export function chooseFile(
       };
     }
     // Report the most telling problem: an unknown format hides the others.
-    const order: DropReason[] = ['unsupported-format', 'compressed-no-primary', 'insecure-url'];
+    const order: DropReason[] = [
+      'no-ink-story',
+      'unsupported-format',
+      'compressed-no-primary',
+      'insecure-url',
+    ];
     problems.sort((a, b) => order.indexOf(a.reason) - order.indexOf(b.reason));
     return { reason: problems[0].reason, detail: problems[0].detail };
   }
@@ -298,12 +343,23 @@ export function chooseFile(
 }
 
 /** The files outside the IF Archive that the choice of a game's file depends on (to check with `check-cors.ts`). */
-export function urlsToCheck(record: GameRecord, devsys: string, enabled: StoryFormat[]): string[] {
+export function urlsToCheck(
+  record: GameRecord,
+  devsys: string,
+  enabled: StoryFormat[],
+  inkStory?: (link: InkExport) => string | null,
+): string[] {
   const urls: string[] = [];
-  const choice = chooseFile(record, devsys, enabled, (url) => {
-    urls.push(url);
-    return false;
-  });
+  const choice = chooseFile(
+    record,
+    devsys,
+    enabled,
+    (url) => {
+      urls.push(url);
+      return false;
+    },
+    inkStory,
+  );
   // A game in several languages may offer a file per language (S2.6): its other files outside the IF Archive.
   if ('file' in choice && languagesOf((record.bibliographic || {}).language).length > 1) {
     for (const other of choice.others) {
@@ -769,7 +825,13 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       drop(game, blocked.reason, blocked.detail);
       continue;
     }
-    const choice = chooseFile(game.record, game.search.devsys || '', ALL_FORMATS);
+    const choice = chooseFile(
+      game.record,
+      game.search.devsys || '',
+      ALL_FORMATS,
+      undefined,
+      options.inkStory,
+    );
     if ('reason' in choice) {
       drop(game, choice.reason, choice.detail);
       continue;
@@ -781,6 +843,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       game.search.devsys || '',
       options.enabledFormats,
       options.readable,
+      options.inkStory,
     );
     if ('reason' in enabledChoice) {
       drop(game, enabledChoice.reason, enabledChoice.detail);

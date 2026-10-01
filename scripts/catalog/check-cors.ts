@@ -2,19 +2,22 @@
 // files from the browser, and keeps the results in a cache the resolver reads (`resolve.ts --cors`). Live network,
 // at most 1 request per second; each file is checked again after CORS_MAX_AGE_DAYS.
 //
-//   node scripts/catalog/check-cors.ts [--in FILE] [--cache FILE] [--summary FILE]
+//   node scripts/catalog/check-cors.ts [--in FILE] [--cache FILE] [--ink FILE] [--summary FILE]
+// --ink: the checks of `check-ink.ts`, so that the file of an ink web export holding the story is the one checked.
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { parseArgs } from 'node:util';
 import { checkReadable, isFresh, type CorsCache, type Probe } from './cors.ts';
 import type { RawDataset } from './crawler.ts';
 import { RateLimiter, USER_AGENT } from './fetcher.ts';
+import { inkStoryFrom, type InkCache } from './ink.ts';
 import { urlsToCheck, type StoryFormat } from './resolver.ts';
 
 const { values } = parseArgs({
   options: {
     in: { type: 'string', default: 'data/raw/games.json' },
     cache: { type: 'string', default: 'data/cache/cors.json' },
+    ink: { type: 'string' },
     summary: { type: 'string' },
   },
 });
@@ -27,9 +30,11 @@ const { enabledFormats } = readJson<{ enabledFormats: StoryFormat[] }>(
 const cache: CorsCache = existsSync(values.cache) ? readJson<CorsCache>(values.cache) : {};
 const now = new Date();
 
+const inkStory = values.ink ? inkStoryFrom(readJson<InkCache>(values.ink)) : undefined;
+
 const urls: string[] = [];
 for (const game of dataset.games) {
-  for (const url of urlsToCheck(game.record, game.search.devsys || '', enabledFormats)) {
+  for (const url of urlsToCheck(game.record, game.search.devsys || '', enabledFormats, inkStory)) {
     if (urls.indexOf(url) < 0) urls.push(url);
   }
 }

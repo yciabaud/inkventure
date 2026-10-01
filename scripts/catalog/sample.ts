@@ -2,12 +2,15 @@
 // fixtures run through the whole pipeline (crawl offline → resolve → emit). The weekly workflow replaces it with the
 // real catalogue in deployed builds.
 // It includes featured.json, made from the curated sample games of tests/fixtures/featured.json (S2.4), and one
-// illustrated game, from the picture counts of tests/fixtures/pictures.json (the cache check-pictures.ts keeps, S2.5).
+// illustrated game, from the picture counts of tests/fixtures/pictures.json (the cache check-pictures.ts keeps, S2.5),
+// and one ink game served as a zipped web export, whose story tests/fixtures/ink-exports.json locates (as the cache
+// check-ink.ts keeps, S2.7; the zip itself is tests/fixtures/ink/tide.zip, built at install).
 import { readFileSync } from 'node:fs';
 import { crawl, type CacheEntry } from './crawler.ts';
 import { emit, type CatalogFiles } from './emitter.ts';
 import { buildFeatured, catalogView, type CuratedFile } from './featured.ts';
 import { offlineFetcher } from './fetcher.ts';
+import { inkStoryFrom, type InkCache } from './ink.ts';
 import { picturesFrom, type PicturesCache } from './pictures.ts';
 import { uiLocales } from './locales.ts';
 import { resolve, type ContentPolicyConfig, type StoryFormat } from './resolver.ts';
@@ -35,6 +38,7 @@ export async function sampleCatalog(): Promise<CatalogFiles> {
     policy: 'general',
     config: readJson<ContentPolicyConfig>('scripts/catalog/content-policy.json'),
     pictures: picturesFrom(readJson<PicturesCache>('tests/fixtures/pictures.json')),
+    inkStory: inkStoryFrom(readJson<InkCache>('tests/fixtures/ink-exports.json')),
   });
   const files = emit(resolution.games, { built: SAMPLE_BUILT, policy: 'general' });
   // The featured lists, from a curated file of sample games (content/featured.json names real ones).
