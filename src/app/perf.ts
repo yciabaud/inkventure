@@ -1,7 +1,7 @@
 // Timings for measuring the app on a device (SPEC §10, §11.4; story S7.1), shown with Settings → About → Timings (or
 // `?perf=1`): how long Home took to be ready, the Library's first results, a page turn in the reader and a game's
-// turn, each in a small line at the top of the screen and in the console. A screen's time counts from the page's start when it is
-// the first one shown, else from the address change that opened it.
+// turn, each in a small line at the top of the screen and in the console. A screen's time counts from the page's
+// start when it is the first one shown, else from the address change that opened it.
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 export type PerfLabel = 'home' | 'library' | 'page' | 'turn';
