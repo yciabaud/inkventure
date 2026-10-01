@@ -82,3 +82,17 @@ code {
   width: 7em;
   margin: 0.5em 0 0;
 }
+
+/* Screenshots of the app (ebook/<locale>/images/, grayscale): framed, never split across pages. */
+.screenshot {
+  display: block;
+  width: 75%;
+  margin: 0.5em auto 1em;
+  border: 1px solid #000;
+  page-break-inside: avoid;
+}
+
+blockquote {
+  margin: 0 0 0.7em 1em;
+  font-style: italic;
+}
