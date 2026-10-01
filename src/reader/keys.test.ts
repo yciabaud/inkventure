@@ -62,6 +62,10 @@ describe('findKeys', () => {
   });
 
   it('reads numbered options with their labels', () => {
+    expect(chips(['1. Autonomous mode: the story plays itself.', '2. Story mode.'])).toEqual([
+      '1 — Autonomous mode',
+      '2 — Story mode',
+    ]);
     expect(chips(['1. Story mode', '(2) Autonomous mode', '3) Quit', 'Your choice?'])).toEqual([
       '1 — Story mode',
       '2 — Autonomous mode',
@@ -127,5 +131,9 @@ describe('shortLabel', () => {
     expect(shortLabel('Quit Menu')).toBe('Quit Menu');
     expect(shortLabel('  resume   game ')).toBe('resume game');
     expect(shortLabel('extraordinarilylongword')).toBe('extraordinarilylongword');
+    expect(shortLabel('Autonomous mode: the story plays itself')).toBe('Autonomous mode');
+    expect(shortLabel('Story mode.')).toBe('Story mode');
+    expect(shortLabel('Quit — leave the game')).toBe('Quit');
+    expect(shortLabel('Hints (spoilers)')).toBe('Hints');
   });
 });

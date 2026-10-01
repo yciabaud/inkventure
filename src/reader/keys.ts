@@ -98,9 +98,16 @@ function keyOf(token: string): { key: string; send: string } | null {
   return { key: upper, send: token.toLowerCase() };
 }
 
-/** A few words of `phrase`, at most LABEL_MAX characters, not ending on an article or a preposition. */
+/**
+ * A few words of `phrase`, up to its first punctuation mark, at most LABEL_MAX characters, not ending on an article or
+ * a preposition.
+ */
 export function shortLabel(phrase: string): string {
-  const words = phrase.replace(/\s+/g, ' ').trim().split(' ');
+  const words = phrase
+    .split(/[:;,.!?()[\]{}<>«»“”"—–]|\s-\s/)[0]
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(' ');
   let label = '';
   for (let i = 0; i < words.length; i++) {
     const next = label ? label + ' ' + words[i] : words[i];
