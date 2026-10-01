@@ -5,7 +5,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_SETTINGS } from '../../reader/settings';
 import { frameScript } from './frameScript';
 import { FRAME_MESSAGE, STYLE_ID } from './messages';
-import { eInkStylesheet, isTwineStory, prepareTwineHtml, storyHtml } from './twineHtml';
+import {
+  eInkStylesheet,
+  isTwineStory,
+  prepareTwineHtml,
+  storyAssets,
+  storyHtml,
+  type StoryAssets,
+} from './twineHtml';
 
 const EMPTY = { local: {}, session: {} };
 const HARLOWE = readFileSync('tests/fixtures/twine/lamp-harlowe.html', 'utf8');
@@ -96,11 +103,16 @@ describe('story page preparation', () => {
 });
 
 /** A story page with the frame script, run in jsdom; `posted` collects what it posts to its parent (itself here). */
-function runFrame(storage: { local: Record<string, string>; session: Record<string, string> }) {
+function runFrame(
+  storage: { local: Record<string, string>; session: Record<string, string> },
+  assets?: StoryAssets,
+) {
   const html = prepareTwineHtml(
     '<!DOCTYPE html><html><head></head><body><p>Story</p><a href="#">A link</a></body></html>',
     eInkStylesheet(DEFAULT_SETTINGS),
     storage,
+    undefined,
+    assets,
   );
   const dom = new JSDOM(html, { runScripts: 'dangerously', pretendToBeVisual: true });
   const posted: Array<Record<string, unknown>> = [];
@@ -152,5 +164,34 @@ describe('frame script', () => {
       new frame.MessageEvent('message', { data: { ...data, css: 'x' }, source: null }),
     );
     expect(frame.document.getElementById(STYLE_ID)?.textContent).toBe('p{color:red}');
+  });
+
+  it('asks the reader for files the story names after it loaded, and uses the answer (S1.11)', async () => {
+    const { frame, posted } = runFrame(EMPTY, storyAssets({ 'img/late.png': new Uint8Array(4) }));
+    const doc = frame.document;
+    const img = doc.createElement('img');
+    img.setAttribute('src', 'img/late.png');
+    const div = doc.createElement('div');
+    div.setAttribute('style', 'background:url("img/late.png")');
+    const outside = doc.createElement('img');
+    outside.setAttribute('src', 'https://example.com/a.png');
+    doc.body.appendChild(img);
+    doc.body.appendChild(div);
+    doc.body.appendChild(outside);
+    await vi.waitFor(() =>
+      expect(posted.filter((m) => m.type === 'asset')).toEqual([
+        { source: FRAME_MESSAGE, type: 'asset', ref: 'img/late.png' },
+      ]),
+    );
+    const url = 'data:image/png;base64,AAAA';
+    frame.dispatchEvent(
+      new frame.MessageEvent('message', {
+        data: { source: FRAME_MESSAGE, type: 'asset', ref: 'img/late.png', url: url },
+        source: frame as unknown as Window,
+      }),
+    );
+    expect(img.getAttribute('src')).toBe(url);
+    expect(div.getAttribute('style')).toBe('background:url("' + url + '")');
+    expect(outside.getAttribute('src')).toBe('https://example.com/a.png');
   });
 });

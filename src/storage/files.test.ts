@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryBackend } from './backend';
-import { cacheFile, MAX_CACHED_FILE_BYTES, readCachedFile, shouldCache } from './files';
+import {
+  cacheFile,
+  MAX_CACHED_FILE_BYTES,
+  readCachedFile,
+  readCachedStory,
+  shouldCache,
+} from './files';
 import { keys, PREFIX } from './keys';
 import { createStore, type StorageEvent } from './store';
 
@@ -44,6 +50,22 @@ describe('story file cache policy', () => {
     expect(backend.getItem(PREFIX + keys.file('g1'))!.length).toBeLessThan(1000);
     expect(readCachedFile(store, 'g1', URL_A)).toEqual(story);
     expect(store.get<string[]>(keys.lru)).toEqual([keys.file('g1')]);
+  });
+
+  it('round-trips a story with its files (S1.11), and counts them in the size limit', () => {
+    const { store } = setup();
+    const story = new Uint8Array(3000).fill(1);
+    const files = { 'img/a.png': noise(200, 2), 'fonts/My Font.woff2': noise(300, 3) };
+    expect(cacheFile(store, 'g1', URL_A, story, files)).toBe(true);
+    expect(readCachedStory(store, 'g1', URL_A)).toEqual({ bytes: story, files: files });
+    expect(readCachedFile(store, 'g1', URL_A)).toEqual(story);
+    // A file cached without files reads back without them.
+    cacheFile(store, 'g2', URL_A, story);
+    expect(readCachedStory(store, 'g2', URL_A)).toEqual({ bytes: story });
+    // Small story, large files: not kept.
+    const large = { 'img/big.png': noise(MAX_CACHED_FILE_BYTES) };
+    expect(cacheFile(store, 'g3', URL_A, story, large)).toBe(false);
+    expect(store.keys()).not.toContain(keys.file('g3'));
   });
 
   it('drops a file cached from another URL (a new version) or unreadable', () => {

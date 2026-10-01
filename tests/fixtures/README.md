@@ -22,7 +22,10 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   story (MIT) in Twine's two main story formats, Harlowe 3.3.9 (zlib licence, `LICENSE-harlowe`) and SugarCube 2.37.3
   (BSD 2-clause, `LICENSE-sugarcube`), published with the format files. The Harlowe one has a long passage (the keeper's
   log) for page turns. Served by the app at `#/play/fixture-twine-harlowe` and `#/play/fixture-twine-sugarcube`.
-  The `.html` files are not committed: `npm install` builds them (`scripts/fixtures/build-twine.ts`, which downloads
+  `twine/lamp-files.twee` → `lamp-files.zip` (S1.11): a short Harlowe version in `Lamp/index.html`, zipped with files
+  of its own: a picture (`img/lamp.png`), a font (`fonts/lamp.woff2`, Literata, OFL), a linked stylesheet with a
+  `url(…)` to the picture, a linked script, and a sound (dropped). Small enough (< 512 KB) to be cached with its files.
+  The `.html` and `.zip` files are not committed: `npm install` builds them (`scripts/fixtures/build-twine.ts`, which downloads
   the formats once from the Story Format Archive into `vendor/twine/` and checks their SHA-256). Run that script again
   after editing a `.twee`.
 - `pictures.json`: picture counts in the shape of `data/cache/pictures.json` (what `scripts/catalog/check-pictures.ts`
