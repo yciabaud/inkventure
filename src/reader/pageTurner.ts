@@ -28,6 +28,9 @@ const CLICK_AFTER_SWIPE_MS = 600;
 export interface PageView {
   pages: Page[];
   index: number;
+  /** Width of the text column and the tallest a picture may be, in px, as laid out (`imageBox`). */
+  width?: number;
+  imageMaxHeight?: number;
 }
 
 export interface Point {
@@ -60,7 +63,15 @@ export class PageTurner {
   /** 'waiting' until the fonts of the first layout are in (or FONT_WAIT_MS has passed). */
   private firstLayout: 'pending' | 'waiting' | 'done' = 'pending';
   /** Metrics of the blocks last measured, reused for unchanged blocks at the same width (a turn adds a few blocks). */
-  private cache: { width: number; blocks: ReaderBlock[]; metrics: BlockMetrics[] } | null = null;
+  private cache: {
+    width: number;
+    imageMaxHeight: number;
+    blocks: ReaderBlock[];
+    metrics: BlockMetrics[];
+  } | null = null;
+  /** Width of the text column and the tallest a picture may be, as last laid out. */
+  private width = 0;
+  private imageMaxHeight = 0;
   /** Layout the last self-corrections were for, and how many were made. */
   private refits = { key: '', count: 0 };
 
@@ -134,8 +145,12 @@ export class PageTurner {
       return;
     }
     this.laidOut = key;
+    // A picture fits on any page, even the last one under the command bar.
+    const imageMaxHeight = Math.max(height - this.lastReserve, 1);
+    this.width = width;
+    this.imageMaxHeight = imageMaxHeight;
 
-    const measured = this.measure(area, text.className, width);
+    const measured = this.measure(area, text.className, width, imageMaxHeight);
     // Turns (an echoed command and its reply) are kept on one page when they fit.
     const turns: boolean[] = [];
     for (let i = 0; i < this.blocks.length; i++) turns.push(this.blocks[i].kind === 'input');
@@ -151,24 +166,39 @@ export class PageTurner {
     this.awaitFonts(measured.fonts);
   }
 
-  /** Measures the blocks, reusing the metrics of the unchanged leading blocks when the width is the same. */
-  private measure(area: HTMLElement, className: string, width: number): Measurement {
+  /**
+   * Measures the blocks, reusing the metrics of the unchanged leading blocks when the width is the same (and the
+   * picture height cap too, when a picture is among them).
+   */
+  private measure(
+    area: HTMLElement,
+    className: string,
+    width: number,
+    imageMaxHeight: number,
+  ): Measurement {
     const blocks = this.blocks;
     const cache = this.cache;
     let same = 0;
     if (cache && cache.width === width) {
       const n = Math.min(cache.blocks.length, blocks.length);
-      while (same < n && cache.blocks[same] === blocks[same]) same++;
+      const capped = cache.imageMaxHeight === imageMaxHeight;
+      while (same < n && cache.blocks[same] === blocks[same] && (capped || !blocks[same].image))
+        same++;
       if (same === blocks.length && same === cache.blocks.length) {
         return { metrics: cache.metrics, fonts: [] };
       }
     }
     // Measure again from the last unchanged block: its gap to the first new block is part of its metrics.
     const from = Math.max(same - 1, 0);
-    const measured = measureBlocks(area, className, width, blocks.slice(from));
+    const measured = measureBlocks(area, className, width, blocks.slice(from), imageMaxHeight);
     const metrics =
       cache && from > 0 ? cache.metrics.slice(0, from).concat(measured.metrics) : measured.metrics;
-    this.cache = { width: width, blocks: blocks, metrics: metrics };
+    this.cache = {
+      width: width,
+      imageMaxHeight: imageMaxHeight,
+      blocks: blocks,
+      metrics: metrics,
+    };
     return { metrics: metrics, fonts: measured.fonts };
   }
 
@@ -211,17 +241,19 @@ export class PageTurner {
    */
   private fontsReadyForFirstLayout(area: HTMLElement, className: string, width: number): boolean {
     if (this.firstLayout === 'waiting') return false;
-    // One block of each kind is enough to know the fonts.
+    // One block of each kind is enough to know the fonts (pictures have none).
     const sample: ReaderBlock[] = [];
     const kinds: Record<string, boolean> = {};
     for (let i = 0; i < this.blocks.length; i++) {
-      if (kinds[this.blocks[i].kind]) continue;
+      if (kinds[this.blocks[i].kind] || this.blocks[i].image) continue;
       kinds[this.blocks[i].kind] = true;
       sample.push(this.blocks[i]);
     }
-    if (!sample.length) return false;
+    if (!this.blocks.length) return false;
 
-    const loads = this.loadFonts(measureBlocks(area, className, width, sample).fonts);
+    const loads = sample.length
+      ? this.loadFonts(measureBlocks(area, className, width, sample, 1).fonts)
+      : [];
     if (!loads.length) {
       this.firstLayout = 'done';
       return true;
@@ -379,6 +411,11 @@ export class PageTurner {
   }
 
   private emit(): void {
-    this.onChange({ pages: this.pages, index: this.index });
+    this.onChange({
+      pages: this.pages,
+      index: this.index,
+      width: this.width,
+      imageMaxHeight: this.imageMaxHeight,
+    });
   }
 }

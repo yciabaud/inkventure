@@ -1,12 +1,14 @@
 // The game transcript as the reader sees it: paragraphs of styled runs plus the status line, built from the engine's
 // OutputBlocks. Pure and immutable (a new transcript per update, unchanged paragraphs shared), so views can compare.
-import type { OutputBlock, TextRun } from './engine';
+import type { ImageRef, OutputBlock, TextRun } from './engine';
 
 export interface Paragraph {
   runs: TextRun[];
   text: string;
   /** Contains the player's echoed command. */
   input: boolean;
+  /** A picture on a line of its own (then `runs` is empty). */
+  image?: ImageRef;
 }
 
 export interface Transcript {
@@ -44,8 +46,14 @@ export function applyOutput(transcript: Transcript, blocks: OutputBlock[]): Tran
       paragraphs = paragraphs.slice(0);
       copied = true;
     }
+    if (block.type === 'image') {
+      const image: ImageRef = { image: block.image, width: block.width, height: block.height };
+      if (block.alt) image.alt = block.alt;
+      paragraphs.push({ runs: [], text: '', input: false, image: image });
+      continue;
+    }
     const last = paragraphs.length - 1;
-    if (block.append && last >= 0) {
+    if (block.append && last >= 0 && !paragraphs[last].image) {
       paragraphs[last] = paragraph(paragraphs[last].runs.concat(block.runs));
     } else {
       paragraphs.push(paragraph(block.runs));

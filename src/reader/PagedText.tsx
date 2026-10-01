@@ -1,9 +1,9 @@
 import type { ComponentChildren } from 'preact';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../i18n/i18n';
-import { blockClass, runClass } from './measure';
+import { blockClass, IMAGE_CLASS, runClass } from './measure';
 import { PageTurner, type PageView, type TapInterceptor } from './pageTurner';
-import { pageFragments, type ReaderBlock } from './paginator';
+import { imageBox, pageFragments, type Fragment, type ReaderBlock } from './paginator';
 
 /**
  * Height in px of the slot under the text ("Back to the present", the choices or input of the demo). The text area is
@@ -40,6 +40,48 @@ interface Props {
   layoutKey?: string;
   /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
   focus?: number;
+  /** The data of picture `id` (image blocks), or null: its alt text shows in its place. */
+  imageUrl?: (id: number) => string | null;
+}
+
+/** An image block: the picture at the size it was laid out with, in grayscale (CSS), or its alt text in its box. */
+function Picture({
+  fragment,
+  view,
+  imageUrl,
+}: {
+  fragment: Fragment;
+  view: PageView;
+  imageUrl?: (id: number) => string | null;
+}) {
+  const image = fragment.image;
+  if (!image) return null;
+  const box = imageBox(image, view.width || image.width, view.imageMaxHeight || image.height);
+  const size = { width: box.width + 'px', height: box.height + 'px' };
+  const src = imageUrl ? imageUrl(image.id) : null;
+  return (
+    <div
+      class={blockClass(fragment.kind)}
+      data-block={fragment.block}
+      data-start={fragment.start}
+      data-end={fragment.end}
+    >
+      {src ? (
+        <img
+          class={IMAGE_CLASS}
+          src={src}
+          alt={image.alt || ''}
+          width={box.width}
+          height={box.height}
+          style={size}
+        />
+      ) : (
+        <div class={IMAGE_CLASS + ' ' + IMAGE_CLASS + '--missing'} style={size}>
+          {image.alt || ''}
+        </div>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -56,6 +98,7 @@ export function PagedText({
   lastSlotHeight,
   textStyle,
   layoutKey,
+  imageUrl,
 }: Props) {
   const areaRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -112,23 +155,32 @@ export function PagedText({
       >
         <div class="reader__text" ref={textRef}>
           {loading && <p class="reader__loading ui-font">{t('reader.loading')}</p>}
-          {fragments.map((fragment) => (
-            <p
-              key={fragment.block + ':' + fragment.start}
-              class={blockClass(fragment.kind)}
-              data-block={fragment.block}
-              data-start={fragment.start}
-              data-end={fragment.end}
-            >
-              {fragment.runs
-                ? fragment.runs.map((run, i) => (
-                    <span key={i} class={runClass(run.style)}>
-                      {run.text}
-                    </span>
-                  ))
-                : fragment.text}
-            </p>
-          ))}
+          {fragments.map((fragment) =>
+            fragment.image ? (
+              <Picture
+                key={fragment.block + ':' + fragment.start}
+                fragment={fragment}
+                view={view}
+                imageUrl={imageUrl}
+              />
+            ) : (
+              <p
+                key={fragment.block + ':' + fragment.start}
+                class={blockClass(fragment.kind)}
+                data-block={fragment.block}
+                data-start={fragment.start}
+                data-end={fragment.end}
+              >
+                {fragment.runs
+                  ? fragment.runs.map((run, i) => (
+                      <span key={i} class={runClass(run.style)}>
+                        {run.text}
+                      </span>
+                    ))
+                  : fragment.text}
+              </p>
+            ),
+          )}
         </div>
       </div>
       <div

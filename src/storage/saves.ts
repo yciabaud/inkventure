@@ -1,6 +1,6 @@
 // Game saves (SPEC §4.4, §6.1): the autosave and up to 5 named slots per game, plus the progress record Home shows.
 // Imported directly (not from index.ts): it pulls in the deflate library, which stays out of the initial bundle.
-import type { TextRun } from '../engines/engine';
+import type { ImageRef, TextRun } from '../engines/engine';
 import { compressBytes, compressText, decompressBytes, decompressText } from './compress';
 import { keys } from './keys';
 import type { Store } from './store';
@@ -14,14 +14,20 @@ export const SLOT_COUNT = 5;
 export const TAIL_CHARS = 20000;
 export const TAIL_BLOCKS = 200;
 
+/**
+ * A paragraph of the saved transcript: its styled runs, or a picture by reference (its number in the story file, not
+ * its data: the engine gives the data again once the story is loaded).
+ */
+export type SavedParagraph = TextRun[] | ImageRef;
+
 /** What a save holds, uncompressed. */
 export interface GameSnapshot {
   /** Engine state (`Engine.saveState`). */
   state: Uint8Array;
   /** Commands sent since the story began. */
   turn: number;
-  /** The end of the transcript: paragraphs as styled runs, and the status line. */
-  paragraphs: TextRun[][];
+  /** The end of the transcript: paragraphs as styled runs (or pictures), and the status line. */
+  paragraphs: SavedParagraph[];
   status: string[];
 }
 
@@ -54,19 +60,21 @@ export interface Progress {
 }
 
 /**
- * Keeps the last paragraphs: up to TAIL_BLOCKS with text (blank lines between them are free) and TAIL_CHARS
- * characters, but at least one paragraph.
+ * Keeps the last paragraphs: up to TAIL_BLOCKS with text or a picture (blank lines between them are free) and
+ * TAIL_CHARS characters, but at least one paragraph.
  */
-export function transcriptTail(paragraphs: TextRun[][]): TextRun[][] {
+export function transcriptTail<T extends SavedParagraph>(paragraphs: T[]): T[] {
   let chars = 0;
   let blocks = 0;
   let from = paragraphs.length;
   while (from > 0) {
-    const runs = paragraphs[from - 1];
+    const paragraph = paragraphs[from - 1];
     let text = '';
-    for (let i = 0; i < runs.length; i++) text += runs[i].text;
+    if (Array.isArray(paragraph)) {
+      for (let i = 0; i < paragraph.length; i++) text += paragraph[i].text;
+    }
     chars += text.length;
-    if (text.trim()) blocks++;
+    if (text.trim() || !Array.isArray(paragraph)) blocks++;
     if ((chars > TAIL_CHARS || blocks > TAIL_BLOCKS) && from < paragraphs.length) break;
     from--;
   }
@@ -102,7 +110,7 @@ function fromRecord(record: unknown): GameSnapshot | undefined {
   if (!isRecord(record)) return undefined;
   try {
     const text = JSON.parse(decompressText(record.text)) as {
-      paragraphs: TextRun[][];
+      paragraphs: SavedParagraph[];
       status: string[];
     };
     return {

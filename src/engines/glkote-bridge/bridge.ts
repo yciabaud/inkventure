@@ -17,7 +17,16 @@ interface GameInterface {
 }
 
 // GlkOte update format (see glkapi.js / the GlkOte spec). Only the fields we use.
-type Content = Array<string | { style: string; text: string }>;
+/** A picture in a buffer window (`glk_image_draw`): the Blorb resource number, its size and alt text. */
+interface ImageSpecial {
+  special: 'image';
+  image: number;
+  width: number;
+  height: number;
+  alttext?: string;
+}
+
+type Content = Array<string | { style: string; text: string } | ImageSpecial>;
 
 interface BufferLine {
   append?: boolean;
@@ -82,6 +91,8 @@ function toRuns(content: Content | undefined): TextRun[] {
       style = item;
       const next = content[++i];
       text = typeof next === 'string' ? next : '';
+    } else if ('special' in item) {
+      continue;
     } else {
       style = item.style;
       text = item.text;
@@ -93,6 +104,47 @@ function toRuns(content: Content | undefined): TextRun[] {
     });
   }
   return runs;
+}
+
+function isImage(item: Content[number] | undefined): item is ImageSpecial {
+  return typeof item === 'object' && item !== null && 'special' in item && item.special === 'image';
+}
+
+/**
+ * The blocks of one buffer window line: its text as a paragraph, and each picture in it as an image block on a line
+ * of its own (the text around a picture becomes the paragraphs before and after it).
+ */
+function bufferLine(line: BufferLine): OutputBlock[] {
+  const content = line.content || [];
+  const blocks: OutputBlock[] = [];
+  let from = 0;
+  let pictures = 0;
+  function text(to: number) {
+    const runs = toRuns(content.slice(from, to));
+    // A blank line is a paragraph, but not the empty text either side of a picture.
+    if (runs.length || (!pictures && to === content.length)) {
+      const block: OutputBlock = { type: 'paragraph', runs: runs };
+      if (line.append && !pictures) block.append = true;
+      blocks.push(block);
+    }
+  }
+  for (let i = 0; i < content.length; i++) {
+    const item = content[i];
+    if (!isImage(item)) continue;
+    text(i);
+    pictures++;
+    from = i + 1;
+    const block: OutputBlock = {
+      type: 'image',
+      image: item.image,
+      width: item.width,
+      height: item.height,
+    };
+    if (item.alttext) block.alt = item.alttext;
+    blocks.push(block);
+  }
+  text(content.length);
+  return blocks;
 }
 
 function runsText(content: Content | undefined): string {
@@ -264,9 +316,8 @@ export class GlkOteBridge {
         if (update.clear) blocks.push({ type: 'clear' });
         const lines = update.text || [];
         for (let l = 0; l < lines.length; l++) {
-          const block: OutputBlock = { type: 'paragraph', runs: toRuns(lines[l].content) };
-          if (lines[l].append) block.append = true;
-          blocks.push(block);
+          const line = bufferLine(lines[l]);
+          for (let b = 0; b < line.length; b++) blocks.push(line[b]);
         }
       } else if (win.type === 'grid') {
         const grid = this.grids[update.id] || [];

@@ -860,6 +860,23 @@ button.pager__btn {
   font-weight: 700;
 }
 
+/* Pictures (Glulx games): their size is set inline (imageBox), known before they load, so pages never reflow. Shown
+   in grayscale, as an e-ink screen would. */
+.reader__image {
+  display: block;
+  margin: 0 auto;
+  filter: grayscale(100%);
+}
+
+/* No picture data: its alt text in a box of the picture's size. */
+.reader__image--missing {
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid #767676;
+  font-style: italic;
+}
+
 /* Under the text: a way back to the present on earlier pages. Its height (SLOT_HEIGHT, set inline) is the same on
    every page, so every page has the same text area. */
 .reader__slot {

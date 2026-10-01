@@ -35,4 +35,21 @@ describe('readerBlocks', () => {
     expect(after[0]).toBe(before[0]);
     expect(after[1]).toBe(before[1]);
   });
+
+  it('turns a picture into an image block, kept even with no text', () => {
+    const t = applyOutput(EMPTY_TRANSCRIPT, [
+      { type: 'paragraph', runs: [run('A painting.')] },
+      { type: 'image', image: 3, width: 60, height: 40, alt: 'A lighthouse' },
+      { type: 'image', image: 4, width: 10, height: 10 },
+    ]);
+    const blocks = readerBlocks(t.paragraphs, true);
+    expect(blocks.map((b) => b.kind)).toEqual(['text', 'image', 'image']);
+    expect(blocks[1]).toEqual({
+      kind: 'image',
+      text: '',
+      image: { id: 3, width: 60, height: 40, alt: 'A lighthouse' },
+    });
+    expect(blocks[2].image).toEqual({ id: 4, width: 10, height: 10 });
+    expect(readerBlocks(t.paragraphs, true)[1]).toBe(blocks[1]);
+  });
 });

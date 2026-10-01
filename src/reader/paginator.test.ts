@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   comparePositions,
+  imageBox,
   pageFragments,
   pageIndexOf,
   paginate,
@@ -239,5 +240,37 @@ describe('a shorter last page (room for the command bar)', () => {
         expect(used(pages, pages.length - 1)).toBeLessThanOrEqual(Math.max(last, LINE));
       }
     }
+  });
+});
+
+describe('pictures', () => {
+  it('sizes a picture from its known size: scaled to the column width, capped to the page height', () => {
+    expect(imageBox({ width: 300, height: 200 }, 500, 700)).toEqual({ width: 300, height: 200 });
+    expect(imageBox({ width: 600, height: 400 }, 300, 700)).toEqual({ width: 300, height: 200 });
+    expect(imageBox({ width: 600, height: 400 }, 600, 100)).toEqual({ width: 150, height: 100 });
+    expect(imageBox({ width: 1000, height: 3 }, 300, 700)).toEqual({ width: 300, height: 1 });
+    expect(imageBox({ width: 0, height: 0 }, 300, 700)).toEqual({ width: 1, height: 1 });
+  });
+
+  it('lays an image block out as one unbreakable line, moved to the next page when it does not fit', () => {
+    const picture: ReaderBlock = {
+      kind: 'image',
+      text: '',
+      image: { id: 1, width: 600, height: 400 },
+    };
+    const blocks = [text(30, 'a'), picture, text(10, 'b')];
+    const box = imageBox(picture.image!, 300, 150);
+    const metrics = measure(blocks, 10);
+    metrics[1] = { lines: [{ start: 0, height: box.height }], gapAfter: GAP };
+    // 60 px of text, a gap, then the 150 px picture: too tall for the rest of a 200 px page.
+    const pages = paginate(metrics, 200);
+    expect(pages.map((p) => p.start)).toEqual([
+      { block: 0, offset: 0 },
+      { block: 1, offset: 0 },
+    ]);
+    const second = pageFragments(blocks, pages[1]);
+    expect(second.map((f) => f.kind)).toEqual(['image', 'text']);
+    expect(second[0].image).toBe(picture.image);
+    expect(pageFragments(blocks, pages[0]).map((f) => f.kind)).toEqual(['text']);
   });
 });

@@ -21,16 +21,26 @@ export interface TextRun {
   style: TextStyle;
 }
 
+/** A picture of the story file (Blorb `Pict` resource `image`), with its size in px and its alt text when it has one. */
+export interface ImageRef {
+  image: number;
+  width: number;
+  height: number;
+  alt?: string;
+}
+
 /**
  * Output from the game.
  * - `paragraph`: one line of the transcript. With `append`, it continues the previous paragraph (e.g. the echoed
  *   command after the prompt).
  * - `status`: the whole status line (Z-machine upper window / Glk grid window), one string per row.
+ * - `image`: a picture drawn in the main window, on a line of its own (`Engine.imageUrl` gives its data).
  * - `clear`: the game cleared its main window.
  */
 export type OutputBlock =
   | { type: 'paragraph'; runs: TextRun[]; append?: boolean }
   | { type: 'status'; lines: string[] }
+  | ({ type: 'image' } & ImageRef)
   | { type: 'clear' };
 
 export interface LineInput {
@@ -82,4 +92,6 @@ export interface Engine {
   restart(): Promise<void>;
   /** Takes back the last turn when the engine can; false lets the reader restore its previous snapshot instead. */
   undo(): Promise<boolean>;
+  /** A URL (`data:`) of picture `image` of the loaded story, or null; only engines that draw pictures have it. */
+  imageUrl?(image: number): string | null;
 }

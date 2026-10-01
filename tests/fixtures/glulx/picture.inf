@@ -1,0 +1,28 @@
+! "The Keeper's Picture": a tiny illustrated Glulx test story for Inkventure (MIT). No library: raw Glk calls. It
+! prints a few paragraphs, draws picture 1 (from the Blorb, scripts/fixtures/build-blorb.ts) in the main window, and
+! then answers every command with one more paragraph, so a turn can be saved and resumed.
+! Rebuild with scripts/fixtures/build-glulx.sh.
+
+Include "infglk";
+
+Array linebuf -> 64;
+Array event --> 4;
+
+[ Main mainwin turns;
+  @setiosys 2 0; ! print through Glk (the library does this)
+  mainwin = glk_window_open(0, 0, 0, wintype_TextBuffer, 0);
+  glk_set_window(mainwin);
+  print "The keeper's cottage is small and smells of lamp oil. A fire burns low in the grate.^^";
+  print "On the wall above the table hangs a painting in a plain wooden frame. The keeper made it himself, he says,
+    the winter the supply boat could not get through.^^";
+  print "You step closer to look at it.^";
+  glk_image_draw(mainwin, 1, imagealign_InlineUp, 0);
+  print "^It shows the lighthouse at dusk, its lamp just lit, the sea dark below.^";
+  for (::) {
+    print "^>";
+    glk_request_line_event(mainwin, linebuf, 64, 0);
+    glk_select(event);
+    turns++;
+    print "You look at the painting a little longer (", turns, ").^";
+  }
+];

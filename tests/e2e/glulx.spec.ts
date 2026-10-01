@@ -125,3 +125,86 @@ test('?perf=1 shows how long the last turn took, for measuring on a device', asy
   await expect(command(page)).toBeVisible();
   await expect(statusLine(page)).not.toContainText(/\(\d+ ms\)/);
 });
+
+// The illustrated fixture (S1.10): a Blorb with one PNG, drawn in the main window.
+const PICTURE_GAME = '/#/play/fixture-glulx-picture';
+const PICTURE_AUTOSAVE = 'ik:v1:save:fixture-glulx-picture:auto';
+const PICTURE_ALT = 'A painting of a lighthouse at dusk, its lamp lit above a dark sea.';
+
+/** The text never runs past the bottom of the text area (minus what the command bar covers on the last page). */
+async function expectPageFits(page: Page) {
+  const overflow = await page.evaluate(() => {
+    const area = document.querySelector('.reader__page') as HTMLElement;
+    const last = document.querySelector('.reader__text')!.lastElementChild as HTMLElement | null;
+    if (!last) return 0;
+    const bottom =
+      area.getBoundingClientRect().bottom - parseFloat(getComputedStyle(area).paddingBottom);
+    const slot = document.querySelector('.reader__slot--raised');
+    const limit = slot ? Math.min(bottom, slot.getBoundingClientRect().top) : bottom;
+    return last.getBoundingClientRect().bottom - limit;
+  });
+  expect(overflow).toBeLessThanOrEqual(0.5);
+}
+
+/** Turns pages with `key` until the picture shows, checking that every page fits. */
+async function findPicture(page: Page, key: 'ArrowLeft' | 'ArrowRight') {
+  const picture = page.getByRole('img', { name: PICTURE_ALT });
+  for (let i = 0; i < 6 && !(await picture.count()); i++) {
+    await expectPageFits(page);
+    await page.locator('.reader__page').focus();
+    await page.keyboard.press(key);
+  }
+  await expect(picture).toBeVisible();
+  await expectPageFits(page);
+  return picture;
+}
+
+async function expectPictureShown(picture: Locator) {
+  // Loaded, in grayscale, and inside the text column.
+  await expect
+    .poll(() => picture.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth))
+    .toBe(600);
+  expect(await picture.evaluate((img) => getComputedStyle(img).filter)).toMatch(/grayscale\(1\)/);
+  const size = await picture.evaluate((img) => {
+    const column = document.querySelector('.reader__text')!.getBoundingClientRect();
+    const box = img.getBoundingClientRect();
+    return { width: box.width, height: box.height, column: column.width };
+  });
+  expect(size.width).toBeLessThanOrEqual(size.column + 0.5);
+  // Its proportions are kept (600 × 400).
+  expect(Math.abs(size.width / size.height - 1.5)).toBeLessThan(0.02);
+}
+
+test('shows the picture of an illustrated Glulx game in grayscale, and again after a reload', async ({
+  page,
+}) => {
+  await page.goto(PICTURE_GAME);
+  await expect(statusLine(page)).toContainText("The Keeper's Picture");
+  await expect(page.locator('.reader__text')).toContainText("The keeper's cottage");
+  // Opens on the first page; the picture is on it or a later one.
+  const picture = await findPicture(page, 'ArrowRight');
+  await expectPictureShown(picture);
+  const present = button(page, 'Back to the present ›');
+  if (await present.count()) await press(present);
+  await expect(command(page)).toBeVisible();
+
+  await command(page).fill('look');
+  await page.getByRole('button', { name: 'Enter' }).click();
+  await expect(page.locator('.reader__text')).toContainText(
+    'You look at the painting a little longer (1).',
+  );
+  await expect
+    .poll(() =>
+      page.evaluate((key) => {
+        const raw = localStorage.getItem(key);
+        return raw ? (JSON.parse(raw) as { turn: number }).turn : -1;
+      }, PICTURE_AUTOSAVE),
+    )
+    .toBe(1);
+
+  // After a reload the reader opens on the last command; the picture is on an earlier page or the same one.
+  await page.reload();
+  await expect(command(page)).toBeVisible();
+  await expect(page.locator('.reader__text')).toContainText('>look');
+  await expectPictureShown(await findPicture(page, 'ArrowLeft'));
+});
