@@ -11,7 +11,7 @@ import {
   sortRecent,
   type Adventure,
 } from './home';
-import { keys } from './keys';
+import { gameId, keys, parseGameId } from './keys';
 import { createStore, isStorageFullError } from './store';
 
 const lamp = { tuid: 'lamp', title: 'The Lamp', author: 'Someone' };
@@ -80,6 +80,18 @@ describe('My adventures (ik:v1:home)', () => {
     expect(inProgressTuids(store)).toEqual({ started: true, saved: true, lamp: true });
   });
 
+  it('counts a game played in another language under its TUID too (S2.6)', () => {
+    const store = createStore(new MemoryBackend());
+    store.set(keys.autosave(gameId('dracula', 'en')), { v: 1 });
+    addToHome(store, { ...lamp, tuid: gameId('baron', 'nl') }, 1000);
+    expect(inProgressTuids(store)).toEqual({
+      'dracula-en': true,
+      dracula: true,
+      'baron-nl': true,
+      baron: true,
+    });
+  });
+
   it('removes a game with or without its saves and progress', () => {
     const store = createStore(new MemoryBackend());
     for (const game of [lamp, cave]) {
@@ -112,6 +124,17 @@ describe('My adventures (ik:v1:home)', () => {
       { tuid: 'cave', title: 'Cave', author: 'Other', added: 2000 },
       { ...lamp, added: 1000, cover: true, turns: 7, lastPlayed: 5000 },
     ]);
+  });
+});
+
+describe('game ids (S2.6)', () => {
+  it('names a game in another language <tuid>-<lang>, and reads it back', () => {
+    expect(gameId('abc123')).toBe('abc123');
+    expect(gameId('abc123', 'es')).toBe('abc123-es');
+    expect(parseGameId('abc123-es')).toEqual({ tuid: 'abc123', language: 'es' });
+    expect(parseGameId('abc123-sco')).toEqual({ tuid: 'abc123', language: 'sco' });
+    expect(parseGameId('abc123')).toEqual({ tuid: 'abc123' });
+    expect(parseGameId('abc123-EN')).toEqual({ tuid: 'abc123-EN' });
   });
 });
 

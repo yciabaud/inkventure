@@ -19,6 +19,20 @@ export const keys = {
   twine: (tuid: string) => 'save:' + tuid + ':twine',
 };
 
+/**
+ * A game played in another language than its default file's (S2.6) is its own game for storage, under the id
+ * `<tuid>-<language>`: its saves, progress, cached file and Home entry. IFDB TUIDs have no `-`.
+ */
+export function gameId(tuid: string, language?: string): string {
+  return language ? tuid + '-' + language : tuid;
+}
+
+/** The TUID and language of a game id (see `gameId`). */
+export function parseGameId(id: string): { tuid: string; language?: string } {
+  const match = /^(.+)-([a-z]{2,3})$/.exec(id);
+  return match ? { tuid: match[1], language: match[2] } : { tuid: id };
+}
+
 const AUTOSAVE = /^save:(.+):auto$/;
 
 export function isFileKey(key: string): boolean {

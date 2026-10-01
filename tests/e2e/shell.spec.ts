@@ -25,6 +25,7 @@ async function expectScreen(page: Page, hash: string, title: string) {
 test('navigates between all screens by tapping, and back', async ({ page }) => {
   // No network in tests: the game file download fails, which shows its error page.
   await page.route('https://www.ifarchive.org/**', (route) => route.abort());
+  await page.route('https://ifarchive.org/**', (route) => route.abort());
   await page.goto('/');
   await expectScreen(page, '#/home', 'Home');
 
@@ -45,8 +46,9 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await press(page.getByRole('link', { name: /Cave of Echoes/ }));
   await expectScreen(page, '#/game/fxcave0000000003', 'Cave of Echoes');
 
+  // In English, its English translation (S2.6).
   await press(page.getByRole('link', { name: 'Play' }));
-  await expectScreen(page, '#/play/fxcave0000000003', 'The game could not be downloaded');
+  await expectScreen(page, '#/play/fxcave0000000003-en', 'The game could not be downloaded');
 
   await openSettings(page);
   await expectScreen(page, '#/settings', 'Settings');
@@ -58,7 +60,7 @@ test('navigates between all screens by tapping, and back', async ({ page }) => {
   await page.goBack();
   await expectScreen(page, '#/settings', 'Settings');
   await page.goBack();
-  await expectScreen(page, '#/play/fxcave0000000003', 'The game could not be downloaded');
+  await expectScreen(page, '#/play/fxcave0000000003-en', 'The game could not be downloaded');
   await page.goBack();
   await expectScreen(page, '#/game/fxcave0000000003', 'Cave of Echoes');
   await page.goBack();

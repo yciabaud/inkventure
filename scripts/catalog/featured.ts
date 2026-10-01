@@ -2,7 +2,7 @@
 // catalogue, and builds the catalogue's `featured.json`, one list per UI locale: the curated games in that language
 // first (with their pitch), then the best-rated games in that language. The app leaves out the games already in
 // progress, so each list holds more games than the shelf shows.
-import type { CatalogFiles, IndexRow, Meta } from './emitter.ts';
+import { rowLanguages, type CatalogFiles, type IndexRow, type Meta } from './emitter.ts';
 import type { ContentPolicyConfig } from './resolver.ts';
 
 /** Bump when the shape of the curated file or of the published `featured.json` changes. */
@@ -147,8 +147,8 @@ export function unfeaturable(
       if (deny.indexOf(tag.toLowerCase()) >= 0) return 'adult content (tag "' + tag + '")';
     }
   }
-  if (!row.l || locales.indexOf(row.l) < 0) {
-    return 'in language "' + (row.l || 'und') + '", not a UI locale: never shown';
+  if (!rowLanguages(row).some((language) => locales.indexOf(language) >= 0)) {
+    return 'in language "' + rowLanguages(row).join(', ') + '", not a UI locale: never shown';
   }
   return undefined;
 }
@@ -202,24 +202,24 @@ export function buildFeatured(
     }
     curated[item.tuid] = true;
     const row = byTuid[item.tuid];
-    const featured: FeaturedRow = { ...row, pi: item.pitch[row.l as string] };
-    if (item.starter) featured.st = 1;
-    lists[row.l as string].push(featured);
+    // A game with a file per language is featured in each of them that is a UI locale (S2.6).
+    for (const language of rowLanguages(row)) {
+      if (!lists[language]) continue;
+      const featured: FeaturedRow = { ...row, pi: item.pitch[language] };
+      if (item.starter) featured.st = 1;
+      lists[language].push(featured);
+    }
   }
 
   const top = catalog.rows
     .filter(
       (row) =>
-        !curated[row.t] &&
-        (row.r || 0) >= MIN_TOP_RATING &&
-        (row.rc || 0) >= MIN_TOP_RATINGS &&
-        !!row.l &&
-        locales.indexOf(row.l) >= 0,
+        !curated[row.t] && (row.r || 0) >= MIN_TOP_RATING && (row.rc || 0) >= MIN_TOP_RATINGS,
     )
     .sort(byStars);
   for (const locale of locales) {
     lists[locale] = lists[locale].concat(
-      top.filter((row) => row.l === locale).slice(0, TOP_RATED_COUNT),
+      top.filter((row) => rowLanguages(row).indexOf(locale) >= 0).slice(0, TOP_RATED_COUNT),
     );
   }
   return { file: { version: FEATURED_VERSION, built: built, locales: lists }, skipped: skipped };

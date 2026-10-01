@@ -1,0 +1,88 @@
+{
+  "tuid": "qbk3fo0jcawo1j7h",
+  "pageVersion": 8,
+  "fetchedAt": "2026-09-30T09:55:56.751Z",
+  "record": {
+    "colophon": {
+      "generator": "ifdb.org/viewgame",
+      "generatorversion": 1,
+      "originated": "2024-01-14"
+    },
+    "identification": {
+      "ifids": [
+        "GLULX-7-070420-E8B75A15",
+        "GLULX-2-040731-743C7B46",
+        "GLULX-7-070420-882CC4CE",
+        "GLULX-8-071227-CADC6986",
+        "GLULX-8-071227-89CA2B59"
+      ],
+      "bafn": 2430,
+      "format": "glulx"
+    },
+    "bibliographic": {
+      "title": "Dracula Part 1: The First Night",
+      "author": "El Clérigo Urbatain and DEF and Rod Pike",
+      "language": "Castilian, English (es, en)",
+      "firstpublished": "2004",
+      "genre": "Horror",
+      "description": "Dracula, The First Night is a remake of the classic text adventure by Rod Pike from 1986 for 8-bit micros (Spectrum and Commodore 64). <br> <br>This remake has been done by DEF and El Clérigo Urbatain. <br> <br>A young solicitor is traveling overseas to meet with a client on whose behalf, he has purchased a house in England. He is also to advise on the details of importing some soil back to England. <br> <br>This chapter is concerned with the last stopover at &quot;The Golden Krone Hotel&quot;, before the final leg of the journey to Castle Dracula. Here, he immediately senses something very... odd with the local people. They are altogether too preoccupied with something else. Having eaten (do try different combinations of food and drink each time you play), night ensues, bringing nightmares and terror!"
+    },
+    "contacts": [],
+    "ifdb": {
+      "tuid": "qbk3fo0jcawo1j7h",
+      "pageversion": 8,
+      "link": "https://ifdb.org/viewgame?id=qbk3fo0jcawo1j7h",
+      "coverart": { "url": "https://ifdb.org/coverart?id=qbk3fo0jcawo1j7h&version=8" },
+      "primaryPlayOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fglulx%252Fspanish%252FDracula_La_Primera_Noche.zip%26open%3DDracula_La_Primera_Noche.blb",
+      "downloads": {
+        "links": [
+          {
+            "url": "https://ifarchive.org/if-archive/games/glulx/spanish/Dracula_La_Primera_Noche.zip",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fglulx%252Fspanish%252FDracula_La_Primera_Noche.zip%26open%3DDracula_La_Primera_Noche.blb",
+            "title": "Dracula_La_Primera_Noche.zip",
+            "desc": "Spanish version, latest release.",
+            "isGame": true,
+            "format": "blorb/glulx",
+            "compression": "zip",
+            "compressedPrimary": "Dracula_La_Primera_Noche.blb"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/glulx/Dracula_The_First_Night.zip",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fglulx%252FDracula_The_First_Night.zip%26open%3DDracula_The_First_Night.blb",
+            "title": "Dracula_The_First_Night.zip",
+            "desc": "English version, latest release.",
+            "isGame": true,
+            "format": "blorb/glulx",
+            "compression": "zip",
+            "compressedPrimary": "Dracula_The_First_Night.blb"
+          },
+          {
+            "url": "https://ifarchive.org/if-archive/games/competitions-spanish/retrocomp2004/dracula_la_primera_noche.zip",
+            "playOnlineUrl": "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fcompetitions-spanish%252Fretrocomp2004%252Fdracula_la_primera_noche.zip%26open%3DDracula_La_Primera_Noche.blb",
+            "title": "dracula_la_primera_noche.zip",
+            "desc": "RetroComp 2004 version (Spanish, release 2).",
+            "isGame": true,
+            "format": "blorb/glulx",
+            "compression": "zip",
+            "compressedPrimary": "Dracula_La_Primera_Noche.blb"
+          }
+        ]
+      },
+      "averageRating": 2.666666666,
+      "starRating": 2.5,
+      "ratingCountAvg": 3,
+      "ratingCountTot": 3,
+      "tags": [
+        { "name": "Dracula", "tagcnt": 1, "gamecnt": 25 },
+        { "name": "first person", "tagcnt": 1, "gamecnt": 373 },
+        { "name": "graphics", "tagcnt": 1, "gamecnt": 1240 },
+        { "name": "horror", "tagcnt": 1, "gamecnt": 891 },
+        { "name": "music", "tagcnt": 1, "gamecnt": 413 },
+        { "name": "sound", "tagcnt": 1, "gamecnt": 692 },
+        { "name": "vampire", "tagcnt": 1, "gamecnt": 146 },
+        { "name": "vampires", "tagcnt": 1, "gamecnt": 123 },
+        { "name": "violence", "tagcnt": 1, "gamecnt": 500 }
+      ]
+    }
+  }
+}

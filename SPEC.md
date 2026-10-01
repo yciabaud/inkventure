@@ -228,6 +228,9 @@ Purpose: find the next adventure in the playable catalogue.
 - Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long: one CSS column per page, turned
   with the pager).
 - Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**.
+- **Language** (S2.6), for a game with a file per language: one button per language; Play, Continue, Home, the
+  language shown and the IF Archive link follow the chosen one. The page opens on the language a link names
+  (`#/game/<tuid>-<lang>`), else the one last played, else the UI language, else the default file's.
 - "Experimental" / "May be slow on this device" notices when relevant (Twine; no game is flagged slow for now, §4.5).
 - Credits: "Data from IFDB" link to the IFDB page, licence info when known (not in the catalogue yet), link to the
   file on the IF Archive.
@@ -476,11 +479,17 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    candidate's `viewgame?json` record (cached per game, keyed by page version) into `data/raw/games.json`.
 2. **Resolve playability** (`scripts/catalog/resolve.ts`, offline) — from each candidate's `viewgame?json` record
    (fetched by the crawler) get links, formats, IFID, genre, language (primary subtag), tags, rating, play time, cover
-   art (forgiveness is only in the iFiction XML, not fetched yet). The language is the one of the file the app plays
-   (S2.6): IFDB's first language, unless IFDB lists several and the chosen file's description names one of them
-   "only" (`(English only.)`, `en français seulement`…), then a hand-kept override (`languages` in
-   `content-policy.json`); `report.json` lists the games changed and counts the multi-language games left with their
-   first language. Pick the best playable file among the formats
+   art (forgiveness is only in the iFiction XML, not fetched yet). **Languages** (S2.6): the language is the one of
+   the file the app plays. For a game IFDB lists in several languages, each usable file's language is read from its
+   IFDB description (a language named "only", `(English only.)`, `en français seulement`; or a single language
+   named, `Spanish version`, `IFComp 2005 version (English)`, `Traducido por…`; not one translated *from*), else from
+   a language tag in its file name (`hs_ita.z5`); a file of unknown language stands for the first language without a
+   file. The best file of each language is kept: the chosen file is the default one when its language is known
+   (otherwise the best file in IFDB's first language replaces it), the others become `versions`. Then a hand-kept
+   override (`languages` in `content-policy.json`) sets the default file's language. `report.json` lists the games
+   whose language is not IFDB's first, the games with a file per language, and counts the multi-language games
+   whose file's language IFDB does not say (to review by hand). `check-cors.ts` also checks the files outside the
+   IF Archive of games in several languages. Pick the best playable file among the formats
    enabled in `scripts/catalog/playability.json` (those with an engine): IF Archive URLs first, uncompressed before a
    zip (zips only when IFDB names the story file inside), `.zblorb/.gblorb` before bare story files; HTTPS only (IF
    Archive links upgraded). A file outside the IF Archive is used only if its host lets a browser page read it
@@ -499,11 +508,12 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    - `meta.json` — build date, counts (games, illustrated games), facet values (genres, languages, formats) with
      counts.
    - `index-<n>.json` — compact rows sharded by ~500 games (short keys to keep parse time low on Kindle):
-     `{t: tuid, n: title, a: author, y: year, l: lang, g: [genres], f: format, r: avgRating, rc: ratingCount,
+     `{t: tuid, n: title, a: author, y: year, l: lang, lv: [other languages], g: [genres], f: format, r: avgRating, rc: ratingCount,
      s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag, st: starterFlag, il: illustrated}`, sorted by title;
      unknown values are left out (`fg` is not available from IFDB's JSON API yet; `st` marks the games carrying a
      newcomer-friendly IFDB tag of `scripts/catalog/starter-tags.json`).
    - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link;
+     `versions: [{language, file}]` for a game with a file per other language (S2.6);
      `illustrated: true` and `pictures` (pictures besides the cover) for an illustrated game.
 5. **Validate** — JSON schema checks, sizes budget (each shard < 150 KB), sanity counts vs previous build
    (fail if > 20 % drop).
@@ -537,10 +547,11 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
   (same short keys as the shards, so Home needs no shard) plus `pi` (pitch) and `st` (starter). Each list holds the
   curated games **in that language** first, in file order, then the **best-rated games in that language** (IFDB star
   sort; average ≥ 3 stars; at most 24), so the shelf never shows a game the reader cannot read and stays full when
-  the curation is thin. The sample catalogue has its own, from `tests/fixtures/featured.json`.
+  the curation is thin. A game with a file per language (S2.6) counts in each of its languages. The sample catalogue
+  has its own, from `tests/fixtures/featured.json`.
 - **Validation** — CI (`scripts/catalog/check-featured.sh`) checks the curated file against the catalogue published
   on the `catalog` branch and fails on: bad schema, missing or overlong pitch, unknown tuid (or not playable),
-  excluded by hand or carrying an adult tag ([§5.4](#54-content-policy)), game language not a UI locale. At
+  excluded by hand or carrying an adult tag ([§5.4](#54-content-policy)), no language of the game a UI locale. At
   deployment a curated game the catalogue no longer has is left out with a warning instead, so a withdrawn IFDB
   game never blocks a deployment.
 - **Client** — the Home shelf shows the list of the UI locale **without the games already in progress** (a
@@ -603,6 +614,9 @@ All keys are prefixed and versioned:
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
 | `ik:v1:save:<tuid>:twine` | a Twine story's own storage (§4.3): `{v, date, local, session}` (string maps), counted with the saves |
 | `ik:v1:file:<tuid>` | cached story file (small files only) |
+
+A game played in another language than its default file's (S2.6) is stored as its own game under the id
+`<tuid>-<lang>` (TUIDs have no `-`): its progress, saves, cached file and Home entry; `#/play/<tuid>-<lang>` plays it.
 | `ik:v1:lru` | access order for evictable entries |
 
 - Saves are compressed (deflate via a small pure-JS lib) then base64-encoded.

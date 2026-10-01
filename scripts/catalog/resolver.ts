@@ -80,8 +80,10 @@ export interface ResolvedGame {
   author: string;
   /** Year of first publication. */
   year?: number;
-  /** Primary language subtag (`en`, `fr`…), when IFDB knows it. */
+  /** Primary language subtag (`en`, `fr`…) of the file played by default, when known (S2.6). */
   language?: string;
+  /** The game's files in its other languages, when IFDB offers one per language (S2.6). */
+  versions?: LanguageVersion[];
   genres: string[];
   format: StoryFormat;
   file: StoryFile;
@@ -117,9 +119,11 @@ export interface LanguageChange {
   /** IFDB's first language. */
   from?: string;
   to: string;
-  source: 'rule' | 'override';
-  /** The file's description (rule) or the override's reason. */
+  source: 'file' | 'override';
+  /** The file's description (or name) or the override's reason. */
   detail: string;
+  /** The file now played, when it is not the one preferred before reading languages. */
+  file?: string;
 }
 
 export interface Resolution {
@@ -138,11 +142,16 @@ export interface Resolution {
     pictures: { blorbs: number; inspected: number; illustrated: number };
   };
   /**
-   * Languages (S2.6): the kept games whose language came from their file's description or from an override, the
-   * count of kept multi-language games left with IFDB's first language (to review by hand), and the overrides that
-   * name no kept game.
+   * Languages (S2.6): the kept games whose language is not IFDB's first one (read from their file, or set by hand),
+   * the games with a file per language, the count of multi-language games whose main file's language IFDB does not
+   * say (assumed; to review by hand), and the overrides that name no kept game.
    */
-  languages: { changed: LanguageChange[]; firstOfSeveral: number; unknownOverrides: string[] };
+  languages: {
+    changed: LanguageChange[];
+    versions: Array<{ tuid: string; title: string; languages: string[] }>;
+    assumed: number;
+    unknownOverrides: string[];
+  };
 }
 
 interface Link {
@@ -207,7 +216,8 @@ export function linkFormat(
   return undefined;
 }
 
-type Choice = { file: Candidate } | { reason: DropReason; detail?: string };
+/** The chosen file, and the other usable files in order of preference (not checked for CORS). */
+type Choice = { file: Candidate; others: Candidate[] } | { reason: DropReason; detail?: string };
 
 /**
  * The best playable file of a record. Preference: an enabled format (in `enabledFormats` order), the IF Archive
@@ -282,18 +292,24 @@ export function chooseFile(
   if (readable && !usable.some((c) => c.onArchive)) {
     const reachable = usable.filter((c) => readable(c.file.url));
     if (!reachable.length) return { reason: 'unreadable-host', detail: usable[0].file.url };
-    return { file: reachable[0] };
+    return { file: reachable[0], others: reachable.slice(1) };
   }
-  return { file: usable[0] };
+  return { file: usable[0], others: usable.slice(1) };
 }
 
 /** The files outside the IF Archive that the choice of a game's file depends on (to check with `check-cors.ts`). */
 export function urlsToCheck(record: GameRecord, devsys: string, enabled: StoryFormat[]): string[] {
   const urls: string[] = [];
-  chooseFile(record, devsys, enabled, (url) => {
+  const choice = chooseFile(record, devsys, enabled, (url) => {
     urls.push(url);
     return false;
   });
+  // A game in several languages may offer a file per language (S2.6): its other files outside the IF Archive.
+  if ('file' in choice && languagesOf((record.bibliographic || {}).language).length > 1) {
+    for (const other of choice.others) {
+      if (!other.onArchive && urls.indexOf(other.file.url) < 0) urls.push(other.file.url);
+    }
+  }
   return urls;
 }
 
@@ -350,6 +366,25 @@ const LANGUAGE_NAMES: Record<string, string> = {
   japonais: 'ja',
   chinese: 'zh',
   chinois: 'zh',
+  // Names of other languages seen on IFDB, so that a description naming one of them is not read as naming another.
+  slovak: 'sk',
+  slovenian: 'sl',
+  ukrainian: 'uk',
+  belarusian: 'be',
+  hungarian: 'hu',
+  greek: 'el',
+  turkish: 'tr',
+  esperanto: 'eo',
+  catalan: 'ca',
+  galician: 'gl',
+  basque: 'eu',
+  korean: 'ko',
+  finnish: 'fi',
+  danish: 'da',
+  norwegian: 'no',
+  romanian: 'ro',
+  hebrew: 'he',
+  arabic: 'ar',
 };
 
 /** Lower case without accents: `Français` → `francais`. */
@@ -413,6 +448,175 @@ export function onlyLanguage(description: string, languages: string[]): string |
   }
   const named = unique(found);
   return named.length === 1 && languages.indexOf(named[0]) >= 0 ? named[0] : undefined;
+}
+
+/** Words that tell a description is written in a language without naming it ("Traducido por …"). */
+const LANGUAGE_WORDS: Record<string, string> = {
+  traducido: 'es',
+  traduccion: 'es',
+  traduit: 'fr',
+  traduction: 'fr',
+  ubersetzt: 'de',
+  ubersetzung: 'de',
+  tradotto: 'it',
+  traduzione: 'it',
+};
+
+/** Language tags in file names (`hs_eng.z5`, `baron_EN.z8`, `Lux PL.html`): ISO 639-1 and common 3-letter forms. */
+const FILE_NAME_CODES: Record<string, string> = {
+  en: 'en',
+  eng: 'en',
+  fr: 'fr',
+  fra: 'fr',
+  fre: 'fr',
+  es: 'es',
+  esp: 'es',
+  spa: 'es',
+  it: 'it',
+  ita: 'it',
+  de: 'de',
+  deu: 'de',
+  ger: 'de',
+  nl: 'nl',
+  nld: 'nl',
+  dut: 'nl',
+  pt: 'pt',
+  por: 'pt',
+  ru: 'ru',
+  rus: 'ru',
+  pl: 'pl',
+  pol: 'pl',
+  sv: 'sv',
+  swe: 'sv',
+  cs: 'cs',
+  cze: 'cs',
+  uk: 'uk',
+  ukr: 'uk',
+  sk: 'sk',
+  slk: 'sk',
+  ja: 'ja',
+  jpn: 'ja',
+  zh: 'zh',
+  chi: 'zh',
+  zho: 'zh',
+};
+
+/**
+ * The languages a description names, from language names and translation words (`Spanish version`,
+ * `Traducido por …`), leaving out a language a story was translated *from* (`Translated from Spanish`).
+ */
+function namedLanguages(description: string): string[] {
+  const text = plain(decodeEntities(description));
+  const found: string[] = [];
+  const words: Record<string, string> = { ...LANGUAGE_NAMES, ...LANGUAGE_WORDS };
+  for (const word of Object.keys(words)) {
+    const pattern = new RegExp('(^|[^a-z])(from\\s+)?' + word + '(?![a-z])', 'g');
+    let match: RegExpExecArray | null;
+    while ((match = pattern.exec(text))) {
+      if (!match[2]) found.push(words[word]);
+    }
+  }
+  return unique(found);
+}
+
+/** The language a file name is tagged with, among `languages`. */
+function fileNameLanguage(path: string, languages: string[]): string | undefined {
+  let name = path.split(/[?#]/)[0].split('/').pop() || '';
+  try {
+    name = decodeURIComponent(name);
+  } catch {
+    // Keep the name as it is.
+  }
+  const tokens = name
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/, '')
+    .split(/[^a-z0-9]+/)
+    .slice(1);
+  const found = unique(
+    tokens
+      .map((token) => FILE_NAME_CODES[token])
+      .filter((code) => !!code && languages.indexOf(code) >= 0),
+  );
+  return found.length === 1 ? found[0] : undefined;
+}
+
+/**
+ * The language of one download of a game in `languages` (S2.6), when IFDB says it: its description names one of them
+ * "only" (`(English only.)`), or names a single language (`Spanish version`, `IFComp 2005 version (English)`,
+ * `Traducido por …`); without any language in its description, its file name may carry a language tag
+ * (`hs_ita.z5`). A language the game does not list is ignored.
+ */
+export function fileLanguage(
+  link: { url: string; desc?: string; compressedPrimary?: string },
+  languages: string[],
+): string | undefined {
+  const desc = link.desc || '';
+  const only = onlyLanguage(desc, languages);
+  if (only) return only;
+  if (/(^|[^a-z])(bilingual|bilingue|multilingual|both)(?![a-z])/.test(plain(desc)))
+    return undefined;
+  const named = namedLanguages(desc);
+  if (named.length)
+    return named.length === 1 && languages.indexOf(named[0]) >= 0 ? named[0] : undefined;
+  return fileNameLanguage(link.compressedPrimary || link.url, languages);
+}
+
+/** A file of a game for one of its languages. */
+export interface LanguageVersion {
+  language: string;
+  file: StoryFile;
+}
+
+/** How a game's language and its files per language were found (S2.6). */
+export interface LanguagePlan {
+  /** The file played by default, and its language. */
+  main: Candidate;
+  language: string;
+  /** IFDB said the main file's language (in its description or name); otherwise it is assumed. */
+  read: boolean;
+  /** Files in the game's other languages, in IFDB's order of languages. */
+  versions: Array<{ language: string; file: Candidate }>;
+}
+
+/**
+ * For a game IFDB lists in several `languages`: the language of each usable file (`fileLanguage`), the best file of
+ * each language (files in order of preference), and the main file. A file of unknown language stands for the first
+ * language without a file of its own. The chosen file stays the main one when its language is known; otherwise the
+ * best file in IFDB's first language replaces it.
+ */
+export function planLanguages(
+  files: Candidate[],
+  languages: string[],
+  links: Array<{ url: string; desc?: string; compressedPrimary?: string }>,
+): LanguagePlan {
+  const byLanguage: Record<string, Candidate> = {};
+  const read: Record<string, boolean> = {};
+  let unknown: Candidate | undefined;
+  for (const file of files) {
+    const language = fileLanguage(links[file.index], languages);
+    if (language) {
+      if (!byLanguage[language]) {
+        byLanguage[language] = file;
+        read[language] = true;
+      }
+    } else if (!unknown) {
+      unknown = file;
+    }
+  }
+  const missing = languages.filter((language) => !byLanguage[language]);
+  if (unknown && missing.length) byLanguage[missing[0]] = unknown;
+  const ordered = languages.filter((language) => !!byLanguage[language]);
+  let language = ordered.filter((code) => byLanguage[code] === files[0])[0];
+  if (!language) language = ordered.length ? ordered[0] : languages[0];
+  const main = byLanguage[language] || files[0];
+  return {
+    main: main,
+    language: language,
+    read: !!read[language],
+    versions: ordered
+      .filter((code) => code !== language)
+      .map((code) => ({ language: code, file: byLanguage[code] })),
+  };
 }
 
 const ENTITIES: Record<string, string> = {
@@ -492,14 +696,7 @@ function num(value: unknown): number | undefined {
   return typeof n === 'number' && isFinite(n) ? n : undefined;
 }
 
-type LanguageNote = Omit<LanguageChange, 'tuid' | 'title'> | 'first-of-several' | undefined;
-
-function resolveGame(
-  game: RawGame,
-  file: Candidate,
-  tags: string[],
-): { game: ResolvedGame; language: LanguageNote } {
-  let change: LanguageNote;
+function resolveGame(game: RawGame, file: Candidate, tags: string[]): ResolvedGame {
   const record = game.record;
   const bib = (record.bibliographic || {}) as Record<string, unknown>;
   const ifdb = record.ifdb as Record<string, unknown>;
@@ -521,16 +718,6 @@ function resolveGame(
   if (year !== undefined) resolved.year = year;
   const language = normalizeLanguage(bib.language);
   if (language) resolved.language = language;
-  const languages = languagesOf(bib.language);
-  if (languages.length > 1) {
-    const only = file.desc ? onlyLanguage(file.desc, languages) : undefined;
-    if (only) {
-      resolved.language = only;
-      change = { from: language, to: only, source: 'rule', detail: file.desc! };
-    } else {
-      change = 'first-of-several';
-    }
-  }
   const average = num(ifdb.averageRating);
   const count = num(ifdb.ratingCountAvg) ?? num(search.numRatings);
   if (average !== undefined && count) {
@@ -548,7 +735,7 @@ function resolveGame(
   if (cover && str(cover.url)) resolved.cover = cover.url as string;
   const description = str(bib.description);
   if (description) resolved.description = description;
-  return { game: resolved, language: change };
+  return resolved;
 }
 
 /** Keeps the playable games allowed by the content policy; every other game is listed with its reason. */
@@ -564,7 +751,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       formats: {},
       pictures: { blorbs: 0, inspected: 0, illustrated: 0 },
     },
-    languages: { changed: [], firstOfSeveral: 0, unknownOverrides: [] },
+    languages: { changed: [], versions: [], assumed: 0, unknownOverrides: [] },
   };
   const overrides = options.config.languages || {};
   const overridden: string[] = [];
@@ -599,25 +786,66 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       drop(game, enabledChoice.reason, enabledChoice.detail);
       continue;
     }
-    const resolution = resolveGame(game, enabledChoice.file, tags);
-    const resolved = resolution.game;
-    let language = resolution.language;
+    const links = ((game.record.ifdb.downloads && game.record.ifdb.downloads.links) ||
+      []) as Link[];
+    const bib = (game.record.bibliographic || {}) as Record<string, unknown>;
+    const languages = languagesOf(bib.language);
+    const readable = options.readable;
+    const plan =
+      languages.length > 1
+        ? planLanguages(
+            [enabledChoice.file].concat(
+              enabledChoice.others.filter((c) => c.onArchive || !readable || readable(c.file.url)),
+            ),
+            languages,
+            links,
+          )
+        : undefined;
+    const resolved = resolveGame(game, plan ? plan.main : enabledChoice.file, tags);
+    let change: Omit<LanguageChange, 'tuid' | 'title'> | undefined;
+    if (plan) {
+      resolved.language = plan.language;
+      if (plan.versions.length) {
+        resolved.versions = plan.versions.map((v) => ({ language: v.language, file: v.file.file }));
+      }
+      if (!plan.read) result.languages.assumed++;
+      const moved = plan.main !== enabledChoice.file;
+      if (plan.language !== languages[0] || moved) {
+        change = {
+          from: languages[0],
+          to: plan.language,
+          source: 'file',
+          detail: plan.main.desc || plan.main.file.archive?.primary || plan.main.file.url,
+        };
+        if (moved) change.file = plan.main.file.url;
+      }
+    }
     const override = overrides[game.tuid];
     if (override) {
       overridden.push(game.tuid);
-      language = {
-        from: language && language !== 'first-of-several' ? language.from : resolved.language,
+      change = {
+        from: languages[0] || resolved.language,
         to: override.language,
         source: 'override',
         detail: override.reason,
       };
       resolved.language = override.language;
+      if (resolved.versions) {
+        resolved.versions = resolved.versions.filter((v) => v.language !== override.language);
+        if (!resolved.versions.length) delete resolved.versions;
+      }
     }
-    if (language === 'first-of-several') result.languages.firstOfSeveral++;
-    else if (language) {
-      const change: LanguageChange = { tuid: game.tuid, title: resolved.title, ...language };
-      if (change.from === undefined) delete change.from;
-      result.languages.changed.push(change);
+    if (change) {
+      const entry: LanguageChange = { tuid: game.tuid, title: resolved.title, ...change };
+      if (entry.from === undefined) delete entry.from;
+      result.languages.changed.push(entry);
+    }
+    if (resolved.versions) {
+      result.languages.versions.push({
+        tuid: game.tuid,
+        title: resolved.title,
+        languages: [resolved.language as string].concat(resolved.versions.map((v) => v.language)),
+      });
     }
     if (isCandidate(resolved)) {
       const counts = result.counts.pictures;

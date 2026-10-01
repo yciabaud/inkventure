@@ -5,10 +5,14 @@ import { formatHash } from '../../app/router';
 import { formatName, languageName } from '../../catalog/filters';
 import {
   blurbParagraphs,
+  gameVersions,
+  initialVersion,
   isIfArchive,
   loadGame,
   thumbnailUrl,
+  versionOf,
   type GameDetail,
+  type GameVersion,
 } from '../../catalog/game';
 import { formatNumber, t, useLocale } from '../../i18n/i18n';
 import {
@@ -17,7 +21,9 @@ import {
   isInHome,
   isStorageFullError,
   keys,
+  parseGameId,
   removeFromHome,
+  type Store,
 } from '../../storage';
 import { Button, LinkButton } from '../../ui/Button';
 import { Cover } from '../../ui/Cover';
@@ -51,22 +57,39 @@ function useGame(tuid: string): [State, () => void] {
   return [state, () => setAttempt((n) => n + 1)];
 }
 
+/** When a version was last played (0 if never), from its progress record; started without one counts as 1. */
+function lastPlayed(store: Store, id: string): number {
+  const progress = store.get<{ lastPlayed?: unknown }>(keys.progress(id));
+  if (progress && typeof progress.lastPlayed === 'number') return progress.lastPlayed;
+  return store.keys().indexOf(keys.autosave(id)) >= 0 ? 1 : 0;
+}
+
 function playtime(minutes: number): string {
   if (minutes < 60) return t('library.minutes', { count: minutes });
   return t('library.hours', { count: Math.round(minutes / 60) });
 }
 
-function Details({ game }: { game: GameDetail }) {
+function Details({ game, id }: { game: GameDetail; id: string }) {
   const locale = useLocale();
   const store = getStore();
-  const [inHome, setInHome] = useState(() => isInHome(store, game.tuid));
+  const versions = gameVersions(game);
+  const [version, setVersion] = useState(() =>
+    initialVersion(versions, id, locale, (versionId) => lastPlayed(store, versionId)),
+  );
+  const [inHome, setInHome] = useState(() => isInHome(store, version.id));
   const [full, setFull] = useState(false);
-  const started = store.keys().indexOf(keys.autosave(game.tuid)) >= 0;
+  const started = store.keys().indexOf(keys.autosave(version.id)) >= 0;
+
+  const choose = (next: GameVersion) => {
+    setVersion(next);
+    setInHome(isInHome(store, next.id));
+    setFull(false);
+  };
 
   const toggleHome = () => {
     try {
-      if (inHome) removeFromHome(store, game.tuid);
-      else addToHome(store, game, Date.now());
+      if (inHome) removeFromHome(store, version.id);
+      else addToHome(store, { ...game, tuid: version.id }, Date.now());
       setInHome(!inHome);
       setFull(false);
     } catch (error) {
@@ -77,7 +100,9 @@ function Details({ game }: { game: GameDetail }) {
 
   const facts: string[] = [];
   if (game.year) facts.push(String(game.year));
-  if (game.language) facts.push(languageName(game.language) || t('filters.unknownLanguage'));
+  if (version.language) {
+    facts.push(languageName(version.language) || t('filters.unknownLanguage'));
+  }
   if (game.genres.length) facts.push(game.genres.join(', '));
   const ratings: string[] = [];
   if (game.rating && game.rating.count) {
@@ -113,8 +138,24 @@ function Details({ game }: { game: GameDetail }) {
           </p>
         </div>
       </div>
+      {versions.length > 1 && (
+        <div class="game__languages" role="group" aria-label={t('game.language')}>
+          <span class="game__languages-label">{t('game.language')}</span>
+          {versions.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              class={'btn btn--' + (v.id === version.id ? 'primary' : 'secondary')}
+              aria-pressed={v.id === version.id ? 'true' : 'false'}
+              onClick={() => choose(v)}
+            >
+              {(v.language && languageName(v.language)) || t('filters.unknownLanguage')}
+            </button>
+          ))}
+        </div>
+      )}
       <div class="game__actions">
-        <LinkButton href={formatHash({ name: 'play', tuid: game.tuid })}>
+        <LinkButton href={formatHash({ name: 'play', tuid: version.id })}>
           {started ? t('game.continue') : t('game.play')}
         </LinkButton>
         <Button variant="secondary" onClick={toggleHome}>
@@ -135,10 +176,10 @@ function Details({ game }: { game: GameDetail }) {
         <a href={game.ifdbLink} target="_blank" rel="noopener">
           {t('game.ifdb')}
         </a>
-        {isIfArchive(game.file.url) && (
+        {isIfArchive(version.file.url) && (
           <>
             {' · '}
-            <a href={game.file.url} target="_blank" rel="noopener">
+            <a href={version.file.url} target="_blank" rel="noopener">
               {t('game.ifArchive')}
             </a>
           </>
@@ -148,24 +189,28 @@ function Details({ game }: { game: GameDetail }) {
   );
 }
 
+/** `tuid` is a game id: a TUID, or `<tuid>-<lang>` to open the page on the game's file in that language (S2.6). */
 export function GameScreen({ tuid }: { tuid: string }) {
-  const [state, retry] = useGame(tuid);
+  const [state, retry] = useGame(parseGameId(tuid).tuid);
   useLocale();
-  if (state.status === 'ready') return <Details key={tuid} game={state.game} />;
+  if (state.status === 'ready' && (!parseGameId(tuid).language || versionOf(state.game, tuid))) {
+    return <Details key={tuid} game={state.game} id={tuid} />;
+  }
+  const status = state.status === 'ready' ? 'missing' : state.status;
   return (
     <div class="screen">
       <h1 class="screen__title">{t('game.title')}</h1>
-      {state.status === 'loading' && (
+      {status === 'loading' && (
         <p class="library__status" role="status">
           {t('game.loading')}
         </p>
       )}
-      {state.status === 'missing' && (
+      {status === 'missing' && (
         <EmptyState title={t('game.missing')} text={t('game.missingText')}>
           <LinkButton href={formatHash({ name: 'library' })}>{t('game.toLibrary')}</LinkButton>
         </EmptyState>
       )}
-      {state.status === 'error' && (
+      {status === 'error' && (
         <EmptyState title={t('game.loadFailed')} text={t('library.loadFailedText')}>
           <Button onClick={retry}>{t('library.retry')}</Button>
         </EmptyState>

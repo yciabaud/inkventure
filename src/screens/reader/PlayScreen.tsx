@@ -5,7 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { reportUrl } from '../../app/links';
 import { formatHash } from '../../app/router';
 import { formatName } from '../../catalog/filters';
-import { loadGame, type GameDetail } from '../../catalog/game';
+import { loadGame, versionOf, type GameDetail } from '../../catalog/game';
 import {
   isStoryFileError,
   storyFileError,
@@ -14,7 +14,7 @@ import {
 import type { EngineKind } from '../../engines/engine';
 import { engineFor, isAvailable, loadEngine } from '../../engines/formats';
 import { t } from '../../i18n/i18n';
-import { getStore } from '../../storage';
+import { getStore, parseGameId } from '../../storage';
 import type { StoryData } from '../../storage/files';
 import { Button, LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
@@ -139,7 +139,11 @@ function Failure({
   );
 }
 
-/** `language` overrides the game's language for the command chips (`?lang=fr`); `perf` shows turn times (`?perf=1`). */
+/**
+ * `tuid` is a game id: the game's TUID, or `<tuid>-<lang>` for its file in another language (S2.6), whose saves are
+ * its own. `language` overrides the game's language for the command chips (`?lang=fr`); `perf` shows turn times
+ * (`?perf=1`).
+ */
 export function PlayScreen({
   tuid,
   language,
@@ -161,14 +165,21 @@ export function PlayScreen({
       setState({ phase: 'failed', game: game, error: failure });
     };
     setState({ phase: 'loading' });
-    loadGame(tuid).then(
+    loadGame(parseGameId(tuid).tuid).then(
       (result) => {
         if (!live) return;
-        if (result.status === 'missing') {
+        const version = result.status === 'ready' ? versionOf(result.game, tuid) : undefined;
+        if (result.status === 'missing' || !version) {
           setState({ phase: 'missing' });
           return;
         }
-        const game = result.game;
+        // The version played, under its own id (its file is cached under it).
+        const game: GameDetail = {
+          ...result.game,
+          tuid: tuid,
+          file: version.file,
+          language: version.language,
+        };
         const kind = engineFor(game.format);
         if (!kind || !isAvailable(kind)) {
           setState({ phase: 'unsupported', game: game });

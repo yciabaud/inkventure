@@ -1,5 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { blurbParagraphs, isIfArchive, loadGame, thumbnailUrl } from './game';
+import {
+  blurbParagraphs,
+  gameVersions,
+  initialVersion,
+  isIfArchive,
+  loadGame,
+  thumbnailUrl,
+  versionOf,
+  type GameDetail,
+} from './game';
 
 describe('blurbParagraphs', () => {
   it('turns line breaks and block elements into paragraphs', () => {
@@ -114,5 +123,54 @@ describe('loadGame', () => {
     await expect(loadGame('abc')).rejects.toThrow('HTTP 500');
     serve(200, JSON.stringify({ ...game, tuid: 'other' }));
     await expect(loadGame('abc')).rejects.toThrow('Invalid game detail');
+  });
+});
+
+describe('versions in other languages (S2.6)', () => {
+  const A = 'https://ifarchive.org/if-archive/games/zcode/';
+  const game = {
+    tuid: 'drac',
+    title: 'Dracula',
+    author: 'X',
+    language: 'es',
+    genres: [],
+    format: 'zcode',
+    file: { url: A + 'drac_es.z5' },
+    versions: [
+      { language: 'en', file: { url: A + 'drac_en.z5' } },
+      { language: 'it', file: { url: A + 'drac_it.z5' } },
+    ],
+    ifids: [],
+    tags: [],
+    slow: false,
+    ifdbLink: '',
+  } as GameDetail;
+
+  it('lists the default file first, then one id per other language', () => {
+    expect(gameVersions(game).map((v) => [v.id, v.language, v.file.url])).toEqual([
+      ['drac', 'es', A + 'drac_es.z5'],
+      ['drac-en', 'en', A + 'drac_en.z5'],
+      ['drac-it', 'it', A + 'drac_it.z5'],
+    ]);
+    expect(versionOf(game, 'drac-it')!.file.url).toBe(A + 'drac_it.z5');
+    expect(versionOf(game, 'drac-fr')).toBeUndefined();
+    expect(gameVersions({ ...game, versions: undefined })).toHaveLength(1);
+  });
+
+  it('opens on the version the link names, else the last played, else the UI language, else the default', () => {
+    const versions = gameVersions(game);
+    const never = (): number => 0;
+    const pick = (id: string, locale: string, played: (id: string) => number = never) =>
+      initialVersion(versions, id, locale, played).id;
+    expect(pick('drac-it', 'en')).toBe('drac-it');
+    expect(pick('drac', 'en')).toBe('drac-en');
+    expect(pick('drac', 'fr')).toBe('drac');
+    expect(pick('drac', 'en', (id) => (id === 'drac-it' ? 5 : id === 'drac' ? 3 : 0))).toBe(
+      'drac-it',
+    );
+  });
+
+  it("shows the game's cover for a version", () => {
+    expect(thumbnailUrl('drac-en', 120, 180)).toBe(thumbnailUrl('drac', 120, 180));
   });
 });

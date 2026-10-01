@@ -7,6 +7,7 @@ import type { GameRecord } from './ifdb';
 import {
   chooseFile,
   decodeEntities,
+  fileLanguage,
   languagesOf,
   linkFormat,
   normalizeGenres,
@@ -440,15 +441,40 @@ describe('the language of the file played (S2.6)', () => {
     expect(onlyLanguage('Englishonly', ['en', 'es'])).toBeUndefined();
   });
 
-  it('takes the language the chosen file\'s description names "only", on the recorded records', () => {
+  it('reads the language of a file from its description, then its name', () => {
+    const fl = (desc: string, languages: string[], url = A + 'game.z5') =>
+      fileLanguage({ url: url, desc: desc }, languages);
+    expect(fl('Spanish version, latest release.', ['es', 'en'])).toBe('es');
+    expect(fl('IFComp 2005 version (English).', ['it', 'en'])).toBe('en');
+    expect(fl('Traducido por Ruber Eaglenest (Clérigo Urbatain)', ['en', 'es'])).toBe('es');
+    expect(fl('In English. Translated by Ricardo Sisnett.', ['es', 'en'])).toBe('en');
+    expect(fl('Original version, in French', ['fr', 'it'])).toBe('fr');
+    // The language a story was translated from is not its language.
+    expect(fl('Translated from Spanish by J. Doe.', ['en', 'es'])).toBeUndefined();
+    // Two languages, a bilingual file, or a language the game does not list: unknown, whatever the file name.
+    expect(fl('Contains English and Italian story files.', ['it', 'en'])).toBeUndefined();
+    expect(fl('bilingual (Slovak/English)', ['en', 'sk'], A + 'x_en.html')).toBeUndefined();
+    expect(fl('German translation.', ['en', 'fr'], A + 'x_fr.z5')).toBeUndefined();
+    // No language in the description: a language tag in the file's name (or the zip's story file).
+    expect(fl('', ['it', 'en'], A + 'hs_ita.z5')).toBe('it');
+    expect(fl('Release 2', ['en', 'nl'], A + 'baron_DU.z8')).toBeUndefined();
+    expect(fl('', ['en', 'pl'], A + 'Lux%20PL.html')).toBe('pl');
+    expect(fl('', ['en', 'es'], A + 'en.z5')).toBeUndefined();
+    expect(
+      fileLanguage({ url: A + 'x.zip', compressedPrimary: 'x/Tuuli_en.zblorb' }, ['es', 'en']),
+    ).toBe('en');
+  });
+
+  it('takes the language IFDB gives the file played, on the recorded records', () => {
     const result = run(games());
-    // Jeangille: IFDB lists `fr, en`; its IF Archive zip is "(English only.)".
+    // Jeangille: IFDB lists `fr, en`; its IF Archive zip is "(English only.)", and no file is in French.
     expect(languageOf(result, JEANGILLE)).toBe('en');
     expect(languageOf(result, 'grjll9wqgibm4xq1')).toBe('en');
     expect(languageOf(result, 'sh5jnhgsxwwu71t1')).toBe('en');
-    // Several languages, no description: the first one, counted for review. One language: unchanged.
+    // Several languages, nothing said of the file: the first one, counted for review. One language: unchanged.
     expect(languageOf(result, '8u7jw2gxr81ouoan')).toBe('en');
     expect(languageOf(result, 'dhwpnm9nyae3jd8b')).toBe('fr');
+    for (const game of result.games) expect(game.versions).toBeUndefined();
     expect(result.languages).toEqual({
       changed: [
         {
@@ -456,18 +482,105 @@ describe('the language of the file played (S2.6)', () => {
           title: 'Les lettres du Docteur Jeangille',
           from: 'fr',
           to: 'en',
-          source: 'rule',
+          source: 'file',
           detail: 'Spring Thing 2024 version, at the IF Archive. (English only.)',
         },
-        expect.objectContaining({ tuid: 'grjll9wqgibm4xq1', from: 'en', to: 'en' }),
-        expect.objectContaining({ tuid: 'sh5jnhgsxwwu71t1', from: 'en', to: 'en' }),
       ],
-      firstOfSeveral: 1,
+      versions: [],
+      assumed: 1,
       unknownOverrides: [],
     });
   });
 
-  it('only reads the description of the file chosen, and only languages the game lists', () => {
+  it('keeps a file per language when IFDB offers one, on the recorded records', () => {
+    const result = run([
+      recorded('qbk3fo0jcawo1j7h', 'Inform 6'),
+      recorded('k8fovtn8hqnlawnh', 'Inform 6'),
+      recorded('ngcuiadqoqzy1yn0', 'Inform 7'),
+      recorded('b8mb4fcwmf1hrxl', 'Inform 7'),
+    ]);
+    const game = (tuid: string) => result.games.filter((g) => g.tuid === tuid)[0];
+    const name = (file: { url: string; archive?: { primary: string } }) =>
+      (file.archive ? file.archive.primary : file.url).split('/').pop();
+    // Dracula 1: "Spanish version" first (IFDB's order), "English version" besides; the older Spanish release is left.
+    expect(game('qbk3fo0jcawo1j7h').language).toBe('es');
+    expect(name(game('qbk3fo0jcawo1j7h').file)).toBe('Dracula_La_Primera_Noche.blb');
+    expect(game('qbk3fo0jcawo1j7h').versions!.map((v) => [v.language, name(v.file)])).toEqual([
+      ['en', 'Dracula_The_First_Night.blb'],
+    ]);
+    // Hello Sword: listed `it, en`; the file preferred is "(English)", the Italian one is named `hs_ita.z5`.
+    expect(game('k8fovtn8hqnlawnh').language).toBe('en');
+    expect(name(game('k8fovtn8hqnlawnh').file)).toBe('hs_eng.z5');
+    expect(game('k8fovtn8hqnlawnh').versions!.map((v) => [v.language, name(v.file)])).toEqual([
+      ['it', 'hs_ita.z5'],
+    ]);
+    // Tuuli: the file preferred says nothing, the others say Spanish and English: the Spanish one becomes the main
+    // file, as the game's first language.
+    expect(game('ngcuiadqoqzy1yn0').language).toBe('es');
+    expect(game('ngcuiadqoqzy1yn0').versions!.map((v) => [v.language, name(v.file)])).toEqual([
+      ['en', 'Tuuli_en.zblorb'],
+    ]);
+    // Lime Ergot: the Spanish translation ("Traducido por…") is preferred (a Blorb); the English file says nothing.
+    expect(game('b8mb4fcwmf1hrxl').language).toBe('es');
+    expect(name(game('b8mb4fcwmf1hrxl').file)).toBe('Ergot_de_Lima.zblorb');
+    expect(game('b8mb4fcwmf1hrxl').versions!.map((v) => v.language)).toEqual(['en']);
+
+    expect(result.languages.versions.map((v) => [v.tuid, v.languages])).toEqual([
+      ['qbk3fo0jcawo1j7h', ['es', 'en']],
+      ['k8fovtn8hqnlawnh', ['en', 'it']],
+      ['ngcuiadqoqzy1yn0', ['es', 'en']],
+      ['b8mb4fcwmf1hrxl', ['es', 'en']],
+    ]);
+    const changes = Object.fromEntries(result.languages.changed.map((c) => [c.tuid, c]));
+    expect(Object.keys(changes).sort()).toEqual([
+      'b8mb4fcwmf1hrxl',
+      'k8fovtn8hqnlawnh',
+      'ngcuiadqoqzy1yn0',
+    ]);
+    expect(changes.ngcuiadqoqzy1yn0).toMatchObject({
+      from: 'es',
+      to: 'es',
+      file: expect.stringMatching(/Tuuli\.zblorb$/),
+    });
+  });
+
+  it('offers a file outside the IF Archive in another language only when the app can read it', () => {
+    const links = [
+      { url: A + 'game.z5', format: 'zcode', isGame: true, desc: 'English version' },
+      {
+        url: 'https://example.com/juego.z5',
+        format: 'zcode',
+        isGame: true,
+        desc: 'Spanish version',
+      },
+    ];
+    const rec = record(links, {}) as GameRecord;
+    rec.bibliographic = { title: 'Two', language: 'English, Castilian (en, es)' };
+    expect(urlsToCheck(rec, '', ['zcode'])).toEqual(['https://example.com/juego.z5']);
+    const raw: RawGame = {
+      tuid: 'two',
+      pageVersion: 1,
+      queries: [],
+      search: { tuid: 'two', title: 'Two', link: '', author: '', hasCoverArt: false, devsys: '' },
+      record: rec,
+    };
+    const resolveWith = (readable: boolean) =>
+      resolve({ games: [raw] } as RawDataset, {
+        enabledFormats: ['zcode'],
+        policy: 'general',
+        config: CONFIG,
+        readable: () => readable,
+      }).games[0].versions;
+    expect(resolveWith(true)).toEqual([
+      { language: 'es', file: { url: 'https://example.com/juego.z5', ifdbFormat: 'zcode' } },
+    ]);
+    expect(resolveWith(false)).toBeUndefined();
+    // A game in one language: its other files are not checked.
+    rec.bibliographic.language = 'en';
+    expect(urlsToCheck(rec, '', ['zcode'])).toEqual([]);
+  });
+
+  it('only reads languages the game lists', () => {
     const edited = (desc: string, language: string): RawGame => {
       const game = recorded(JEANGILLE, 'Twine 2 (SugarCube)');
       const record = JSON.parse(JSON.stringify(game.record)) as GameRecord;
@@ -485,20 +598,23 @@ describe('the language of the file played (S2.6)', () => {
     expect(languageOf(run([edited('German only.', 'French, English (fr, en)')]), JEANGILLE)).toBe(
       'fr',
     );
-    // "Bilingual version." is the itch.io link's, which the app cannot download.
     expect(
       languageOf(run([edited('At the IF Archive.', 'French, English (fr, en)')]), JEANGILLE),
     ).toBe('fr');
   });
 
   it('applies the overrides last and reports those naming no kept game', () => {
-    const result = run(games(), {
+    const result = run(games().concat([recorded('qbk3fo0jcawo1j7h', 'Inform 6')]), {
       '8u7jw2gxr81ouoan': { language: 'fr', reason: 'The zip holds the French version.' },
       [JEANGILLE]: { language: 'fr', reason: 'Checked by hand.' },
+      qbk3fo0jcawo1j7h: { language: 'en', reason: 'Checked by hand.' },
       zzzzunknown00000: { language: 'en', reason: 'Gone from IFDB.' },
     });
     expect(languageOf(result, '8u7jw2gxr81ouoan')).toBe('fr');
     expect(languageOf(result, JEANGILLE)).toBe('fr');
+    // A file in the overridden language besides the main one is dropped.
+    expect(languageOf(result, 'qbk3fo0jcawo1j7h')).toBe('en');
+    expect(result.games.filter((g) => g.tuid === 'qbk3fo0jcawo1j7h')[0].versions).toBeUndefined();
     const changes = Object.fromEntries(result.languages.changed.map((c) => [c.tuid, c]));
     expect(changes['8u7jw2gxr81ouoan']).toEqual({
       tuid: '8u7jw2gxr81ouoan',
@@ -509,21 +625,25 @@ describe('the language of the file played (S2.6)', () => {
       detail: 'The zip holds the French version.',
     });
     expect(changes[JEANGILLE]).toMatchObject({ from: 'fr', to: 'fr', source: 'override' });
-    expect(result.languages.firstOfSeveral).toBe(0);
     expect(result.languages.unknownOverrides).toEqual(['zzzzunknown00000']);
   });
 
-  it('lists the changed games and the multi-language games left as they were in the job summary', () => {
-    const dataset = { games: games() } as RawDataset;
+  it('lists the changed games, the files per language and the games to review in the job summary', () => {
+    const dataset = {
+      games: games().concat([recorded('k8fovtn8hqnlawnh', 'Inform 6')]),
+    } as RawDataset;
     const summary = summarize(
       dataset,
       run(dataset.games, { zzzzunknown00000: { language: 'en', reason: '' } }),
     );
     expect(summary).toContain(
-      '| `rpis77r72fg8228` | Les lettres du Docteur Jeangille | fr → en | rule | ' +
+      '| `rpis77r72fg8228` | Les lettres du Docteur Jeangille | fr → en | file | ' +
         'Spring Thing 2024 version, at the IF Archive. (English only.) |',
     );
-    expect(summary).toContain("1 kept game(s) list several languages and keep IFDB's first one");
+    expect(summary).toContain('| `k8fovtn8hqnlawnh` | Hello Sword | en, it |');
+    expect(summary).toContain(
+      '1 kept game(s) in several languages play a file whose language IFDB does not say',
+    );
     expect(summary).toContain('Language overrides naming no kept game: `zzzzunknown00000`.');
   });
 });

@@ -10,4 +10,5 @@ the development environment cannot reach ifdb.org. Real responses can replace th
 
 What they cover: a search with a short first page that is not the last one (IFDB leaves hidden games out of a page),
 an empty search, games with and without cover art (page version in the cover link or not), and a listing that no
-longer exists (`{"error": …}`), which the crawler skips.
+longer exists (`{"error": …}`), which the crawler skips. *Cave of Echoes* is in French with an English translation
+(`echoes_en.z5`), for the files per language of S2.6.

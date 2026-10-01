@@ -170,7 +170,14 @@ export function matcher(filters: Filters): (row: IndexRow) => boolean {
       for (let i = 0; i < own.length && !any; i++) any = genres.indexOf(own[i]) >= 0;
       if (!any) return false;
     }
-    if (filters.languages.length && filters.languages.indexOf(row.l || 'und') < 0) return false;
+    // A game with a file per language (S2.6) is found in each of them.
+    if (filters.languages.length && filters.languages.indexOf(row.l || 'und') < 0) {
+      const others = row.lv || [];
+      let any = false;
+      for (let i = 0; i < others.length && !any; i++)
+        any = filters.languages.indexOf(others[i]) >= 0;
+      if (!any) return false;
+    }
     if (filters.formats.length && filters.formats.indexOf(row.f) < 0) return false;
     if (filters.minRating !== undefined && !(row.r !== undefined && row.r >= filters.minRating)) {
       return false;

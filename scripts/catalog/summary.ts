@@ -17,19 +17,30 @@ function table(title: string, rows: Array<[string, number]>, max = 15): string {
 }
 
 function languages(resolution: Resolution): string {
-  const { changed, firstOfSeveral, unknownOverrides } = resolution.languages;
-  const rows = changed.map(
-    (change) =>
-      `| \`${change.tuid}\` | ${change.title.replace(/\|/g, '\\|')} | ${change.from || '(none)'} → ` +
-      `${change.to} | ${change.source} | ${change.detail.replace(/\|/g, '\\|')} |`,
-  );
+  const { changed, versions, assumed, unknownOverrides } = resolution.languages;
+  const cell = (text: string) => text.replace(/\|/g, '\\|');
   const parts = [
-    rows.length
-      ? '**Language from the file (S2.6)**\n\n| Game | Title | IFDB first → kept | From | Why |\n|---|---|---|---|---|\n' +
-        rows.join('\n') +
+    changed.length
+      ? "**Language not IFDB's first (S2.6)**\n\n| Game | Title | IFDB first → kept | From | Why |\n|---|---|---|---|---|\n" +
+        changed
+          .map(
+            (change) =>
+              `| \`${change.tuid}\` | ${cell(change.title)} | ${change.from || '(none)'} → ${change.to} | ` +
+              `${change.source} | ${cell(change.detail)}${change.file ? ' (file changed)' : ''} |`,
+          )
+          .join('\n') +
         '\n'
-      : '**Language from the file (S2.6)**: none\n',
-    `${firstOfSeveral} kept game(s) list several languages and keep IFDB's first one (to review by hand).\n`,
+      : "**Language not IFDB's first (S2.6)**: none\n",
+    versions.length
+      ? '**Games with a file per language (S2.6)**\n\n| Game | Title | Languages |\n|---|---|---|\n' +
+        versions
+          .map(
+            (game) => `| \`${game.tuid}\` | ${cell(game.title)} | ${game.languages.join(', ')} |`,
+          )
+          .join('\n') +
+        '\n'
+      : '**Games with a file per language (S2.6)**: none\n',
+    `${assumed} kept game(s) in several languages play a file whose language IFDB does not say (assumed; to review by hand).\n`,
   ];
   if (unknownOverrides.length) {
     parts.push(

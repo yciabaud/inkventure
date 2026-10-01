@@ -49,6 +49,17 @@ describe('filter predicates', () => {
     expect(ids({ formats: ['glulx'] })).toEqual(['c']);
   });
 
+  it('finds a game with a file per language in each of its languages (S2.6)', () => {
+    const bilingual = [row('x', { l: 'es', lv: ['en'] }), row('y', { l: 'en' })];
+    const match = (languages: string[]) =>
+      applyFilters(bilingual, [0, 1], { ...NO_FILTERS, languages: languages }).map(
+        (i) => bilingual[i].t,
+      );
+    expect(match(['en'])).toEqual(['x', 'y']);
+    expect(match(['es'])).toEqual(['x']);
+    expect(match(['fr'])).toEqual([]);
+  });
+
   it('keeps games with at least the rating or number of ratings, leaving unrated ones out', () => {
     expect(ids({ minRating: 4 })).toEqual(['a', 'b']);
     expect(ids({ minVotes: 5 })).toEqual(['a', 'b']);

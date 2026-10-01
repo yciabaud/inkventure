@@ -3,7 +3,7 @@ import { runMigrations } from './migrations';
 import { createStore, type Store } from './store';
 
 export { compressBytes, compressText, decompressBytes, decompressText } from './compress';
-export { keys } from './keys';
+export { gameId, keys, parseGameId } from './keys';
 export {
   addToHome,
   continueGame,

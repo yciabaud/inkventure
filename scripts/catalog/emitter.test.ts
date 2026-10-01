@@ -100,6 +100,51 @@ describe('index rows', () => {
   });
 });
 
+describe('files per language (S2.6)', () => {
+  const A = 'https://ifarchive.org/if-archive/games/zcode/';
+  const bilingual = game('drac', 'Dracula', {
+    language: 'es',
+    versions: [{ language: 'en', file: { url: A + 'drac_en.z5' } }],
+  });
+
+  it('lists the other languages in the row, counts every language in the facets, keeps the files in the detail', () => {
+    expect(indexRow(bilingual)).toMatchObject({ l: 'es', lv: ['en'] });
+    expect(indexRow(game('one', 'One', { language: 'en' })).lv).toBeUndefined();
+    const files = emit([bilingual, game('one', 'One', { language: 'en' })], {
+      built: BUILT,
+      policy: 'general',
+    });
+    expect((files['meta.json'] as Meta).facets.languages).toEqual([
+      ['en', 2],
+      ['es', 1],
+    ]);
+    expect((files['games/drac.json'] as ResolvedGame).versions).toEqual(bilingual.versions);
+    expect(validate(files, { shardBudgetBytes: BUDGET }).errors).toEqual([]);
+  });
+
+  it('reports a bad language list or version file', () => {
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'zcode', l: 'es', lv: ['en'] })).toEqual([]);
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'zcode', l: 'es', lv: ['es'] })).toEqual([
+      'lv: languages',
+    ]);
+    expect(rowProblems({ t: 'a', n: 'A', a: '', f: 'zcode', lv: [] })).toEqual(['lv: languages']);
+    const files = emit(
+      [
+        game('drac', 'Dracula', {
+          language: 'es',
+          versions: [{ language: 'es', file: { url: 'http://example.com/x.z5' } }],
+        }),
+      ],
+      { built: BUILT, policy: 'general' },
+    );
+    expect(validate(files, { shardBudgetBytes: BUDGET }).errors).toEqual([
+      'index-0.json row 0: lv: languages',
+      'games/drac.json: versions[0].language',
+      'games/drac.json: versions[0].file.url: HTTPS URL',
+    ]);
+  });
+});
+
 describe('emit', () => {
   const games = ['delta', 'Alpha', 'charlie', 'Bravo', 'echo'].map((title, i) =>
     game('t' + i, title),

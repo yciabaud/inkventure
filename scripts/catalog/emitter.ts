@@ -25,8 +25,10 @@ export interface IndexRow {
   a: string;
   /** year */
   y?: number;
-  /** language (primary subtag) */
+  /** language (primary subtag) of the file played by default */
   l?: string;
+  /** languages of the game's other files, one per language (S2.6) */
+  lv?: string[];
   /** genres */
   g?: string[];
   /** story format */
@@ -101,6 +103,7 @@ export function indexRow(game: ResolvedGame): IndexRow {
   const row: IndexRow = { t: game.tuid, n: game.title, a: game.author, f: game.format };
   if (game.year !== undefined) row.y = game.year;
   if (game.language) row.l = game.language;
+  if (game.versions && game.versions.length) row.lv = game.versions.map((v) => v.language);
   if (game.genres.length) row.g = game.genres;
   if (game.rating) {
     row.r = round(game.rating.average, 2);
@@ -113,6 +116,11 @@ export function indexRow(game: ResolvedGame): IndexRow {
   if (isStarter(game.tags)) row.st = 1;
   if (game.illustrated) row.il = 1;
   return row;
+}
+
+/** Every language a game can be played in: its default file's, then its other files' (S2.6); `und` if unknown. */
+export function rowLanguages(row: IndexRow): string[] {
+  return [row.l || 'und'].concat(row.lv || []);
 }
 
 function facet(values: string[]): Array<[string, number]> {
@@ -153,7 +161,7 @@ export function emit(
     illustrated: sorted.filter((game) => game.illustrated).length,
     shards: shards,
     facets: {
-      languages: facet(sorted.map((game) => game.language || 'und')),
+      languages: facet(sorted.flatMap((game) => rowLanguages(indexRow(game)))),
       genres: facet(sorted.flatMap((game) => game.genres)),
       formats: facet(sorted.map((game) => game.format)),
     },
@@ -181,6 +189,7 @@ export function rowProblems(row: unknown): string[] {
     'a',
     'y',
     'l',
+    'lv',
     'g',
     'f',
     'r',
@@ -202,6 +211,16 @@ export function rowProblems(row: unknown): string[] {
     problems.push('y: year');
   if (r.l !== undefined && !(typeof r.l === 'string' && /^[a-z]{2,3}$/.test(r.l)))
     problems.push('l: language');
+  if (
+    r.lv !== undefined &&
+    !(
+      Array.isArray(r.lv) &&
+      r.lv.length > 0 &&
+      r.lv.every((l) => typeof l === 'string' && /^[a-z]{2,3}$/.test(l) && l !== r.l)
+    )
+  ) {
+    problems.push('lv: languages');
+  }
   if (r.g !== undefined && !(Array.isArray(r.g) && r.g.every((g) => typeof g === 'string' && g))) {
     problems.push('g: genres');
   }
@@ -218,18 +237,39 @@ export function rowProblems(row: unknown): string[] {
   return problems;
 }
 
-function detailProblems(detail: Record<string, unknown>): string[] {
+type FileShape = { url?: unknown; archive?: { type?: unknown; primary?: unknown } } | undefined;
+
+function fileProblems(file: FileShape, name: string): string[] {
   const problems: string[] = [];
-  const file = detail.file as
-    { url?: unknown; archive?: { type?: unknown; primary?: unknown } } | undefined;
   if (!file || typeof file.url !== 'string' || !/^https:\/\//.test(file.url))
-    problems.push('file.url: HTTPS URL');
+    problems.push(name + '.url: HTTPS URL');
   if (
     file &&
     file.archive &&
     !(file.archive.type === 'zip' && typeof file.archive.primary === 'string')
   ) {
-    problems.push('file.archive');
+    problems.push(name + '.archive');
+  }
+  return problems;
+}
+
+function detailProblems(detail: Record<string, unknown>): string[] {
+  const problems = fileProblems(detail.file as FileShape, 'file');
+  if (detail.versions !== undefined) {
+    const versions = detail.versions as Array<{ language?: unknown; file?: FileShape }>;
+    if (!Array.isArray(versions) || !versions.length) problems.push('versions');
+    else
+      versions.forEach((version, i) => {
+        if (
+          !version ||
+          typeof version.language !== 'string' ||
+          !/^[a-z]{2,3}$/.test(version.language) ||
+          version.language === detail.language
+        ) {
+          problems.push(`versions[${i}].language`);
+        }
+        problems.push(...fileProblems(version && version.file, `versions[${i}].file`));
+      });
   }
   if (typeof detail.ifdbLink !== 'string') problems.push('ifdbLink');
   return problems;

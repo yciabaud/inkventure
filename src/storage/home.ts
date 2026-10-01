@@ -1,6 +1,6 @@
 // "My adventures" (SPEC §3.3, §6.1): `ik:v1:home`, the games the player added from their page or started, most
 // recently added first. Title and author are kept so Home can list them without loading the catalogue.
-import { autosaveTuid, keys } from './keys';
+import { autosaveTuid, keys, parseGameId } from './keys';
 import type { Store } from './store';
 
 export interface HomeEntry {
@@ -101,7 +101,7 @@ const PROGRESS = /^progress:(.+)$/;
 
 /**
  * The games already in progress: those with a progress record or an autosave (started) and those in My adventures.
- * The Featured shelf leaves them out.
+ * The Featured shelf leaves them out. A game played in another language counts under its TUID too (S2.6).
  */
 export function inProgressTuids(store: Store): Record<string, boolean> {
   const tuids: Record<string, boolean> = {};
@@ -109,9 +109,10 @@ export function inProgressTuids(store: Store): Record<string, boolean> {
   for (let i = 0; i < all.length; i++) {
     const progress = PROGRESS.exec(all[i]);
     const tuid = progress ? progress[1] : autosaveTuid(all[i]);
-    if (tuid) tuids[tuid] = true;
+    if (tuid) tuids[tuid] = tuids[parseGameId(tuid).tuid] = true;
   }
   const home = getHome(store);
-  for (let i = 0; i < home.length; i++) tuids[home[i].tuid] = true;
+  for (let i = 0; i < home.length; i++)
+    tuids[home[i].tuid] = tuids[parseGameId(home[i].tuid).tuid] = true;
   return tuids;
 }
