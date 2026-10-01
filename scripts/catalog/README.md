@@ -70,10 +70,24 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
 - **Readable files** (`--cors FILE`): a file outside the IF Archive is used only when there is no IF Archive file and
   `check-cors.ts` found that the app can read it; otherwise the game is dropped (`unreadable-host`). Without `--cors`
   every host is assumed readable (local runs on the fixtures).
+- **Ink web exports** (`--ink FILE`, S2.7): a zip or page of an ink game is used only when `check-ink.ts` found its
+  story; the game's file then points at it (`archive.primary` in a zip, the script's URL for a page). Without
+  `--ink` the file IFDB names is assumed to hold it.
 - **Reasons**: `no-game-file`, `unsupported-format`, `format-not-enabled`, `compressed-no-primary`, `insecure-url`,
-  `unreadable-host`, `adult-content`, `excluded`.
+  `unreadable-host`, `no-ink-story`, `adult-content`, `excluded`. The summary also counts the ink games kept and
+  dropped, by reason.
 - `--summary FILE` appends a Markdown summary, including the distribution of the raw IFDB fields (link formats,
   compression, languages, genres); the manual workflow writes it to the job summary.
+
+## Ink web exports (S2.7)
+
+`check-ink.ts` (`npm run catalog:ink`, live network, ≤ 1 request/s, project `User-Agent`) lists the web exports of
+the ink games in the raw dataset (`exportsToInspect`: zips whose named file is a page or script, and web pages outside
+itch.io) and opens each one: the story is in the named file when it holds `storyContent` (or is the compiled JSON),
+else in the first of the page's own scripts that does (`ink.js` is skipped). Results go to `data/cache/ink.json`
+(`{ "url" or "url#primary": { checked, story?, detail?, transient? } }`), reused for 90 days; network errors and 5xx
+answers are `transient`. It runs before the CORS check, which then takes `--ink FILE` too, so the script of a page
+outside the IF Archive is the file checked; `check-pictures.ts` and `resolve.ts` take it as well.
 
 ## CORS check
 
@@ -115,7 +129,8 @@ writes them to `data/catalog/` (`--out`):
   (the `meta.json` currently published).
 
 **Weekly workflow** (`.github/workflows/catalog.yml`, Mondays 04:17 UTC, or Run workflow): full crawl reusing the
-record cache, CORS check, picture counts, resolve, emit, then commits `catalog/`, `cache/` (records, CORS, pictures) and
+record cache, ink exports, CORS check, picture counts, resolve, emit, then commits `catalog/`, `cache/` (records, ink
+exports, CORS, pictures) and
 `report.json` to the **`catalog` branch**.
 The deployment runs after it: `use-published.sh` copies that catalogue into `public/catalog/` before the build (preview
 builds too). Without the branch, builds keep the committed sample.

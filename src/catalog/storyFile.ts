@@ -1,12 +1,13 @@
 // Story files (SPEC §5.5; story S3.4): downloaded at play time from the URL in `games/<tuid>.json` (the IF Archive
 // sends CORS headers, verified on a Kindle in S0.3), unzipped when the catalogue says so, and kept in storage when
 // small (src/storage/files.ts).
-import { strFromU8, unzipSync } from 'fflate';
+import { strFromU8, strToU8, unzipSync } from 'fflate';
 import type { StoryFile } from '../../scripts/catalog/resolver';
 import type { EngineKind } from '../engines/engine';
 import { looksLikeStory } from '../engines/formats';
 import { cacheFile, readCachedStory, type StoryData, type StoryFiles } from '../storage/files';
 import type { Store } from '../storage/store';
+import { inkStoryJson } from './inkStory';
 import { storyFileError, type StoryFileError } from './storyFileError';
 
 export { isStoryFileError, storyFileError, type StoryFileError } from './storyFileError';
@@ -197,13 +198,24 @@ export function extractTwine(zip: Uint8Array, primary: string): StoryData {
 }
 
 /**
+ * The compiled story of an ink game (story S2.7): the file itself when it is the `.json`, else the object assigned to
+ * `storyContent` in a web export's script or page, read as JSON (the export's scripts are not run).
+ */
+export function inkStory(bytes: Uint8Array): Uint8Array {
+  const json = inkStoryJson(strFromU8(bytes));
+  if (json === null) throw storyFileError('format', 'Not a story file: no compiled ink story');
+  return strToU8(json);
+}
+
+/**
  * The story itself from the downloaded bytes: unzipped when the catalogue says the file is a zip, with its files for
- * a Twine story.
+ * a Twine story; the compiled story out of an ink web export.
  */
 export function storyData(file: StoryFile, kind: EngineKind, bytes: Uint8Array): StoryData {
-  if (!file.archive || file.archive.type !== 'zip') return { bytes: bytes };
-  if (kind === 'twine') return extractTwine(bytes, file.archive.primary);
-  return { bytes: extractPrimary(bytes, file.archive.primary) };
+  const zipped = !!file.archive && file.archive.type === 'zip';
+  if (kind === 'twine' && zipped) return extractTwine(bytes, file.archive!.primary);
+  const story = zipped ? extractPrimary(bytes, file.archive!.primary) : bytes;
+  return { bytes: kind === 'ink' ? inkStory(story) : story };
 }
 
 interface FetchOptions extends DownloadOptions {

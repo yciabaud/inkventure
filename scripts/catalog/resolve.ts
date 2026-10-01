@@ -1,13 +1,15 @@
 // Playability resolution CLI (SPEC §5.2 steps 2–3; story S2.2): reads the crawler's raw dataset, writes the playable
 // games and a report of the games left out, with their reasons.
 //
-//   node scripts/catalog/resolve.ts [--in FILE] [--out DIR] [--cors FILE] [--pictures FILE] [--summary FILE]
+//   node scripts/catalog/resolve.ts [--in FILE] [--out DIR] [--cors FILE] [--pictures FILE] [--ink FILE]
+//                                   [--summary FILE]
 //
 // CONTENT_POLICY=general (default) | adult. Formats: scripts/catalog/playability.json. Policy lists:
 // scripts/catalog/content-policy.json. --summary appends a Markdown summary (e.g. $GITHUB_STEP_SUMMARY).
 // --cors: the checks of `check-cors.ts`; a file outside the IF Archive is then used only if the app can read it.
 // Without it every host is assumed readable (local runs on fixtures).
 // --pictures: the checks of `check-pictures.ts`; games whose Blorb holds pictures besides the cover are illustrated.
+// --ink: the checks of `check-ink.ts`; an ink web export is then used only when it holds a story, pointing at it.
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -19,6 +21,7 @@ import {
   type StoryFormat,
 } from './resolver.ts';
 import { readableFrom, type CorsCache } from './cors.ts';
+import { inkStoryFrom, type InkCache } from './ink.ts';
 import { picturesFrom, type PicturesCache } from './pictures.ts';
 import { summarize } from './summary.ts';
 
@@ -28,6 +31,7 @@ const { values } = parseArgs({
     out: { type: 'string', default: 'data/resolved' },
     cors: { type: 'string' },
     pictures: { type: 'string' },
+    ink: { type: 'string' },
     summary: { type: 'string' },
   },
 });
@@ -51,6 +55,7 @@ const resolution = resolve(dataset, {
   config: config,
   readable: values.cors ? readableFrom(readJson<CorsCache>(values.cors)) : undefined,
   pictures: values.pictures ? picturesFrom(readJson<PicturesCache>(values.pictures)) : undefined,
+  inkStory: values.ink ? inkStoryFrom(readJson<InkCache>(values.ink)) : undefined,
 });
 
 mkdirSync(values.out, { recursive: true });

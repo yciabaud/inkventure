@@ -70,9 +70,46 @@ describe('format detection', () => {
     const html = { url: A + 'story.html', format: 'hypertextgame' };
     expect(linkFormat(html, 'Twine 2 (SugarCube)')!.format).toBe('twine');
     expect(linkFormat(html, 'Custom JavaScript')).toBeUndefined();
-    expect(linkFormat({ url: A + 'story.json' }, 'ink')!.format).toBe('ink');
-    expect(linkFormat({ url: A + 'story.zip', format: 'hypertextgame' }, 'ink')).toBeUndefined();
+    expect(linkFormat({ url: A + 'story.json' }, 'ink')).toEqual({ format: 'ink', blorb: false });
     expect(linkFormat({ url: A + 'game.t3', format: 'tads3' }, 'TADS 3')).toBeUndefined();
+  });
+
+  it("recognises the web exports of ink games: zips and pages, not game stores' pages (S2.7)", () => {
+    const exported = { format: 'ink', blorb: false, inkExport: true };
+    const zip = { url: A + 'tide.zip', format: 'hypertextgame', compression: 'zip' };
+    for (const devsys of ['ink', 'Ink', 'Godot, Ink', 'Inkle', 'Ink / HTML5']) {
+      expect(linkFormat({ ...zip, compressedPrimary: 'tide/index.html' }, devsys)).toEqual(
+        exported,
+      );
+    }
+    expect(linkFormat({ ...zip, compressedPrimary: 'tide/story.js' }, 'ink')).toEqual(exported);
+    // Without the file inside named: an export, which the resolver then drops for its zip.
+    expect(linkFormat(zip, 'ink')).toEqual(exported);
+    expect(linkFormat({ ...zip, compressedPrimary: 'tide/story.json' }, 'ink')).toEqual({
+      format: 'ink',
+      blorb: false,
+    });
+    const page = { url: 'https://unbox.ifarchive.org/x/Tide/index.html', format: 'hypertextgame' };
+    expect(linkFormat(page, 'ink')).toEqual(exported);
+    expect(
+      linkFormat({ url: 'https://author.example/tide/', format: 'hypertextgame' }, 'Ink'),
+    ).toEqual(exported);
+    expect(linkFormat({ url: 'https://example.com/tide/index.htm' }, 'ink')).toEqual(exported);
+    // Not exports: game stores, other files, desktop builds, other systems.
+    expect(linkFormat({ url: 'https://author.itch.io/tide', format: 'hypertextgame' }, 'ink')).toBe(
+      undefined,
+    );
+    expect(linkFormat({ url: A + 'tide.ink', format: 'document' }, 'ink')).toBeUndefined();
+    expect(
+      linkFormat({ ...zip, compressedPrimary: 'Tide/Tide.exe' }, 'Unity, Ink'),
+    ).toBeUndefined();
+    expect(linkFormat({ ...zip, compressedPrimary: 'inner.zip' }, 'ink')).toBeUndefined();
+    expect(linkFormat(page, 'inklewriter')).toBeUndefined();
+    expect(linkFormat(page, 'Binksi')).toBeUndefined();
+    expect(linkFormat(page, 'Custom JavaScript')).toBeUndefined();
+    // An HTML page of an ink game is not Twine, and a Twine page is not ink.
+    expect(linkFormat(page, 'ink')!.format).toBe('ink');
+    expect(linkFormat(page, 'Twine 2 (Harlowe)')!.format).toBe('twine');
   });
 
   it('upgrades IF Archive links to HTTPS and refuses other plain HTTP links', () => {
@@ -291,13 +328,13 @@ describe('resolution of the recorded fixtures', () => {
       fxbell0000000002: 'format-not-enabled',
       fxexcl0000000011: 'excluded',
       fxhttp0000000010: 'insecure-url',
-      fxinky0000000007: 'unsupported-format',
+      fxinky0000000007: 'format-not-enabled',
       fxnofl0000000009: 'no-game-file',
       fxtwin0000000006: 'format-not-enabled',
     });
     expect(result.games.length + result.dropped.length).toBe(dataset.games.length);
     // Games the policy removes are not counted.
-    expect(result.counts.formats).toEqual({ zcode: 3, glulx: 1, twine: 1 });
+    expect(result.counts.formats).toEqual({ zcode: 3, glulx: 1, twine: 1, ink: 1 });
   });
 
   it('fills the metadata the index needs', async () => {
@@ -654,5 +691,103 @@ describe('the language of the file played (S2.6)', () => {
       run(dataset.games, { [JEANGILLE]: { language: 'fr', reason: 'a\\|b' } }),
     );
     expect(summary).toContain('| override | a\\\\\\|b |');
+  });
+});
+
+describe('ink web exports (S2.7)', () => {
+  const ZIP = A + 'ink/tide.zip';
+  const PAGE = 'https://xyz.unbox.ifarchive.org/xyz/Tide/index.html';
+  const OTHER = 'https://author.example/tide/index.html';
+  const zip = {
+    url: ZIP,
+    format: 'hypertextgame',
+    compression: 'zip',
+    compressedPrimary: 'Tide/index.html',
+  };
+  const ink: StoryFormat[] = ['ink'];
+  const stories: Record<string, string> = {
+    [ZIP + '#Tide/index.html']: 'Tide/Tide.js',
+    [PAGE]: 'https://xyz.unbox.ifarchive.org/xyz/Tide/Tide.js',
+    [OTHER]: 'https://author.example/tide/story.js',
+  };
+  const inkStory = (link: { url: string; primary?: string }) =>
+    stories[link.primary ? link.url + '#' + link.primary : link.url] || null;
+
+  it('points a zip at the file holding the story, and a page at the script holding it', () => {
+    const fromZip = chooseFile(record([zip]), 'ink', ink, undefined, inkStory);
+    expect('file' in fromZip && fromZip.file.file).toEqual({
+      url: ZIP,
+      ifdbFormat: 'hypertextgame',
+      archive: { type: 'zip', primary: 'Tide/Tide.js' },
+    });
+    const fromPage = chooseFile(
+      record([{ url: PAGE, format: 'hypertextgame' }]),
+      'ink',
+      ink,
+      undefined,
+      inkStory,
+    );
+    expect('file' in fromPage && fromPage.file.file.url).toBe(stories[PAGE]);
+  });
+
+  it('without the checks, assumes the file IFDB names holds the story', () => {
+    const choice = chooseFile(record([zip]), 'ink', ink);
+    expect('file' in choice && choice.file.file.archive).toEqual({
+      type: 'zip',
+      primary: 'Tide/index.html',
+    });
+  });
+
+  it('drops an export without a story, and checks CORS on the script of a page outside the IF Archive', () => {
+    const none = chooseFile(
+      record([
+        { ...zip, url: A + 'ink/empty.zip' },
+        { url: 'https://a.itch.io/t', format: 'hypertextgame' },
+      ]),
+      'ink',
+      ink,
+      undefined,
+      inkStory,
+    );
+    expect(none).toEqual({ reason: 'no-ink-story', detail: A + 'ink/empty.zip' });
+    const links = [{ url: OTHER, format: 'hypertextgame' }];
+    expect(urlsToCheck(record(links), 'ink', ink, inkStory)).toEqual([stories[OTHER]]);
+    expect(chooseFile(record(links), 'ink', ink, () => false, inkStory)).toEqual({
+      reason: 'unreadable-host',
+      detail: stories[OTHER],
+    });
+  });
+
+  it('counts the ink games kept and dropped, by reason, in the job summary', async () => {
+    const game = (tuid: string, devsys: string, links: Link[]): RawGame => ({
+      tuid: tuid,
+      pageVersion: 1,
+      queries: [],
+      search: { tuid: tuid, title: tuid, link: '', author: '', hasCoverArt: false, devsys: devsys },
+      record: record(links, { tuid: tuid }),
+    });
+    const dataset: RawDataset = {
+      source: 'test',
+      queries: [],
+      games: [
+        game('kept', 'Ink', [zip]),
+        game('empty', 'ink', [{ ...zip, url: A + 'ink/empty.zip' }]),
+        game('itch', 'Godot, Ink', [
+          { url: 'https://a.itch.io/t', format: 'hypertextgame', isGame: true },
+        ]),
+        game('z', 'Inform 7', [{ url: A + 'z.z5', format: 'zcode' }]),
+      ],
+    };
+    const resolution = resolve(dataset, {
+      enabledFormats: ['zcode', 'ink'],
+      policy: 'general',
+      config: CONFIG,
+      inkStory: inkStory,
+    });
+    expect(resolution.games.map((g) => g.tuid)).toEqual(['kept', 'z']);
+    const summary = summarize(dataset, resolution);
+    expect(summary).toContain('**Ink games (S2.7)**: 3 crawled, 1 kept, 2 dropped.');
+    expect(summary).toContain('| `no-ink-story` | 1 |');
+    expect(summary).toContain('| `unsupported-format` | 1 |');
   });
 });

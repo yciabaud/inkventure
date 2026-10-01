@@ -3,13 +3,14 @@
 // besides the cover. The results go to a cache the resolver reads (`resolve.ts --pictures`). Live network, at most 1
 // request per second; a check is reused for PICTURES_MAX_AGE_DAYS, then revalidated.
 //
-//   node scripts/catalog/check-pictures.ts [--in FILE] [--cors FILE] [--cache FILE] [--summary FILE]
+//   node scripts/catalog/check-pictures.ts [--in FILE] [--cors FILE] [--ink FILE] [--cache FILE] [--summary FILE]
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { parseArgs } from 'node:util';
 import { readableFrom, type CorsCache } from './cors.ts';
 import type { RawDataset } from './crawler.ts';
 import { RateLimiter, USER_AGENT } from './fetcher.ts';
+import { inkStoryFrom, type InkCache } from './ink.ts';
 import {
   inspect,
   isFresh,
@@ -30,6 +31,7 @@ const { values } = parseArgs({
   options: {
     in: { type: 'string', default: 'data/raw/games.json' },
     cors: { type: 'string' },
+    ink: { type: 'string' },
     cache: { type: 'string', default: 'data/cache/pictures.json' },
     summary: { type: 'string' },
   },
@@ -46,6 +48,7 @@ const games = resolve(dataset, {
   policy: (process.env.CONTENT_POLICY || 'general') as ContentPolicy,
   config: readJson<ContentPolicyConfig>('scripts/catalog/content-policy.json'),
   readable: values.cors ? readableFrom(readJson<CorsCache>(values.cors)) : undefined,
+  inkStory: values.ink ? inkStoryFrom(readJson<InkCache>(values.ink)) : undefined,
 }).games;
 const urls = urlsToInspect(games);
 const cache: PicturesCache = existsSync(values.cache) ? readJson<PicturesCache>(values.cache) : {};

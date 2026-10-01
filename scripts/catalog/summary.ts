@@ -1,7 +1,7 @@
 // Markdown summary of a resolution, with the distribution of the raw IFDB fields it relies on (link formats,
 // compression, languages, genres), so a live run can be checked from the GitHub Actions job summary.
 import type { RawDataset } from './crawler.ts';
-import type { Resolution } from './resolver.ts';
+import { isInkSystem, type Resolution } from './resolver.ts';
 
 function tally(values: string[]): Array<[string, number]> {
   const counts = new Map<string, number>();
@@ -51,6 +51,19 @@ function languages(resolution: Resolution): string {
   return parts.join('\n');
 }
 
+/** The games of an ink development system (S2.7): how many are kept, and why the others are dropped. */
+function inkGames(dataset: RawDataset, resolution: Resolution): string {
+  const ink: Record<string, true> = {};
+  for (const game of dataset.games)
+    if (isInkSystem(game.search.devsys || '')) ink[game.tuid] = true;
+  const kept = resolution.games.filter((game) => ink[game.tuid]).length;
+  const dropped = resolution.dropped.filter((game) => ink[game.tuid]);
+  return (
+    `**Ink games (S2.7)**: ${Object.keys(ink).length} crawled, ${kept} kept, ${dropped.length} dropped.\n\n` +
+    table('Ink games dropped, by reason', tally(dropped.map((game) => game.reason)))
+  );
+}
+
 export function summarize(dataset: RawDataset, resolution: Resolution): string {
   const links = dataset.games.flatMap((game) => {
     const downloads = game.record.ifdb.downloads;
@@ -84,6 +97,7 @@ export function summarize(dataset: RawDataset, resolution: Resolution): string {
       tally(resolution.games.map((game) => game.language || '(none)')),
     ),
     languages(resolution),
+    inkGames(dataset, resolution),
     '### Raw IFDB fields',
     '',
     table(
