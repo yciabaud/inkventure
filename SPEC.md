@@ -394,6 +394,14 @@ the ink functions of the same name.
   Scrolling is hidden only once that script runs, so a story that breaks it still scrolls. "Aa" changes are sent to
   the frame as a new stylesheet (the story is not reloaded). Relative links (images) resolve where the story was
   downloaded from (`<base>`).
+- **A story from a zip** (S1.11) keeps, besides its page, the files of the page's folder the frame can use (pictures,
+  fonts, styles, scripts; not audio or video), at most 8 MB unpacked, in their order of reference (the rest is
+  dropped, with a console warning). Before the frame loads, the page's references to them (attributes, `url(…)` in
+  styles, `@import`, SugarCube `[img[…]]`, also in the passages' text; `./`, `../`, `%20` normalised, case ignored as a
+  fallback) become `data:` URLs, which load in the opaque origin, fonts included; linked stylesheets and scripts are
+  inlined; a font keeps only its first source found in the zip. References the story makes later (`src` of an image,
+  `url(…)` in a `style` attribute) are sent by the frame script to the reader, which answers with a `data:` URL when
+  they name a kept file. Other references still go through `<base>`.
 - Save/restore relies on the story format's own mechanism; Inkventure's Save, Restore, Undo and Transcript are not
   offered for Twine. The sandbox has no storage of its own: the injected script stands in for `localStorage` and
   `sessionStorage` and sends every change to the reader, which keeps it under `save:<tuid>:twine` (at most 1 M
@@ -555,11 +563,12 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
   whose file cannot be read leave the catalogue (`unreadable-host` in the report).
 - Download (S3.4): XHR `arraybuffer` with a progress page (KB received, of the total when known; Cancel), abandoned
   after **30 s without receiving anything** (not a fixed total time: Wi-Fi can be slow). A zip is unzipped client-side
-  (the `primary` file the catalogue names). The file must look like a story for its engine (Blorb or the format's
+  (the `primary` file the catalogue names; for Twine, also the files it uses, §4.3). The file must look like a story for its engine (Blorb or the format's
   header). Failures show an error page: Try again, Open on IFDB, Report a problem (a prefilled GitHub issue). Formats
   whose engine has not shipped yet say "Not playable yet" without downloading.
 - Files are cached in localStorage only if small (< 512 KB after unzipping, deflated, keyed by file URL so a new
-  version is re-downloaded; LRU, see §6); larger files are re-downloaded per session on Kindle. Caching a file only
+  version is re-downloaded; LRU, see §6); larger files are re-downloaded per session on Kindle. A Twine story kept
+  with the files of its zip (§4.3) is cached with them, packed together, under the same limit for the whole. Caching a file only
   ever evicts other cached files, never saves.
 
 ### 5.6 Attribution & terms
