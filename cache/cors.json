@@ -42,7 +42,7 @@
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "HTTP 522",
     "transient": true
   },
@@ -195,7 +195,7 @@
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -420,7 +420,7 @@
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -845,7 +845,7 @@
   },
   "https://hadesunited.com/wp-content/uploads/2024/09/Charlie-The-Robot.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1085,19 +1085,19 @@
   },
   "https://inurashii.com/relic.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/seedlings/seeds2.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1141,7 +1141,7 @@
   },
   "https://launchpad.yourlibrary.ca/games/escape_the_library/index.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1693,7 +1693,7 @@
   },
   "https://spacestories.ru/stories/looter/index.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1733,25 +1733,25 @@
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1762,7 +1762,7 @@
   },
   "https://web.archive.org/web/1000if_/http://aliendovecote.com/uploads/twine/atlantean.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1778,31 +1778,30 @@
   },
   "https://web.archive.org/web/1000if_/https://dl.dropboxusercontent.com/u/106579376/Playdate.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://web.archive.org/web/1000if_/https://dl.dropboxusercontent.com/u/13042603/G/T/arthur.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://web.archive.org/web/1000if_/https://dl.dropboxusercontent.com/u/20149169/history%20jacket.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "redirect without CORS headers"
   },
   "https://web.archive.org/web/1000if_/https://dl.dropboxusercontent.com/u/20149169/malachy.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://web.archive.org/web/1000if_/https://dl.dropboxusercontent.com/u/231563351/fadeaway.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1978,7 +1977,7 @@
   },
   "https://web.archive.org/web/20130120023256if_/http://aliendovecote.com/uploads/twine/others/chaosjam/pressxtohex.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1989,9 +1988,8 @@
   },
   "https://web.archive.org/web/20130406011354/https://bphennessy.com/dungeons.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20130511114750if_/http://www.antsandaphids.net/advertising.html": {
     "ok": false,
@@ -2000,7 +1998,7 @@
   },
   "https://web.archive.org/web/20130609230000if_/http://marrasart.net/tapes.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2026,9 +2024,8 @@
   },
   "https://web.archive.org/web/20131226074817if_/http://www.trumpetshark.com/images/twine/horseworld.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20140129194302if_/http://www.gamerjockies.com/TWINE/ertmas.html": {
     "ok": false,
@@ -2042,25 +2039,22 @@
   },
   "https://web.archive.org/web/20140808011405if_/http://www.sheltercontent.org.uk/twine/The%20Spare%20Set.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20141215012234/http://aliendovecote.com/uploads/twine/The Sky in the Room.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20141220192210if_/https://dl.dropboxusercontent.com/u/109926883/Shorn%20Face.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20150101012335if_/http://dl.dropboxusercontent.com/u/4740390/ANDROID%20MAKEOUT%20ATTACK.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2071,7 +2065,7 @@
   },
   "https://web.archive.org/web/20150110111958/https://dl.dropboxusercontent.com/u/20534082/IsThisAGame.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2092,13 +2086,13 @@
   },
   "https://web.archive.org/web/20160321185443/http://www.ashtonraze.com/nocomment.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://web.archive.org/web/20160417192824/http://fearoftwine.com/zest/play.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2119,13 +2113,13 @@
   },
   "https://web.archive.org/web/20161117033431if_/http://inurashii.xyz/seeds.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://web.archive.org/web/20161119030325if_/http://paltryachievements.net/wp-content/uploads/2014/01/hydebybrainsullivan.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2146,7 +2140,7 @@
   },
   "https://web.archive.org/web/20170423202328/http://makoian.com/jedediah/The%20Periwink.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2162,9 +2156,8 @@
   },
   "https://web.archive.org/web/20201115215325if_/https://chigby.org/twine/terms-and-conditions.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-01T07:03:56.185Z",
+    "detail": "no CORS headers"
   },
   "https://web.archive.org/web/20201116043448if_/http://amandinebru.free.fr/Twine/TOSW/To_the_Other_Side_of_the_World.html": {
     "ok": false,
@@ -2188,7 +2181,7 @@
   },
   "https://web.archive.org/web/20221005081741if_/https://sub-q.com/wp-content/uploads/2015/fiction/2015_10_06_Witches_and_Wardrobes_Anthropy/index.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2199,7 +2192,7 @@
   },
   "https://web.archive.org/web/20231122141747if_/https://www.glorioustrainwrecks.com/local/blob.html": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2410,7 +2403,7 @@
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2441,7 +2434,7 @@
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T06:00:04.803Z",
+    "checked": "2026-10-01T07:03:56.185Z",
     "detail": "network: fetch failed",
     "transient": true
   },
