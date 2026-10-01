@@ -1,0 +1,43 @@
+name: Ebook image
+
+# Builds the image the ebooks are built in (.github/ebook-image/Dockerfile: Playwright's, with Pandoc, EPUBCheck and
+# Calibre) and publishes it to ghcr.io, tagged like its Playwright base. Runs when the Dockerfile changes, also on its
+# pull request, so the Ebook workflow can use the new image before the merge.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/ebook-image/**'
+      - '.github/workflows/ebook-image.yml'
+  pull_request:
+    paths:
+      - '.github/ebook-image/**'
+      - '.github/workflows/ebook-image.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag of the Playwright base image
+        id: tag
+        run: |
+          tag=$(sed -n 's|^FROM mcr\.microsoft\.com/playwright:\(.*\)$|\1|p' .github/ebook-image/Dockerfile)
+          test -n "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .github/ebook-image
+          push: true
+          tags: ghcr.io/yciabaud/inkventure-ebook:${{ steps.tag.outputs.tag }}
