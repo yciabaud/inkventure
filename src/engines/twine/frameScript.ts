@@ -6,6 +6,7 @@
 // - pages: a tap on the left 30 % of the page (outside links and controls) shows the previous screenful, elsewhere
 //   the next one; the page number is posted to the reader. Scrolling is hidden only once this works, so a story that
 //   breaks it still scrolls.
+// - cookies: `document.cookie` throws, whatever the browser does in an opaque origin.
 // - style: the reader sends a new e-ink stylesheet when the text settings change.
 //
 // Plain ES5 in a string: it runs in the story's page, outside the bundle and its transpilation.
@@ -93,6 +94,13 @@ const FRAME_SCRIPT = `(function () {
   }
   install('localStorage', makeStorage('local'));
   install('sessionStorage', makeStorage('session'));
+  // No cookies: the opaque origin already refuses them (Chromium throws, WebKit gives an empty jar); throw everywhere.
+  function noCookies() {
+    throw new Error('No cookies in the reader');
+  }
+  try {
+    Object.defineProperty(document, 'cookie', { configurable: true, get: noCookies, set: noCookies });
+  } catch (e) {}
   window.addEventListener('pagehide', flush);
 
   // --- Style ---

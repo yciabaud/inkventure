@@ -2,7 +2,7 @@
 // opaque origin: it cannot reach this page, its storage or the top window). It gets the e-ink stylesheet and a frame
 // script (frameScript.ts) that turns pages on taps and stands in for its storage, which the reader keeps under
 // `save:<tuid>:twine`. The story format's own saves are used; the reader's Save / Restore / Undo are not offered.
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { FRAME_MESSAGE, type FrameMessage } from '../../engines/twine/messages';
 import type { ReaderSettings } from '../../reader/settings';
 import { t } from '../../i18n/i18n';
@@ -117,7 +117,8 @@ export function TwineReader({ tuid, title, author, cover, story, baseUrl }: Prop
     playedRef.current = played;
   });
 
-  useEffect(() => {
+  // A layout effect: listening before the frame starts, whose first page report (sent once) must not be missed.
+  useLayoutEffect(() => {
     if (!loaded) return;
     const onMessage = (event: MessageEvent) => {
       const frame = frameRef.current;
