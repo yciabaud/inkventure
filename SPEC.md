@@ -639,6 +639,15 @@ A free ebook, in EN and FR, is the main acquisition channel.
 - **Distribution:** direct download (site, IF community), possibly free on stores; links must open the
   device browser (Kindle opens external links in the experimental browser after a confirmation).
 - The ebook build reads `featured.json` so cards stay in sync with the app.
+- **Build** (`npm run ebook`, S6.1): per UI locale, the chapters `ebook/<locale>/NN-*.md` with the game cards
+  inserted at a `<!-- cards -->` marker → EPUB 3 (Pandoc), which must pass EPUBCheck without warnings → AZW3
+  (Calibre). The cards are the first 12 games (`ebook/config.json`) of the locale's `featured.json` list, curated
+  first; a game without a curated pitch gets the first paragraph of its blurb, shortened. The cover is the IFDB
+  thumbnail (§5.6), fetched at build time, or a text placeholder; the length and the "Start here" badge use the app's
+  strings and rounding, and the badge stands in for difficulty (no forgiveness rating is emitted yet). The QR code
+  is a PNG of the same link. The host is `ebook/config.json`'s `host`. The book cover is rendered from HTML with
+  Playwright's Chromium (Calibre drops SVG covers). The Ebook workflow builds both books from the published catalogue
+  on `v*` tags (artifact) and on pull requests that touch the ebook.
 
 ---
 
@@ -677,7 +686,8 @@ A free ebook, in EN and FR, is the main acquisition channel.
 ├── scripts/catalog/    crawler, resolver, emitter, content-policy.json
 ├── scripts/size/       check-size.ts: asset budgets report (CI)
 ├── scripts/build/      build-info.ts: version.json + build meta tag (Vite plugin)
-├── ebook/              Markdown sources, templates, build script
+├── ebook/              ebook Markdown sources per locale, metadata, CSS, config (app address)
+├── scripts/ebook/      build.ts: ebook build (cards, QR codes, cover, Pandoc, EPUBCheck, Calibre)
 └── tests/
     ├── unit/           (or colocated *.test.ts)
     ├── e2e/            Playwright specs

@@ -1,0 +1,46 @@
+name: Ebook
+
+# Builds the EN and FR ebooks (SPEC §8; story S6.1) on a version tag, on pull requests that change them, or on
+# demand: EPUB 3 (Pandoc, checked with EPUBCheck) and AZW3 (Calibre), with game cards from the published catalogue's
+# featured lists. The books are uploaded as a workflow artifact.
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths:
+      - 'ebook/**'
+      - 'scripts/ebook/**'
+      - '.github/workflows/ebook.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ebook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Chromium (the cover is rendered with Playwright) comes with the image; its tag must match @playwright/test.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install Pandoc, EPUBCheck and Calibre
+        run: apt-get update -qq && apt-get install -y -qq --no-install-recommends pandoc epubcheck calibre
+      - run: npm ci
+      - name: Use the published catalogue
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          scripts/catalog/use-published.sh
+      - run: npm run ebook
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ebooks
+          path: |
+            ebook/build/*.epub
+            ebook/build/*.azw3
+          if-no-files-found: error
