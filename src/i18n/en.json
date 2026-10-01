@@ -259,6 +259,7 @@
   "about.fonts": "Fonts: Literata and Source Sans 3, under the SIL Open Font License 1.1.",
   "about.privacy": "Privacy: there is no account, no tracking and no advertising. Your settings, progress and saved games stay in this browser. The app only downloads the catalogue from its own site, covers from IFDB and game files from the IF Archive.",
   "about.ebook": "Free ebook: a short guide to interactive fiction with games to start from its pages, in English and French. Download it from a computer at {address}",
+  "about.source": "Source code: github.com/yciabaud/inkventure. The licences of the software and fonts it uses, in full: {address}",
   "ebookPage.title": "The Inkventure ebook",
   "ebookPage.languageName": "English",
   "ebookPage.language": "Language",

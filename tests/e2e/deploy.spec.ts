@@ -14,6 +14,26 @@ test('version.json matches the build meta tag', async ({ page, request }) => {
   );
 });
 
+test('licences.txt lists the third-party code and fonts the site serves', async ({ request }) => {
+  const response = await request.get('/licences.txt');
+  expect(response.ok()).toBe(true);
+  const text = await response.text();
+  for (const name of [
+    'preact',
+    'inkjs',
+    'ifvms',
+    'glkote-term',
+    'fflate',
+    'Quixe',
+    'core-js',
+    'SystemJS',
+  ]) {
+    expect(text).toContain('## ' + name + ' - ');
+  }
+  expect(text).toContain('@fontsource/literata');
+  expect(text).toContain('SIL OPEN FONT LICENSE');
+});
+
 // GitHub Pages serves the project site under /inkventure/. Emulate that origin and path with request routing,
 // proxying to the local preview server, and fail on any request that escapes the sub-path.
 test('the production build works from the GitHub Pages sub-path', async ({ page, baseURL }) => {

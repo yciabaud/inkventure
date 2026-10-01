@@ -611,7 +611,14 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
 - Cover art is hot-linked from IFDB, not re-hosted, and always requested **as a thumbnail** sized for the slot
   (`coverart?id=…&thumbnail=WxH`, IFDB caps it at 250×250), never at full size — full-size covers can weigh
   hundreds of KB over e-reader Wi-Fi.
-- Respect IFDB and IF Archive usage etiquette; contact the IFTF before launch to announce the project.
+- Respect IFDB and IF Archive usage etiquette; contact the IFTF before launch to announce the project (S7.2: the
+  message, saying how the crawler, cover art and game downloads use their services, is drafted in
+  `docs/launch/iftf-message.md`, with the launch steps and the announcements).
+- **Licences** (S7.2): the app is MIT (`LICENSE`). The build writes `licences.txt` at the site's root, the full licence
+  text of every third-party package and font the site serves (Vite's `build.license` list of bundled packages,
+  completed by `scripts/build/licences.ts` with Quixe, the legacy bundle's core-js and SystemJS, and the probe's QR
+  code script); Settings › About names the components and gives that file's address as text, with the source
+  code's.
 
 ---
 
@@ -730,13 +737,13 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Engines | ZVM + Quixe (Parchment, MIT), inkjs (MIT) | Mature, pure JS. |
 | Unit tests | Vitest | Fast, TS-native. |
 | E2E tests | Playwright | Device emulation, network mocking. |
-| Hosting | GitHub Pages (project site, served from the `gh-pages` branch: `main` at the root, deployed by `.github/workflows/deploy.yml` after CI passes; each pull request under `pr-preview/pr-<n>/` by `preview.yml`) | Free, static; PRs can be tried on a device before merging. |
+| Hosting | GitHub Pages (project site, served from the `gh-pages` branch: `main` at the root, deployed by `.github/workflows/deploy.yml` after CI passes; each pull request under `pr-preview/pr-<n>/` by `preview.yml`). Public address `https://yciabaud.github.io/inkventure/`, no custom domain for V1 (S7.2); `ebook/config.json`'s `host` is the one place it is written for the build | Free, static; PRs can be tried on a device before merging. |
 | CI/CD | GitHub Actions | Tests, build, catalogue job, ebook build. |
 
 ```
 /
-├── SPEC.md, CLAUDE.md, README.md
-├── docs/BACKLOG.md, docs/stories/*.md
+├── SPEC.md, CLAUDE.md, README.md, LICENSE
+├── docs/BACKLOG.md, docs/stories/*.md, docs/launch/ (launch steps and messages)
 ├── src/
 │   ├── app/            shell, hash router
 │   ├── ui/             design-system components (TopBar, Button, Pager, Cover, Dialog…), icons
@@ -753,12 +760,13 @@ A free ebook, in EN and FR, is the main acquisition channel.
 ├── content/featured.json
 ├── scripts/catalog/    crawler, resolver, emitter, content-policy.json
 ├── scripts/size/       check-size.ts: asset budgets report (CI)
-├── scripts/build/      build-info.ts: version.json + build meta tag (Vite plugin)
+├── scripts/build/      Vite plugins: build-info.ts (version.json + build meta tag), licences.ts (licences.txt)
 ├── ebook/              ebook Markdown sources per locale, metadata, CSS, config (app address)
 ├── scripts/ebook/      build.ts: ebook build (cards, QR codes, cover, Pandoc, EPUBCheck, Calibre)
 └── tests/
     ├── unit/           (or colocated *.test.ts)
     ├── e2e/            Playwright specs
+    ├── production/     smoke test of the live site (real network, run by hand)
     └── fixtures/       tiny freely-licensed stories, recorded IFDB JSON
 ```
 
@@ -774,7 +782,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 | Accessibility | Semantic HTML, labels on icon buttons, focus order, contrast ≥ 4.5:1, font scaling; dyslexia-friendly typeface option. |
 | Privacy | No analytics, no third-party requests except IFDB cover art and game file hosts. No cookies. |
 | Resilience | Clear error pages: game download failed (retry, open on IFDB), storage full (manage data), unsupported browser. |
-| Licensing | App code open source (MIT proposed); third-party licences listed in About. |
+| Licensing | App code open source (MIT, `LICENSE`); third-party components named in About, their full licence texts in `licences.txt` (§5.6). |
 
 ---
 
@@ -805,6 +813,10 @@ Tests are part of every story's definition of done; CI blocks merges when they f
   save/restore slots; undo; UI language switch; deep link cold start `#/play/<tuid>`;
   storage-full and download-failure error pages.
 - Optional screenshot comparisons for key screens (stable, since there is no animation).
+- **Production smoke** (S7.2, the one exception to "no network"): `tests/production/`, run by hand
+  (`npm run test:production`, or the *Production smoke* workflow) against the live site, `ebook/config.json`'s `host`
+  or `PROD_URL`: build and catalogue published, Home and Library, a featured Z-machine game downloaded from the IF
+  Archive, the ebooks matching `books.json` and their links pointing to the site. Not part of `test:e2e`.
 
 ### 11.3 Legacy-compatibility gate
 

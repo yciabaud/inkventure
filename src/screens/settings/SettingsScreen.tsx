@@ -42,16 +42,29 @@ const ABOUT: MessageKey[] = [
   'about.fonts',
   'about.privacy',
   'about.ebook',
+  'about.source',
 ];
 
-/** The ebook download page (S6.3), next to the app: shown as text (an e-reader cannot easily download a file). */
-export function ebookAddress(href: string): string {
+/** A file or folder next to the app, e.g. "ebook/": shown as text (an e-reader cannot easily download a file). */
+export function siteAddress(href: string, path: string): string {
   return (
     href
       .split('#')[0]
       .split('?')[0]
-      .replace(/[^/]*$/, '') + 'ebook/'
+      .replace(/[^/]*$/, '') + path
   );
+}
+
+/** The ebook download page (S6.3). */
+export function ebookAddress(href: string): string {
+  return siteAddress(href, 'ebook/');
+}
+
+/** The address each About paragraph shows, if any. */
+function aboutParams(key: MessageKey): { address: string } | undefined {
+  if (key === 'about.ebook') return { address: ebookAddress(location.href) };
+  if (key === 'about.source') return { address: siteAddress(location.href, 'licences.txt') };
+  return undefined;
 }
 
 /** 1234 characters → "2 KB"; a megabyte and more → "1.5 MB". */
@@ -262,9 +275,7 @@ function About() {
       <TurnTimes />
       <PagedParagraphs
         key={getLocale()}
-        paragraphs={ABOUT.map((key) =>
-          t(key, key === 'about.ebook' ? { address: ebookAddress(location.href) } : undefined),
-        )}
+        paragraphs={ABOUT.map((key) => t(key, aboutParams(key)))}
       />
     </SectionPage>
   );

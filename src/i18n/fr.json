@@ -259,6 +259,7 @@
   "about.fonts": "Polices : Literata et Source Sans 3, sous SIL Open Font License 1.1.",
   "about.privacy": "Confidentialité : pas de compte, pas de pistage, pas de publicité. Vos réglages, votre progression et vos parties restent dans ce navigateur. L’application télécharge seulement le catalogue depuis son propre site, les couvertures depuis IFDB et les fichiers de jeu depuis l’IF Archive.",
   "about.ebook": "Livre numérique gratuit : un petit guide de la fiction interactive, avec des jeux à lancer depuis ses pages, en français et en anglais. Téléchargez-le depuis un ordinateur à l'adresse {address}",
+  "about.source": "Code source : github.com/yciabaud/inkventure. Les licences des logiciels et polices qu’il utilise, en entier : {address}",
   "ebookPage.title": "Le livre numérique Inkventure",
   "ebookPage.languageName": "Français",
   "ebookPage.language": "Langue",

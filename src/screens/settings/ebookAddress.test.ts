@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ebookAddress } from './SettingsScreen';
+import { ebookAddress, siteAddress } from './SettingsScreen';
 
 describe('the ebook address in Settings › About', () => {
   it('is the ebook/ folder next to the app', () => {
@@ -10,5 +10,13 @@ describe('the ebook address in Settings › About', () => {
       'https://example.org/inkventure/ebook/',
     );
     expect(ebookAddress('http://localhost:4173/')).toBe('http://localhost:4173/ebook/');
+  });
+});
+
+describe('siteAddress', () => {
+  it('is a file next to the app', () => {
+    expect(siteAddress('https://example.org/inkventure/#/settings?s=about', 'licences.txt')).toBe(
+      'https://example.org/inkventure/licences.txt',
+    );
   });
 });
