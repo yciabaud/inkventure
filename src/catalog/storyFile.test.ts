@@ -7,9 +7,11 @@ import { createStore } from '../storage/store';
 import {
   download,
   extractPrimary,
+  extractTwine,
   fetchStory,
   isStoryFileError,
-  storyBytes,
+  MAX_STORY_FILES_BYTES,
+  storyData,
   type StoryFileError,
 } from './storyFile';
 
@@ -169,11 +171,15 @@ describe('zip extraction', () => {
     expect(isStoryFileError(error) && error.reason).toBe('format');
   });
 
-  it('unzips only when the catalogue says so', () => {
-    expect(storyBytes({ url: URL_Z }, STORY)).toBe(STORY);
+  it('unzips only when the catalogue says so, and keeps other files for a Twine story only', () => {
+    expect(storyData({ url: URL_Z }, 'zmachine', STORY)).toEqual({ bytes: STORY });
     expect(
-      storyBytes({ url: URL_ZIP, archive: { type: 'zip', primary: 'hollow/HOLLOW.Z3' } }, zip),
-    ).toEqual(STORY);
+      storyData(
+        { url: URL_ZIP, archive: { type: 'zip', primary: 'hollow/HOLLOW.Z3' } },
+        'zmachine',
+        zip,
+      ),
+    ).toEqual({ bytes: STORY });
   });
 });
 
@@ -188,13 +194,13 @@ describe('fetchStory', () => {
       createXhr: fakeXhr({ status: 200, body: STORY }, log),
       defer: now,
     }).promise;
-    expect(first).toEqual(STORY);
+    expect(first).toEqual({ bytes: STORY });
     expect(store.keys()).toContain(keys.file('lamp'));
 
     const second = await fetchStory(game, 'zmachine', store, {
       createXhr: fakeXhr({ status: 200, body: STORY }, log),
     }).promise;
-    expect(second).toEqual(STORY);
+    expect(second).toEqual({ bytes: STORY });
     expect(log).toEqual(['GET ' + URL_Z]);
   });
 
@@ -206,7 +212,7 @@ describe('fetchStory', () => {
       createXhr: fakeXhr({ status: 200, body: STORY }, log),
       defer: now,
     }).promise;
-    expect(story).toEqual(STORY);
+    expect(story).toEqual({ bytes: STORY });
     expect(log).toEqual(['GET ' + URL_Z]);
   });
 
@@ -218,7 +224,7 @@ describe('fetchStory', () => {
       createXhr: fakeXhr({ status: 200, body: zip }),
       defer: now,
     }).promise;
-    expect(story).toEqual(STORY);
+    expect(story).toEqual({ bytes: STORY });
 
     const page = new TextEncoder().encode('<!DOCTYPE html><html>' + ' '.repeat(100));
     const error = await failure(
@@ -229,5 +235,100 @@ describe('fetchStory', () => {
     );
     expect(error.reason).toBe('format');
     expect(store.keys()).not.toContain(keys.file('web'));
+  });
+});
+
+describe('zipped Twine stories (S1.11)', () => {
+  const enc = (text: string) => Uint8Array.from(new TextEncoder().encode(text));
+  const PAGE = enc(
+    '<html><head><link rel="stylesheet" href="css/story.css"></head><body><tw-storydata>' +
+      '[img[img/b.png]] [img[img/a.png]]</tw-storydata></body></html>',
+  );
+  const bytes = (size: number, fill: number) => new Uint8Array(size).fill(fill);
+  const ZIP = zipSync({
+    'Lamp/index.html': PAGE,
+    'Lamp/css/story.css': enc('@font-face{src:url(../fonts/f.woff2)}'),
+    'Lamp/img/a.png': bytes(10, 1),
+    'Lamp/img/b.png': bytes(10, 2),
+    'Lamp/fonts/f.woff2': bytes(10, 3),
+    'Lamp/js/extra.js': enc('window.x = 1;'),
+    'Lamp/audio/sea.mp3': bytes(10, 4),
+    'Lamp/video/intro.webm': bytes(10, 5),
+    'Lamp/readme.txt': enc('Hello'),
+    'Other/img/c.png': bytes(10, 6),
+    'cover.png': bytes(10, 7),
+  });
+
+  it("keeps the files of the primary's folder the frame can use, by path from that folder", () => {
+    const story = extractTwine(ZIP, 'Lamp/index.html');
+    expect(story.bytes).toEqual(PAGE);
+    expect(Object.keys(story.files!).sort()).toEqual([
+      'css/story.css',
+      'fonts/f.woff2',
+      'img/a.png',
+      'img/b.png',
+      'js/extra.js',
+    ]);
+    expect(story.files!['img/b.png']).toEqual(bytes(10, 2));
+  });
+
+  it('finds the primary in another case or folder, and keeps that folder', () => {
+    const story = extractTwine(ZIP, 'lamp/INDEX.html');
+    expect(story.bytes).toEqual(PAGE);
+    expect(Object.keys(story.files!)).toContain('img/a.png');
+    const flat = extractTwine(zipSync({ 'index.html': PAGE, 'a.png': bytes(4, 1) }), 'index.html');
+    expect(Object.keys(flat.files!)).toEqual(['a.png']);
+  });
+
+  it('a story with no other files has none', () => {
+    const story = extractTwine(zipSync({ 'Lamp/index.html': PAGE }), 'Lamp/index.html');
+    expect(story).toEqual({ bytes: PAGE, files: {} });
+  });
+
+  it('over the size limit, keeps the files in their order of reference and drops the rest', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const big = Math.floor(MAX_STORY_FILES_BYTES / 2) - 1000;
+    const zip = zipSync(
+      {
+        'Lamp/index.html': PAGE,
+        'Lamp/css/story.css': enc('@font-face{src:url(../fonts/f.woff2)}'),
+        'Lamp/img/a.png': bytes(big, 1),
+        'Lamp/img/b.png': bytes(big, 2),
+        'Lamp/fonts/f.woff2': bytes(100, 3),
+        'Lamp/img/unused.png': bytes(big, 4),
+      },
+      { level: 0 },
+    );
+    const story = extractTwine(zip, 'Lamp/index.html');
+    // The page names the stylesheet, b, then a; the stylesheet names the font; unused.png is never named.
+    expect(Object.keys(story.files!).sort()).toEqual([
+      'css/story.css',
+      'fonts/f.woff2',
+      'img/a.png',
+      'img/b.png',
+    ]);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('img/unused.png'));
+    warn.mockRestore();
+  });
+
+  it('downloads a zipped Twine story with its files, then plays it from the cache', async () => {
+    const store = createStore(new MemoryBackend());
+    const game = {
+      tuid: 'lamp-zip',
+      file: { url: URL_ZIP, archive: { type: 'zip' as const, primary: 'Lamp/index.html' } },
+    };
+    const page = enc('<html><body><tw-storydata name="Lamp"></tw-storydata>' + ' '.repeat(100));
+    const zip = zipSync({ 'Lamp/index.html': page, 'Lamp/img/a.png': bytes(10, 1) });
+    const log: string[] = [];
+    const first = await fetchStory(game, 'twine', store, {
+      createXhr: fakeXhr({ status: 200, body: zip }, log),
+      defer: (write) => write(),
+    }).promise;
+    expect(first).toEqual({ bytes: page, files: { 'img/a.png': bytes(10, 1) } });
+    const second = await fetchStory(game, 'twine', store, {
+      createXhr: fakeXhr({ status: 200, body: zip }, log),
+    }).promise;
+    expect(second).toEqual(first);
+    expect(log).toEqual(['GET ' + URL_ZIP]);
   });
 });

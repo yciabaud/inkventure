@@ -8,15 +8,21 @@
 //   breaks it still scrolls.
 // - cookies: `document.cookie` throws, whatever the browser does in an opaque origin.
 // - style: the reader sends a new e-ink stylesheet when the text settings change.
+// - files (story S1.11): a relative `src` (img, source…) or `url(…)` in a `style` attribute that the story sets after
+//   it loaded is sent to the reader, which answers with a `data:` URL when it names a file kept from the story's zip.
 //
 // Plain ES5 in a string: it runs in the story's page, outside the bundle and its transpilation.
 
 import { FRAME_MESSAGE, STYLE_ID, type FrameStorage } from './messages';
 
-/** The script for a frame starting with `storage`. */
-export function frameScript(storage: FrameStorage): string {
+/** The script for a frame starting with `storage`; `assets` when the story has files of its own (story S1.11). */
+export function frameScript(storage: FrameStorage, assets = false): string {
   // `<` escaped: the data must not close the script element.
-  const data = JSON.stringify(storage).replace(/</g, '\\u003c');
+  const data = JSON.stringify({
+    local: storage.local,
+    session: storage.session,
+    assets: assets,
+  }).replace(/</g, '\\u003c');
   return FRAME_SCRIPT.replace('__DATA__', data)
     .replace(/__SOURCE__/g, JSON.stringify(FRAME_MESSAGE))
     .replace(/__STYLE_ID__/g, JSON.stringify(STYLE_ID));
@@ -111,8 +117,71 @@ const FRAME_SCRIPT = `(function () {
       var style = document.getElementById(__STYLE_ID__);
       if (style) style.textContent = message.css;
       report();
+    } else if (message.type === 'asset' && typeof message.ref === 'string' && typeof message.url === 'string') {
+      served(message.ref, message.url);
     }
   });
+
+  // --- Files ---
+  var RELATIVE = /^(?![a-z][a-z0-9+.-]*:|[\\/#])\\S/i;
+  var STYLE_URL = /url\\(\\s*["']?([^"')]+)["']?\\s*\\)/gi;
+  var asked = {};
+  var waiting = {};
+  function ask(ref, apply) {
+    if (!has.call(waiting, ref)) waiting[ref] = [];
+    waiting[ref].push(apply);
+    if (has.call(asked, ref)) return;
+    asked[ref] = true;
+    post({ type: 'asset', ref: ref });
+  }
+  function served(ref, url) {
+    var list = waiting[ref] || [];
+    delete waiting[ref];
+    for (var i = 0; i < list.length; i++) list[i](url);
+  }
+  function watchElement(node) {
+    if (!node || node.nodeType !== 1) return;
+    var name = node.nodeName.toUpperCase();
+    if (name === 'IMG' || name === 'SOURCE' || name === 'VIDEO' || name === 'INPUT') {
+      var src = node.getAttribute('src');
+      if (src && RELATIVE.test(src)) {
+        ask(src, function (url) {
+          if (node.getAttribute('src') === src) node.setAttribute('src', url);
+        });
+      }
+    }
+    var inline = node.getAttribute('style');
+    if (inline && inline.indexOf('url(') >= 0) {
+      var match;
+      STYLE_URL.lastIndex = 0;
+      while ((match = STYLE_URL.exec(inline))) {
+        (function (ref) {
+          if (!RELATIVE.test(ref)) return;
+          ask(ref, function (url) {
+            var now = node.getAttribute('style') || '';
+            node.setAttribute('style', now.split(ref).join(url));
+          });
+        })(match[1]);
+      }
+    }
+  }
+  function watchTree(node) {
+    watchElement(node);
+    if (node && node.getElementsByTagName) {
+      var all = node.getElementsByTagName('*');
+      for (var i = 0; i < all.length; i++) watchElement(all[i]);
+    }
+  }
+  // From the start, only for a story with files.
+  if (data.assets && window.MutationObserver) {
+    new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var record = records[i];
+        if (record.type === 'attributes') watchElement(record.target);
+        else for (var j = 0; j < record.addedNodes.length; j++) watchTree(record.addedNodes[j]);
+      }
+    }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style'] });
+  }
 
   // --- Pages ---
   var root = document.documentElement;

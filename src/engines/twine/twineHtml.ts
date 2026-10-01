@@ -2,7 +2,10 @@
 // injected at the top of its <head>, so the script runs before the story format's own.
 import { strFromU8 } from 'fflate';
 import { FONT_SIZES, type ReaderSettings } from '../../reader/settings';
+import { inlineAssets, type StoryAssets } from './assets';
 import { frameScript } from './frameScript';
+
+export { storyAssets, type StoryAssets } from './assets';
 import { STYLE_ID, type FrameStorage } from './messages';
 
 // The frame has an opaque origin: the app's bundled web fonts are not available there, the fallbacks are.
@@ -90,15 +93,18 @@ function escapeAttribute(value: string): string {
 
 /**
  * The story's page with the e-ink `<style>` and the frame script (starting with `storage`) injected first in its
- * <head> (or after <html>, or at the very start for a page with neither). With `baseUrl` (where the story was
- * downloaded from) and no <base> of its own, its relative links (images) resolve there.
+ * <head> (or after <html>, or at the very start for a page with neither). With `assets` (the files of a zipped story),
+ * the references to them are served from them first (assets.ts). With `baseUrl` (where the story was downloaded from)
+ * and no <base> of its own, its other relative links resolve there.
  */
 export function prepareTwineHtml(
-  html: string,
+  page: string,
   css: string,
   storage: FrameStorage,
   baseUrl?: string,
+  assets?: StoryAssets,
 ): string {
+  const html = assets ? inlineAssets(page, assets) : page;
   const base =
     baseUrl && !/<base[\s>]/i.test(html) ? '<base href="' + escapeAttribute(baseUrl) + '">' : '';
   const injected =
@@ -108,7 +114,7 @@ export function prepareTwineHtml(
     '">' +
     css.replace(/<\//g, '<\\/') +
     '</style><script>' +
-    frameScript(storage) +
+    frameScript(storage, !!assets) +
     '</script>';
   const head = HEAD.exec(html);
   if (head) return insertAt(html, head.index + head[0].length, injected);

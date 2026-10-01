@@ -1,0 +1,37 @@
+:: StoryTitle
+The Lamp at Saltmere (with files)
+
+:: StoryData
+{
+  "ifid": "0C8E9A57-6D53-4E5C-9C2B-7B3F1D2A4E61",
+  "format": "Harlowe",
+  "format-version": "3.3.9",
+  "start": "Landing Stage"
+}
+
+:: Story Stylesheet [stylesheet]
+/* A zipped Harlowe story with files of its own, for Inkventure's tests (MIT; story S1.11). Built into lamp-files.zip
+   by scripts/fixtures/build-twine.ts, with img/lamp.png, fonts/lamp.woff2 (Literata, OFL), css/lamp.css (linked,
+   with a url() to the picture) and js/lamp.js (linked). Small enough to be cached with its files (< 512 KB). */
+@font-face {
+  font-family: "LampFont";
+  src: url("fonts/lamp.woff2") format("woff2"), url("fonts/missing.ttf") format("truetype");
+}
+.lamp-title {
+  font-family: "LampFont", serif;
+}
+
+:: Landing Stage
+<span class="lamp-title">The Lamp at Saltmere</span>
+
+<img id="lamp" src="./img/lamp.png" alt="A lamp">
+
+<span class="lamp-styled">The lighthouse above the harbour is dark.</span>
+
+<img id="late" alt="The lamp, later">
+<script>setTimeout(function () { document.getElementById('late').setAttribute('src', 'img/lamp.png'); }, 0);</script>
+
+[[Light the lamp->Lit]]
+
+:: Lit
+The lamp is lit.

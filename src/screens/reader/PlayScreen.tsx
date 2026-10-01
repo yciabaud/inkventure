@@ -15,6 +15,7 @@ import type { EngineKind } from '../../engines/engine';
 import { engineFor, isAvailable, loadEngine } from '../../engines/formats';
 import { t } from '../../i18n/i18n';
 import { getStore } from '../../storage';
+import type { StoryData } from '../../storage/files';
 import { Button, LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
 import { ErrorPage } from '../../ui/ErrorPage';
@@ -30,7 +31,7 @@ type State =
   | { phase: 'unsupported'; game: GameDetail }
   | { phase: 'downloading'; game: GameDetail; loaded: number; total: number }
   | { phase: 'failed'; game: GameDetail; error: StoryFileError }
-  | { phase: 'ready'; game: GameDetail; kind: EngineKind; story: Uint8Array };
+  | { phase: 'ready'; game: GameDetail; kind: EngineKind; story: StoryData };
 
 /** Progress is redrawn in steps (every repaint is slow and ghosts on e-ink): 5 % of the file, or 64 KB. */
 const PERCENT_STEP = 5;
@@ -217,7 +218,8 @@ export function PlayScreen({
         title={state.game.title}
         author={state.game.author}
         cover={!!state.game.cover}
-        story={state.story}
+        story={state.story.bytes}
+        files={state.story.files}
         baseUrl={state.game.file.url}
       />
     );
@@ -232,7 +234,7 @@ export function PlayScreen({
         language={language || state.game.language}
         perf={perf}
         kind={state.kind}
-        story={state.story}
+        story={state.story.bytes}
       />
     );
   }

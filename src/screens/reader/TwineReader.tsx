@@ -7,12 +7,14 @@ import { FRAME_MESSAGE, type FrameMessage } from '../../engines/twine/messages';
 import type { ReaderSettings } from '../../reader/settings';
 import { t } from '../../i18n/i18n';
 import { addToHome, getStore, isStorageFullError } from '../../storage';
+import type { StoryFiles } from '../../storage/files';
 import type { TwineStorage } from '../../storage/twine';
 import { ErrorPage } from '../../ui/ErrorPage';
 import { ReaderFrame } from './ReaderFrame';
 import { RestartDialog } from './SaveDialogs';
 
 type TwineModule = typeof import('../../engines/twine/twineHtml');
+type StoryAssets = import('../../engines/twine/twineHtml').StoryAssets;
 type StorageModule = typeof import('../../storage/twine');
 type SavesModule = typeof import('../../storage/saves');
 
@@ -26,6 +28,8 @@ interface Props {
   cover?: boolean;
   /** The published story (HTML). */
   story: Uint8Array;
+  /** The files kept from the story's zip (pictures, fonts, styles, scripts), served to it (story S1.11). */
+  files?: StoryFiles;
   /** Where the story was downloaded from: its relative links (images) resolve there. */
   baseUrl?: string;
 }
@@ -35,13 +39,15 @@ interface Loaded {
   storage: StorageModule;
   saves: SavesModule;
   html: string;
+  /** The story's own files, when its zip had some. */
+  assets?: StoryAssets;
   /** The story's storage when its frame starts. */
   saved: TwineStorage;
 }
 
 type State = { phase: 'loading' } | { phase: 'failed' } | { phase: 'ready'; loaded: Loaded };
 
-export function TwineReader({ tuid, title, author, cover, story, baseUrl }: Props) {
+export function TwineReader({ tuid, title, author, cover, story, files, baseUrl }: Props) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [page, setPage] = useState<{ page: number; pages: number } | null>(null);
   const [restarting, setRestarting] = useState(false);
@@ -68,17 +74,22 @@ export function TwineReader({ tuid, title, author, cover, story, baseUrl }: Prop
         }
         const saved = storage.readTwineStorage(getStore(), tuid);
         storageRef.current = saved;
-        setState({
-          phase: 'ready',
-          loaded: { twine: twine, storage: storage, saves: saves, html: html, saved: saved },
-        });
+        const loaded: Loaded = {
+          twine: twine,
+          storage: storage,
+          saves: saves,
+          html: html,
+          saved: saved,
+        };
+        if (files && Object.keys(files).length) loaded.assets = twine.storyAssets(files);
+        setState({ phase: 'ready', loaded: loaded });
       },
       () => !cancelled && setState({ phase: 'failed' }),
     );
     return () => {
       cancelled = true;
     };
-  }, [story, tuid]);
+  }, [story, files, tuid]);
 
   const loaded = state.phase === 'ready' ? state.loaded : null;
 
@@ -133,6 +144,19 @@ export function TwineReader({ tuid, title, author, cover, story, baseUrl }: Prop
         };
         if (timerRef.current !== null) clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => writeRef.current(), WRITE_DELAY_MS);
+      } else if (message.type === 'asset' && loaded.assets && typeof message.ref === 'string') {
+        const path = loaded.assets.resolve(message.ref);
+        if (path && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            {
+              source: FRAME_MESSAGE,
+              type: 'asset',
+              ref: message.ref,
+              url: loaded.assets.dataUrl(path),
+            },
+            '*',
+          );
+        }
       } else if (message.type === 'page') {
         const pages = Math.max(1, Math.floor(Number(message.pages)) || 1);
         const current = Math.min(pages, Math.max(1, Math.floor(Number(message.page)) || 1));
@@ -219,6 +243,7 @@ function TwineFrame({ title, loaded, settings, baseUrl, frameRef }: FrameProps) 
       loaded.twine.eInkStylesheet(settings),
       loaded.saved,
       baseUrl,
+      loaded.assets,
     ),
   );
   const firstRef = useRef(true);
