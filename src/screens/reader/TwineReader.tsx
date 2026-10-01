@@ -112,7 +112,8 @@ export function TwineReader({ tuid, title, author, cover, story, baseUrl }: Prop
     }
   }
   const playedRef = useRef(played);
-  useEffect(() => {
+  // A layout effect: up to date before the frame can post, which can be before passive effects run (WebKit).
+  useLayoutEffect(() => {
     writeRef.current = writeStorage;
     playedRef.current = played;
   });
