@@ -1,5 +1,10 @@
 # Welcome
 
+[Open Inkventure]({{host}}){.open-app}
+
+Tap the link above with the Wi-Fi on (the e-reader may ask you to confirm): the app opens in its web
+browser.
+
 This book is a door into interactive fiction: stories where you decide what happens next by typing what you
 want to do. You can read it anywhere, and play every game it presents on the e-reader you are holding, for free.
 

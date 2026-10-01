@@ -482,6 +482,10 @@ export function HomeScreen({ query = {} }: { query?: Record<string, string> }) {
             <a class="welcome__link" href={formatHash({ name: 'help' })}>
               {t('home.howToPlay')}
             </a>
+            {/* The ebook download page (S6.3), next to the app. */}
+            <a class="welcome__link" href="ebook/">
+              {t('home.ebook')}
+            </a>
           </p>
         </section>
       )}

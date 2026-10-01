@@ -6,6 +6,8 @@
 //
 // Needs pandoc, EPUBCheck (`epubcheck`, or its jar in EPUBCHECK_JAR) and Calibre's `ebook-convert` on the PATH, and
 // Playwright's Chromium for the cover. --offline skips the IFDB cover thumbnails (cards get their text placeholder).
+// Besides the books, the output folder gets a cover thumbnail per locale and books.json, for the download page
+// (story S6.3).
 import { spawnSync } from 'node:child_process';
 import {
   existsSync,
@@ -14,13 +16,16 @@ import {
   readFileSync,
   realpathSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { chromium } from '@playwright/test';
 import type { FeaturedFile } from '../catalog/featured.ts';
+import { resolveBuildInfo } from '../build/build-info.ts';
 import { uiLocales } from '../catalog/locales.ts';
+import { bookFileName, booksManifest, coverFileName } from './books.ts';
 import {
   buildCard,
   fillHost,
@@ -89,11 +94,13 @@ function epubcheck(file: string): void {
   else run('epubcheck', ['--failonwarnings', file]);
 }
 
-async function renderCover(book: BookMeta, file: string): Promise<void> {
+/** The cover as a JPEG `width` px wide (the page is drawn at 1600 × 2560 and zoomed). */
+async function renderCover(book: BookMeta, file: string, width = 1600): Promise<void> {
   const browser = await chromium.launch();
   try {
-    const page = await browser.newPage({ viewport: { width: 1600, height: 2560 } });
-    await page.setContent(coverPage(book));
+    const zoom = width / 1600;
+    const page = await browser.newPage({ viewport: { width, height: Math.round(2560 * zoom) } });
+    await page.setContent(coverPage(book) + '<style>html{zoom:' + zoom + '}</style>');
     await page.evaluate(() => document.fonts.ready.then(() => undefined));
     await page.screenshot({ path: file, type: 'jpeg', quality: 90 });
   } finally {
@@ -160,8 +167,10 @@ async function buildBook(
   };
   writeFileSync(join(out, 'metadata.json'), JSON.stringify(metadata, null, 2));
   await renderCover(book, join(out, 'cover.jpg'));
+  // Shown at 120 × 192 CSS px on the download page, sharp up to 2x.
+  await renderCover(book, join(values.out, coverFileName(locale)), 240);
 
-  const epub = join(values.out, 'inkventure-' + locale + '.epub');
+  const epub = join(values.out, bookFileName(locale, 'epub'));
   run('pandoc', [
     '--from=markdown-implicit_figures',
     '--to=epub3',
@@ -190,3 +199,13 @@ if (values.host) config.host = values.host;
 const featured = readJson<FeaturedFile>(join(values.catalog, 'featured.json'));
 const locales = values.locale ? values.locale.split(',') : uiLocales();
 for (const locale of locales) await buildBook(locale, config, featured);
+
+const sizes: Record<string, number> = {};
+for (const name of readdirSync(values.out)) {
+  const path = join(values.out, name);
+  if (statSync(path).isFile()) sizes[name] = statSync(path).size;
+}
+const info = resolveBuildInfo(process.env, new Date());
+const manifest = booksManifest(sizes, locales, { built: info.date, commit: info.commit });
+writeFileSync(join(values.out, 'books.json'), JSON.stringify(manifest, null, 2) + '\n');
+console.log('books.json: ' + manifest.books.length + ' files');

@@ -41,7 +41,18 @@ const ABOUT: MessageKey[] = [
   'about.engines',
   'about.fonts',
   'about.privacy',
+  'about.ebook',
 ];
+
+/** The ebook download page (S6.3), next to the app: shown as text (an e-reader cannot easily download a file). */
+export function ebookAddress(href: string): string {
+  return (
+    href
+      .split('#')[0]
+      .split('?')[0]
+      .replace(/[^/]*$/, '') + 'ebook/'
+  );
+}
 
 /** 1234 characters → "2 KB"; a megabyte and more → "1.5 MB". */
 export function formatSize(chars: number): string {
@@ -249,7 +260,12 @@ function About() {
     <SectionPage title={t('settings.about')}>
       <p class="settings-page__version">{buildVersion()}</p>
       <TurnTimes />
-      <PagedParagraphs key={getLocale()} paragraphs={ABOUT.map((key) => t(key))} />
+      <PagedParagraphs
+        key={getLocale()}
+        paragraphs={ABOUT.map((key) =>
+          t(key, key === 'about.ebook' ? { address: ebookAddress(location.href) } : undefined),
+        )}
+      />
     </SectionPage>
   );
 }

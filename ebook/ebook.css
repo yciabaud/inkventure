@@ -26,6 +26,17 @@ code {
   font-family: monospace;
 }
 
+/* The link that opens the app, on the first page. */
+.open-app {
+  display: block;
+  margin: 0.5em 0 0.7em;
+  padding: 0.5em;
+  border: 2px solid #000;
+  font-size: 1.4em;
+  font-weight: bold;
+  text-align: center;
+}
+
 .card {
   page-break-before: always;
   page-break-inside: avoid;
