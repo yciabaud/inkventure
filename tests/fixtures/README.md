@@ -15,5 +15,6 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   story (MIT) in Twine's two main story formats, Harlowe 3.3.9 (zlib licence, `LICENSE-harlowe`) and SugarCube 2.37.3
   (BSD 2-clause, `LICENSE-sugarcube`), published with the format files. The Harlowe one has a long passage (the keeper's
   log) for page turns. Served by the app at `#/play/fixture-twine-harlowe` and `#/play/fixture-twine-sugarcube`.
-  Rebuild with `node scripts/fixtures/build-twine.ts`, which downloads the formats from the Story Format Archive and
-  checks their SHA-256.
+  The `.html` files are not committed: `npm install` builds them (`scripts/fixtures/build-twine.ts`, which downloads
+  the formats once from the Story Format Archive into `vendor/twine/` and checks their SHA-256). Run that script again
+  after editing a `.twee`.

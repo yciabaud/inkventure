@@ -11,3 +11,7 @@ data/
 
 # Quixe, downloaded at install from its upstream tag (scripts/build/fetch-quixe.ts)
 vendor/quixe/*.js
+
+# Twine story formats, downloaded at install, and the test fixtures built with them (scripts/fixtures/build-twine.ts)
+vendor/twine/
+tests/fixtures/twine/*.html
