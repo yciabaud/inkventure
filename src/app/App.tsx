@@ -5,7 +5,7 @@ import { LibraryScreen } from '../screens/library/LibraryScreen';
 import { ReaderScreen } from '../screens/reader/ReaderScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { useLocale } from '../i18n/i18n';
-import { getStore } from '../storage';
+import { getPrefs, getStore } from '../storage';
 import { StorageNotice } from '../ui/StorageNotice';
 import { TopBar } from '../ui/TopBar';
 import { useLocation, type Location } from './router';
@@ -38,7 +38,7 @@ export function App() {
         <ReaderScreen
           tuid={route.tuid}
           language={location.query.lang}
-          perf={location.query.perf === '1'}
+          perf={location.query.perf === '1' || !!getPrefs(getStore()).turnTimes}
         />
       </div>
     );

@@ -39,8 +39,8 @@ hands that library its `Dialog` (`getlibrary('Dialog')`). A `.gblorb` is unpacke
 can draw "The story is thinking…" and take taps during a long turn; `load`, `restoreState` and `restart` therefore
 resolve when the game first waits for input, and a VM being replaced is `abandon()`ed. `saveState` uses Quixe's
 autosave snapshot (`do_autosave` with the pending `glk_select` event from `GiDispa.check_autosave`, patched to allow the
-first prompt too); the RAM is stored XORed with the story's initial RAM (mostly zeros: the fixture's save deflates to
-~1.5 KB). Images are not shown yet (follow-up; graphics windows are created, as games expect, but what is drawn is ignored); sound is silent (the channel calls, which throw upstream, are patched into no-ops); the game's own UNDO uses Quixe's undo, the reader's
+first prompt too); the RAM is stored XORed with the story's initial RAM (mostly zeros) and deflated in the
+state itself (envelope version 2; version 1, not deflated, is still read), so Undo's states stay a few KB. Images are not shown yet (follow-up; graphics windows are created, as games expect, but what is drawn is ignored); sound is silent (the channel calls, which throw upstream, are patched into no-ops); the game's own UNDO uses Quixe's undo, the reader's
 Undo its snapshots.
 
 Ink (S1.8): inkjs's runtime only (no compiler: stories come compiled, as JSON; the byte order mark inklecate writes is

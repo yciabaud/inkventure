@@ -126,6 +126,36 @@ test('?perf=1 shows how long the last turn took, for measuring on a device', asy
   await expect(statusLine(page)).not.toContainText(/\(\d+ ms\)/);
 });
 
+test('turn times can be switched on in Settings, without editing the address', async ({ page }) => {
+  await page.goto('/#/settings?s=about');
+  const group = page.getByRole('group', { name: 'Turn times' });
+  await expect(group.getByRole('button', { name: 'Hidden' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await press(group.getByRole('button', { name: 'Shown' }));
+  await expect(group.getByRole('button', { name: 'Shown' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+
+  await page.goto(GAME);
+  await press(button(page, 'Continue ›'));
+  await expect(command(page)).toBeVisible();
+  await send(page, 'look', 1);
+  await expect(statusLine(page)).toContainText(/\(\d+ ms\)/);
+
+  // Switched off again: no time.
+  await page.goto('/#/settings?s=about');
+  await press(
+    page.getByRole('group', { name: 'Turn times' }).getByRole('button', { name: 'Hidden' }),
+  );
+  await page.goto(GAME);
+  await expect(command(page)).toBeVisible();
+  await send(page, 'look', 2);
+  await expect(statusLine(page)).not.toContainText(/\(\d+ ms\)/);
+});
+
 // The illustrated fixture (S1.10): a Blorb with one PNG, drawn in the main window.
 const PICTURE_GAME = '/#/play/fixture-glulx-picture';
 const PICTURE_AUTOSAVE = 'ik:v1:save:fixture-glulx-picture:auto';

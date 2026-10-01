@@ -417,7 +417,8 @@ the ink functions of the same name.
   can only be resumed by the game's own `@restore`. The game's SAVE / RESTORE commands are cancelled: saves go through
   the reader menu.
 - Glulx state: Quixe's autosave snapshot (RAM, stack, heap and the Glk library state) in a JSON envelope naming the
-  story (its first 64 bytes); the RAM is stored XORed with the story's initial RAM, so it compresses to little.
+  story (its first 64 bytes); the RAM is stored XORed with the story's initial RAM and deflated at once, so a state
+  (Undo keeps 10 in memory) is a few KB even for a game with 1–2 MB of RAM.
 - A turn begins when the game waits for a command: its state is snapshotted (after the page is drawn) for Undo and
   written as the autosave with the transcript tail (the last 200 paragraphs with text or a picture, at most ≈ 20,000
   characters; a picture is kept by its number, not its data, and resolved again by the engine after a reload),
