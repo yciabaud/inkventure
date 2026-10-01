@@ -397,8 +397,9 @@ the ink functions of the same name.
 - Story HTML loaded into `<iframe sandbox="allow-scripts">` from `srcdoc`: scripts run, but with an opaque origin, so
   the story cannot reach the app's page, its storage, cookies or the top window, nor open pop-ups.
 - An e-ink stylesheet is injected first in its `<head>` (black on white, the reader's text settings with system fonts,
-  bold underlined links at least 48 px tall, no animations or transitions, SugarCube's UI bar and Harlowe's sidebar
-  restyled), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
+  bold underlined links at least 48 px tall and always opaque, no motion: animations and transitions are not removed but
+  made instant, so they jump to their end state, which a story that fades its text in from `opacity:0` needs to show
+  at all; SugarCube's UI bar and Harlowe's sidebar restyled), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
   previous screenful, elsewhere the next one (one line of overlap), and the page number shows under the frame.
   Scrolling is hidden only once that script runs, so a story that breaks it still scrolls. "Aa" changes are sent to
   the frame as a new stylesheet (the story is not reloaded). Relative links (images) resolve where the story was

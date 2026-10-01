@@ -27,8 +27,12 @@ const PAGE = 'tw-story, tw-passage, #story, #passages, .passage, #passage, main'
 
 /**
  * The e-ink stylesheet for the reader's text settings: black on white, the reader's font, size, spacing and margins,
- * bold underlined links at least 48 px tall, no animations or transitions. `!important` wins over the story format's
- * styles, which are added later.
+ * bold underlined links at least 48 px tall, no motion. `!important` wins over the story format's styles, which are
+ * added later.
+ *
+ * Animations and transitions are not removed but made instant: they jump to their end state, which a story may need
+ * to show its text at all (`opacity:0` + a fade-in that fills `forwards`, S1.13). A looping animation stops on its
+ * last frame, so links are kept opaque whatever their animation ends on.
  */
 export function eInkStylesheet(settings: ReaderSettings): string {
   const size = FONT_SIZES[settings.size];
@@ -36,8 +40,9 @@ export function eInkStylesheet(settings: ReaderSettings): string {
   const extra =
     settings.typeface === 'dyslexic' ? 'letter-spacing:0.05em;word-spacing:0.12em;' : '';
   return [
-    '*,*::before,*::after{animation:none!important;transition:none!important;' +
-      'text-shadow:none!important;box-shadow:none!important}',
+    '*,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;' +
+      'animation-iteration-count:1!important;transition-duration:0s!important;' +
+      'transition-delay:0s!important;text-shadow:none!important;box-shadow:none!important}',
     'html,body{background:#fff!important;color:#000!important;margin:0!important}',
     'html{font-size:' + size + 'px!important}',
     'html.ik-paged{overflow:hidden!important}',
@@ -70,7 +75,7 @@ export function eInkStylesheet(settings: ReaderSettings): string {
     '#ui-dialog{border:2px solid #000!important}',
     '#ui-overlay{background:#fff!important}',
     'a,tw-link,.enchantment-link,button{color:#000!important;font-weight:700!important;' +
-      'text-decoration:underline!important;cursor:pointer}',
+      'text-decoration:underline!important;cursor:pointer;opacity:1!important}',
     'a,tw-link,.enchantment-link{display:inline-block;min-height:48px;line-height:48px}',
     'button,input,select,textarea{font:inherit!important;min-height:48px;background:#fff!important;' +
       'color:#000!important;border:2px solid #000!important}',

@@ -18,10 +18,14 @@ const EMPTY = { local: {}, session: {} };
 const HARLOWE = readFileSync('tests/fixtures/twine/lamp-harlowe.html', 'utf8');
 
 describe('e-ink stylesheet', () => {
-  it('is black on white, without animations, with the reader text settings', () => {
+  it('is black on white, without motion, with the reader text settings', () => {
     const css = eInkStylesheet(DEFAULT_SETTINGS);
-    expect(css).toContain('animation:none!important');
-    expect(css).toContain('transition:none!important');
+    // Animations and transitions jump to their end state instead of being removed (S1.13).
+    expect(css).toContain('animation-duration:0s!important;animation-delay:0s!important');
+    expect(css).toContain('animation-iteration-count:1!important');
+    expect(css).toContain('transition-duration:0s!important;transition-delay:0s!important');
+    expect(css).not.toMatch(/animation:none|transition:none/);
+    expect(css).toMatch(/a,tw-link,\.enchantment-link,button\{[^}]*opacity:1!important/);
     expect(css).toMatch(/html,body\{background:#fff!important;color:#000!important/);
     expect(css).toContain('html{font-size:18px!important}');
     expect(css).toContain('line-height:1.5!important');
