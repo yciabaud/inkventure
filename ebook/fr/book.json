@@ -1,0 +1,14 @@
+{
+  "title": "Inkventure",
+  "subtitle": "Jouez aux fictions interactives sur votre liseuse",
+  "creator": "Inkventure",
+  "lang": "fr",
+  "identifier": "urn:uuid:daa1dfc7-e6ff-4bff-a36e-745368919c9d",
+  "rights": "Libre de partage. Les couvertures et descriptions des jeux appartiennent à leurs auteurs.",
+  "description": "Un guide gratuit de la fiction interactive sur liseuse, avec une sélection de jeux à lancer depuis la page.",
+  "cards": {
+    "by": "de {author}",
+    "playNow": "Jouer",
+    "qrAlt": "Code QR du lien du jeu"
+  }
+}

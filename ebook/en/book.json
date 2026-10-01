@@ -1,0 +1,14 @@
+{
+  "title": "Inkventure",
+  "subtitle": "Play text adventures on your e-reader",
+  "creator": "Inkventure",
+  "lang": "en",
+  "identifier": "urn:uuid:8bc3f41b-4763-4580-a06c-69ecc296d862",
+  "rights": "Free to share. Game covers and descriptions belong to their authors.",
+  "description": "A free guide to interactive fiction on e-readers, with a selection of games you can start from the page.",
+  "cards": {
+    "by": "by {author}",
+    "playNow": "Play now",
+    "qrAlt": "QR code of the game's link"
+  }
+}
