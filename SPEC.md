@@ -677,7 +677,9 @@ A free ebook, in EN and FR, is the main acquisition channel.
   strings and rounding, and the badge stands in for difficulty (no forgiveness rating is emitted yet). The QR code
   is a PNG of the same link. The host is `ebook/config.json`'s `host`. The book cover is rendered from HTML with
   Playwright's Chromium (Calibre drops SVG covers). The Ebook workflow builds both books from the published catalogue
-  on `v*` tags (artifact) and on pull requests that touch the ebook.
+  on `v*` tags (artifact) and on pull requests that touch the ebook. CI builds them in an image with the tools
+  preinstalled (`.github/ebook-image`: Playwright's, plus Pandoc, EPUBCheck and Calibre; published to ghcr.io by
+  the Ebook image workflow, tagged like Playwright).
 - **Download page** (S6.3): `<host>/ebook/`, a standalone static page like `probe/` (not a route of the app), for
   readers on a computer. The Deploy workflow builds the books on every deployment of `main` (a job in parallel with
   the app's build, from the same catalogue) and publishes them at stable URLs, without a version:

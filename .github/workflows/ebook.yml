@@ -15,30 +15,25 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   ebook:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # Chromium (the cover is rendered with Playwright) comes with the image; its tag must match @playwright/test.
+    # Playwright's image with Pandoc, EPUBCheck and Calibre (.github/ebook-image, published by the Ebook image
+    # workflow). Its tag must match @playwright/test: Chromium renders the cover.
     container:
-      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      image: ghcr.io/yciabaud/inkventure-ebook:v1.63.0-noble
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
-      # Non-interactive, with retries and a network timeout: a slow mirror once held this step until the job's
-      # timeout. Past 10 minutes it fails, so the run can be started again.
-      - name: Install Pandoc, EPUBCheck and Calibre
-        timeout-minutes: 10
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          APT="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
-          apt-get $APT update -qq
-          apt-get $APT install -y -qq --no-install-recommends pandoc epubcheck calibre
       - run: npm ci
       - name: Use the published catalogue
         run: |
