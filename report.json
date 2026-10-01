@@ -7,19 +7,21 @@
     "twine"
   ],
   "counts": {
-    "kept": 3000,
+    "kept": 3052,
     "dropped": {
-      "unsupported-format": 1411,
+      "unsupported-format": 1308,
       "adult-content": 157,
-      "unreadable-host": 477,
-      "insecure-url": 271,
+      "unreadable-host": 494,
+      "insecure-url": 275,
       "no-game-file": 9,
+      "no-ink-story": 30,
       "compressed-no-primary": 20
     },
     "formats": {
       "zcode": 1693,
       "glulx": 720,
-      "twine": 1064
+      "twine": 1064,
+      "ink": 69
     },
     "pictures": {
       "blorbs": 382,
@@ -185,7 +187,7 @@
         ]
       }
     ],
-    "assumed": 31,
+    "assumed": 33,
     "unknownOverrides": []
   },
   "dropped": [
@@ -228,8 +230,8 @@
     {
       "tuid": "0dwctbtziwcnz1a3",
       "title": "The Ivory Calico",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2025/TheIvoryCalico/The%20Ivory%20Calico.js"
     },
     {
       "tuid": "0e3timddpa2hjg17",
@@ -701,8 +703,8 @@
     {
       "tuid": "20eqhma9wkwvmcep",
       "title": "The Lighthouse Keeper",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/horror-lighthouse?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_lighthouse_keeper"
     },
     {
       "tuid": "20f753czrlhoorfh",
@@ -731,12 +733,6 @@
     {
       "tuid": "22315ieilhga4g4b",
       "title": "the price it demands",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "22vfwjqal8m9jezg",
-      "title": "Arkuwar",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -969,12 +965,6 @@
       "detail": "https://web.archive.org/web/20091010010147id_/http://www.daedalic.de/tww/april/twwonline.z5"
     },
     {
-      "tuid": "2n3e85j1kvi82ief",
-      "title": "Read This When You Turn 15",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "2njx8jit2j13ash",
       "title": "Hypnotist of Ladies",
       "reason": "unsupported-format",
@@ -1007,12 +997,6 @@
     {
       "tuid": "2ojj5zcbm3248p0z",
       "title": "Growing Pain",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "2owjwbu11aharp0h",
-      "title": "Stowaway",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -1097,8 +1081,8 @@
     {
       "tuid": "2uh4yl2hkc8uom5b",
       "title": "Fantasy Opera: Mischief at the Masquerade",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://lamppostprojects.com/fantasy-opera/archived/"
     },
     {
       "tuid": "2vckwrsfqe6n5b8c",
@@ -1133,8 +1117,8 @@
     {
       "tuid": "30speeobxq42f7n",
       "title": "柳树街侦探社",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://poppelyang.github.io/dongbeidec/"
     },
     {
       "tuid": "31lt1jeiurfsa6ad",
@@ -1305,12 +1289,6 @@
       "detail": "erotic"
     },
     {
-      "tuid": "3g549ryo910s6o6",
-      "title": "Refugee",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "3h48r59mtw4i9l8e",
       "title": "The Locked Room",
       "reason": "unreadable-host",
@@ -1343,8 +1321,8 @@
     {
       "tuid": "3jg4zw0zsquaqb6z",
       "title": "The Secrets of Sylvan Gardens",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://lamppostprojects.com/the-secrets-of-sylvan-gardens/archived/"
     },
     {
       "tuid": "3l73pkt3g127dqf6",
@@ -1547,8 +1525,8 @@
     {
       "tuid": "3zk3ylcogai123nc",
       "title": "Thanks For The Memories",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://sub-q.com/play-thanks-for-the-memories/"
     },
     {
       "tuid": "40mod7hymdrp7rcm",
@@ -1613,8 +1591,8 @@
     {
       "tuid": "45lras3amitckx2a",
       "title": "The Perfect Score",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/heist-perfectheist?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_perfect_score"
     },
     {
       "tuid": "45rchefs13frj99i",
@@ -1823,8 +1801,8 @@
     {
       "tuid": "4mcc20c1qr45c6ny",
       "title": "1NTERSTELLAR c0NQUEST: a textb00k",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.introcomp.org/introcomp2026/1nterstellarConquest/"
     },
     {
       "tuid": "4mrbsemkx5sepjhy",
@@ -1849,12 +1827,6 @@
       "title": "Skull-Scraper",
       "reason": "insecure-url",
       "detail": "http://www.castleprincessdragon.com/InteractiveFiction/SkullScraper/Scraper.html"
-    },
-    {
-      "tuid": "4n9awhu22o8caou1",
-      "title": "Demon Hatching",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "4nijlgs7taq39vim",
@@ -1883,8 +1855,8 @@
     {
       "tuid": "4p7dx8jc3dul1gm3",
       "title": "Exchange",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.springthing.net/2026/play.html#Exchange"
     },
     {
       "tuid": "4ps1lqo53w5mpqd",
@@ -1985,12 +1957,6 @@
     {
       "tuid": "4wsjyom1kpg68ikr",
       "title": "The Sword of Voldiir",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "4wydzq1lz76avmw8",
-      "title": "Smart Theory",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -2211,12 +2177,6 @@
       "detail": "http://www.fullyramblomatic.com/6days/body.zip"
     },
     {
-      "tuid": "5duct3nu4tlhv2rz",
-      "title": "The Daughter",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "5fs96f2u2m6a2443",
       "title": "You are Standing at a Crossroads",
       "reason": "insecure-url",
@@ -2253,12 +2213,6 @@
       "detail": "https://rcveeder.net/littlematchgirl/poseidon/How%20the%20Little%20Match%20Girl%20Came%20.gblorb"
     },
     {
-      "tuid": "5h4b5etld37wilw8",
-      "title": "Stoned Ape Hypothesis",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "5h6c7d5ja4qftr2r",
       "title": "I Wasn't Sure What to Make of My New Flatmate.",
       "reason": "unsupported-format",
@@ -2279,8 +2233,8 @@
     {
       "tuid": "5mj2ydbh5rfi2u87",
       "title": "Night Shift",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/comedy-nightshift?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=night_shift"
     },
     {
       "tuid": "5n5wxoq3tz0yz2ri",
@@ -2525,8 +2479,8 @@
     {
       "tuid": "6914cp5tz75v5dyk",
       "title": "please tell me you love me",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://ifarchive.org/if-archive/games/html/ptmylm.zip"
     },
     {
       "tuid": "6963a47vqgms8wi0",
@@ -2770,8 +2724,8 @@
     {
       "tuid": "6trpqzwfz89ga9t7",
       "title": "凡德玛尔遗闻录",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://loststoryofvandermar.netlify.app/%E5%87%A1%E5%BE%B7%E7%8E%9B%E5%B0%94%E9%81%97%E9%97%BB%E5%BD%95.js"
     },
     {
       "tuid": "6u8xfl6tz0szfik3",
@@ -2883,12 +2837,6 @@
     {
       "tuid": "739rpjq6xrtw655v",
       "title": "Hospital from Hell",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "73eybmebju0gnmuk",
-      "title": "For the Cats",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -3151,12 +3099,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "7nyfezsjiy2ptpki",
-      "title": "Market Day",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "7o3bri8w217lrfcy",
       "title": "Kotodama",
       "reason": "unsupported-format",
@@ -3261,8 +3203,8 @@
     {
       "tuid": "7v2eq1wbcxj9y39k",
       "title": "今天去溜猫",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://62700ae8459f1a6d93994081--calm-sfogliatella-581516.netlify.app/%E4%BB%8A%E5%A4%A9%E5%8E%BB%E9%81%9B%E7%8C%AB.js"
     },
     {
       "tuid": "7v2kulfsh4bgy010",
@@ -3335,12 +3277,6 @@
       "title": "Stick it to the man",
       "reason": "adult-content",
       "detail": "sexual content"
-    },
-    {
-      "tuid": "8156uta57cp05v4l",
-      "title": "S1X + Another Dream",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "81av33q1tn3smq8a",
@@ -3614,8 +3550,8 @@
     {
       "tuid": "8mj5ctsye6edtzq",
       "title": "雪山案件",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://60b25469ef2afdcc44a9b8c3--jovial-stonebraker-946c42.netlify.app/%E9%9B%AA%E5%B1%B1%E8%A7%86%E9%A2%91.js"
     },
     {
       "tuid": "8mploi67m6kjlbr7",
@@ -3644,12 +3580,6 @@
     {
       "tuid": "8p52tzqa608fmm0d",
       "title": "Kitty Katt Cat",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "8plyd4idebe4l4th",
-      "title": "Pharaohs' Heir",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -3698,12 +3628,6 @@
     {
       "tuid": "8rtmqg60oycxy3q5",
       "title": "A Time of Tungsten",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "8s21tfx7mdodfwit",
-      "title": "Use Your Psychic Powers at Applebee's",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -4020,12 +3944,6 @@
       "detail": "http://introcomp.org/introcomp2020/The%20Interview/TheInterview-2020.gblorb"
     },
     {
-      "tuid": "9f836qld0qv7oi7",
-      "title": "Loose Ends",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "9fhxy18csz6fy63x",
       "title": "The Little Match Girl Approaches the Golden Firmament",
       "reason": "unsupported-format",
@@ -4328,8 +4246,8 @@
     {
       "tuid": "aa87v3cuew7sh0f2",
       "title": "The Path of Totality",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://lamppostprojects.com/the-path-of-totality/archived"
     },
     {
       "tuid": "aads1tpa4rnouncn",
@@ -4474,12 +4392,6 @@
       "title": "Infidel",
       "reason": "unreadable-host",
       "detail": "https://eblong.com/infocom/gamefiles/infidel-r22-s830916.z3"
-    },
-    {
-      "tuid": "ao0f75d5wanxf7jp",
-      "title": "The Library of Knowledge",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "apj4ssskmd9wt8yc",
@@ -4742,8 +4654,8 @@
     {
       "tuid": "bikvf16be7j13af8",
       "title": "Through Death New Life",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2025/IF_Through_Death_New_Life/IF_Through_Death_New_Life.js"
     },
     {
       "tuid": "blvdzahqq9xdb8f2",
@@ -5150,8 +5062,8 @@
     {
       "tuid": "cokkdk71wf27y0w7",
       "title": "Magnitude Operation",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp18.zip"
     },
     {
       "tuid": "cpj1j23zgnl6ols",
@@ -5215,8 +5127,8 @@
     {
       "tuid": "cxpfnp291xgodosd",
       "title": "Dashiell Hamlett: The Blue Dane Meets the Black Bird",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://www.springthing.net/2019/play_online/DashiellHamlett/Dashiell%20Hamlett.js"
     },
     {
       "tuid": "d01a4d4clbl7856j",
@@ -5305,8 +5217,8 @@
     {
       "tuid": "d71w0nrcv7g5nijg",
       "title": "Never Ever Land",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://multiversestudios.xyz/play/neverland/"
     },
     {
       "tuid": "d7fhbqjxvdelmcr",
@@ -5443,8 +5355,8 @@
     {
       "tuid": "dnn79gok36yo43bx",
       "title": "Your Post-Apocalyptic To-Do List",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://adventuresnack.com/games/apocalyptic-todos/story.js"
     },
     {
       "tuid": "dq148h8owh2asrbt",
@@ -5579,12 +5491,6 @@
       "detail": "sexual content"
     },
     {
-      "tuid": "e38gmwi9yhudei3t",
-      "title": "Cyberpunk 1977",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "e3lk9yfi8toyaczh",
       "title": "A Tango Story",
       "reason": "unsupported-format",
@@ -5677,8 +5583,8 @@
     {
       "tuid": "ed7uayx9m2etcx9f",
       "title": "最后的颂歌",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://thelastode.netlify.app/%E6%9C%80%E5%90%8E%E7%9A%84%E9%A2%82%E6%AD%8C.js"
     },
     {
       "tuid": "ed9w1m9dyz0y15z7",
@@ -5809,8 +5715,8 @@
     {
       "tuid": "eo0olgbgglq8rs92",
       "title": "One Day",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://riverknows.gitee.io/oneday/"
     },
     {
       "tuid": "eoparmwlr1dmk096",
@@ -6095,12 +6001,6 @@
       "detail": "sexual content"
     },
     {
-      "tuid": "fl293uxg3agev90k",
-      "title": "In the Blink of an Eye",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "fl6rhfuyiaduxu8t",
       "title": "Simple Procedure",
       "reason": "unsupported-format",
@@ -6127,8 +6027,8 @@
     {
       "tuid": "fmwtyuhr06tnqmpd",
       "title": "祖昆达的传说",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://legendofzulkunda.netlify.app/%E7%A5%96%E6%98%86%E8%BE%BE%E7%9A%84%E4%BC%A0%E8%AF%B4.js"
     },
     {
       "tuid": "fnl7svp9izgzzd0h",
@@ -6163,12 +6063,6 @@
     {
       "tuid": "fpd03vud4z28qegt",
       "title": "Burtonport, 1985",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "fq14517evw333qp",
-      "title": "Throne",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -6325,8 +6219,8 @@
     {
       "tuid": "g69dkn17k44l3i0n",
       "title": "拦截",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://the-intercept-from-inkle.netlify.app/%E6%8B%A6%E6%88%AA.js"
     },
     {
       "tuid": "g6u45xu7enltw8gl",
@@ -6421,18 +6315,12 @@
     {
       "tuid": "gfa7ch1ahnun3t62",
       "title": "Potato Peace",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.springthing.net/2024/play.html#PotatoPeace"
     },
     {
       "tuid": "gfljso1zuhqmakck",
       "title": "The Gnomish Treasury",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "gg2vdk8rizf29yig",
-      "title": "Blood and Silver",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -6545,12 +6433,6 @@
       "detail": "https://skulgun.neocities.org/mimetics15.html"
     },
     {
-      "tuid": "go3ljk1l07u5235h",
-      "title": "Poptart Quest",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "go4tem8zfswlwi36",
       "title": "Forevermore: A Game of Writing Horror",
       "reason": "unsupported-format",
@@ -6581,16 +6463,10 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "gq9rzti4oo65jlfx",
-      "title": "The Deserter",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "gqi1h0caif28ioqo",
       "title": "镜中人",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://maninthemirror.netlify.app/%E9%95%9C%E4%B8%AD%E4%BA%BA.js"
     },
     {
       "tuid": "gqmk9o1iogawq1oj",
@@ -6811,8 +6687,8 @@
     {
       "tuid": "h6gwlggjjyc1e7vl",
       "title": "Jealousy",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "insecure-url",
+      "detail": "http://media.textadventures.co.uk/games/qbXSAvGsskKeTGIcSyvpyw/jealousy/index.html"
     },
     {
       "tuid": "h7xuaknosrvjz8a4",
@@ -7031,12 +6907,6 @@
       "detail": "https://carringtonvanston.net/games/dorm/downloads/dorm.z3"
     },
     {
-      "tuid": "hukf9rzectwkla8i",
-      "title": "Blood and Company",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "hvc88sbcwvabnpub",
       "title": "Weird Little Guys",
       "reason": "unsupported-format",
@@ -7107,12 +6977,6 @@
       "title": "Welcome to Hell",
       "reason": "adult-content",
       "detail": "sexual content"
-    },
-    {
-      "tuid": "i7pt5r2cm5v8eel",
-      "title": "Intersigne",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "i9rjvxtl9oxr3u3t",
@@ -7231,8 +7095,8 @@
     {
       "tuid": "ih91u4luggha74ao",
       "title": "Ms Teri (she’s a mystery)",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://climbingthepyramid.com/wp-content/uploads/2018/09/index.html"
     },
     {
       "tuid": "ihpz22zoqcc4f0dl",
@@ -7295,12 +7159,6 @@
       "detail": "http://eristhenia.net/twine/machine.html"
     },
     {
-      "tuid": "inc1h3bor74j9iwh",
-      "title": "All the Troubles Come My Way",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "ink7nofvj5nu55si",
       "title": "TinyUtopias Football Manager: Super Soccer Slam Edition",
       "reason": "unsupported-format",
@@ -7345,8 +7203,8 @@
     {
       "tuid": "ir05zg4gv8z3m5q9",
       "title": "The Report",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/drama-whistleblower?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_report"
     },
     {
       "tuid": "ircyrh8j1bj3zq8w",
@@ -7657,8 +7515,8 @@
     {
       "tuid": "jk6b4w3hvqbxxumx",
       "title": "THE CRIMSON LINE",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.ifarchive.org/if-archive/games/mini-comps/neo-twinyjam/2024/THE_CRIMSON_LINE.zip"
     },
     {
       "tuid": "jm0keegph6fqnw2k",
@@ -7765,8 +7623,8 @@
     {
       "tuid": "jse9nd7yyystdk6",
       "title": "爱丽丝的早晨",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://alicesmorning.netlify.app/review.js"
     },
     {
       "tuid": "jte5k6kzfpms24a7",
@@ -7903,12 +7761,6 @@
     {
       "tuid": "k56imbkvpvy6k1mb",
       "title": "Grievance",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "k5j7qitz73walo0g",
-      "title": "Six of Swords",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -8286,8 +8138,8 @@
     {
       "tuid": "l0jya2nznqza9bix",
       "title": "Fantasy Opera: The Theater of Memory",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.springthing.net/2026/play.html#FantasyOperaTheTheaterOfMemory"
     },
     {
       "tuid": "l0rjyx61erofk1dj",
@@ -8312,12 +8164,6 @@
       "title": "The President, The Democrats, and Smelly Pete",
       "reason": "adult-content",
       "detail": "sexual content"
-    },
-    {
-      "tuid": "l33dhbwbchrvb5xc",
-      "title": "Campfire",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "l41jntc68lhfxl76",
@@ -8368,12 +8214,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "l7puzrlk4t16z03g",
-      "title": "The Last Doctor",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "l86mbzh8eeyr1axw",
       "title": "HOW TO SPEAK ATLANTEAN",
       "reason": "unreadable-host",
@@ -8412,8 +8252,8 @@
     {
       "tuid": "lelw04u7w2ohdjx",
       "title": "Copper Canyon",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "insecure-url",
+      "detail": "http://www.springthing.net/2021/play_online/CopperCanyon/index.html"
     },
     {
       "tuid": "leohxxz3edj4b5gn",
@@ -8544,8 +8384,8 @@
     {
       "tuid": "lpdw6ssqb5b3pvva",
       "title": "Tell Me Everything",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.inklewriter.com/stories/240834"
     },
     {
       "tuid": "lpg3ontitstpkvo",
@@ -8746,12 +8586,6 @@
       "detail": "https://web.archive.org/web/20150915044444if_/http://frezned.com/responsibility/It%20Is%20Your%20Responsibility.gblorb"
     },
     {
-      "tuid": "ma9ncwy054x818fw",
-      "title": "Bluebeard's Not-Wives",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "mafzs0iiqv27rs88",
       "title": "Fracture",
       "reason": "unreadable-host",
@@ -8820,12 +8654,6 @@
     {
       "tuid": "mgbaf5l2tkigdwyf",
       "title": "You Couldn't Have Done That",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "mhm7zqdxy4kqojn2",
-      "title": "Prism",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -9119,8 +8947,8 @@
     {
       "tuid": "n3q111k47qkvrmck",
       "title": "A Fly On The Wall",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "insecure-url",
+      "detail": "http://plover.net/~peregrine/A%20Fly%20on%20the%20Wall/"
     },
     {
       "tuid": "n49zyvmdbll6lv7p",
@@ -9175,12 +9003,6 @@
       "title": "not knowing when the dawn will come, i open every door",
       "reason": "unsupported-format",
       "detail": "storyfile"
-    },
-    {
-      "tuid": "n62cqem6179917t",
-      "title": "TENT GAME",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "n6gtncaxbx3ztfb9",
@@ -9323,8 +9145,8 @@
     {
       "tuid": "nlp1zehiwuts79bf",
       "title": "Voyage of the Marigold",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://sheep.horse/voyage_of_the_marigold/"
     },
     {
       "tuid": "nlvnc6gwmrhviohy",
@@ -9335,8 +9157,8 @@
     {
       "tuid": "nm06u7pglp89tflt",
       "title": "在黑暗中",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://alone-in-darkness.netlify.app/%E5%9C%A8%E9%BB%91%E6%9A%97%E4%B8%AD.js"
     },
     {
       "tuid": "nmdl0pllcsf9mtn1",
@@ -9347,12 +9169,6 @@
     {
       "tuid": "nmg570ycyex4mty0",
       "title": "4x4 Archipelago",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "nmhq7ok8qtuo8ya4",
-      "title": "Sentry",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -9427,12 +9243,6 @@
       "title": "Buttered Toast: the Interactive Fiction Starring Billy Davis",
       "reason": "unreadable-host",
       "detail": "https://github.com/leettyun/OOZELUMNY/raw/master/story-files/ButteredToast.gblorb"
-    },
-    {
-      "tuid": "nu8di757l1oss5f7",
-      "title": "You Cannot Speak",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "nummmn9jlr3uctl",
@@ -9527,8 +9337,8 @@
     {
       "tuid": "o276xxsxarlf1v4o",
       "title": "My Grandfather's Chattels",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://mholland.me/media/mgc/mgc.js"
     },
     {
       "tuid": "o2wi7q29grpzw5h8",
@@ -9749,8 +9559,8 @@
     {
       "tuid": "okvelssfvrn0huu6",
       "title": "Scoop",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://introcomp.org/introcomp2020/Scoop/SCOOP/Scoop.js"
     },
     {
       "tuid": "okzrfte4a7nribci",
@@ -9761,8 +9571,8 @@
     {
       "tuid": "ol9vmzj4p1sv4un",
       "title": "Halloween",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://hqhalloween.netlify.app/Halloween.js"
     },
     {
       "tuid": "olocx8ecku7q8sh7",
@@ -9875,8 +9685,8 @@
     {
       "tuid": "oustv01dqedkw8nf",
       "title": "minor fall MAJOR LIFT",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.ifarchive.org/if-archive/games/ink/Minor_Fall_Major_Lift.zip"
     },
     {
       "tuid": "ouv80gvsl32xlion",
@@ -9951,12 +9761,6 @@
       "detail": "https://web.archive.org/web/20201221195755if_/http://download1081.mediafire.com/q4cqmavgarbg/18qxf2wmp4wortw/The+Minimalist+Game+2.z5"
     },
     {
-      "tuid": "oysoh0mrzanlxtby",
-      "title": "I don't want to talk about it.",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "oyv5filpq7q72bae",
       "title": "So You Have a Knife at Your Throat",
       "reason": "unsupported-format",
@@ -10007,12 +9811,6 @@
     {
       "tuid": "p3g9gfs0myyzi6zh",
       "title": "FUNGUS!",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "p4a493ytmxk6l78w",
-      "title": "Conversations With Deleted NPCs",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -10155,20 +9953,8 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "pi2flgnvwz44wxut",
-      "title": "Marooned",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "pia6hjxnpb1uj49c",
       "title": "UNDEAD/YRSELF",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "pinimlyjdv6njlil",
-      "title": "Xanthippe's Last Night with Socrates",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -10234,12 +10020,6 @@
     {
       "tuid": "pqm1caf5p0ebg9xf",
       "title": "Contact Page",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "pqpt36dgxui7g3cr",
-      "title": "Blood and Sunlight",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -10460,12 +10240,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "q9c9m5tkw3n3o3ox",
-      "title": "A Woman's Duty",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "q9t7abs7e521u7l8",
       "title": "ENGINE MACHINE: The Deities of Time and Space",
       "reason": "unsupported-format",
@@ -10522,8 +10296,8 @@
     {
       "tuid": "qdgx6q23axxybqwf",
       "title": "Cycles (Excerpt)",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "insecure-url",
+      "detail": "http://www.springthing.net/2021/play_online/CyclesExcerpt/index.html"
     },
     {
       "tuid": "qeks3k9x7ubdlk6s",
@@ -10594,8 +10368,8 @@
     {
       "tuid": "qnz7puzyazwbw9j",
       "title": "JoinDispatch",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://joindispatch.app/"
     },
     {
       "tuid": "qogpyrhbnglh3enq",
@@ -10720,8 +10494,8 @@
     {
       "tuid": "qylyog0aso4g2bs4",
       "title": "Nemesis Protocol",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/scifi-nemesis?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=nemesis_protocol"
     },
     {
       "tuid": "qz81xw352hlhrevj",
@@ -11018,12 +10792,6 @@
       "detail": "http://dl.dropbox.com/u/3168842/INFORM/Noble/A%20Quest%20Only%20For%20The%20Noble.zblorb"
     },
     {
-      "tuid": "rq4yubc2yqmcsmtn",
-      "title": "The Golden Heist",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "rsd9e0bw9s7iq4pe",
       "title": "Mini-Zork II",
       "reason": "unreadable-host",
@@ -11310,12 +11078,6 @@
       "title": "L'île du Phare Abandonné",
       "reason": "insecure-url",
       "detail": "http://www.fiction-interactive.fr/fi/yoruk/ile-du-phare-abandonne/ile-du-phare-abandonne.blb"
-    },
-    {
-      "tuid": "si39ri8ng9bqimv1",
-      "title": "A Clean Getaway",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "sj5rdu8vuawrq3vf",
@@ -11722,8 +11484,8 @@
     {
       "tuid": "tluuqqkhzb00qkdn",
       "title": "入眠者诊所",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://poppelyang.github.io/sleeptight/"
     },
     {
       "tuid": "tm4gyzvk4kjcfi",
@@ -11742,12 +11504,6 @@
       "title": "Manikin Demo",
       "reason": "insecure-url",
       "detail": "http://www.springthing.net/2021/play_online/ManikinDemo/Index.html"
-    },
-    {
-      "tuid": "to4jlgxhov4a5yhn",
-      "title": "A Calling of Dogs",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
     },
     {
       "tuid": "to7v8xqo0pd5ue11",
@@ -11864,12 +11620,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "tyuh24bze4n3o4tp",
-      "title": "Kitchen Table",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "tyuvsh5fa7d5g7x6",
       "title": "> by @",
       "reason": "unreadable-host",
@@ -11878,8 +11628,8 @@
     {
       "tuid": "tyvagb75y0tc09wg",
       "title": "What Remains",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/survival-whatremains?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=what_remains"
     },
     {
       "tuid": "tz5zzqtyclunasfl",
@@ -11954,12 +11704,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "u3czphf1oijraetz",
-      "title": "Kobold Crawl",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "u3dd6j9aldwyuuhk",
       "title": "Fish Dreams",
       "reason": "insecure-url",
@@ -11990,12 +11734,6 @@
       "detail": "https://introcomp.org/introcomp2023/Kyrathaba/Kyrathaba.html"
     },
     {
-      "tuid": "u8x12omz0a93jues",
-      "title": "Elvish for Goodbye",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "u9bgcluaj3ztp8kt",
       "title": "Rainbows and Dance Parties!",
       "reason": "unreadable-host",
@@ -12016,8 +11754,8 @@
     {
       "tuid": "ua61xgenbbrk653k",
       "title": "Quest for the Homeland",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://www.springthing.net/2020/play.html#QuestForTheHomeland"
     },
     {
       "tuid": "ua7h9z9j0iyamd1a",
@@ -12128,12 +11866,6 @@
       "detail": "http://blog.patientrock.com/wp-content/uploads/2019/10/Redactor.html"
     },
     {
-      "tuid": "uo96k0h6uihebiel",
-      "title": "Fix Your Mother's Printer",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "up2ak731a6h2quna",
       "title": "Feasibility Experiment",
       "reason": "unsupported-format",
@@ -12172,12 +11904,6 @@
     {
       "tuid": "uroxss4rsvc8oun8",
       "title": "Merchant",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "urt6x53rb4bu9o1w",
-      "title": "Never Have I Ever",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -12572,12 +12298,6 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "vtjqvg7khg4rvrid",
-      "title": "Him (and Us)",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "vtxeyqo5aio1zsxr",
       "title": "A Room of One's Own",
       "reason": "unsupported-format",
@@ -12741,8 +12461,8 @@
     {
       "tuid": "wcojvcxv2covu3pf",
       "title": "荒岛故事",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://musing-lalande-ef8a0d.netlify.app/Untitled.js"
     },
     {
       "tuid": "wct8s6sdmss0nbjq",
@@ -12753,8 +12473,8 @@
     {
       "tuid": "wcvfaidnxm9oxp21",
       "title": "The Last Witness",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/noir-lastwitness?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_last_witness"
     },
     {
       "tuid": "wd2uqfej83jo5yj7",
@@ -12903,8 +12623,8 @@
     {
       "tuid": "wqlwova2myi083zm",
       "title": "The Broken Crown",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/fantasy-epic?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_broken_crown"
     },
     {
       "tuid": "wqsmrahzozosu3r",
@@ -12939,12 +12659,6 @@
     {
       "tuid": "wvb4mzvcczm96hr1",
       "title": "Cat Simulator 3000",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "wvpvp0izl3shzbbg",
-      "title": "The Counsel in The Cave",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -13531,12 +13245,6 @@
       "detail": "https://philome.la/anarchicAccord/amorphous/play/index.html"
     },
     {
-      "tuid": "ydxd7uqksax1wiw0",
-      "title": "Nobody Cares About Charley",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "ye7j1geloce730eh",
       "title": "Resurrection Gate",
       "reason": "unsupported-format",
@@ -13951,12 +13659,6 @@
       "detail": "https://web.archive.org/web/20131006144311id_/http://www.shamusyoung.com/if/sps2.z8"
     },
     {
-      "tuid": "zcxqr5azmarc68jl",
-      "title": "Doppeljobs",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "zdc97279svjlhhju",
       "title": "SUN SCOURED",
       "reason": "unsupported-format",
@@ -14037,12 +13739,6 @@
     {
       "tuid": "zlsrj84oyoosp846",
       "title": "The Properties of Iron",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "znuaiecxj5ceohnf",
-      "title": "Inside",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -14191,12 +13887,6 @@
       "detail": "http://distractionware.com/junk/textthehalls/Capture%20Santa!.zip"
     },
     {
-      "tuid": "zv6ieocpzqjlxdl6",
-      "title": "20 Exchange Place",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "zx5l694lwn3rweg",
       "title": "Karen's Secret",
       "reason": "adult-content",
@@ -14223,8 +13913,8 @@
     {
       "tuid": "zyhxp43j3nhvqk4p",
       "title": "The Same Night",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/time-loop-samenight?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=ifdb_listings_2026&utm_content=the_same_night"
     },
     {
       "tuid": "zz6i7irfr70nvp7a",

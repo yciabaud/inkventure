@@ -3,6 +3,16 @@
     "ok": true,
     "checked": "2026-09-30T22:55:25.690Z"
   },
+  "https://60b25469ef2afdcc44a9b8c3--jovial-stonebraker-946c42.netlify.app/%E9%9B%AA%E5%B1%B1%E8%A7%86%E9%A2%91.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://62700ae8459f1a6d93994081--calm-sfogliatella-581516.netlify.app/%E4%BB%8A%E5%A4%A9%E5%8E%BB%E9%81%9B%E7%8C%AB.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
   "https://68d8fa3b2f88055e251d87a151e503e83759097b.googledrive.com/host/0B8Vp_6RrfYFmd0FCS3ExbU5jNms/A(s)century.html": {
     "ok": false,
     "checked": "2026-10-01T06:00:04.803Z",
@@ -13,9 +23,24 @@
     "checked": "2026-10-01T06:00:04.803Z",
     "detail": "redirect without CORS headers"
   },
+  "https://adventuresnack.com/games/apocalyptic-todos/story.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://alicesmorning.netlify.app/review.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
   "https://allthingsjacq.com/if/2H2Mv3.gblorb": {
     "ok": false,
     "checked": "2026-09-30T22:55:25.690Z",
+    "detail": "no CORS headers"
+  },
+  "https://alone-in-darkness.netlify.app/%E5%9C%A8%E9%BB%91%E6%9A%97%E4%B8%AD.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "no CORS headers"
   },
   "https://anilkumarbheemaiah.weebly.com/blogs-and-downloads.html": {
@@ -46,7 +71,7 @@
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "HTTP 522",
     "transient": true
   },
@@ -74,6 +99,10 @@
     "ok": false,
     "checked": "2026-10-01T06:00:04.803Z",
     "detail": "redirect without CORS headers"
+  },
+  "https://boni1921.github.io/ink-one/christmas.js": {
+    "ok": true,
+    "checked": "2026-10-01T20:34:04.693Z"
   },
   "https://caoseamor.neocities.org/A%20Servi%C3%A7o%20de%20Ganga%20Zumba.html": {
     "ok": false,
@@ -199,7 +228,7 @@
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -424,7 +453,7 @@
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -849,13 +878,18 @@
   },
   "https://hadesunited.com/wp-content/uploads/2024/09/Charlie-The-Robot.html": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://hd0.linusakesson.net/files/tethered-rel1.zblorb": {
     "ok": false,
     "checked": "2026-09-30T17:51:03.282Z",
+    "detail": "no CORS headers"
+  },
+  "https://hqhalloween.netlify.app/Halloween.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "no CORS headers"
   },
   "https://html-classic.itch.zone/html/10315373/Release/The%20Wolf.gblorb": {
@@ -1056,6 +1090,11 @@
     "checked": "2026-09-30T17:51:03.282Z",
     "detail": "no CORS headers"
   },
+  "https://introcomp.org/introcomp2020/Scoop/SCOOP/Scoop.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
   "https://introcomp.org/introcomp2021/Mission%20Unknown.html": {
     "ok": false,
     "checked": "2026-10-01T06:00:04.803Z",
@@ -1086,6 +1125,16 @@
     "checked": "2026-09-30T17:51:03.282Z",
     "detail": "no CORS headers"
   },
+  "https://introcomp.org/introcomp2025/IF_Through_Death_New_Life/IF_Through_Death_New_Life.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://introcomp.org/introcomp2025/TheIvoryCalico/The%20Ivory%20Calico.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
   "https://introcomp.org/introcomp2025/TheLittleMatchGirl6/The%20Little%20Match%20Girl%206:%20Fulcru.gblorb": {
     "ok": false,
     "checked": "2026-09-30T22:55:25.690Z",
@@ -1093,19 +1142,19 @@
   },
   "https://inurashii.com/relic.html": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/seedlings/seeds2.html": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1149,13 +1198,28 @@
   },
   "https://launchpad.yourlibrary.ca/games/escape_the_library/index.html": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
+  },
+  "https://legendofzulkunda.netlify.app/%E7%A5%96%E6%98%86%E8%BE%BE%E7%9A%84%E4%BC%A0%E8%AF%B4.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
   },
   "https://lilith.cc/~victor/uploads/if/nemesis/Nemesis%20Macana.zblorb": {
     "ok": false,
     "checked": "2026-09-30T17:51:03.282Z",
+    "detail": "no CORS headers"
+  },
+  "https://loststoryofvandermar.netlify.app/%E5%87%A1%E5%BE%B7%E7%8E%9B%E5%B0%94%E9%81%97%E9%97%BB%E5%BD%95.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://maninthemirror.netlify.app/%E9%95%9C%E4%B8%AD%E4%BA%BA.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "no CORS headers"
   },
   "https://mattweiner.net/Shufflecomp%202014/1982/1982.gblorb": {
@@ -1171,6 +1235,16 @@
   "https://mega.nz/file/MYhhWSYa#tjaf92jJDqTLi_-JcEsFASq2HWWyFni6MYglL2Zh9rg": {
     "ok": true,
     "checked": "2026-10-01T06:00:04.803Z"
+  },
+  "https://mholland.me/media/mgc/mgc.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://musing-lalande-ef8a0d.netlify.app/Untitled.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
   },
   "https://narfation.org/2008/03/14/the-it-crowd-season-2-dvd-easter-eggs#barber_z5": {
     "ok": false,
@@ -1706,7 +1780,7 @@
   },
   "https://spacestories.ru/stories/looter/index.html": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1724,6 +1798,16 @@
     "ok": false,
     "checked": "2026-10-01T06:00:04.803Z",
     "detail": "redirect without CORS headers"
+  },
+  "https://the-intercept-from-inkle.netlify.app/%E6%8B%A6%E6%88%AA.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
+  },
+  "https://thelastode.netlify.app/%E6%9C%80%E5%90%8E%E7%9A%84%E9%A2%82%E6%AD%8C.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
   },
   "https://thetwinealbum.paperblurt.com/DadvsUnicorn.html": {
     "ok": false,
@@ -1746,25 +1830,25 @@
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2400,7 +2484,7 @@
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2431,9 +2515,14 @@
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
     "ok": false,
-    "checked": "2026-10-01T16:33:39.754Z",
+    "checked": "2026-10-01T20:34:04.693Z",
     "detail": "network: fetch failed",
     "transient": true
+  },
+  "https://www.springthing.net/2019/play_online/DashiellHamlett/Dashiell%20Hamlett.js": {
+    "ok": false,
+    "checked": "2026-10-01T20:34:04.693Z",
+    "detail": "no CORS headers"
   },
   "https://www.springthing.net/2020/play.html#AMurderInEngrams": {
     "ok": false,
