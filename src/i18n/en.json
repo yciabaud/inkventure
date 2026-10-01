@@ -248,8 +248,8 @@
   "settings.about": "About",
   "settings.version": "Version {commit}, built on {date}",
   "settings.versionDev": "Development version",
-  "settings.turnTimes": "Turn times",
-  "settings.turnTimesHint": "For measuring speed on this device: the reader shows how long each turn of a game played by typing commands took.",
+  "settings.turnTimes": "Timings",
+  "settings.turnTimesHint": "For measuring speed on this device: the time Home and the Library take to be ready, a page turn, and each turn of a game played by typing commands.",
   "settings.off": "Hidden",
   "settings.on": "Shown",
   "about.intro": "Inkventure lets you play interactive fiction from IFDB on an e-reader. It is free, open-source software under the MIT licence.",
@@ -304,5 +304,8 @@
   "game.rating": {
     "one": "★ {stars} ({count} rating)",
     "other": "★ {stars} ({count} ratings)"
-  }
+  },
+  "perf.home": "Home ready in {ms} ms",
+  "perf.library": "First results in {ms} ms",
+  "perf.page": "Page turned in {ms} ms"
 }

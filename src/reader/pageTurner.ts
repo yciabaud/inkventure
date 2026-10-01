@@ -1,5 +1,6 @@
 // Page state and input handling for the paged text view, kept out of the component so the listeners (attached once)
 // and the reading position are plain mutable state.
+import { perfNow } from '../app/perf';
 import { measureBlocks, type Measurement } from './measure';
 import {
   pageIndexOf,
@@ -60,6 +61,8 @@ export class PageTurner {
   private ignoreClickUntil = 0;
   private detach: (() => void) | null = null;
   private fontsRequested: Record<string, boolean> = {};
+  /** A page turn the reader asked for, not yet drawn (timings, S7.1). */
+  private turnAsked: number | null = null;
   /** 'waiting' until the fonts of the first layout are in (or FONT_WAIT_MS has passed). */
   private firstLayout: 'pending' | 'waiting' | 'done' = 'pending';
   /** Metrics of the blocks last measured, reused for unchanged blocks at the same width (a turn adds a few blocks). */
@@ -115,7 +118,17 @@ export class PageTurner {
 
   turn(delta: number, point?: Point): void {
     if (this.interceptTap && this.interceptTap(this.index >= this.pages.length - 1, point)) return;
+    const before = this.index;
+    const asked = perfNow();
     this.turnTo(this.index + delta);
+    if (this.index !== before) this.turnAsked = asked;
+  }
+
+  /** When the last page turn asked by the reader started (`perfNow()`), once; null when none is pending. */
+  takeTurnAsked(): number | null {
+    const asked = this.turnAsked;
+    this.turnAsked = null;
+    return asked;
   }
 
   first(): void {

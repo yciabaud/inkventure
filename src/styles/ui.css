@@ -1857,3 +1857,17 @@ a.menu__item {
   padding-top: 16px;
   border-top: 2px solid #000;
 }
+
+/* Timings for measuring on a device (S7.1): a small line at the top right that taps go through. */
+.perf-line {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  margin: 0;
+  padding: 2px 8px;
+  border: 1px solid #000;
+  background: #fff;
+  font-size: 14px;
+  pointer-events: none;
+}

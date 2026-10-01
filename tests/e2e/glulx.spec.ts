@@ -128,7 +128,7 @@ test('?perf=1 shows how long the last turn took, for measuring on a device', asy
 
 test('turn times can be switched on in Settings, without editing the address', async ({ page }) => {
   await page.goto('/#/settings?s=about');
-  const group = page.getByRole('group', { name: 'Turn times' });
+  const group = page.getByRole('group', { name: 'Timings' });
   await expect(group.getByRole('button', { name: 'Hidden' })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -147,9 +147,7 @@ test('turn times can be switched on in Settings, without editing the address', a
 
   // Switched off again: no time.
   await page.goto('/#/settings?s=about');
-  await press(
-    page.getByRole('group', { name: 'Turn times' }).getByRole('button', { name: 'Hidden' }),
-  );
+  await press(page.getByRole('group', { name: 'Timings' }).getByRole('button', { name: 'Hidden' }));
   await page.goto(GAME);
   await expect(command(page)).toBeVisible();
   await send(page, 'look', 2);

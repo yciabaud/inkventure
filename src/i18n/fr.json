@@ -248,8 +248,8 @@
   "settings.about": "À propos",
   "settings.version": "Version {commit}, compilée le {date}",
   "settings.versionDev": "Version de développement",
-  "settings.turnTimes": "Durée des tours",
-  "settings.turnTimesHint": "Pour mesurer la vitesse sur cet appareil : le lecteur affiche la durée de chaque tour d’un jeu où l’on tape des commandes.",
+  "settings.turnTimes": "Mesures de temps",
+  "settings.turnTimesHint": "Pour mesurer la vitesse sur cet appareil : le temps que mettent l’accueil et la bibliothèque à être prêts, un changement de page, et chaque tour d’un jeu où l’on tape des commandes.",
   "settings.off": "Masquée",
   "settings.on": "Affichée",
   "about.intro": "Inkventure permet de jouer sur liseuse aux fictions interactives d’IFDB. C’est un logiciel libre et gratuit, sous licence MIT.",
@@ -304,5 +304,8 @@
   "game.rating": {
     "one": "★ {stars} ({count} note)",
     "other": "★ {stars} ({count} notes)"
-  }
+  },
+  "perf.home": "Accueil prêt en {ms} ms",
+  "perf.library": "Premiers résultats en {ms} ms",
+  "perf.page": "Page tournée en {ms} ms"
 }

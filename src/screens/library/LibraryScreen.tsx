@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useReadyTiming } from '../../app/perf';
 import { formatHash, formatQuery, type Query } from '../../app/router';
 import {
   activeCount,
@@ -200,6 +201,7 @@ export function LibraryScreen({ query }: { query: Query }) {
   };
   const panel = parsePanel(query.panel);
   const [state, retry] = useCatalog();
+  useReadyTiming('library', state.status !== 'loading');
   const [area, listRef] = useArea();
   const [view, setView] = useView();
   const grid = gridLayout(area.width, area.height);

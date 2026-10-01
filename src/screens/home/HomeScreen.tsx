@@ -3,6 +3,7 @@
 // the height left on the screen and are paged with ‹ › in their header, never scrolled.
 import type { ComponentChildren, RefObject } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
+import { useReadyTiming } from '../../app/perf';
 import { formatHash } from '../../app/router';
 import {
   featuredFor,
@@ -454,6 +455,7 @@ function AdventuresShelf({
 export function HomeScreen({ query = {} }: { query?: Record<string, string> }) {
   const locale = useLocale();
   const featured = useFeatured();
+  useReadyTiming('home', featured.status !== 'loading');
   const store = getStore();
   // Read again after a removal.
   const [version, setVersion] = useState(0);
