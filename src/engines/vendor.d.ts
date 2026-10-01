@@ -50,5 +50,7 @@ declare module '*/vendor/quixe/gi_blorb.js' {
   export class BlorbClass {
     init(data: Uint8Array | unknown[], options?: Record<string, unknown>): void;
     get_exec_data(type: string): Uint8Array | null;
+    /** A `data:` URL of picture `image` (a Pict resource), or null. */
+    get_image_url(image: number): string | null;
   }
 }

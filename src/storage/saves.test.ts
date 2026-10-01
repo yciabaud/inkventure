@@ -20,6 +20,7 @@ import {
   writeAutosave,
   writeSlot,
   type GameSnapshot,
+  type SavedParagraph,
 } from './saves';
 import { createStore, isStorageFullError } from './store';
 
@@ -187,6 +188,26 @@ describe('game saves', () => {
     // A single paragraph longer than the budget is still kept.
     expect(transcriptTail([paragraph(1, 10), paragraph(2, TAIL_CHARS * 2)])).toHaveLength(1);
     expect(transcriptTail([])).toEqual([]);
+  });
+
+  it('keeps pictures in the tail by reference, counted as blocks, and reads them back', () => {
+    const picture = { image: 1, width: 600, height: 400, alt: 'A lighthouse' };
+    const text: TextRun[] = [{ text: 'Hello', style: 'normal' }];
+    const paragraphs: SavedParagraph[] = [];
+    for (let i = 0; i < TAIL_BLOCKS; i++) paragraphs.push(text);
+    paragraphs.push(picture);
+    const tail = transcriptTail(paragraphs);
+    expect(tail).toHaveLength(TAIL_BLOCKS);
+    expect(tail[tail.length - 1]).toBe(picture);
+
+    const store = createStore(new MemoryBackend());
+    writeAutosave(
+      store,
+      TUID,
+      { state: new Uint8Array([1]), turn: 2, paragraphs: [text, picture], status: [] },
+      0,
+    );
+    expect(readAutosave(store, TUID)!.paragraphs).toEqual([text, picture]);
   });
 
   it('updates the progress record, keeping the per-game reader settings', () => {

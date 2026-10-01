@@ -354,24 +354,31 @@ interface Engine {
   restoreState(data: Uint8Array): Promise<void>;
   restart(): Promise<void>;
   undo(): Promise<boolean>;           // false: the reader restores its previous turn snapshot instead
+  imageUrl?(image: number): string | null; // data URL of a picture of the story (Glulx Blorb), or null
 }
 ```
 
 For ZVM and Quixe, we implement a **GlkOte-compatible display layer** (the API Parchment's engines talk
 to) that translates Glk window updates into `OutputBlock`s: buffer window → transcript, grid window →
-status line, graphics → grayscale images, sound → ignored. Existing Parchment code is reused where its
+status line, pictures drawn in the buffer window → grayscale images, graphics windows and sound → ignored. Existing Parchment code is reused where its
 licence allows (MIT); only the presentation layer is ours.
 
 `OutputBlock` (`src/engines/engine.ts`): `paragraph` (styled runs, Glk style names; `append` continues the previous
-paragraph, e.g. the echoed command after the prompt), `status` (the whole status line, one string per row) and `clear`
-(ignored by the paginated transcript, which keeps everything). The Z-machine runs on ZVM (`ifvms`) and the Glk API
+paragraph, e.g. the echoed command after the prompt), `status` (the whole status line, one string per row), `image`
+(a picture on a line of its own: its Blorb number, size in px and alt text; the text around it on the same Glk line
+becomes the paragraphs before and after it) and `clear` (ignored by the paginated transcript, which keeps everything). The Z-machine runs on ZVM (`ifvms`) and the Glk API
 library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
 bundle, one Glk instance per game (see `src/engines/README.md`). `load()` rejects when the story cannot start; the VM
 runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its own, newer Glk library and Blorb decoder,
 downloaded unchanged at install time from the upstream `quixe-2.2.6` tag into `vendor/quixe/` (Quixe is not on npm;
 the files are checked against SHA-256 hashes kept in the repository, and ignored by git) and patched at build time; `.gblorb` files are unpacked
-client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input. Images in
-Glulx games are not shown yet (follow-up); sound is ignored. Ink runs on inkjs 2.4 (runtime only): each stop is a
+client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input. Pictures
+drawn in the main window (`glk_image_draw`, from the Blorb's `Pict` chunks) are shown: the bridge passes the picture's
+number, size and alt text (Blorb `RDes`), and `imageUrl` gives its data (a `data:` URL built by Quixe's Blorb decoder).
+The paginator sizes a picture from its known size before it loads (scaled down to the text column and to the room on
+the last page, under the command bar, keeping its proportions), so pages never reflow; it is shown in grayscale (CSS
+filter) and never split across pages. A picture with no data shows its alt text in a box of its size. Graphics windows
+are still not drawn; sound is ignored. Ink runs on inkjs 2.4 (runtime only): each stop is a
 `ChoiceInput`; the `title` global tag and `chapter` line tags make the status line; external functions fall back to
 the ink functions of the same name.
 
@@ -411,7 +418,8 @@ the ink functions of the same name.
 - Glulx state: Quixe's autosave snapshot (RAM, stack, heap and the Glk library state) in a JSON envelope naming the
   story (its first 64 bytes); the RAM is stored XORed with the story's initial RAM, so it compresses to little.
 - A turn begins when the game waits for a command: its state is snapshotted (after the page is drawn) for Undo and
-  written as the autosave with the transcript tail (the last 200 paragraphs with text, at most ≈ 20,000 characters),
+  written as the autosave with the transcript tail (the last 200 paragraphs with text or a picture, at most ≈ 20,000
+  characters; a picture is kept by its number, not its data, and resolved again by the engine after a reload),
   and the progress
   record is updated. Opening the game resumes from the autosave on the page of the last command. Restoring a slot
   resets Undo; Restart asks first, clears the autosave and keeps the named slots.

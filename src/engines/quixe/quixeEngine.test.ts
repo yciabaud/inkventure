@@ -9,6 +9,8 @@ import { createQuixeEngine } from './quixeEngine';
 const STORY = readFileSync('tests/fixtures/glulx/lamp.ulx');
 /** Opens a graphics window and plays a sound without checking that Glk supports them. */
 const MEDIA = readFileSync('tests/fixtures/glulx/media.ulx');
+/** An illustrated game: a Blorb with one PNG picture and its alt text. */
+const PICTURE = readFileSync('tests/fixtures/glulx/picture.gblorb');
 
 function copy(bytes: Uint8Array): ArrayBuffer {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
@@ -160,6 +162,25 @@ describe('Quixe engine', () => {
     expect(session.take()).toContain('The end.');
     expect(session.exited()).toBe(true);
     expect(session.errors).toEqual([]);
+  });
+
+  it('shows the pictures of a Blorb as image blocks, and gives their data', async () => {
+    const session = await start(PICTURE);
+    expect(session.errors).toEqual([]);
+    const paragraphs = session.transcript().paragraphs;
+    const at = paragraphs.findIndex((p) => p.image);
+    expect(paragraphs[at].image).toEqual({
+      image: 1,
+      width: 600,
+      height: 400,
+      alt: 'A painting of a lighthouse at dusk, its lamp lit above a dark sea.',
+    });
+    expect(paragraphs[at - 1].text).toBe('You step closer to look at it.');
+    expect(paragraphs[at + 1].text).toMatch(/^It shows the lighthouse/);
+    const url = session.engine.imageUrl!(1);
+    expect(url).toMatch(/^data:image\/png;base64,iVBORw0KGgo/);
+    expect(session.engine.imageUrl!(2)).toBe(null);
+    expect(await send(session, 'look')).toContain('You look at the painting a little longer (1).');
   });
 
   it('yields to the event loop during a long run when sliced', async () => {

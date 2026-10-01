@@ -1,7 +1,7 @@
 // Reads line boxes from the DOM for the paginator. Blocks are laid out once, off screen but with the reader's
 // exact classes and width; the top of each word tells where lines start. No DOM writes happen between reads, so
 // the browser lays the text out a single time.
-import type { BlockMetrics, LineBox, ReaderBlock } from './paginator';
+import { imageBox, type BlockMetrics, type LineBox, type ReaderBlock } from './paginator';
 
 export function blockClass(kind: ReaderBlock['kind']): string {
   return 'reader__block reader__block--' + kind;
@@ -11,8 +11,25 @@ export function runClass(style: string): string {
   return 'reader__run reader__run--' + style;
 }
 
-/** Creates the element a block (or fragment) is rendered with; the reader view renders the same markup. */
-function blockElement(block: ReaderBlock): HTMLElement {
+/** Class of the picture (or of its stand-in while measuring) inside an image block. */
+export const IMAGE_CLASS = 'reader__image';
+
+/**
+ * Creates the element a block (or fragment) is rendered with; the reader view renders the same markup. A picture is
+ * a box of its display size (`imageBox`), so measuring never waits for it to load.
+ */
+function blockElement(block: ReaderBlock, width: number, imageMaxHeight: number): HTMLElement {
+  if (block.image) {
+    const div = document.createElement('div');
+    div.className = blockClass(block.kind);
+    const box = imageBox(block.image, width, imageMaxHeight);
+    const picture = document.createElement('div');
+    picture.className = IMAGE_CLASS;
+    picture.style.width = box.width + 'px';
+    picture.style.height = box.height + 'px';
+    div.appendChild(picture);
+    return div;
+  }
   const p = document.createElement('p');
   p.className = blockClass(block.kind);
   if (block.runs) {
@@ -99,12 +116,14 @@ function fontOf(element: HTMLElement): string {
 
 /**
  * Measures `blocks` inside `host` (the text area), in a hidden layer of width `width` px styled like `className`.
+ * Pictures are scaled down to `width` × `imageMaxHeight` px.
  */
 export function measureBlocks(
   host: HTMLElement,
   className: string,
   width: number,
   blocks: ReaderBlock[],
+  imageMaxHeight: number,
 ): Measurement {
   const layer = document.createElement('div');
   layer.className = className;
@@ -120,7 +139,7 @@ export function measureBlocks(
 
   const elements: HTMLElement[] = [];
   for (let i = 0; i < blocks.length; i++) {
-    const p = blockElement(blocks[i]);
+    const p = blockElement(blocks[i], width, imageMaxHeight);
     elements.push(p);
     layer.appendChild(p);
   }
@@ -136,7 +155,7 @@ export function measureBlocks(
     if (i > 0) metrics[i - 1].gapAfter = Math.max(rect.top - previousBottom, 0);
     metrics.push({ lines: lineBoxes(elements[i], blocks[i].text, range), gapAfter: 0 });
     previousBottom = rect.bottom;
-    if (!kinds[blocks[i].kind]) {
+    if (!kinds[blocks[i].kind] && !blocks[i].image) {
       kinds[blocks[i].kind] = true;
       fonts.push(fontOf(elements[i]));
     }

@@ -114,6 +114,8 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
   let errorCb: (message: string) => void = () => undefined;
   let story: Uint8Array | null = null;
   let game: Uint8Array | null = null;
+  // The story's Blorb (pictures), for `imageUrl`.
+  let resources: BlorbClass | null = null;
   let columns = DEFAULT_COLUMNS;
   let running: Running | null = null;
 
@@ -231,7 +233,9 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
       if (typeof data === 'string') return Promise.reject(new Error('A Glulx story is binary.'));
       story = new Uint8Array(data);
       try {
-        game = unpack(story).game;
+        const unpacked = unpack(story);
+        game = unpacked.game;
+        resources = unpacked.blorb;
       } catch (error) {
         return Promise.reject(error);
       }
@@ -333,6 +337,16 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
     undo(): Promise<boolean> {
       // Quixe's own undo (@restoreundo) is driven by the game's UNDO command; the reader falls back to its snapshots.
       return Promise.resolve(false);
+    },
+
+    imageUrl(image: number): string | null {
+      if (!resources) return null;
+      try {
+        // Built once per picture, then cached by the Blorb decoder.
+        return resources.get_image_url(image);
+      } catch {
+        return null;
+      }
     },
   };
 }

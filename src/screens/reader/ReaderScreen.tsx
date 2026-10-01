@@ -8,9 +8,10 @@ import { GameReader } from './GameReader';
 import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
 import { LazyTwineReader as TwineReader } from './LazyTwineReader';
-// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx`, `fixture-ink`,
-// `fixture-twine-harlowe` and `fixture-twine-sugarcube`.
+// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx`,
+// `fixture-glulx-picture`, `fixture-ink`, `fixture-twine-harlowe` and `fixture-twine-sugarcube`.
 import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url';
+import fixturePictureUrl from '../../../tests/fixtures/glulx/picture.gblorb?url';
 import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url';
 import fixtureHarloweUrl from '../../../tests/fixtures/twine/lamp-harlowe.html?url';
 import fixtureSugarCubeUrl from '../../../tests/fixtures/twine/lamp-sugarcube.html?url';
@@ -26,6 +27,9 @@ export const FIXTURE_Z_TUID = 'fixture-z';
 /** `#/play/fixture-glulx`: the same game built for Glulx. */
 export const FIXTURE_GLULX_TUID = 'fixture-glulx';
 
+/** `#/play/fixture-glulx-picture`: an illustrated Glulx game (a Blorb with one picture). */
+export const FIXTURE_PICTURE_TUID = 'fixture-glulx-picture';
+
 /** `#/play/fixture-ink`: the same story told with choices, in ink. */
 export const FIXTURE_INK_TUID = 'fixture-ink';
 
@@ -33,9 +37,12 @@ export const FIXTURE_INK_TUID = 'fixture-ink';
 export const FIXTURE_HARLOWE_TUID = 'fixture-twine-harlowe';
 export const FIXTURE_SUGARCUBE_TUID = 'fixture-twine-sugarcube';
 
-const FIXTURES: Record<string, { url: string; kind: EngineKind }> = {
+const FIXTURE_TITLE = 'The Lamp at Saltmere';
+
+const FIXTURES: Record<string, { url: string; kind: EngineKind; title?: string }> = {
   [FIXTURE_Z_TUID]: { url: fixtureZUrl, kind: 'zmachine' },
   [FIXTURE_GLULX_TUID]: { url: fixtureGlulxUrl, kind: 'glulx' },
+  [FIXTURE_PICTURE_TUID]: { url: fixturePictureUrl, kind: 'glulx', title: "The Keeper's Picture" },
   [FIXTURE_INK_TUID]: { url: fixtureInkUrl, kind: 'ink' },
   [FIXTURE_HARLOWE_TUID]: { url: fixtureHarloweUrl, kind: 'twine' },
   [FIXTURE_SUGARCUBE_TUID]: { url: fixtureSugarCubeUrl, kind: 'twine' },
@@ -92,7 +99,7 @@ function FixtureReader({
     return (
       <TwineReader
         tuid={tuid}
-        title="The Lamp at Saltmere"
+        title={fixture.title || FIXTURE_TITLE}
         author="Inkventure Fixtures"
         story={story}
       />
@@ -100,7 +107,7 @@ function FixtureReader({
   return (
     <GameReader
       tuid={tuid}
-      title="The Lamp at Saltmere"
+      title={fixture.title || FIXTURE_TITLE}
       author="Inkventure Fixtures"
       language={language || 'en'}
       kind={fixture.kind}

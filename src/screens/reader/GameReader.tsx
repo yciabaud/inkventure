@@ -68,13 +68,17 @@ function toGameSnapshot(turnState: TurnState): GameSnapshot {
   return {
     state: turnState.state,
     turn: turnState.turn,
-    paragraphs: turnState.transcript.paragraphs.map((p) => p.runs),
+    paragraphs: turnState.transcript.paragraphs.map((p) => p.image || p.runs),
     status: turnState.transcript.status,
   };
 }
 
 function fromGameSnapshot(saved: GameSnapshot): TurnState {
-  const blocks: OutputBlock[] = saved.paragraphs.map((runs) => ({ type: 'paragraph', runs: runs }));
+  const blocks: OutputBlock[] = saved.paragraphs.map((paragraph): OutputBlock =>
+    Array.isArray(paragraph)
+      ? { type: 'paragraph', runs: paragraph }
+      : { type: 'image', ...paragraph },
+  );
   blocks.push({ type: 'status', lines: saved.status });
   return {
     state: saved.state,
@@ -394,6 +398,12 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return recentNouns(texts, table, splitStatus(transcript.status).left);
   }, [blocks, table, transcript.status]);
 
+  /** The data of a picture of the story (Glulx), from the engine. */
+  function imageUrl(id: number): string | null {
+    const engine = engineRef.current;
+    return engine && engine.imageUrl ? engine.imageUrl(id) : null;
+  }
+
   function sendChar(key: string) {
     const engine = engineRef.current;
     if (!engine || !awaitingChar) return;
@@ -556,6 +566,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               focus={blocks.length}
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
+              imageUrl={imageUrl}
               interceptTap={closeBar}
               pageSlot={(nav) => <TranscriptNav nav={nav} onClose={() => setView('game')} />}
             />
@@ -572,6 +583,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               }
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
+              imageUrl={imageUrl}
               pinToLast={typing}
               interceptTap={(isLastPage, point) => {
                 if (closeBar()) return true;

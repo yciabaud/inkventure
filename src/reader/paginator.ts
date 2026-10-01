@@ -7,14 +7,23 @@ export interface Run {
   style: string;
 }
 
+/** A picture: its number in the story file, its size in px and its alt text. */
+export interface ReaderImage {
+  id: number;
+  width: number;
+  height: number;
+  alt?: string;
+}
+
 /**
  * A paragraph of output. `input` is an echoed player command. `runs`, when present, split `text` into styled pieces
- * (their texts joined are exactly `text`).
+ * (their texts joined are exactly `text`). An `image` block (empty `text`) shows `image`, sized by `imageBox`.
  */
 export interface ReaderBlock {
-  kind: 'text' | 'input';
+  kind: 'text' | 'input' | 'image';
   text: string;
   runs?: Run[];
+  image?: ReaderImage;
 }
 
 /** A place in the text: character `offset` in block `block`. */
@@ -49,10 +58,29 @@ export interface Fragment {
   kind: ReaderBlock['kind'];
   text: string;
   runs?: Run[];
+  image?: ReaderImage;
 }
 
 // Measurements are fractional; tolerate rounding so a line that exactly fits is not pushed to the next page.
 const EPSILON = 0.5;
+
+/**
+ * The size a picture is shown at, known before it loads (so pages never reflow): its own size, scaled down to fit
+ * `maxWidth` × `maxHeight` (the text column and the page height), keeping its proportions; whole pixels, at least 1.
+ */
+export function imageBox(
+  image: { width: number; height: number },
+  maxWidth: number,
+  maxHeight: number,
+): { width: number; height: number } {
+  const width = image.width > 0 ? image.width : 1;
+  const height = image.height > 0 ? image.height : 1;
+  const scale = Math.min(1, maxWidth / width, maxHeight / height);
+  return {
+    width: Math.max(1, Math.floor(width * scale)),
+    height: Math.max(1, Math.floor(height * scale)),
+  };
+}
 
 export function comparePositions(a: Position, b: Position): number {
   return a.block !== b.block ? a.block - b.block : a.offset - b.offset;
@@ -170,6 +198,8 @@ export function pageFragments(blocks: ReaderBlock[], page: Page): Fragment[] {
     };
     const runs = blocks[b].runs;
     if (runs) fragment.runs = sliceRuns(runs, start, end);
+    const image = blocks[b].image;
+    if (image) fragment.image = image;
     fragments.push(fragment);
   }
   return fragments;

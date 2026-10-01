@@ -133,3 +133,66 @@ describe('GlkOteBridge graphics windows and exit', () => {
     expect(bridge.waitingFor).toBe(null);
   });
 });
+
+describe('GlkOteBridge pictures', () => {
+  const picture = (image: number, alttext?: string) => ({
+    special: 'image' as const,
+    image: image,
+    width: 600,
+    height: 400,
+    alignment: 'inlineup',
+    ...(alttext ? { alttext: alttext } : {}),
+  });
+
+  it('turns a picture in the main window into an image block, splitting the text around it', () => {
+    const blocks: OutputBlock[] = [];
+    const bridge = new GlkOteBridge(
+      {
+        output: (out: OutputBlock[]) => blocks.push(...out),
+        input: () => undefined,
+        exit: () => undefined,
+        error: () => undefined,
+      },
+      80,
+    );
+    bridge.update({
+      type: 'update',
+      gen: 1,
+      windows: [{ id: 1, type: 'buffer' }],
+      content: [
+        {
+          id: 1,
+          text: [
+            { content: ['normal', 'You look at it.'] },
+            { content: [picture(1, 'A lighthouse')] },
+            { append: true, content: ['normal', 'Before ', picture(2), 'normal', 'after.'] },
+            {},
+          ],
+        },
+      ],
+    });
+    expect(blocks).toEqual([
+      { type: 'paragraph', runs: [{ text: 'You look at it.', style: 'normal' }] },
+      { type: 'image', image: 1, width: 600, height: 400, alt: 'A lighthouse' },
+      { type: 'paragraph', runs: [{ text: 'Before ', style: 'normal' }], append: true },
+      { type: 'image', image: 2, width: 600, height: 400 },
+      { type: 'paragraph', runs: [{ text: 'after.', style: 'normal' }] },
+      { type: 'paragraph', runs: [] },
+    ]);
+
+    // In the transcript: a paragraph of its own, which later appended text does not join.
+    const transcript = applyOutput(EMPTY_TRANSCRIPT, [
+      blocks[1],
+      { type: 'paragraph', runs: [{ text: 'More.', style: 'normal' }], append: true },
+    ]);
+    expect(transcript.paragraphs).toEqual([
+      {
+        runs: [],
+        text: '',
+        input: false,
+        image: { image: 1, width: 600, height: 400, alt: 'A lighthouse' },
+      },
+      { runs: [{ text: 'More.', style: 'normal' }], text: 'More.', input: false },
+    ]);
+  });
+});

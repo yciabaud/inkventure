@@ -48,7 +48,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S1.7](stories/S1.7-engine-glulx.md) | Glulx support (Quixe) & performance flag | E1 | M4 | S1.5, S1.4 | in-progress |
 | [S1.8](stories/S1.8-engine-ink.md) | Ink support (inkjs) & choice buttons | E1 | M4 | S1.5 | done |
 | [S1.9](stories/S1.9-engine-twine.md) | Twine support in a sandboxed iframe (experimental) | E1 | M4 | S1.1, S3.4 | done |
-| [S1.10](stories/S1.10-glulx-images.md) | Images in Glulx games (grayscale) | E1 | M4 | S1.7 | todo |
+| [S1.10](stories/S1.10-glulx-images.md) | Images in Glulx games (grayscale) | E1 | M4 | S1.7 | done |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
