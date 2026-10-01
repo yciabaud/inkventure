@@ -21,6 +21,7 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { StorageNotice } from '../../ui/StorageNotice';
 import { TopBar } from '../../ui/TopBar';
 import { GameReader } from './GameReader';
+import { LazyTwineReader as TwineReader } from './LazyTwineReader';
 
 type State =
   | { phase: 'loading' }
@@ -173,7 +174,7 @@ export function PlayScreen({
           return;
         }
         // The engine's chunk loads during the download.
-        loadEngine(kind).catch(() => undefined);
+        if (kind !== 'twine') loadEngine(kind).catch(() => undefined);
         setState({ phase: 'downloading', game: game, loaded: 0, total: 0 });
         let step = 0;
         import('../../catalog/storyFile').then(
@@ -209,6 +210,18 @@ export function PlayScreen({
 
   const retry = () => setAttempt((n) => n + 1);
 
+  if (state.phase === 'ready' && state.kind === 'twine') {
+    return (
+      <TwineReader
+        tuid={tuid}
+        title={state.game.title}
+        author={state.game.author}
+        cover={!!state.game.cover}
+        story={state.story}
+        baseUrl={state.game.file.url}
+      />
+    );
+  }
   if (state.phase === 'ready') {
     return (
       <GameReader

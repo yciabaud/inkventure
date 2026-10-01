@@ -21,14 +21,15 @@ describe('format → engine', () => {
     expect(engineFor('toString')).toBeNull();
   });
 
-  it('ships the Z-machine, Glulx and ink engines, so far', async () => {
+  it('plays every format: Z-machine, Glulx and ink engines, Twine in its own frame', async () => {
     expect(isAvailable('zmachine')).toBe(true);
     expect(isAvailable('glulx')).toBe(true);
     expect(isAvailable('ink')).toBe(true);
-    expect(isAvailable('twine')).toBe(false);
+    expect(isAvailable('twine')).toBe(true);
     expect(typeof (await loadEngine('zmachine'))).toBe('function');
     expect(typeof (await loadEngine('glulx'))).toBe('function');
     expect(typeof (await loadEngine('ink'))).toBe('function');
+    // Twine stories have no `Engine`: the reader runs them in a sandboxed frame.
     await expect(loadEngine('twine')).rejects.toThrow(/No engine/);
   });
 
@@ -45,5 +46,15 @@ describe('format → engine', () => {
     expect(looksLikeStory('glulx', header(ascii('Glul'), 64))).toBe(true);
     expect(looksLikeStory('glulx', header([5], 64))).toBe(false);
     expect(looksLikeStory('ink', header(ascii('{"inkVersion"'), 20))).toBe(true);
+  });
+
+  it('recognises a Twine story by its story data (Twine 2) or store area (Twine 1)', () => {
+    const page = (body: string) => new Uint8Array(ascii('<!DOCTYPE html><html><body>' + body));
+    expect(looksLikeStory('twine', page('<tw-storydata name="x" hidden></tw-storydata>'))).toBe(
+      true,
+    );
+    expect(looksLikeStory('twine', page('<div id="storeArea" hidden></div>'))).toBe(true);
+    expect(looksLikeStory('twine', page('<h1>404 Not Found</h1>'))).toBe(false);
+    expect(looksLikeStory('twine', header([5], 64))).toBe(false);
   });
 });

@@ -9,7 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "postinstall": "node scripts/build/fetch-quixe.ts",
+    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/fixtures/build-twine.ts",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -40,6 +40,7 @@
     "@eslint/js": "^10.0.1",
     "@playwright/test": "1.63.0",
     "@preact/preset-vite": "^2.10.6",
+    "@types/jsdom": "^30.0.0",
     "@types/node": "^26.6.3",
     "@vitejs/plugin-legacy": "^7.2.1",
     "autoprefixer": "^10.6.1",

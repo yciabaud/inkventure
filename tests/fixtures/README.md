@@ -14,3 +14,10 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   *Ekphrasis*; then one line of input and the end. Built by the same script.
 - `ink/lamp.ink` → `lamp.json`: the same story told with choices in ink (MIT), with `title` / `chapter` tags and two
   endings. Served by the app at `#/play/fixture-ink`. Rebuild with `scripts/fixtures/build-ink.sh` (inkjs's compiler).
+- `twine/lamp-harlowe.twee` → `lamp-harlowe.html` and `twine/lamp-sugarcube.twee` → `lamp-sugarcube.html`: the same
+  story (MIT) in Twine's two main story formats, Harlowe 3.3.9 (zlib licence, `LICENSE-harlowe`) and SugarCube 2.37.3
+  (BSD 2-clause, `LICENSE-sugarcube`), published with the format files. The Harlowe one has a long passage (the keeper's
+  log) for page turns. Served by the app at `#/play/fixture-twine-harlowe` and `#/play/fixture-twine-sugarcube`.
+  The `.html` files are not committed: `npm install` builds them (`scripts/fixtures/build-twine.ts`, which downloads
+  the formats once from the Story Format Archive into `vendor/twine/` and checks their SHA-256). Run that script again
+  after editing a `.twee`.

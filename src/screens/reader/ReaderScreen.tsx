@@ -7,9 +7,13 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { GameReader } from './GameReader';
 import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
-// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx` and `fixture-ink`.
+import { LazyTwineReader as TwineReader } from './LazyTwineReader';
+// The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx`, `fixture-ink`,
+// `fixture-twine-harlowe` and `fixture-twine-sugarcube`.
 import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url';
 import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url';
+import fixtureHarloweUrl from '../../../tests/fixtures/twine/lamp-harlowe.html?url';
+import fixtureSugarCubeUrl from '../../../tests/fixtures/twine/lamp-sugarcube.html?url';
 import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
 import type { EngineKind } from '../../engines/engine';
 
@@ -25,10 +29,16 @@ export const FIXTURE_GLULX_TUID = 'fixture-glulx';
 /** `#/play/fixture-ink`: the same story told with choices, in ink. */
 export const FIXTURE_INK_TUID = 'fixture-ink';
 
+/** `#/play/fixture-twine-harlowe` and `-sugarcube`: the same story in Twine's two main story formats. */
+export const FIXTURE_HARLOWE_TUID = 'fixture-twine-harlowe';
+export const FIXTURE_SUGARCUBE_TUID = 'fixture-twine-sugarcube';
+
 const FIXTURES: Record<string, { url: string; kind: EngineKind }> = {
   [FIXTURE_Z_TUID]: { url: fixtureZUrl, kind: 'zmachine' },
   [FIXTURE_GLULX_TUID]: { url: fixtureGlulxUrl, kind: 'glulx' },
   [FIXTURE_INK_TUID]: { url: fixtureInkUrl, kind: 'ink' },
+  [FIXTURE_HARLOWE_TUID]: { url: fixtureHarloweUrl, kind: 'twine' },
+  [FIXTURE_SUGARCUBE_TUID]: { url: fixtureSugarCubeUrl, kind: 'twine' },
 };
 
 /**
@@ -78,6 +88,15 @@ function FixtureReader({
 
   if (failed) return <ErrorPage message={t('reader.gameLoadFailed')} />;
   if (!story) return <p class="reader__loading ui-font">{t('reader.loading')}</p>;
+  if (fixture.kind === 'twine')
+    return (
+      <TwineReader
+        tuid={tuid}
+        title="The Lamp at Saltmere"
+        author="Inkventure Fixtures"
+        story={story}
+      />
+    );
   return (
     <GameReader
       tuid={tuid}

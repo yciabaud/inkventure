@@ -15,6 +15,8 @@ export const keys = {
     return 'save:' + tuid + ':' + slot;
   },
   file: (tuid: string) => 'file:' + tuid,
+  /** A Twine story's own storage (its format's saves and session), kept like a named save. */
+  twine: (tuid: string) => 'save:' + tuid + ':twine',
 };
 
 const AUTOSAVE = /^save:(.+):auto$/;

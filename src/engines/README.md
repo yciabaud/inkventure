@@ -9,7 +9,9 @@ Engine abstraction and adapters (SPEC §4).
 - `formats.ts`: catalogue format → engine, the lazy loader of each shipped engine, and a header check of story files.
 - `zvm/`: the Z-machine engine (lazy chunk).
 - `quixe/`: the Glulx engine (lazy chunk), on the Quixe files downloaded into `vendor/quixe/` at install.
-- `ink/`: the ink engine (lazy chunk), on inkjs. Later: `twine/`.
+- `ink/`: the ink engine (lazy chunk), on inkjs.
+- `twine/`: not an `Engine`: preparing a Twine story's page for its sandboxed frame (`twineHtml.ts`: e-ink stylesheet,
+  injection) and the script run inside it (`frameScript.ts`); `messages.ts` is what the reader (`TwineReader`) needs.
 
 ## Third-party code
 
@@ -47,3 +49,11 @@ a command. `# title:` (global tag) and `# chapter:` (line tags) make the status 
 `saveState` is `story.state.toJson()` in a JSON envelope naming the story (a hash of its JSON) and the current chapter;
 the reader's Undo restores its previous turn snapshot. Unbound external functions fall back to the ink function of the
 same name (`allowExternalFunctionFallbacks`); none is bound. A runtime error of the story is reported through `onError`.
+
+Twine (S1.9): a Twine story runs its own story format in an `<iframe sandbox="allow-scripts" srcdoc>` (opaque origin:
+no access to the app, its storage or the top window). `prepareTwineHtml` puts, first in its `<head>`, the e-ink
+stylesheet (`eInkStylesheet(settings)`, `!important` rules over the format's own) and the frame script: plain ES5 in a
+string (it runs outside the bundle), which stands in for `localStorage` / `sessionStorage` (seeded with the saved data,
+every change posted to the reader), turns pages on taps (left 30 % back, elsewhere forward; links and controls excluded)
+and applies a new stylesheet when the reader sends one. The reader keeps the story's storage under
+`save:<tuid>:twine` (`src/storage/twine.ts`). Only messages whose `source` is the frame's window are handled.

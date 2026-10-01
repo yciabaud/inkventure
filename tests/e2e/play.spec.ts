@@ -109,10 +109,10 @@ test('a file that is not a story is refused', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('a format without an engine yet says so, without downloading', async ({ page }) => {
+test('a format without an engine says so, without downloading', async ({ page }) => {
   const detail = JSON.parse(readFileSync('public/catalog/games/' + CAVE + '.json', 'utf8'));
   await page.route('**/catalog/games/' + CAVE + '.json', (route) =>
-    route.fulfill({ status: 200, json: { ...detail, format: 'twine' } }),
+    route.fulfill({ status: 200, json: { ...detail, format: 'tads' } }),
   );
   let downloads = 0;
   await page.route('https://www.ifarchive.org/**', (route) => {
@@ -121,7 +121,7 @@ test('a format without an engine yet says so, without downloading', async ({ pag
   });
   await page.goto('/#/play/' + CAVE);
   await expect(page.getByRole('heading', { level: 1, name: 'Not playable yet' })).toBeVisible();
-  await expect(page.getByText('Twine games cannot be played in Inkventure yet.')).toBeVisible();
+  await expect(page.getByText('tads games cannot be played in Inkventure yet.')).toBeVisible();
   expect(downloads).toBe(0);
 });
 

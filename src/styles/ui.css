@@ -992,6 +992,21 @@ button.pager__btn {
   white-space: pre-wrap;
 }
 
+/* Twine stories (SPEC §4.3): the story's own page in a sandboxed frame filling the text area. */
+.twine__frame {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+
+.reader__badge {
+  flex-shrink: 0;
+  margin: 0 16px 0 0;
+}
+
 /* Status line in the top zone: location on the left, score / turns on the right. */
 .reader__status {
   display: flex;

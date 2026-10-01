@@ -34,7 +34,7 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
   // The same grid as My adventures: cover, title, and "Start here" on a curated starter.
   await expect(lamp).toContainText('The Lamp at Saltmere');
   await expect(lamp).toContainText('Start here');
-  await expect(shelf(page).getByRole('link')).toHaveCount(2);
+  await expect(shelf(page).getByRole('link')).toHaveCount(3);
   expect(await scrolls(page)).toBe(false);
 
   await press(lamp);
@@ -44,14 +44,17 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
 
 test('games in progress are left out, and the welcome is gone', async ({ page }) => {
   await page.goto('/#/home');
-  await expect(shelf(page).getByRole('link')).toHaveCount(2);
+  await expect(shelf(page).getByRole('link')).toHaveCount(3);
   await page.evaluate(
     (tuid) => localStorage.setItem('ik:v1:progress:' + tuid, JSON.stringify({ turns: 3 })),
     LAMP,
   );
   await page.reload();
-  await expect(shelf(page).getByRole('link')).toHaveCount(1);
-  await expect(shelf(page).getByRole('link')).toHaveAttribute('aria-label', /^Hollow Mountain/);
+  await expect(shelf(page).getByRole('link')).toHaveCount(2);
+  await expect(shelf(page).getByRole('link').first()).toHaveAttribute(
+    'aria-label',
+    /^Hollow Mountain/,
+  );
   await expect(page.getByText('Welcome to Inkventure')).toHaveCount(0);
 });
 
