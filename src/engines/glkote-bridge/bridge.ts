@@ -52,6 +52,8 @@ export interface Update {
   content?: ContentUpdate[];
   input?: InputUpdate[];
   specialinput?: { type: string };
+  /** GlkOte 2.3 (Quixe's Glk): the game has ended, in an `update`. Older libraries send `type: 'exit'` instead. */
+  exit?: boolean;
   message?: string;
 }
 
@@ -172,7 +174,7 @@ export class GlkOteBridge {
       }, 0);
     }
     if (data.input) this.updateInput(data.input);
-    if (data.type === 'exit') {
+    if (data.type === 'exit' || data.exit) {
       this.exited = true;
       this.pending = null;
       this.sink.exit();

@@ -7,6 +7,8 @@ import { applyOutput, EMPTY_TRANSCRIPT, splitStatus, type Transcript } from '../
 import { createQuixeEngine } from './quixeEngine';
 
 const STORY = readFileSync('tests/fixtures/glulx/lamp.ulx');
+/** Opens a graphics window and plays a sound without checking that Glk supports them. */
+const MEDIA = readFileSync('tests/fixtures/glulx/media.ulx');
 
 function copy(bytes: Uint8Array): ArrayBuffer {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
@@ -145,6 +147,19 @@ describe('Quixe engine', () => {
     const session = await start(blorb(new Uint8Array(STORY)));
     await begin(session);
     expect(await send(session, 'take can')).toContain('Taken.');
+  });
+
+  it('runs a game that draws pictures and plays sounds without checking support', async () => {
+    const session = await start(MEDIA);
+    expect(session.errors).toEqual([]);
+    expect(session.take()).toContain('Pictures and sounds are ready.');
+    expect(session.input()).toEqual({ type: 'line', maxlen: expect.any(Number) });
+    const next = session.next();
+    session.engine.sendLine('go');
+    await next;
+    expect(session.take()).toContain('The end.');
+    expect(session.exited()).toBe(true);
+    expect(session.errors).toEqual([]);
   });
 
   it('yields to the event loop during a long run when sliced', async () => {

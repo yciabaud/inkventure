@@ -100,3 +100,36 @@ describe('splitStatus', () => {
     expect(splitStatus([])).toEqual({ left: '', right: '' });
   });
 });
+
+describe('GlkOteBridge graphics windows and exit', () => {
+  it('ignores what is drawn in a graphics window, and reports an `exit: true` update as the end', () => {
+    let exited = false;
+    let transcript: Transcript = EMPTY_TRANSCRIPT;
+    const bridge = new GlkOteBridge(
+      {
+        output: (blocks: OutputBlock[]) => (transcript = applyOutput(transcript, blocks)),
+        input: () => undefined,
+        exit: () => (exited = true),
+        error: () => undefined,
+      },
+      80,
+    );
+    bridge.update({
+      type: 'update',
+      gen: 1,
+      windows: [
+        { id: 1, type: 'buffer' },
+        { id: 3, type: 'graphics' },
+      ],
+      content: [{ id: 1, text: [{ content: ['normal', 'Ready.'] }] }],
+      input: [{ id: 1, type: 'line', gen: 1, maxlen: 64 }],
+    });
+    expect(transcript.paragraphs.map((p) => p.text)).toEqual(['Ready.']);
+    expect(bridge.waitingFor).toBe('line');
+
+    bridge.update({ type: 'update', gen: 2, input: [], exit: true });
+    expect(exited).toBe(true);
+    expect(bridge.hasExited).toBe(true);
+    expect(bridge.waitingFor).toBe(null);
+  });
+});
