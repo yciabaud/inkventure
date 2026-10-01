@@ -7,6 +7,8 @@ export interface Prefs {
   locale?: string;
   reader?: Record<string, string | number>;
   libraryView?: 'list' | 'grid';
+  /** Show how long each turn took in the reader (also `?perf=1`): measuring engines on a device. */
+  turnTimes?: boolean;
 }
 
 export function getPrefs(store: Store): Prefs {

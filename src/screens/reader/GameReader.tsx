@@ -462,6 +462,10 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   if (state.phase === 'failed') return <ErrorPage message={state.message} />;
 
   const status = splitStatus(transcript.status);
+  const time =
+    perf && turnTime !== null ? (
+      <span class="reader__score">{t('reader.turnTime', { ms: turnTime })}</span>
+    ) : null;
   const heading =
     view === 'transcript' ? (
       <span class="reader__title">{t('transcript.title')}</span>
@@ -469,9 +473,12 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       <span class="reader__status">
         <span class="reader__title">{status.left}</span>
         {status.right && <span class="reader__score">{status.right}</span>}
-        {perf && turnTime !== null && (
-          <span class="reader__score">{t('reader.turnTime', { ms: turnTime })}</span>
-        )}
+        {time}
+      </span>
+    ) : time ? (
+      <span class="reader__status">
+        <span class="reader__title">{title}</span>
+        {time}
       </span>
     ) : (
       <span class="reader__title">{title}</span>

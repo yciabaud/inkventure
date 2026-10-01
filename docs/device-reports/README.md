@@ -27,9 +27,11 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 
 ## Measuring turn latency (story S1.7)
 
-1. On the e-reader, open a game with `?perf=1` after its address, e.g.
+1. On the e-reader, turn on **Settings → About → Turn times: Shown** (editing the address is awkward in the Kindle
+   browser), then open a game. Or add `?perf=1` after a game's address, e.g.
    `https://yciabaud.github.io/inkventure/#/play/<tuid>?perf=1` (or the pull request preview). The bundled Glulx
-   fixture is `#/play/fixture-glulx?perf=1`.
+   fixture is `#/play/fixture-glulx`. Only games played by typing commands (Z-machine, Glulx) have turns to time; Ink
+   and Twine show nothing.
 2. Play about ten ordinary commands (`look`, `inventory`, moves, `examine …`). After each one the status line shows the
    turn's time, e.g. `(840 ms)`.
 3. Note, per game: title and tuid, story file size (from its IFDB / IF Archive page), the first turn, and the typical

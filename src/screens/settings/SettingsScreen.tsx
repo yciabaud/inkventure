@@ -15,7 +15,7 @@ import {
 } from '../../i18n/i18n';
 import { changeLocale, initLocale } from '../../i18n/locale';
 import { getDefaults, setDefaults, textStyle, type ReaderSettings } from '../../reader/settings';
-import { getPrefs, getStore, type UsageGroup } from '../../storage';
+import { getPrefs, getStore, setPrefs, type UsageGroup } from '../../storage';
 import { Button } from '../../ui/Button';
 import { Dialog } from '../../ui/Dialog';
 import { PagedParagraphs } from '../../ui/PagedParagraphs';
@@ -215,10 +215,40 @@ function buildVersion(): string {
   return t('settings.version', { commit: parts[0].slice(0, 7), date: formatDate(date) });
 }
 
+type Toggle = 'off' | 'on';
+
+/** Turn times in the reader, for measuring on a device without editing the address (`?perf=1`). */
+function TurnTimes() {
+  const [current, setCurrent] = useState<Toggle>(() =>
+    getPrefs(getStore()).turnTimes ? 'on' : 'off',
+  );
+  function choose(value: Toggle) {
+    setCurrent(value);
+    try {
+      setPrefs(getStore(), { turnTimes: value === 'on' ? true : undefined });
+    } catch {
+      // Storage full: the StorageNotice says so.
+    }
+  }
+  return (
+    <>
+      <Choice<Toggle>
+        label={t('settings.turnTimes')}
+        values={['off', 'on']}
+        current={current}
+        labelOf={(value) => t(value === 'on' ? 'settings.on' : 'settings.off')}
+        onChoose={choose}
+      />
+      <p class="settings-page__hint">{t('settings.turnTimesHint')}</p>
+    </>
+  );
+}
+
 function About() {
   return (
     <SectionPage title={t('settings.about')}>
       <p class="settings-page__version">{buildVersion()}</p>
+      <TurnTimes />
       <PagedParagraphs key={getLocale()} paragraphs={ABOUT.map((key) => t(key))} />
     </SectionPage>
   );
