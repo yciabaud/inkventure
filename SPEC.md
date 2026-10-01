@@ -201,6 +201,7 @@ Purpose: find the next adventure in the playable catalogue.
   - Play time (< 30 min, 30 min–1 h, 1–2 h, 2 h+ — from IFDB median playtime when available)
   - Forgiveness (Merciful → Cruel; shown once the index carries it, see [§5.2](#52-catalogue-index))
   - Release year range
+  - Illustrated (games whose story file holds pictures besides the cover, see [§5.2](#52-catalogue-index); S2.5)
   - "Start here" (newcomer-friendly: a curated starter of `featured.json`, or an IFDB tag listed in
     `scripts/catalog/starter-tags.json`, e.g. *recommended for beginners*)
 
@@ -209,7 +210,7 @@ Purpose: find the next adventure in the playable catalogue.
   (its current value), and a page of choices per filter with counts, as many 56 px rows as fit, paged with ‹ ›.
   Choices apply at once and replace the current history entry, so "Show n adventures" returns to the results with
   them and the back button leaves the panel as the results were. Hash keys: `q`, `sort`, `genre`, `lang`,
-  `format`, `rating`, `votes`, `time`, `fg`, `from`, `to`, `start`, `page`, `panel` (lists comma-separated).
+  `format`, `rating`, `votes`, `time`, `fg`, `from`, `to`, `ill`, `start`, `page`, `panel` (lists comma-separated).
 - **Sort**: best rated (IFDB star sort; the default), most rated, newest, title A–Z; games without the value last,
   ties keep the search order (title matches first, then by title).
 - **Results**, paginated, as many as fit the screen (no scrolling), in two views remembered in the preferences:
@@ -221,7 +222,7 @@ Purpose: find the next adventure in the playable catalogue.
 
 ### 3.5 Game detail (`#/game/:tuid`)
 
-- Cover, title, author(s), year, language, genre, format badge, ★ rating and count, playtime, forgiveness.
+- Cover, title, author(s), year, language, genre, format badge, "Illustrated" badge when relevant, ★ rating and count, playtime, forgiveness.
 - Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long: one CSS column per page, turned
   with the pager).
 - Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**.
@@ -460,12 +461,15 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    Archive links upgraded). A file outside the IF Archive is used only if its host lets a browser page read it
    (CORS, checked by `check-cors.ts` before resolving, see [§5.5](#55-game-files)). Drop games without such a file,
    recording the reason in `report.json`.
+   **Illustrated** (S2.5): for a Blorb in a format whose engine draws pictures, read the resource index from the
+   file's head (HTTP `Range`, full download as fallback; cached per file URL) and flag the game when it holds at
+   least two `Pict` resources besides the cover (`Fspc`).
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts, facet values (genres, languages, formats) with counts.
    - `index-<n>.json` — compact rows sharded by ~500 games (short keys to keep parse time low on Kindle):
      `{t: tuid, n: title, a: author, y: year, l: lang, g: [genres], f: format, r: avgRating, rc: ratingCount,
-     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag, st: starterFlag}`, sorted by title;
+     s: starSort, p: playtimeMin, fg: forgiveness, c: hasCover, sl: slowFlag, st: starterFlag, il: illustrated}`, sorted by title;
      unknown values are left out (`fg` is not available from IFDB's JSON API yet; `st` marks the games carrying a
      newcomer-friendly IFDB tag of `scripts/catalog/starter-tags.json`).
    - `games/<tuid>.json` — full detail: blurb, credits, IFID, file URL(s), file size, licence, cover URL, IFDB link.
@@ -728,7 +732,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M1 — Playable Z-machine** | Paginated reader, settings, ZVM, command bar & chips, saves, status line | S1.1–S1.6 |
 | **M2 — Catalogue pipeline** | IFDB crawl, playability, index, featured | S2.1–S2.4 |
 | **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings | S3.1–S3.4, S4.1–S4.2, S5.1 |
-| **M4 — More formats** | Glulx, Ink, Twine | S1.7–S1.9 |
+| **M4 — More formats** | Glulx, illustrated games, Ink, Twine | S1.7–S1.9, S2.5 |
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
