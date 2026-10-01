@@ -19,7 +19,7 @@ import {
   statSync,
   writeFileSync,
 } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { delimiter, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { chromium } from '@playwright/test';
 import type { FeaturedFile } from '../catalog/featured.ts';
@@ -180,7 +180,8 @@ async function buildBook(
     '--toc',
     '--toc-depth=1',
     '--split-level=1',
-    '--resource-path=' + resolve(out),
+    // The cards' files are in the build folder, the screenshots (images/) next to the chapters.
+    '--resource-path=' + [resolve(out), resolve(source)].join(delimiter),
     '--output=' + epub,
     ...inputs,
   ]);

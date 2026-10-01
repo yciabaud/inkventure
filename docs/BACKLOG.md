@@ -55,7 +55,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
 | [S2.4](stories/S2.4-featured-json.md) | Featured selection file & validation | E2 | M2 | S2.3 | done |
 | [S2.5](stories/S2.5-illustrated-games.md) | Illustrated games: detection, badge & filter | E2 | M4 | S1.10, S2.3, S3.2 | done |
-| [S2.6](stories/S2.6-file-language.md) | The language of the file we play, not of every version | E2 | M4 | S2.2, S2.3 | in-progress |
+| [S2.6](stories/S2.6-file-language.md) | The language of the file we play, not of every version | E2 | M4 | S2.2, S2.3 | done |
 | [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | done |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | done |
@@ -65,7 +65,7 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 | [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | done |
 | [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | dropped |
 | [S6.1](stories/S6.1-ebook-build.md) | Ebook build pipeline (EPUB + KF8) | E6 | M5 | S2.4 | done |
-| [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | todo |
+| [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | done |
 | [S6.3](stories/S6.3-ebook-download-page.md) | Ebook download page (desktop) | E6 | M5 | S6.1 | in-progress |
 | [S7.1](stories/S7.1-device-checklist-perf.md) | Real-device checklist & performance budgets | E7 | M5 | S4.2, S3.4 | todo |
 | [S7.2](stories/S7.2-launch.md) | Launch: domain, README, credits, licences | E7 | M5 | S7.1, S6.2, S6.3 | todo |

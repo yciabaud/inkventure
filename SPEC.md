@@ -692,6 +692,10 @@ A free ebook, in EN and FR, is the main acquisition channel.
   Vite entry, so the app's budgets do not count it. The ebooks have no size budget. Home's welcome and the ⋯ menu
   link to the page; Settings › About gives its address as text; the README and the ebook's credits chapter link to
   it.
+- **Screenshots** (S6.2): the chapters show the app in grayscale PNGs (`ebook/<locale>/images/`, 16 gray levels,
+  600 × 800 like a small e-reader), taken from the production build with the sample catalogue and the test fixtures
+  by `npm run ebook:screenshots` and committed; the fixture stories are in English, so the French book's screenshots
+  show the French UI with an English game (its buttons follow the game's language, which the text says).
 - **First page of the book:** a large "Open Inkventure" link to the app at the top of the welcome chapter: the
   book's main use on the e-reader is to open the app with one tap.
 

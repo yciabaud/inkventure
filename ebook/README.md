@@ -10,6 +10,10 @@ Sources of the free Inkventure ebook (SPEC §8), one folder per UI locale, built
 - `<locale>/NN-*.md`: the chapters, in file name order (Pandoc Markdown). `{{host}}` is replaced by the app's address;
   the `<!-- cards -->` marker (in exactly one chapter) by the game cards, made from the catalogue's `featured.json`
   (curated games first) with their IFDB cover thumbnail, or a text placeholder.
+- `<locale>/images/`: screenshots of the app in grayscale (16 levels), referenced by the chapters as
+  `images/<name>.png`. They are committed: after a visible change to Home or the reader, run
+  `npm run build && npm run ebook:screenshots` (the production build at 600 × 800, with the sample catalogue and the
+  test fixtures, no network) and check them before committing.
 
 ## Building
 

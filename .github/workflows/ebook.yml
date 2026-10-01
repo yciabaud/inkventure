@@ -29,8 +29,16 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      # Non-interactive, with retries and a network timeout: a slow mirror once held this step until the job's
+      # timeout. Past 10 minutes it fails, so the run can be started again.
       - name: Install Pandoc, EPUBCheck and Calibre
-        run: apt-get update -qq && apt-get install -y -qq --no-install-recommends pandoc epubcheck calibre
+        timeout-minutes: 10
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          APT="-o Acquire::Retries=3 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30"
+          apt-get $APT update -qq
+          apt-get $APT install -y -qq --no-install-recommends pandoc epubcheck calibre
       - run: npm ci
       - name: Use the published catalogue
         run: |
