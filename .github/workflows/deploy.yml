@@ -4,6 +4,8 @@ name: Deploy to GitHub Pages
 # catalogue published on the `catalog` branch replaces the sample in public/catalog/), or on demand.
 # The site is served from the gh-pages branch: main at its root, pull request previews under pr-preview/
 # (see preview.yml), so this deployment must leave that folder alone.
+# The ebooks (SPEC §8, story S6.3) are built from the same catalogue in a parallel job and published under ebook/,
+# next to their download page; if their build fails, the site is deployed without them (the page says so).
 on:
   workflow_run:
     workflows: [CI, Catalogue]
@@ -20,7 +22,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.name == 'Catalogue'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -42,6 +44,69 @@ jobs:
       - run: npm run check:size
       # The Vite manifest is only used by check:size; don't publish it. Serve files as they are (no Jekyll).
       - run: rm -rf dist/.vite && touch dist/.nojekyll
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  ebook:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && (github.event.workflow_run.event == 'push' || github.event.workflow_run.name == 'Catalogue'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Chromium (the cover is rendered with Playwright) comes with the image; its tag must match @playwright/test.
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install Pandoc, EPUBCheck and Calibre
+        run: apt-get update -qq && apt-get install -y -qq --no-install-recommends pandoc epubcheck calibre
+      - run: npm ci
+      - name: Use the published catalogue
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          scripts/catalog/use-published.sh
+      - run: npm run ebook
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+      # The ebooks have no size budget (owner's decision, S6.3).
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ebook
+          path: |
+            ebook/build/books.json
+            ebook/build/inkventure-*.epub
+            ebook/build/inkventure-*.azw3
+            ebook/build/inkventure-*-cover.jpg
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: [build, ebook]
+    # The site goes out even when the ebook build failed.
+    if: always() && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # The deploy action pushes from a repository.
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: dist
+      - uses: actions/download-artifact@v4
+        if: needs.ebook.result == 'success'
+        with:
+          name: ebook
+          path: dist/ebook
       - uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: dist

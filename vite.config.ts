@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import { buildInfoPlugin } from './scripts/build/build-info.ts';
+import { ebookPagePlugin } from './scripts/build/ebook-page.ts';
 import { vendorPatchesPlugin } from './scripts/build/vendor-patches.ts';
 
 export default defineConfig({
@@ -15,6 +16,8 @@ export default defineConfig({
     preact(),
     vendorPatchesPlugin(),
     buildInfoPlugin(),
+    // The ebook download page (S6.3), dist/ebook/: not an entry, outside the app's budgets.
+    ebookPagePlugin(),
     // ES5 bundle + core-js polyfills for the Kindle experimental browser (old WebKit).
     legacy({
       targets: ['defaults', 'safari >= 5', 'ie >= 11'],

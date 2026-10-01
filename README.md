@@ -7,6 +7,7 @@ you play mostly by tapping. It is distributed through a free ebook that links st
 
 - Live app: https://yciabaud.github.io/inkventure/ (deployed from `main` after CI passes; build info in
   [`version.json`](https://yciabaud.github.io/inkventure/version.json))
+- Free ebook (EN/FR, EPUB and AZW3), to download from a computer: https://yciabaud.github.io/inkventure/ebook/
 - Device probe (run it on your e-reader): https://yciabaud.github.io/inkventure/probe/ — see
   [docs/device-reports/](docs/device-reports/README.md)
 - Specification: [SPEC.md](SPEC.md)
@@ -23,7 +24,7 @@ npm run dev         # dev server
 npm run lint        # ESLint, stylelint, Prettier
 npm test            # unit tests (Vitest, jsdom)
 npm run build       # modern + ES5 legacy bundles in dist/
-npm run check:es5   # es-check on the legacy bundle and the device probe
+npm run check:es5   # es-check on the legacy bundle, the device probe and the ebook page
 npm run check:size  # asset size budgets (size-budget.json)
 npm run test:e2e    # Playwright (set PW_WEBKIT=1 to include WebKit locally; CI always does)
 ```

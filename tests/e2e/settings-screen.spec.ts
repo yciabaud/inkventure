@@ -110,6 +110,11 @@ test.describe('English browser', () => {
       await press(next);
     }
     await expect(page.getByText(/^Privacy:/)).toBeVisible();
+    // Then the ebook download page's address, as text (S6.3).
+    for (let i = 0; i < 10 && !(await page.getByText(/^Free ebook:/).isVisible()); i++) {
+      await press(next);
+    }
+    await expect(page.getByText(/^Free ebook:/)).toContainText(/http:\/\/localhost:\d+\/ebook\/$/);
   });
 
   test('reset needs two confirmations, clears only ik: keys and returns to the first launch', async ({

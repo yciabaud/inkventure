@@ -23,3 +23,9 @@ Other options: `--catalog DIR` (default `public/catalog`, the sample catalogue u
 `scripts/catalog/use-published.sh` replaced it), `--out DIR`, `--host URL`, `--no-check` (skip EPUBCheck),
 `--no-azw3`. The cover is rendered with Playwright's Chromium. The Ebook workflow (`.github/workflows/ebook.yml`)
 builds both books from the published catalogue on every `v*` tag and uploads them as an artifact.
+
+The output folder also gets a cover thumbnail per locale (`inkventure-<locale>-cover.jpg`) and `books.json` (each
+file's locale, format, size, build date and commit), for the download page. The Deploy workflow builds the books on
+each deployment of `main` and publishes them under `ebook/` on the site, next to that page
+(`src/ebook-page/page.ts`, written into the build by `scripts/build/ebook-page.ts`). The file names have no version,
+so shared links keep working.

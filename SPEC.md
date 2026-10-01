@@ -659,6 +659,19 @@ A free ebook, in EN and FR, is the main acquisition channel.
   is a PNG of the same link. The host is `ebook/config.json`'s `host`. The book cover is rendered from HTML with
   Playwright's Chromium (Calibre drops SVG covers). The Ebook workflow builds both books from the published catalogue
   on `v*` tags (artifact) and on pull requests that touch the ebook.
+- **Download page** (S6.3): `<host>/ebook/`, a standalone static page like `probe/` (not a route of the app), for
+  readers on a computer. The Deploy workflow builds the books on every deployment of `main` (a job in parallel with
+  the app's build, from the same catalogue) and publishes them at stable URLs, without a version:
+  `ebook/inkventure-<locale>.epub` and `.azw3`, a cover thumbnail `ebook/inkventure-<locale>-cover.jpg`, and
+  `ebook/books.json` (for each file: locale, format, size, build date, commit). If the ebook build fails, the site is
+  deployed without them. The page follows the browser's language (EN/FR, `?lang=` switch), shows the book in that
+  language first, a download button per format ("EPUB", for most e-readers; "AZW3", for e-readers that use that
+  format) with size and build date, and how to copy the file to an e-reader (USB, the e-reader's own sending
+  service, in generic terms). Without `books.json` (failed build, PR previews, `vite preview`) it says the books are
+  not available. Its strings are the `ebookPage.*` keys of `src/i18n/`; `scripts/build/ebook-page.ts` writes
+  `ebook/index.html` with them and compiles `src/ebook-page/page.ts` to ES5 (`ebook/page.js`) at build time: not a
+  Vite entry, so the app's budgets do not count it. The ebooks have no size budget. Settings › About gives the
+  page's address as text; the README and the ebook's credits chapter link to it.
 
 ---
 
