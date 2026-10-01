@@ -646,4 +646,13 @@ describe('the language of the file played (S2.6)', () => {
     );
     expect(summary).toContain('Language overrides naming no kept game: `zzzzunknown00000`.');
   });
+
+  it('escapes backslashes and pipes in the summary table', () => {
+    const dataset = { games: games() } as RawDataset;
+    const summary = summarize(
+      dataset,
+      run(dataset.games, { [JEANGILLE]: { language: 'fr', reason: 'a\\|b' } }),
+    );
+    expect(summary).toContain('| override | a\\\\\\|b |');
+  });
 });

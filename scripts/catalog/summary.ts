@@ -18,7 +18,8 @@ function table(title: string, rows: Array<[string, number]>, max = 15): string {
 
 function languages(resolution: Resolution): string {
   const { changed, versions, assumed, unknownOverrides } = resolution.languages;
-  const cell = (text: string) => text.replace(/\|/g, '\\|');
+  // Markdown table cell: backslashes first, then the pipes.
+  const cell = (text: string) => text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
   const parts = [
     changed.length
       ? "**Language not IFDB's first (S2.6)**\n\n| Game | Title | IFDB first → kept | From | Why |\n|---|---|---|---|---|\n" +
