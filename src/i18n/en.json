@@ -307,5 +307,6 @@
   },
   "perf.home": "Home ready in {ms} ms",
   "perf.library": "First results in {ms} ms",
-  "perf.page": "Page turned in {ms} ms"
+  "perf.page": "Page turned in {ms} ms",
+  "perf.turn": "Turn played in {ms} ms"
 }

@@ -307,5 +307,6 @@
   },
   "perf.home": "Accueil prêt en {ms} ms",
   "perf.library": "Premiers résultats en {ms} ms",
-  "perf.page": "Page tournée en {ms} ms"
+  "perf.page": "Page tournée en {ms} ms",
+  "perf.turn": "Tour joué en {ms} ms"
 }

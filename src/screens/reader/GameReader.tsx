@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { reportTiming } from '../../app/perf';
 import type { Engine, EngineKind, InputRequest, OutputBlock } from '../../engines/engine';
 import { loadEngine } from '../../engines/formats';
 import {
@@ -145,7 +146,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     if (start === null || !perf) return;
     const time = Date.now() - start;
     setTurnTime(time);
-    console.info('Turn took ' + time + ' ms');
+    // Also in the timings line (S7.1), which logs it to the console.
+    reportTiming('turn', time);
   }
   const table = useMemo(() => verbTable(language || DEFAULT_LANGUAGE), [language]);
 
