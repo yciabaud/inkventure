@@ -6,8 +6,10 @@ import { ReaderScreen } from '../screens/reader/ReaderScreen';
 import { SettingsScreen } from '../screens/settings/SettingsScreen';
 import { useLocale } from '../i18n/i18n';
 import { getPrefs, getStore } from '../storage';
+import { PerfLine } from '../ui/PerfLine';
 import { StorageNotice } from '../ui/StorageNotice';
 import { TopBar } from '../ui/TopBar';
+import { setPerfEnabled } from './perf';
 import { useLocation, type Location } from './router';
 
 function Screen({ location }: { location: Location }) {
@@ -31,15 +33,15 @@ export function App() {
   // Re-render the whole tree when the UI language changes (t() reads the current locale).
   const locale = useLocale();
   const route = location.route;
+  // Timings for measuring on a device (S7.1): Settings → About, or `?perf=1`.
+  const perf = location.query.perf === '1' || !!getPrefs(getStore()).turnTimes;
+  setPerfEnabled(perf);
   if (route.name === 'play') {
     // The reader takes the whole screen and shows the top bar itself when its top zone is tapped.
     return (
       <div class="app" lang={locale}>
-        <ReaderScreen
-          tuid={route.tuid}
-          language={location.query.lang}
-          perf={location.query.perf === '1' || !!getPrefs(getStore()).turnTimes}
-        />
+        <ReaderScreen tuid={route.tuid} language={location.query.lang} perf={perf} />
+        {perf && <PerfLine />}
       </div>
     );
   }
@@ -50,6 +52,7 @@ export function App() {
         <StorageNotice store={getStore()} />
         <Screen location={location} />
       </main>
+      {perf && <PerfLine />}
     </div>
   );
 }

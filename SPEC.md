@@ -799,7 +799,12 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 ### 11.4 Real-device checklist
 
 - `docs/device-checklist.md` (story S7.1): a 15-minute manual script run on a real Kindle (and a Kobo)
-  before each release; results recorded in the release notes.
+  before each release; results recorded in the release notes (`docs/release-notes-template.md`) and in
+  `docs/device-reports/`.
+- **Timings** (Settings → About → Timings, or `?perf=1`): a small line at the top right of the screen gives the
+  last time measured on the device — Home ready (from the page's start on a cold start, else from the address
+  change), the Library's first results, a page turn in the reader (from the tap to the new page painted) — and the
+  console logs each one. The reader's status line gives each game turn's time (§4.5).
 
 ---
 

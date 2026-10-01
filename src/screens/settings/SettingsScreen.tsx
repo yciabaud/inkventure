@@ -228,7 +228,7 @@ function buildVersion(): string {
 
 type Toggle = 'off' | 'on';
 
-/** Turn times in the reader, for measuring on a device without editing the address (`?perf=1`). */
+/** Timings (Home, Library, page turns and game turns), for measuring on a device without editing the address (`?perf=1`). */
 function TurnTimes() {
   const [current, setCurrent] = useState<Toggle>(() =>
     getPrefs(getStore()).turnTimes ? 'on' : 'off',

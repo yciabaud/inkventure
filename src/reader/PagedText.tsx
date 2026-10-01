@@ -1,5 +1,6 @@
 import type { ComponentChildren } from 'preact';
-import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { measured, perfEnabled } from '../app/perf';
 import { t } from '../i18n/i18n';
 import { blockClass, IMAGE_CLASS, runClass } from './measure';
 import { PageTurner, type PageView, type TapInterceptor } from './pageTurner';
@@ -127,6 +128,13 @@ export function PagedText({
   // After each draw, make sure the page really fits (see PageTurner.checkFit).
   useLayoutEffect(() => {
     turner.checkFit();
+  }, [turner, view]);
+
+  // Timings (S7.1): a page turn the reader asked for counts until the new page is painted.
+  useEffect(() => {
+    const asked = turner.takeTurnAsked();
+    if (asked === null || !perfEnabled()) return;
+    requestAnimationFrame(() => setTimeout(() => measured('page', asked), 0));
   }, [turner, view]);
 
   // New text settings: paginate again (the first layout happens on attach).
