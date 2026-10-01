@@ -184,7 +184,7 @@ export function inlineAssets(html: string, assets: StoryAssets): string {
     const css = rewriteCss(assets.text(path), folderOf(path), assets, [path]);
     return '<style ' + INLINED + '>' + inElement(css, 'style') + '</style>';
   });
-  page = page.replace(/<script\b([^>]*)>\s*<\/script>/gi, (tag, attributes: string) => {
+  page = page.replace(/<script\b([^>]*)>\s*<\/script\s*>/gi, (tag, attributes: string) => {
     const src = attribute(attributes, 'src');
     const path = src !== undefined ? assets.resolve(src) : undefined;
     if (!path || !/\.js$/i.test(path)) return tag;
@@ -195,7 +195,7 @@ export function inlineAssets(html: string, assets: StoryAssets): string {
     return '<script' + rest + '>' + inElement(assets.text(path), 'script') + '</script>';
   });
   page = page.replace(
-    /(<style\b)([^>]*)>([\s\S]*?)(<\/style>)/gi,
+    /(<style\b)([^>]*)>([\s\S]*?)(<\/style\s*>)/gi,
     (_match, open: string, attributes: string, css: string, close: string) =>
       attributes.indexOf(INLINED) >= 0
         ? open + attributes.replace(' ' + INLINED, '') + '>' + css + close

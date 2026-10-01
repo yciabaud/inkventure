@@ -94,6 +94,15 @@ describe('the story page', () => {
     );
   });
 
+  it('accepts end tags with spaces', () => {
+    expect(
+      inlineAssets(
+        '<script src="js/extra.js"></script ><style>a{b:url(img/lamp.png)}</style >',
+        assets,
+      ),
+    ).toBe(`<script>window.extra = "<\\/script>";</script><style>a{b:url(${PNG_URL})}</style >`);
+  });
+
   it('rewrites attributes, style elements and inline styles', () => {
     expect(
       inlineAssets(
