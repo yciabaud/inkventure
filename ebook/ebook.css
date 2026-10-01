@@ -1,0 +1,73 @@
+/* Ebook styles (SPEC §8): plain and robust for e-readers. The reader's own font and size win; no colours, no
+   animations; each game card starts a page. */
+body {
+  margin: 0;
+  line-height: 1.4;
+}
+
+h1 {
+  margin: 1em 0 1em;
+  font-size: 1.6em;
+  line-height: 1.2;
+  page-break-before: always;
+}
+
+h2 {
+  margin: 1.2em 0 0.5em;
+  font-size: 1.25em;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 0.7em;
+}
+
+code {
+  font-family: monospace;
+}
+
+.card {
+  page-break-before: always;
+  page-break-inside: avoid;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card-cover,
+.card-nocover {
+  display: block;
+  width: 8em;
+  margin: 0 0 0.7em;
+}
+
+.card-nocover {
+  height: 12em;
+  box-sizing: border-box;
+  padding: 0.5em;
+  border: 2px solid #000;
+  font-weight: bold;
+}
+
+.card-meta {
+  font-size: 0.9em;
+}
+
+.card-badge {
+  padding: 0 0.3em;
+  border: 1px solid #000;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.card-play {
+  font-size: 1.15em;
+  font-weight: bold;
+}
+
+.card-qr {
+  display: block;
+  width: 7em;
+  margin: 0.5em 0 0;
+}
