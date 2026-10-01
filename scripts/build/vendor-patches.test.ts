@@ -65,6 +65,12 @@ describe('Quixe patches', () => {
     expect(glkapi.match(/return 0; \/\* no sound: nothing played \*\//g)).toHaveLength(3);
   });
 
+  it('create graphics windows even without a canvas', () => {
+    const glkapi = applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements);
+    expect(glkapi).not.toContain('Graphics windows not supported; silently return null');
+    expect(glkapi).toContain('Created even without a canvas: the bridge ignores what is drawn.');
+  });
+
   it('leave no window, document or jQuery on the paths the app runs', () => {
     const glkapi = applyPatch(read('glkapi.js'), QUIXE_GLKAPI.replacements);
     expect(glkapi).not.toMatch(/window\.GlkOteClass|document\.createElement/);

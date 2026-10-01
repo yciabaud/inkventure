@@ -1,5 +1,5 @@
 #!/bin/sh
-# Rebuilds the Glulx test fixture from its Inform 6 source.
+# Rebuilds the Glulx test fixtures from their Inform 6 sources.
 # Needs the Inform 6 compiler and the Inform 6 standard library 6.12 *with* infglk.h (the Debian package lacks it):
 #   git clone --depth 1 https://github.com/DavidGriffith/inform6lib /tmp/inform6lib
 #   INFORM6LIB=/tmp/inform6lib scripts/fixtures/build-glulx.sh
@@ -18,3 +18,4 @@ done
 ln -sf "$LIB/verblib.h" "$CASED/VerbLib.h" 2>/dev/null || true
 cd "$(dirname "$0")/../../tests/fixtures/glulx"
 inform6 -G -s +include_path="$CASED" lamp.inf lamp.ulx
+inform6 -G +include_path="$CASED" media.inf media.ulx

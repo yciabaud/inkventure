@@ -13,7 +13,10 @@
 // define classes as globals and export them only to CommonJS:
 // - each file exports its class as an ES module instead, without creating the unused default instance;
 // - `qlog` no longer reads `window` (absent in unit tests);
-// - glkapi.js: GlkOte is always passed in, and it reports no canvas (Inkventure draws no graphics windows);
+// - glkapi.js: GlkOte is always passed in, and it reports no canvas (Inkventure draws no graphics windows yet);
+// - glkapi.js: graphics windows are still created. Without a canvas upstream returns null for them, while the Graphics
+//   gestalt still says yes: games that trust it then draw into that null window and stop on "glk_image_draw: invalid
+//   window". The window exists (the bridge ignores what is drawn in it); the DrawImage gestalt still says no for it;
 // - glkapi.js: sound is silent. Upstream never creates a sound channel (`glk_schannel_create` returns null) and every
 //   other channel call throws "invalid schannel", which stops games that play sounds without checking the channel
 //   they got (or the Sound gestalt): these calls do nothing instead, and the play calls report failure (0);
@@ -110,6 +113,10 @@ export const PATCHES: Patch[] = [
       [
         /^ {4}has_canvas = \(document\.createElement\('canvas'\)\.getContext != undefined\);$/m,
         '    has_canvas = false;',
+      ],
+      [
+        /^ {8}if \(!has_canvas\) \{\n {12}\/\* Graphics windows not supported; silently return null \*\/\n {12}gli_delete_window\(newwin\);\n {12}return null;\n {8}\}\n/m,
+        '        /* Created even without a canvas: the bridge ignores what is drawn. */\n',
       ],
       [
         /^ {4}throw\('glk_schannel_(play|play_ext|play_multi): invalid schannel'\);$/gm,
