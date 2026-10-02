@@ -30,7 +30,8 @@ S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 →
 M6 (play fidelity) comes from the [2026-10-01 comparison](reports/rendering-2026-10-01/README.md) of the 32 featured games with Parchment and the original
 Twine pages: the two blockers first (S1.13 is the smallest), then the stories that make menus and questions usable.
 
-M7 (offline) starts with a device spike: S5.3 is designed from what the S0.9 probe shows on the Kindle.
+M7 (offline) started with a device spike: the S0.9 probe showed the Kindle can open a page and read kept files with Wi-Fi
+off, so S5.3 keeps its full scope.
 
 ## Stories
 
@@ -44,7 +45,7 @@ M7 (offline) starts with a device spike: S5.3 is designed from what the S0.9 pro
 | [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | done |
 | [S0.7](stories/S0.7-asset-size-budgets.md) | Asset size budgets in CI | E0 | M0 | S0.1 | done |
 | [S0.8](stories/S0.8-pr-preview-deployments.md) | Pull request preview deployments | E0 | M0 | S0.2 | done |
-| [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | in-progress |
+| [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | done |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |

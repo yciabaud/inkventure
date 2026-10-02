@@ -112,8 +112,9 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
   refresh, slow repaint (≈100–500 ms).
 - **Keyboard:** slow virtual keyboard covering half the screen; no hardware keys exposed to the page.
 - **Offline:** not relied upon; Wi-Fi is needed to load the app and a game, but a loaded game keeps working and
-  autosaves locally. A Service Worker offline shell is now a realistic enhancement (see §6.2 and §13), measured by the
-  offline probe (`/probe/offline/`, S0.9) and planned in S5.3.
+  autosaves locally. **Measured (S0.9, 2026-10-02):** a Service Worker serves a page with Wi-Fi off, after a browser
+  and a device restart; the Cache API and IndexedDB keep files of up to 20 MB across both (quota 100 MB,
+  `persist()` refused, `estimate()` under-reports usage). The offline mode is planned in S5.3 (see §6.2).
 - **CPU:** slow — interpreters must stay responsive (see [§4.5](#45-performance)).
 
 ### 2.3 Consequences for the whole app
@@ -676,9 +677,10 @@ A game played in another language than its default file's (S2.6) is stored as it
 - IndexedDB for story files and catalogue shards; Service Worker for offline app shell + recently played
   games. Feature-detected; never required. The Kindle measured in S0.3 exposes all three APIs, so this may reach
   class A too once it is shown to work there (§13 #11).
-- **Offline mode (M7):** the offline probe (S0.9, `/probe/offline/`) checks on the device whether a Service Worker
-  can reload a page with Wi-Fi off and whether story files survive in the Cache API or IndexedDB. S5.3 then adds an
-  offline app shell and "Keep offline" adventures (pinned story files, never evicted), designed from that report.
+- **Offline mode (M7):** the offline probe (S0.9, `/probe/offline/`) showed on the Kindle that a Service Worker
+  serves a page with Wi-Fi off and that story files survive restarts in the Cache API and IndexedDB. S5.3 adds an
+  offline app shell and "Keep offline" adventures (pinned story files in the Cache API, never evicted). Sizes are
+  counted by the app, since `estimate()` under-reports usage there.
 
 ### 6.3 Export / import (dropped from V1)
 
@@ -889,4 +891,4 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
 | 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
-| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Offline probe on the device (S0.9), then offline app shell + kept adventures (S5.3, M7). |
+| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures in S5.3 (M7). `persist()` is refused, so a lost file must degrade to "Needs Wi-Fi". |
