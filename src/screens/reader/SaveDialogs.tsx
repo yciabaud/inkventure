@@ -130,17 +130,21 @@ export function RestoreDialog({
 /** Restart asks first: the current game is lost unless saved. */
 export function RestartDialog({
   onConfirm,
+  onErase,
   onClose,
 }: {
   onConfirm: () => void;
+  /** Also offers to erase the story's own saves and start afresh (Twine). */
+  onErase?: () => void;
   onClose: () => void;
 }) {
   return (
     <Dialog title={t('saves.restartTitle')} onClose={onClose}>
       <div class="saves ui-font">
-        <p class="saves__hint">{t('saves.restartText')}</p>
+        <p class="saves__hint">{t(onErase ? 'saves.restartTextErase' : 'saves.restartText')}</p>
         <div class="saves__buttons">
           <Button onClick={onConfirm}>{t('saves.restartConfirm')}</Button>
+          {onErase && <Button onClick={onErase}>{t('saves.restartErase')}</Button>}
           <Button variant="secondary" onClick={onClose}>
             {t('saves.cancel')}
           </Button>

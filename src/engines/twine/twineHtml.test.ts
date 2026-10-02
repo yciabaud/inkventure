@@ -39,6 +39,8 @@ describe('e-ink stylesheet', () => {
     expect(css).toMatch(
       /tw-story, tw-passage[^{]*\{position:static!important;transform:none!important/,
     );
+    // A story next to <body> keeps the side margins.
+    expect(css).toContain('html>tw-story{padding:0 24px!important}');
   });
 
   it('follows every setting', () => {

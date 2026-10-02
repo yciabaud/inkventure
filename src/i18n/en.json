@@ -216,6 +216,8 @@
   "saves.restartTitle": "Restart the story?",
   "saves.restartText": "The story starts again from the beginning. Your saved games are kept.",
   "saves.restartConfirm": "Restart",
+  "saves.restartTextErase": "The story starts again from the beginning. Its own saves are kept, unless you erase everything.",
+  "saves.restartErase": "Erase everything and restart",
   "saves.cancel": "Cancel",
   "settings.title": "Settings",
   "settings.sections": "Settings sections",

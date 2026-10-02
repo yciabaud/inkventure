@@ -247,14 +247,15 @@ const FRAME_SCRIPT = `(function () {
   }
   document.addEventListener('animationend', reveal, true);
   document.addEventListener('webkitAnimationEnd', reveal, true);
-  // In case the browser does not report animations that end at once: every element of the page, after a change.
+  // In case the browser does not report animations that end at once: every element of the page (a Harlowe story may
+  // sit next to <body>), after a change.
   var revealing = false;
   function revealAll() {
     if (revealing || !window.getComputedStyle) return;
     revealing = true;
     setTimeout(function () {
       revealing = false;
-      var all = document.body.getElementsByTagName('*');
+      var all = root.getElementsByTagName('*');
       for (var i = 0; i < all.length; i++) show(all[i]);
     }, 50);
   }
@@ -272,7 +273,7 @@ const FRAME_SCRIPT = `(function () {
       new MutationObserver(function () {
         reportSoon();
         revealAll();
-      }).observe(document.body, { childList: true, subtree: true, characterData: true });
+      }).observe(root, { childList: true, subtree: true, characterData: true });
     }
     revealAll();
     report();

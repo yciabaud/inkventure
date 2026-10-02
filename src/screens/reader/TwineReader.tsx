@@ -178,11 +178,11 @@ export function TwineReader({ tuid, title, author, cover, story, files, baseUrl 
 
   if (state.phase === 'failed') return <ErrorPage message={t('reader.gameLoadFailed')} />;
 
-  function restart() {
+  /** Starts the story again. Its own saves (local) stay unless `erase`; its session (where SugarCube resumes from) goes. */
+  function restart(erase: boolean) {
     if (!loaded) return;
     setRestarting(false);
-    // The story's own saves (local) stay; its session (where SugarCube resumes from) goes.
-    const saved = { local: storageRef.current.local, session: {} };
+    const saved = { local: erase ? {} : storageRef.current.local, session: {} };
     storageRef.current = saved;
     writeStorage();
     setPage(null);
@@ -216,7 +216,11 @@ export function TwineReader({ tuid, title, author, cover, story, files, baseUrl 
               {page ? t('twine.page', { page: page.page, pages: page.pages }) : ' '}
             </p>
             {restarting && (
-              <RestartDialog onConfirm={restart} onClose={() => setRestarting(false)} />
+              <RestartDialog
+                onConfirm={() => restart(false)}
+                onErase={() => restart(true)}
+                onClose={() => setRestarting(false)}
+              />
             )}
           </div>
         ) : (

@@ -68,6 +68,8 @@ export function eInkStylesheet(settings: ReaderSettings): string {
       '{position:static!important;transform:none!important;top:auto!important;left:auto!important;' +
       'right:auto!important;bottom:auto!important}',
     'tw-story{padding:0!important;margin:0 auto!important;width:auto!important;max-width:40em!important}',
+    // Harlowe may put the story next to <body> (Will Not Let Me Go): it then gets the body's side margins itself.
+    'html>tw-story{padding:0 ' + padding + 'px!important}',
     // Harlowe's sidebar (undo / redo) as a row above the passage, instead of in the margin.
     'tw-sidebar{position:static!important;display:flex!important;flex-direction:row!important;' +
       'width:auto!important;left:auto!important;margin:0 0 8px!important}',
