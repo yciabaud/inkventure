@@ -1,5 +1,6 @@
-import { useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../i18n/i18n';
+import type { AnswerChip } from '../../reader/commands/answers';
 import { applyChip, applyNoun, awaitsObject, browseHistory } from '../../reader/commands/compose';
 import type { Chip, VerbTable } from '../../reader/commands/verbs';
 import { Dialog } from '../../ui/Dialog';
@@ -23,6 +24,8 @@ interface Props {
   table: VerbTable;
   /** Objects recently mentioned, most recent first. */
   nouns: string[];
+  /** The answers to a question the game asks (Yes / No, numbered options): first in the directions row. */
+  answers?: AnswerChip[];
   field: string;
   onField: (field: string) => void;
   onSend: (command: string) => void;
@@ -39,6 +42,7 @@ interface Props {
 export function CommandBar({
   table,
   nouns,
+  answers = [],
   field,
   onField,
   onSend,
@@ -56,6 +60,15 @@ export function CommandBar({
   const verbsShown = useFitCount(verbsRow);
   // At least one object, shortened with an ellipsis if it is too long for the row.
   const nounsShown = useFitCount(nounsRow, 1);
+  // The options' words are left out when they keep some answers off the row (numbers only, then).
+  const answersKey = answers.map((a) => a.send + ':' + (a.detail || '')).join('|');
+  const [compact, setCompact] = useState({ key: '', on: false });
+  const short = compact.key === answersKey && compact.on;
+  useLayoutEffect(() => {
+    if (compact.key !== answersKey) setCompact({ key: answersKey, on: false });
+    else if (!compact.on && directionsShown < answers.length)
+      setCompact({ key: answersKey, on: true });
+  }, [compact.key, compact.on, answersKey, directionsShown, answers.length]);
 
   function chip(item: Chip<string>) {
     setDialog(null);
@@ -93,12 +106,29 @@ export function CommandBar({
 
   return (
     <div class="command-bar ui-font">
-      <div class="chips" role="group" aria-label={t('reader.directions')} ref={directionsRow}>
+      <div
+        class="chips"
+        role="group"
+        aria-label={t(answers.length ? 'reader.answers' : 'reader.directions')}
+        ref={directionsRow}
+      >
+        {answers.map((a, i) => (
+          <button
+            key={'answer:' + a.send}
+            type="button"
+            class={fitClass('chip chip--answer', i, directionsShown)}
+            data-fit
+            aria-label={a.detail ? a.label + ' — ' + a.detail : undefined}
+            onClick={() => send(a.send)}
+          >
+            {a.detail && !short ? a.label + ' — ' + a.detail : a.label}
+          </button>
+        ))}
         {directions.map((d, i) => (
           <button
             key={d.id}
             type="button"
-            class={fitClass('chip chip--direction', i, directionsShown)}
+            class={fitClass('chip chip--direction', answers.length + i, directionsShown)}
             data-fit
             onClick={() => chip(d)}
           >
@@ -208,6 +238,19 @@ export function CommandBar({
       {dialog === 'directions' && (
         <Dialog title={t('reader.directions')} onClose={() => setDialog(null)}>
           <div class="chip-grid">
+            {answers.slice(directionsShown).map((a) => (
+              <button
+                key={'answer:' + a.send}
+                type="button"
+                class="chip chip--answer"
+                onClick={() => {
+                  setDialog(null);
+                  send(a.send);
+                }}
+              >
+                {a.detail ? a.label + ' — ' + a.detail : a.label}
+              </button>
+            ))}
             {otherDirections.concat(directions).map((d) => (
               <button key={d.id} type="button" class="chip" onClick={() => chip(d)}>
                 {d.label}

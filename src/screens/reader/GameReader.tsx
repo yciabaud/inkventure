@@ -14,6 +14,7 @@ import {
 import { t } from '../../i18n/i18n';
 import type { GameSnapshot, SlotInfo } from '../../storage/saves';
 import { addToHome, getStore, isStorageFullError } from '../../storage';
+import { findAnswers } from '../../reader/commands/answers';
 import { applyNoun } from '../../reader/commands/compose';
 import { findKeys, type KeyPrompt } from '../../reader/keys';
 import { recentNouns } from '../../reader/commands/nouns';
@@ -35,6 +36,9 @@ const DEFAULT_LANGUAGE = 'en';
 
 /** Paragraphs scanned for noun chips: the latest turns only. */
 const NOUN_PARAGRAPHS = 12;
+
+/** Paragraphs scanned for the answers to a question the game asks: the latest ones since the last command. */
+const ANSWER_PARAGRAPHS = 12;
 
 /** Paragraphs scanned for the keys a single-key prompt names: the latest ones since the last command. */
 const KEY_PARAGRAPHS = 12;
@@ -457,6 +461,21 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return recentNouns(texts, table, splitStatus(transcript.status).left);
   }, [blocks, table, transcript.status]);
 
+  // The answers to a question the game asks before the prompt (Yes / No, numbered options), from the text since the
+  // last command.
+  const answers = useMemo(() => {
+    if (!awaitingLine) return [];
+    const paragraphs = transcript.paragraphs;
+    const texts: string[] = [];
+    for (let i = paragraphs.length - 1; i >= 0 && texts.length < ANSWER_PARAGRAPHS; i--) {
+      if (paragraphs[i].replaced) continue;
+      // The last command's echo ends the search.
+      if (paragraphs[i].input) break;
+      if (paragraphs[i].text.trim()) texts.unshift(paragraphs[i].text);
+    }
+    return findAnswers(texts, table.language);
+  }, [transcript, awaitingLine, table]);
+
   // The keys a single-key prompt names, in every status row and in the text since the last command. When the game printed
   // keys after the last key sent (a new screen of a menu), only those: a "Press any key" that follows a menu does not.
   const keyPrompt = useMemo(() => {
@@ -595,6 +614,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       <CommandBar
         table={table}
         nouns={nouns}
+        answers={answers}
         field={command}
         onField={setCommand}
         onSend={sendLine}

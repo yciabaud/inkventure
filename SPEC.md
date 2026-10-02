@@ -299,6 +299,13 @@ The core screen. It must feel like reading an ebook.
 itself never changes size, see above), in three rows:
 
 1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
+   When the game asks a question in its text (S1.17), its **answers** come first in this row, in bold, and the
+   directions that no longer fit move to the dialog: **Yes / No** (game language) when the last paragraph before the
+   prompt asks a yes/no question to the player (it ends with "?" and starts with an auxiliary verb with "you" / "I" /
+   "we" in it, or a French inversion "Voulez-vous…", or says "yes or no", "(y/n)", "oui ou non"); the **numbers** of
+   a numbered list of options that ends the text ("1. …", "1) …", "(1) …", from 1, in order, at least two, at most 9
+   chips, optionally followed by one short line asking for the choice), each with the start of its option when all
+   of them fit, the number alone otherwise. A tap sends the answer. A list wins over a yes/no question.
 2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
    Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
