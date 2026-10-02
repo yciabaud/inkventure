@@ -248,6 +248,7 @@ function TwineFrame({ title, loaded, settings, baseUrl, frameRef }: FrameProps) 
       loaded.saved,
       baseUrl,
       loaded.assets,
+      t('twine.symbolLink'),
     ),
   );
   const firstRef = useRef(true);

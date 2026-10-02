@@ -288,7 +288,10 @@ test('readable colours: coloured dialogue and dark link buttons in black on whit
     ')&quot;&gt;&lt;/div&gt;\n' +
     '@@color:#f5deb3;&quot;Father!?&quot;@@\n' +
     '&lt;div class=&quot;ai&quot;&gt;SYSTEM ONLINE &lt;span class=&quot;badend&quot;&gt;Bad end&lt;/span&gt;&lt;/div&gt;\n' +
-    'A paraffin can stands by the bollard.';
+    'A paraffin can stands by the bollard.\n' +
+    // A link drawn with a symbol no font has (like Detritus's U+26DB on the Kindle), and one with a symbol drawn.
+    '&lt;&lt;link &quot;\u{10FFFD}&quot; &quot;Lamp Room&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; ' +
+    '&lt;&lt;link &quot;\u2192&quot; &quot;The Lamp Stays Dark&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;';
   const dark =
     '<style>body{background-color:#334455;color:#eee}' +
     'a{color:White;border:1px solid #9696b6;background-color:#33334a;' +
@@ -353,6 +356,19 @@ test('readable colours: coloured dialogue and dark link buttons in black on whit
     banner: true,
     page: 'rgb(255, 255, 255)',
   });
+  // The symbol the device cannot draw is replaced by the passage the link leads to; the arrow stays.
+  const symbolLinks = () =>
+    frame.evaluate(() =>
+      Array.from(document.querySelectorAll('#passages a[data-passage]'))
+        .filter((a) =>
+          /^(Lamp Room|The Lamp Stays Dark)$/.test(a.getAttribute('data-passage') || ''),
+        )
+        .map((a) => [a.textContent, a.getAttribute('aria-label')]),
+    );
+  await expect.poll(symbolLinks, { timeout: 2000 }).toEqual([
+    ['Lamp Room', 'Lamp Room'],
+    ['\u2192', null],
+  ]);
   // Still a link.
   await press(link(page, 'Walk up to the lighthouse'));
   await expect(story(page).locator('#passages')).toContainText('The lighthouse door is ajar');

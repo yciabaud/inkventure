@@ -154,6 +154,13 @@ describe('story page preparation', () => {
     );
   });
 
+  it('keeps the escapes of its regular expressions (the script is a template string)', () => {
+    const script = frameScript(EMPTY);
+    expect(script).toContain("replace(/\\s+/g, '')");
+    expect(script).toContain("var MISSING = ['\\uffff', '\\u0378', '\\udbff\\udffd'];");
+    expect(() => new Function(script)).not.toThrow();
+  });
+
   it('keeps saved data from closing the script element', () => {
     const script = frameScript({
       local: { key: '</script><script>alert(1)</script>' },

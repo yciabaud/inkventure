@@ -163,7 +163,8 @@ function escapeAttribute(value: string): string {
  * The story's page with the e-ink `<style>` and the frame script (starting with `storage`) injected first in its
  * <head> (or after <html>, or at the very start for a page with neither). With `assets` (the files of a zipped story),
  * the references to them are served from them first (assets.ts). With `baseUrl` (where the story was downloaded from)
- * and no <base> of its own, its other relative links resolve there.
+ * and no <base> of its own, its other relative links resolve there. `symbolLink` labels a link the device cannot draw
+ * (frameScript.ts).
  */
 export function prepareTwineHtml(
   page: string,
@@ -171,6 +172,7 @@ export function prepareTwineHtml(
   storage: FrameStorage,
   baseUrl?: string,
   assets?: StoryAssets,
+  symbolLink?: string,
 ): string {
   const html = assets ? inlineAssets(page, assets) : page;
   const base =
@@ -182,7 +184,7 @@ export function prepareTwineHtml(
     '">' +
     css.replace(/<\//g, '<\\/') +
     '</style><script>' +
-    frameScript(storage, !!assets) +
+    frameScript(storage, !!assets, symbolLink) +
     '</script>';
   const head = HEAD.exec(html);
   if (head) return insertAt(html, head.index + head[0].length, injected);

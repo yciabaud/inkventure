@@ -8,7 +8,7 @@
 //   breaks it still scrolls.
 // - cookies: `document.cookie` throws, whatever the browser does in an opaque origin.
 // - style: the reader sends a new e-ink stylesheet when the text settings change. Gradients are cleared and visible
-//   borders turn black (story S1.14).
+//   borders turn black, and a link drawn only with symbols no font of the device has gets a label (story S1.14).
 // - files (story S1.11): a relative `src` (img, source…) or `url(…)` in a `style` attribute that the story sets after
 //   it loaded is sent to the reader, which answers with a `data:` URL when it names a file kept from the story's zip.
 //
@@ -16,13 +16,18 @@
 
 import { FRAME_MESSAGE, STYLE_ID, type FrameStorage } from './messages';
 
-/** The script for a frame starting with `storage`; `assets` when the story has files of its own (story S1.11). */
-export function frameScript(storage: FrameStorage, assets = false): string {
+/**
+ * The script for a frame starting with `storage`; `assets` when the story has files of its own (story S1.11);
+ * `symbolLink`, the label of a link drawn only with symbols the device cannot show and leading to no named passage
+ * (story S1.14).
+ */
+export function frameScript(storage: FrameStorage, assets = false, symbolLink = 'Link'): string {
   // `<` escaped: the data must not close the script element.
   const data = JSON.stringify({
     local: storage.local,
     session: storage.session,
     assets: assets,
+    symbolLink: symbolLink,
   }).replace(/</g, '\\u003c');
   return FRAME_SCRIPT.replace('__DATA__', data)
     .replace(/__SOURCE__/g, JSON.stringify(FRAME_MESSAGE))
@@ -263,10 +268,91 @@ const FRAME_SCRIPT = `(function () {
       node.style.setProperty(side + '-color', '#000', 'important');
     }
   }
+  // A link drawn only with symbols that no font of the device has (Detritus's U+26DB on the Kindle) shows empty boxes:
+  // it is labelled with the passage it leads to (SugarCube's data-passage, Harlowe's passage-name), or a generic word.
+  // A symbol is missing when it draws nothing, or the same pixels as characters no font has (a box). Checked once the
+  // story's web fonts are loaded, so an icon font still loading is not taken for a missing one.
+  var LINKS = /^(A|TW-LINK|BUTTON)$/;
+  var drawn = {};
+  var loading = {};
+  var canvas = null;
+  function pixels(text, font) {
+    var context = canvas.getContext('2d');
+    context.clearRect(0, 0, 64, 64);
+    context.font = font;
+    context.fillText(text, 8, 48);
+    return context.getImageData(0, 0, 64, 64).data;
+  }
+  // What the device draws for characters no font has: a box (.notdef) on some, nothing on others. U+0378 is
+  // unassigned and U+10FFFD private, so only a catch-all font draws something real for them.
+  var MISSING = ['\\uffff', '\\u0378', '\\udbff\\udffd'];
+  var missing = {};
+  function same(a, b) {
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
+  function blank(a) {
+    for (var i = 3; i < a.length; i += 4) if (a[i]) return false;
+    return true;
+  }
+  function drawable(symbol, font) {
+    var key = font + '|' + symbol;
+    if (has.call(drawn, key)) return drawn[key];
+    var result = true;
+    try {
+      if (!canvas) {
+        canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+      }
+      if (!has.call(missing, font)) {
+        missing[font] = [];
+        for (var i = 0; i < MISSING.length; i++) missing[font].push(pixels(MISSING[i], font));
+      }
+      var ink = pixels(symbol, font);
+      result = !blank(ink);
+      for (var j = 0; result && j < missing[font].length; j++) if (same(ink, missing[font][j])) result = false;
+    } catch (e) {
+      result = true;
+    }
+    drawn[key] = result;
+    return result;
+  }
+  function symbols(node, style) {
+    if (!LINKS.test(node.nodeName.toUpperCase()) || node.getAttribute('data-ik-label') !== null) return;
+    var text = (node.textContent || '').replace(/\\s+/g, '');
+    if (!text || text.length > 8) return;
+    var font = style.fontStyle + ' ' + style.fontWeight + ' 32px ' + style.fontFamily;
+    // A web font (an icon font) is loaded only once something on screen uses it: load it for this text first.
+    var key = font + '|' + text;
+    function loaded() {
+      loading[key] = false;
+      revealAll();
+    }
+    try {
+      if (!has.call(loading, key) && !document.fonts.check(font, text)) {
+        loading[key] = true;
+        document.fonts.load(font, text).then(loaded, loaded);
+        return;
+      }
+    } catch (e) {}
+    if (loading[key] === true) return;
+    for (var i = 0; i < text.length; i++) {
+      var code = text.charCodeAt(i);
+      // A surrogate pair is one symbol.
+      var symbol = code >= 0xd800 && code < 0xdc00 ? text.substr(i++, 2) : text.charAt(i);
+      if (drawable(symbol, font)) return;
+    }
+    var label = node.getAttribute('data-passage') || node.getAttribute('passage-name') || data.symbolLink;
+    node.setAttribute('data-ik-label', node.textContent);
+    if (!node.getAttribute('aria-label')) node.setAttribute('aria-label', label);
+    node.textContent = label;
+  }
   function fix(node) {
     var style = getComputedStyle(node);
     show(node, style);
     colours(node, style);
+    symbols(node, style);
   }
   function reveal(event) {
     if (event.target && event.target.nodeType === 1 && window.getComputedStyle) show(event.target, getComputedStyle(event.target));

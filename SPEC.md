@@ -409,7 +409,8 @@ the ink functions of the same name.
   `::before` and `::after` in black, over the story's own `!important` rules, with no background colour, and no
   background image on links and controls; pictures stay: `img`, `svg`, `canvas`, `video` and a `url(…)` background
   elsewhere; the frame script clears a gradient behind text and turns visible borders black, a
-  transparent one stays; dialogs, overlays and UI bars stay opaque white; disabled controls grey), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
+  transparent one stays; dialogs, overlays and UI bars stay opaque white; disabled controls grey; a link drawn only with symbols the device
+  has no font for, which would show empty boxes, is labelled with the passage it leads to, or "Link"), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
   previous screenful, elsewhere the next one (one line of overlap), and the page number shows under the frame.
   Scrolling is hidden only once that script runs, so a story that breaks it still scrolls. "Aa" changes are sent to
   the frame as a new stylesheet (the story is not reloaded). Relative links (images) resolve where the story was
