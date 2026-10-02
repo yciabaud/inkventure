@@ -213,6 +213,11 @@ import) can be reused.
 - **Illustrated Glulx games** (static, detailed pictures that suit e-ink, with an engine and catalogue V1 already
   has): detection, badge and Library filter in [S2.5](stories/S2.5-illustrated-games.md).
 
+## Written as stories
+
+- **Tappable compass** in the status window (Bronze's exits): [S1.20](stories/S1.20-tappable-compass.md), milestone
+  Post-V1 in the [backlog](BACKLOG.md).
+
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.
