@@ -36,35 +36,17 @@ function winning(selectors: string[], after = ''): string {
 
 // Everything the story draws: in <body>, or in a Harlowe story next to it.
 const INSIDE = ['body *', 'html>tw-story *'];
-// Links, buttons and inline elements: their background (a colour, a gradient, a texture) is never a picture to keep.
-const INLINE = [
+// Links and controls: their background (a colour, a gradient, a texture) is never a picture to keep. Other elements
+// keep a url(…) background (a title picture, even on a span); the frame script clears a gradient behind text.
+const CONTROLS = [
   'a',
   'tw-link',
-  'tw-hook',
-  'tw-expression',
-  'tw-enchantment',
   'tw-icon',
   '.enchantment-link',
   'button',
   'input',
   'select',
   'textarea',
-  'label',
-  'span',
-  'font',
-  'b',
-  'strong',
-  'i',
-  'em',
-  'u',
-  's',
-  'mark',
-  'small',
-  'big',
-  'sub',
-  'sup',
-  'code',
-  'kbd',
 ];
 const LINKS = ['a', 'tw-link', '.enchantment-link', 'button'];
 // What must stay opaque, over the passage: SugarCube's UI bar, dialogs and overlay; Harlowe's dialogs and backdrop.
@@ -74,15 +56,16 @@ const ICONS = ['#ui-bar svg ', 'tw-sidebar svg ', 'a svg ', 'button svg ', 'tw-l
 
 /**
  * Readable colours (S1.14): black text on white everywhere in the story, whatever colour the author gave a word, a
- * line of dialogue or a link (on a 16-level grey screen, colours carry little meaning). Backgrounds are cleared
- * (dark boxes, link buttons), but pictures are kept: an `img`, `svg`, `canvas` or `video`, and a `url(…)` background
- * on a block element. The frame script clears gradients and blackens visible borders.
+ * line of dialogue or a link (on a 16-level grey screen, colours carry little meaning). Background colours are cleared
+ * (dark boxes, link buttons), and so are background images on links and controls, but pictures are kept: an `img`,
+ * `svg`, `canvas` or `video`, and a `url(…)` background elsewhere. The frame script clears gradients behind text and
+ * blackens visible borders.
  */
 function readableColours(): string[] {
   return [
     [winning(INSIDE), winning(INSIDE, '::before'), winning(INSIDE, '::after')].join(',') +
       '{color:#000!important;-webkit-text-fill-color:#000!important;background-color:transparent!important}',
-    winning(INLINE) + '{background-image:none!important}',
+    winning(CONTROLS) + '{background-image:none!important}',
     winning(LINKS) + '{border-color:#000!important}',
     // A disabled control still looks disabled.
     winning(['button:disabled', 'input:disabled', 'select:disabled', 'textarea:disabled']) +

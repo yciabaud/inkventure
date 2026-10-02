@@ -83,12 +83,12 @@ describe('readable colours (S1.14)', () => {
     }
   });
 
-  it('clears the backgrounds of links, buttons and inline elements, and keeps pictures', () => {
-    for (const selector of ['a', 'tw-link', 'button', 'span', 'tw-hook', '.enchantment-link']) {
+  it('clears the background images of links and controls, and keeps pictures', () => {
+    for (const selector of ['a', 'tw-link', 'button', 'input', '.enchantment-link']) {
       expect(rule(selector + WIN)).toContain('background-image:none!important');
     }
-    // A picture is never cleared: an img, svg, canvas or video, or a block with a url(…) background.
-    for (const selector of ['img', 'svg', 'canvas', 'video', 'div', 'body *']) {
+    // A picture is never cleared: an img, svg, canvas or video, or a url(…) background elsewhere (even on a span).
+    for (const selector of ['img', 'svg', 'canvas', 'video', 'div', 'span', 'body *']) {
       expect(rule(selector + WIN)).not.toContain('background-image');
     }
     expect(css).not.toMatch(/(^|[,\s])(img|svg|canvas|video)[^{]*\{[^}]*background/m);
