@@ -60,6 +60,58 @@ describe('e-ink stylesheet', () => {
   });
 });
 
+describe('readable colours (S1.14)', () => {
+  const css = eInkStylesheet(DEFAULT_SETTINGS);
+  const WIN = ':not(#ik-0):not(#ik-1)';
+  /** The declarations of the rules whose selector list contains `selector`. */
+  function rule(selector: string): string {
+    return css
+      .split('\n')
+      .filter((line) => line.split('{')[0].split(',').indexOf(selector) >= 0)
+      .map((line) => line.slice(line.indexOf('{')))
+      .join('');
+  }
+
+  it('forces black text on every descendant, its ::before and ::after, over the story !important rules', () => {
+    for (const scope of ['body *', 'html>tw-story *']) {
+      for (const pseudo of ['', '::before', '::after']) {
+        const declarations = rule(scope + WIN + pseudo);
+        expect(declarations).toContain('color:#000!important');
+        expect(declarations).toContain('-webkit-text-fill-color:#000!important');
+        expect(declarations).toContain('background-color:transparent!important');
+      }
+    }
+  });
+
+  it('clears the backgrounds of links, buttons and inline elements, and keeps pictures', () => {
+    for (const selector of ['a', 'tw-link', 'button', 'span', 'tw-hook', '.enchantment-link']) {
+      expect(rule(selector + WIN)).toContain('background-image:none!important');
+    }
+    // A picture is never cleared: an img, svg, canvas or video, or a block with a url(…) background.
+    for (const selector of ['img', 'svg', 'canvas', 'video', 'div', 'body *']) {
+      expect(rule(selector + WIN)).not.toContain('background-image');
+    }
+    expect(css).not.toMatch(/(^|[,\s])(img|svg|canvas|video)[^{]*\{[^}]*background/m);
+  });
+
+  it('draws link and button borders in black, disabled controls in grey', () => {
+    expect(rule('a' + WIN)).toContain('{border-color:#000!important}');
+    expect(rule('button' + WIN)).toContain('{border-color:#000!important}');
+    expect(rule('button:disabled' + WIN)).toContain('color:#555!important');
+  });
+
+  it("keeps dialogs, overlays and UI bars opaque, above the clearing rule's strength", () => {
+    for (const selector of ['#ui-dialog', '#ui-overlay', '#ui-bar', 'tw-dialog', 'tw-backdrop']) {
+      expect(rule(selector + WIN + WIN)).toBe('{background-color:#fff!important}');
+    }
+  });
+
+  it('draws SVG icons of UI bars, links and buttons in black', () => {
+    expect(rule('#ui-bar svg [fill]:not([fill=none])' + WIN)).toBe('{fill:#000!important}');
+    expect(rule('a svg [stroke]:not([stroke=none])' + WIN)).toBe('{stroke:#000!important}');
+  });
+});
+
 describe('story page preparation', () => {
   it('decodes the story file as UTF-8 without its byte order mark', () => {
     const bytes = strToU8('\ufeff<html>Château</html>');
@@ -160,6 +212,33 @@ describe('frame script', () => {
       expect(posted.some((m) => m.type === 'page' && m.page === 1)).toBe(true),
     );
     expect(frame.document.documentElement.className).toBe('ik-paged');
+  });
+
+  it('clears gradients behind text and turns visible borders black, keeping pictures and transparent borders', async () => {
+    const { frame } = runFrame(EMPTY);
+    const doc = frame.document;
+    const add = (style: string) => {
+      const div = doc.createElement('div');
+      div.setAttribute('style', style);
+      doc.body.appendChild(div);
+      return div;
+    };
+    const gradient = add('background-image:linear-gradient(white, red)');
+    gradient.textContent = 'Bad end';
+    // With no text: an icon (Will Not Let Me Go's colour switch), kept.
+    const icon = add('background-image:linear-gradient(black, white)');
+    const picture = add('background-image:url("title.png")');
+    const box = add('border:3px ridge #b6e1fc');
+    const spacer = add('border:2px solid transparent');
+    await vi.waitFor(() =>
+      expect(gradient.style.getPropertyValue('background-image')).toBe('none'),
+    );
+    expect(gradient.style.getPropertyPriority('background-image')).toBe('important');
+    expect(picture.style.getPropertyValue('background-image')).toBe('url("title.png")');
+    expect(icon.style.getPropertyValue('background-image')).toBe('linear-gradient(black, white)');
+    expect(box.style.getPropertyValue('border-top-color')).toBe('rgb(0, 0, 0)');
+    expect(box.style.getPropertyValue('border-left-color')).toBe('rgb(0, 0, 0)');
+    expect(spacer.style.getPropertyValue('border-top-color')).toBe('transparent');
   });
 
   it('applies a new stylesheet sent by the reader', async () => {

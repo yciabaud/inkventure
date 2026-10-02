@@ -55,7 +55,7 @@ Twine pages: the two blockers first (S1.13 is the smallest), then the stories th
 | [S1.11](stories/S1.11-twine-zip-assets.md) | Twine stories with files in their zip (images, fonts, styles) | E1 | M4 | S1.9, S3.4 | done |
 | [S1.12](stories/S1.12-single-key-prompts.md) | Single-key prompts: key chips and a one-key field | E1 | M6 | S1.4, S1.7 | done |
 | [S1.13](stories/S1.13-twine-animation-end-state.md) | Twine: animations jump to their end state | E1 | M6 | S1.9 | done |
-| [S1.14](stories/S1.14-twine-readable-colours.md) | Twine: readable colours on e-ink | E1 | M6 | S1.9 | todo |
+| [S1.14](stories/S1.14-twine-readable-colours.md) | Twine: readable colours on e-ink | E1 | M6 | S1.9 | in-progress |
 | [S1.15](stories/S1.15-status-line-rows.md) | Status line: every row of the status window | E1 | M6 | S1.6 | todo |
 | [S1.16](stories/S1.16-cleared-screens-and-menus.md) | Cleared screens and menus: one screen, not a pile | E1 | M6 | S1.12, S1.15 | todo |
 | [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | todo |

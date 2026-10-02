@@ -25,9 +25,79 @@ const LINE_HEIGHT: Record<ReaderSettings['spacing'], number> = {
 // #passages, .passage), Snowman / Chapbook (#passage, main).
 const PAGE = 'tw-story, tw-passage, #story, #passages, .passage, #passage, main';
 
+// Raises a selector's specificity by two ids, so the e-ink rules also win over the story's own `!important` rules
+// (A Long Way to the Nearest Star: `.board button:hover{background-color:#00ace6!important}`).
+const WIN = ':not(#ik-0):not(#ik-1)';
+
+/** `selectors`, each made to win over the story's rules, and followed by `after` (a pseudo-element…) when given. */
+function winning(selectors: string[], after = ''): string {
+  return selectors.map((selector) => selector + WIN + after).join(',');
+}
+
+// Everything the story draws: in <body>, or in a Harlowe story next to it.
+const INSIDE = ['body *', 'html>tw-story *'];
+// Links, buttons and inline elements: their background (a colour, a gradient, a texture) is never a picture to keep.
+const INLINE = [
+  'a',
+  'tw-link',
+  'tw-hook',
+  'tw-expression',
+  'tw-enchantment',
+  'tw-icon',
+  '.enchantment-link',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'label',
+  'span',
+  'font',
+  'b',
+  'strong',
+  'i',
+  'em',
+  'u',
+  's',
+  'mark',
+  'small',
+  'big',
+  'sub',
+  'sup',
+  'code',
+  'kbd',
+];
+const LINKS = ['a', 'tw-link', '.enchantment-link', 'button'];
+// What must stay opaque, over the passage: SugarCube's UI bar, dialogs and overlay; Harlowe's dialogs and backdrop.
+const OPAQUE = ['#ui-bar', '#ui-dialog', '#ui-overlay', 'tw-dialog', 'tw-backdrop'];
+// Icons in the UI bars, links and buttons drawn with SVG fills or strokes.
+const ICONS = ['#ui-bar svg ', 'tw-sidebar svg ', 'a svg ', 'button svg ', 'tw-link svg '];
+
+/**
+ * Readable colours (S1.14): black text on white everywhere in the story, whatever colour the author gave a word, a
+ * line of dialogue or a link (on a 16-level grey screen, colours carry little meaning). Backgrounds are cleared
+ * (dark boxes, link buttons), but pictures are kept: an `img`, `svg`, `canvas` or `video`, and a `url(…)` background
+ * on a block element. The frame script clears gradients and blackens visible borders.
+ */
+function readableColours(): string[] {
+  return [
+    [winning(INSIDE), winning(INSIDE, '::before'), winning(INSIDE, '::after')].join(',') +
+      '{color:#000!important;-webkit-text-fill-color:#000!important;background-color:transparent!important}',
+    winning(INLINE) + '{background-image:none!important}',
+    winning(LINKS) + '{border-color:#000!important}',
+    // A disabled control still looks disabled.
+    winning(['button:disabled', 'input:disabled', 'select:disabled', 'textarea:disabled']) +
+      '{color:#555!important;-webkit-text-fill-color:#555!important;border-color:#555!important}',
+    // Twice as strong: they win over the rule above (`html>tw-story *`) for `tw-dialog` too.
+    winning(OPAQUE, WIN) + '{background-color:#fff!important}',
+    winning(['tw-dialog']) + '{border:2px solid #000!important}',
+    winning(ICONS.map((s) => s + '[fill]:not([fill=none])')) + '{fill:#000!important}',
+    winning(ICONS.map((s) => s + '[stroke]:not([stroke=none])')) + '{stroke:#000!important}',
+  ];
+}
+
 /**
  * The e-ink stylesheet for the reader's text settings: black on white, the reader's font, size, spacing and margins,
- * bold underlined links at least 48 px tall, no motion. `!important` wins over the story format's styles, which are
+ * bold underlined links at least 48 px tall, no motion, and readable colours. `!important` wins over the story format's styles, which are
  * added later.
  *
  * Animations and transitions are not removed but made instant: they jump to their end state, which a story may need
@@ -88,7 +158,9 @@ export function eInkStylesheet(settings: ReaderSettings): string {
     'button,input,select,textarea{font:inherit!important;min-height:48px;background:#fff!important;' +
       'color:#000!important;border:2px solid #000!important}',
     'img{filter:grayscale(1);max-width:100%}',
-  ].join('\n');
+  ]
+    .concat(readableColours())
+    .join('\n');
 }
 
 /** The story file as text (UTF-8, byte order mark dropped). */

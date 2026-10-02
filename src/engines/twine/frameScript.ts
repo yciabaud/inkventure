@@ -7,7 +7,8 @@
 //   the next one; the page number is posted to the reader. Scrolling is hidden only once this works, so a story that
 //   breaks it still scrolls.
 // - cookies: `document.cookie` throws, whatever the browser does in an opaque origin.
-// - style: the reader sends a new e-ink stylesheet when the text settings change.
+// - style: the reader sends a new e-ink stylesheet when the text settings change. Gradients are cleared and visible
+//   borders turn black (story S1.14).
 // - files (story S1.11): a relative `src` (img, source…) or `url(…)` in a `style` attribute that the story sets after
 //   it loaded is sent to the reader, which answers with a `data:` URL when it names a file kept from the story's zip.
 //
@@ -237,18 +238,43 @@ const FRAME_SCRIPT = `(function () {
   }
   // Animations jump to their end state (e-ink stylesheet). One that ends invisible (a loop stopped on its last frame,
   // a fade in and out) would hide its text for good: the element is shown instead.
-  function show(node) {
-    var style = getComputedStyle(node);
+  function show(node, style) {
     var name = style.animationName || style.webkitAnimationName;
     if (name && name !== 'none' && parseFloat(style.opacity) < 0.1) node.style.setProperty('opacity', '1', 'important');
   }
+  // Readable colours (story S1.14), what the e-ink stylesheet cannot tell apart: a gradient behind text is cleared (it
+  // is never a picture, unlike a url(…); with no text, it is an icon or a decoration and stays), and a visible border
+  // (a box, an outline) turns black. A transparent border, kept for spacing, stays transparent.
+  var SIDES = ['top', 'right', 'bottom', 'left'];
+  // Transparent, or already black: nothing to do.
+  var CLEAR = /^(transparent|rgba\\(.*,\\s*0\\)|rgb\\(0,\\s*0,\\s*0\\))$/;
+  function colours(node, style) {
+    var image = style.backgroundImage || '';
+    if (image.indexOf('gradient') >= 0 && image.indexOf('url(') < 0 && /\\S/.test(node.textContent || '')) {
+      node.style.setProperty('background-image', 'none', 'important');
+    }
+    // A disabled control keeps the grey of the e-ink stylesheet.
+    if (node.disabled) return;
+    for (var i = 0; i < SIDES.length; i++) {
+      var side = 'border-' + SIDES[i];
+      var kind = style.getPropertyValue(side + '-style');
+      if (!kind || kind === 'none' || kind === 'hidden' || !(parseFloat(style.getPropertyValue(side + '-width')) > 0)) continue;
+      if (CLEAR.test(style.getPropertyValue(side + '-color'))) continue;
+      node.style.setProperty(side + '-color', '#000', 'important');
+    }
+  }
+  function fix(node) {
+    var style = getComputedStyle(node);
+    show(node, style);
+    colours(node, style);
+  }
   function reveal(event) {
-    if (event.target && event.target.nodeType === 1 && window.getComputedStyle) show(event.target);
+    if (event.target && event.target.nodeType === 1 && window.getComputedStyle) show(event.target, getComputedStyle(event.target));
   }
   document.addEventListener('animationend', reveal, true);
   document.addEventListener('webkitAnimationEnd', reveal, true);
-  // In case the browser does not report animations that end at once: every element of the page (a Harlowe story may
-  // sit next to <body>), after a change.
+  // Every element of the page (a Harlowe story may sit next to <body>), at the start and after a change; also in case
+  // the browser does not report animations that end at once.
   var revealing = false;
   function revealAll() {
     if (revealing || !window.getComputedStyle) return;
@@ -256,7 +282,7 @@ const FRAME_SCRIPT = `(function () {
     setTimeout(function () {
       revealing = false;
       var all = root.getElementsByTagName('*');
-      for (var i = 0; i < all.length; i++) show(all[i]);
+      for (var i = 0; i < all.length; i++) fix(all[i]);
     }, 50);
   }
   function start() {

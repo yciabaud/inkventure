@@ -405,7 +405,11 @@ the ink functions of the same name.
 - An e-ink stylesheet is injected first in its `<head>` (black on white, the reader's text settings with system fonts,
   bold underlined links at least 48 px tall and always opaque, no motion: animations and transitions are not removed but
   made instant, so they jump to their end state, which a story that fades its text in from `opacity:0` needs to show
-  at all; SugarCube's UI bar and Harlowe's sidebar restyled), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
+  at all; SugarCube's UI bar and Harlowe's sidebar restyled; readable colours: every element of the story, its
+  `::before` and `::after` in black, over the story's own `!important` rules, with no background colour, and no
+  background image on links, buttons and inline elements; pictures stay: `img`, `svg`, `canvas`, `video` and a `url(…)`
+  background on a block; the frame script clears a gradient behind text and turns visible borders black, a
+  transparent one stays; dialogs, overlays and UI bars stay opaque white; disabled controls grey), and a small script turns pages: a tap on the left 30 % of the frame (outside links and controls) shows the
   previous screenful, elsewhere the next one (one line of overlap), and the page number shows under the frame.
   Scrolling is hidden only once that script runs, so a story that breaks it still scrolls. "Aa" changes are sent to
   the frame as a new stylesheet (the story is not reloaded). Relative links (images) resolve where the story was
