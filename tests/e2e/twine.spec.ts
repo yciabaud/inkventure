@@ -273,6 +273,107 @@ test('elements whose animation ends invisible show even when the browser reports
   await playsWithoutMotion(page);
 });
 
+test('readable colours: coloured dialogue and dark link buttons in black on white, pictures kept', async ({
+  page,
+}) => {
+  // The SugarCube fixture, coloured for a dark screen like The Den and A Long Way to the Nearest Star (S1.14).
+  const png =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+  const passage =
+    '&lt;img id=&quot;cover&quot; width=&quot;120&quot; height=&quot;60&quot; src=&quot;' +
+    png +
+    '&quot;&gt;' +
+    '&lt;div id=&quot;banner&quot; style=&quot;height:40px;background-image:url(' +
+    png +
+    ')&quot;&gt;&lt;/div&gt;\n' +
+    '@@color:#f5deb3;&quot;Father!?&quot;@@\n' +
+    '&lt;div class=&quot;ai&quot;&gt;SYSTEM ONLINE &lt;span class=&quot;badend&quot;&gt;Bad end&lt;/span&gt;&lt;/div&gt;\n' +
+    'A paraffin can stands by the bollard.\n' +
+    // A link drawn with a symbol no font has (like Detritus's U+26DB on the Kindle), and one with a symbol drawn.
+    '&lt;&lt;link &quot;\u{10FFFD}&quot; &quot;Lamp Room&quot;&gt;&gt;&lt;&lt;/link&gt;&gt; ' +
+    '&lt;&lt;link &quot;\u2192&quot; &quot;The Lamp Stays Dark&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;';
+  const dark =
+    '<style>body{background-color:#334455;color:#eee}' +
+    'a{color:White;border:1px solid #9696b6;background-color:#33334a;' +
+    'background-image:linear-gradient(#33334a,#111)}' +
+    '#passages a.link-internal{color:#ffff66!important;background-color:#00004d!important}' +
+    '.ai{background-color:#00004d;border:3px ridge #b6e1fc;color:#4dd2ff}' +
+    '.badend{background:linear-gradient(White,Red);-webkit-background-clip:text;' +
+    '-webkit-text-fill-color:transparent}</style></head>';
+  await page.route('https://ifarchive.org/if-archive/games/twine/lanterns.html', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'text/html',
+      headers: { 'access-control-allow-origin': '*' },
+      body: readFileSync('tests/fixtures/twine/lamp-sugarcube.html', 'utf8')
+        .replace('A paraffin can stands by the bollard.', passage)
+        .replace(/<\/head>/i, dark),
+    }),
+  );
+  await page.goto('/#/play/fxtwin0000000006');
+  await expect(story(page).locator('#passages')).toContainText('Father!?');
+  const frame = await storyFrame(page);
+  const BLACK = 'rgb(0, 0, 0)';
+  const CLEAR = 'rgba(0, 0, 0, 0)';
+  const colours = () =>
+    frame.evaluate(() => {
+      const style = (node: Element) => getComputedStyle(node);
+      const dialogue = Array.from(document.querySelectorAll('#passages span')).find(
+        (node) => node.textContent === '"Father!?"',
+      )!;
+      const link = style(document.querySelector('#passages a.link-internal')!);
+      const box = style(document.querySelector('.ai')!);
+      const bad = style(document.querySelector('.badend')!);
+      const title = document.querySelector('img#cover') as HTMLImageElement;
+      const banner = style(document.querySelector('#banner')!);
+      return {
+        dialogue: [style(dialogue).color, style(dialogue).webkitTextFillColor],
+        link: [
+          link.color,
+          link.backgroundColor,
+          link.backgroundImage,
+          link.borderTopColor,
+          link.textDecorationLine,
+          link.fontWeight,
+          parseFloat(link.minHeight) >= 48,
+        ],
+        box: [box.color, box.backgroundColor, box.borderTopColor, box.borderLeftColor],
+        bad: [bad.webkitTextFillColor, bad.backgroundImage],
+        title: [
+          title.complete && title.naturalWidth > 0,
+          style(title).display !== 'none' && title.getBoundingClientRect().width > 0,
+        ],
+        banner: /^url\(/.test(banner.backgroundImage),
+        page: style(document.body).backgroundColor,
+      };
+    });
+  await expect.poll(colours, { timeout: 2000 }).toEqual({
+    dialogue: [BLACK, BLACK],
+    link: [BLACK, CLEAR, 'none', BLACK, 'underline', '700', true],
+    box: [BLACK, CLEAR, BLACK, BLACK],
+    bad: [BLACK, 'none'],
+    title: [true, true],
+    banner: true,
+    page: 'rgb(255, 255, 255)',
+  });
+  // The symbol the device cannot draw is replaced by the passage the link leads to; the arrow stays.
+  const symbolLinks = () =>
+    frame.evaluate(() =>
+      Array.from(document.querySelectorAll('#passages a[data-passage]'))
+        .filter((a) =>
+          /^(Lamp Room|The Lamp Stays Dark)$/.test(a.getAttribute('data-passage') || ''),
+        )
+        .map((a) => [a.textContent, a.getAttribute('aria-label')]),
+    );
+  await expect.poll(symbolLinks, { timeout: 2000 }).toEqual([
+    ['Lamp Room', 'Lamp Room'],
+    ['\u2192', null],
+  ]);
+  // Still a link.
+  await press(link(page, 'Walk up to the lighthouse'));
+  await expect(story(page).locator('#passages')).toContainText('The lighthouse door is ajar');
+});
+
 test('a catalogue Twine game downloads and plays in the frame, flagged experimental', async ({
   page,
 }) => {

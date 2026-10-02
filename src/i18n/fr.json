@@ -158,6 +158,7 @@
   "reader.turnTime": "({ms} ms)",
   "reader.engineError": "Le jeu s’est arrêté à cause d’une erreur : {message}",
   "twine.page": "{page} / {pages}",
+  "twine.symbolLink": "Lien",
   "reader.gameLoadFailed": "Le jeu n’a pas pu être chargé.",
   "reader.directions": "Directions",
   "reader.moreDirections": "Autres directions",

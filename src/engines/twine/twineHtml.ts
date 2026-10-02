@@ -25,9 +25,62 @@ const LINE_HEIGHT: Record<ReaderSettings['spacing'], number> = {
 // #passages, .passage), Snowman / Chapbook (#passage, main).
 const PAGE = 'tw-story, tw-passage, #story, #passages, .passage, #passage, main';
 
+// Raises a selector's specificity by two ids, so the e-ink rules also win over the story's own `!important` rules
+// (A Long Way to the Nearest Star: `.board button:hover{background-color:#00ace6!important}`).
+const WIN = ':not(#ik-0):not(#ik-1)';
+
+/** `selectors`, each made to win over the story's rules, and followed by `after` (a pseudo-element…) when given. */
+function winning(selectors: string[], after = ''): string {
+  return selectors.map((selector) => selector + WIN + after).join(',');
+}
+
+// Everything the story draws: in <body>, or in a Harlowe story next to it.
+const INSIDE = ['body *', 'html>tw-story *'];
+// Links and controls: their background (a colour, a gradient, a texture) is never a picture to keep. Other elements
+// keep a url(…) background (a title picture, even on a span); the frame script clears a gradient behind text.
+const CONTROLS = [
+  'a',
+  'tw-link',
+  'tw-icon',
+  '.enchantment-link',
+  'button',
+  'input',
+  'select',
+  'textarea',
+];
+const LINKS = ['a', 'tw-link', '.enchantment-link', 'button'];
+// What must stay opaque, over the passage: SugarCube's UI bar, dialogs and overlay; Harlowe's dialogs and backdrop.
+const OPAQUE = ['#ui-bar', '#ui-dialog', '#ui-overlay', 'tw-dialog', 'tw-backdrop'];
+// Icons in the UI bars, links and buttons drawn with SVG fills or strokes.
+const ICONS = ['#ui-bar svg ', 'tw-sidebar svg ', 'a svg ', 'button svg ', 'tw-link svg '];
+
+/**
+ * Readable colours (S1.14): black text on white everywhere in the story, whatever colour the author gave a word, a
+ * line of dialogue or a link (on a 16-level grey screen, colours carry little meaning). Background colours are cleared
+ * (dark boxes, link buttons), and so are background images on links and controls, but pictures are kept: an `img`,
+ * `svg`, `canvas` or `video`, and a `url(…)` background elsewhere. The frame script clears gradients behind text and
+ * blackens visible borders.
+ */
+function readableColours(): string[] {
+  return [
+    [winning(INSIDE), winning(INSIDE, '::before'), winning(INSIDE, '::after')].join(',') +
+      '{color:#000!important;-webkit-text-fill-color:#000!important;background-color:transparent!important}',
+    winning(CONTROLS) + '{background-image:none!important}',
+    winning(LINKS) + '{border-color:#000!important}',
+    // A disabled control still looks disabled.
+    winning(['button:disabled', 'input:disabled', 'select:disabled', 'textarea:disabled']) +
+      '{color:#555!important;-webkit-text-fill-color:#555!important;border-color:#555!important}',
+    // Twice as strong: they win over the rule above (`html>tw-story *`) for `tw-dialog` too.
+    winning(OPAQUE, WIN) + '{background-color:#fff!important}',
+    winning(['tw-dialog']) + '{border:2px solid #000!important}',
+    winning(ICONS.map((s) => s + '[fill]:not([fill=none])')) + '{fill:#000!important}',
+    winning(ICONS.map((s) => s + '[stroke]:not([stroke=none])')) + '{stroke:#000!important}',
+  ];
+}
+
 /**
  * The e-ink stylesheet for the reader's text settings: black on white, the reader's font, size, spacing and margins,
- * bold underlined links at least 48 px tall, no motion. `!important` wins over the story format's styles, which are
+ * bold underlined links at least 48 px tall, no motion, and readable colours. `!important` wins over the story format's styles, which are
  * added later.
  *
  * Animations and transitions are not removed but made instant: they jump to their end state, which a story may need
@@ -88,7 +141,9 @@ export function eInkStylesheet(settings: ReaderSettings): string {
     'button,input,select,textarea{font:inherit!important;min-height:48px;background:#fff!important;' +
       'color:#000!important;border:2px solid #000!important}',
     'img{filter:grayscale(1);max-width:100%}',
-  ].join('\n');
+  ]
+    .concat(readableColours())
+    .join('\n');
 }
 
 /** The story file as text (UTF-8, byte order mark dropped). */
@@ -108,7 +163,8 @@ function escapeAttribute(value: string): string {
  * The story's page with the e-ink `<style>` and the frame script (starting with `storage`) injected first in its
  * <head> (or after <html>, or at the very start for a page with neither). With `assets` (the files of a zipped story),
  * the references to them are served from them first (assets.ts). With `baseUrl` (where the story was downloaded from)
- * and no <base> of its own, its other relative links resolve there.
+ * and no <base> of its own, its other relative links resolve there. `symbolLink` labels a link the device cannot draw
+ * (frameScript.ts).
  */
 export function prepareTwineHtml(
   page: string,
@@ -116,6 +172,7 @@ export function prepareTwineHtml(
   storage: FrameStorage,
   baseUrl?: string,
   assets?: StoryAssets,
+  symbolLink?: string,
 ): string {
   const html = assets ? inlineAssets(page, assets) : page;
   const base =
@@ -127,7 +184,7 @@ export function prepareTwineHtml(
     '">' +
     css.replace(/<\//g, '<\\/') +
     '</style><script>' +
-    frameScript(storage, !!assets) +
+    frameScript(storage, !!assets, symbolLink) +
     '</script>';
   const head = HEAD.exec(html);
   if (head) return insertAt(html, head.index + head[0].length, injected);

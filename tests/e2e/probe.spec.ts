@@ -88,3 +88,17 @@ test('the swipe box records touch input', async ({ page }) => {
   expect(line(text, 'input.eventsSeen')).toContain('touchstart');
   expect(line(text, 'input.lastSwipe')).toMatch(/^tap/);
 });
+
+test('the symbol fonts page checks each font for the symbols of Twine links', async ({ page }) => {
+  await mockNetwork(page);
+  await page.goto('/probe/glyphs.html');
+  // Whatever the fonts of the machine: a verdict about U+26DB, and a row per font, the browser's fallback first.
+  await expect(page.locator('#summary')).toHaveText(
+    /^(The browser draws ⛛ by itself\.|Fonts that draw ⛛: .+\.)$/,
+  );
+  await expect(page.locator('#rows tr').first().locator('td').first()).toHaveText('default');
+  expect(await page.locator('#rows tr').count()).toBeGreaterThan(40);
+  await expect(page.locator('#rows tr', { hasText: 'Bookerly' }).locator('td').nth(1)).toHaveText(
+    /^(yes|no)$/,
+  );
+});
