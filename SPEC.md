@@ -112,7 +112,8 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
   refresh, slow repaint (≈100–500 ms).
 - **Keyboard:** slow virtual keyboard covering half the screen; no hardware keys exposed to the page.
 - **Offline:** not relied upon; Wi-Fi is needed to load the app and a game, but a loaded game keeps working and
-  autosaves locally. A Service Worker offline shell is now a realistic enhancement (see §6.2 and §13).
+  autosaves locally. A Service Worker offline shell is now a realistic enhancement (see §6.2 and §13), measured by the
+  offline probe (`/probe/offline/`, S0.9) and planned in S5.3.
 - **CPU:** slow — interpreters must stay responsive (see [§4.5](#45-performance)).
 
 ### 2.3 Consequences for the whole app
@@ -675,6 +676,9 @@ A game played in another language than its default file's (S2.6) is stored as it
 - IndexedDB for story files and catalogue shards; Service Worker for offline app shell + recently played
   games. Feature-detected; never required. The Kindle measured in S0.3 exposes all three APIs, so this may reach
   class A too once it is shown to work there (§13 #11).
+- **Offline mode (M7):** the offline probe (S0.9, `/probe/offline/`) checks on the device whether a Service Worker
+  can reload a page with Wi-Fi off and whether story files survive in the Cache API or IndexedDB. S5.3 then adds an
+  offline app shell and "Keep offline" adventures (pinned story files, never evicted), designed from that report.
 
 ### 6.3 Export / import (dropped from V1)
 
@@ -865,6 +869,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M4 — More formats** | Glulx, illustrated games, Ink, Twine | S1.7–S1.9, S2.5 |
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
 | **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.18 |
+| **M7 — Offline** | Offline probe on the Kindle, offline app shell and kept adventures | S0.9, S5.3 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
@@ -884,4 +889,4 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
 | 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
-| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Candidate follow-up story after M1: offline app shell + recently played games, validated on the device. |
+| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | Offline probe on the device (S0.9), then offline app shell + kept adventures (S5.3, M7). |

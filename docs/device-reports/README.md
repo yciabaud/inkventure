@@ -34,6 +34,19 @@ Before each release, run the [device checklist](../device-checklist.md) and save
 |---|---|---|---|---|---|---|---|
 | 2026-10-01 | Kindle (as 2026-09-29) | `18e798a` | 1 918 ms | 2 225 ms | 109–191 ms | 178 / 889 ms | [2026-10-01-kindle-checklist.md](2026-10-01-kindle-checklist.md) |
 
+## Offline probe (story S0.9)
+
+1. With Wi-Fi **on**, open **https://yciabaud.github.io/inkventure/probe/offline/** (or the pull request preview's
+   `/probe/offline/`) and wait for **Done**. The `sw.*`, `cache.*` and `idb.*` lines say what was stored.
+2. Turn Wi-Fi **off** (airplane mode) and reload the page. The key line is `offline.reload`: `ok (page served by the
+   Service Worker…)` means the app can open without Wi-Fi. `cache.storyFile: kept…` means a story file can be
+   played offline.
+3. Still offline, close the browser, reopen it and come back to the page (history or bookmark), then restart the
+   device and do it again. The `run` counter and the `kept` lines show what survived.
+4. Send the report of each step (**Show QR code** works offline). Save it as
+   `docs/device-reports/<YYYY-MM-DD>-<device>-offline.txt`, add a line to the table above, and update S0.9.
+5. **Clear test data** removes everything the probe stored (up to ~52 MB with the 20 MB test files).
+
 ## Measuring turn latency (story S1.7)
 
 1. On the e-reader, turn on **Settings → About → Timings: Shown** (editing the address is awkward in the Kindle
