@@ -423,7 +423,8 @@ the ink functions of the same name.
   `sessionStorage` and sends every change to the reader, which keeps it under `save:<tuid>:twine` (at most 1 M
   characters; a named-save entry: never evicted). So the format's save slots persist and a SugarCube story resumes
   where it was after a reload. Restart reloads the story, keeping its `localStorage` (its saves) and dropping its
-  session.
+  session; its dialog also offers "Erase everything and restart", which drops the `localStorage` too (a story that
+  saves by itself then really starts afresh instead of asking to resume).
 - Flagged "Experimental" in the UI (game page and the reader's top zone). Twine has no `Engine`: the reader runs it
   directly (`TwineReader`, lazy chunk).
 

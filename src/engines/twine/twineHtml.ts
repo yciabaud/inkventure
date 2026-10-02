@@ -32,7 +32,8 @@ const PAGE = 'tw-story, tw-passage, #story, #passages, .passage, #passage, main'
  *
  * Animations and transitions are not removed but made instant: they jump to their end state, which a story may need
  * to show its text at all (`opacity:0` + a fade-in that fills `forwards`, S1.13). A looping animation stops on its
- * last frame, so links are kept opaque whatever their animation ends on.
+ * last frame, so links are kept opaque whatever their animation ends on, and the frame script shows any element
+ * whose animation ends invisible.
  */
 export function eInkStylesheet(settings: ReaderSettings): string {
   const size = FONT_SIZES[settings.size];
@@ -61,7 +62,14 @@ export function eInkStylesheet(settings: ReaderSettings): string {
       '{background:#fff!important;color:#000!important;font-family:inherit!important;' +
       'font-size:inherit!important;line-height:inherit!important}',
     'html,body,tw-story{height:auto!important;min-height:0!important}',
-    'tw-story{padding:0!important;margin:0 auto!important;max-width:40em!important}',
+    // In the flow of the page: a story centred with absolute positioning and a transform (Will Not Let Me Go's
+    // "top:25%; transform:translate(-50%,-50%)") ends up above the top of a page whose height is its content's.
+    PAGE +
+      '{position:static!important;transform:none!important;top:auto!important;left:auto!important;' +
+      'right:auto!important;bottom:auto!important}',
+    'tw-story{padding:0!important;margin:0 auto!important;width:auto!important;max-width:40em!important}',
+    // Harlowe may put the story next to <body> (Will Not Let Me Go): it then gets the body's side margins itself.
+    'html>tw-story{padding:0 ' + padding + 'px!important}',
     // Harlowe's sidebar (undo / redo) as a row above the passage, instead of in the margin.
     'tw-sidebar{position:static!important;display:flex!important;flex-direction:row!important;' +
       'width:auto!important;left:auto!important;margin:0 0 8px!important}',

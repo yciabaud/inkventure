@@ -216,6 +216,8 @@
   "saves.restartTitle": "Recommencer l’histoire ?",
   "saves.restartText": "L’histoire reprend depuis le début. Vos parties enregistrées sont conservées.",
   "saves.restartConfirm": "Recommencer",
+  "saves.restartTextErase": "L’histoire reprend depuis le début. Ses propres sauvegardes sont conservées, sauf si vous effacez tout.",
+  "saves.restartErase": "Tout effacer et recommencer",
   "saves.cancel": "Annuler",
   "settings.title": "Réglages",
   "settings.sections": "Rubriques des réglages",
