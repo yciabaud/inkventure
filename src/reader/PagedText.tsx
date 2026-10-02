@@ -39,6 +39,11 @@ interface Props {
   textStyle?: Record<string, string>;
   /** Changes whenever `textStyle` changes the layout: the text is paginated again, keeping the reading position. */
   layoutKey?: string;
+  /**
+   * Changes when the text area may change size without a window resize (rows of the status window above it): the
+   * pages are laid out again if it did, keeping the reading position. (Not every e-reader has ResizeObserver.)
+   */
+  frameKey?: string;
   /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
   focus?: number;
   /** The data of picture `id` (image blocks), or null: its alt text shows in its place. */
@@ -99,6 +104,7 @@ export function PagedText({
   lastSlotHeight,
   textStyle,
   layoutKey,
+  frameKey,
   imageUrl,
 }: Props) {
   const areaRef = useRef<HTMLDivElement>(null);
@@ -144,6 +150,14 @@ export function PagedText({
     layoutKeyRef.current = layoutKey;
     turner.refresh();
   }, [turner, layoutKey]);
+
+  // Declared after the blocks effect: when new text and new status rows come together, that one already laid out.
+  const frameKeyRef = useRef(frameKey);
+  useLayoutEffect(() => {
+    if (frameKey === frameKeyRef.current) return;
+    frameKeyRef.current = frameKey;
+    turner.layout(false);
+  }, [turner, frameKey]);
 
   const count = Math.max(view.pages.length, 1);
   const current = Math.min(view.index, count - 1);

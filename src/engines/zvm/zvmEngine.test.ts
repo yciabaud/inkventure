@@ -3,7 +3,13 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import type { Engine, InputRequest } from '../engine';
-import { applyOutput, EMPTY_TRANSCRIPT, splitStatus, type Transcript } from '../transcript';
+import {
+  applyOutput,
+  EMPTY_TRANSCRIPT,
+  splitStatus,
+  statusRows,
+  type Transcript,
+} from '../transcript';
 import { createZvmEngine } from './zvmEngine';
 
 const STORY = readFileSync('tests/fixtures/zmachine/lamp.z5');
@@ -122,6 +128,22 @@ describe('ZVM adapter', () => {
     status = splitStatus(s.transcript().status);
     expect(status.left).toBe('Foot of the Tower');
     expect(status.right).toMatch(/^Score: 1\s+Moves: 2$/);
+  });
+
+  it('draws three status rows inside the shed, then one again', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    s.engine.sendLine('open shed');
+    s.engine.sendLine('east');
+    expect(statusRows(s.transcript().status).shown).toEqual([
+      { left: 'Inside the Shed', right: expect.stringMatching(/^Score: 0\s+Moves: 2$/) },
+      { left: 'Saltmere Rock', right: 'W  OUT' },
+      { left: 'Sheds searched: 1/1', right: '' },
+    ]);
+    s.engine.sendLine('west');
+    expect(statusRows(s.transcript().status).shown).toEqual([
+      { left: 'Landing Stage', right: expect.stringMatching(/^Score: 0\s+Moves: 3$/) },
+    ]);
   });
 
   it('ignores input that was not asked for', async () => {

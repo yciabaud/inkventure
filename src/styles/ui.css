@@ -1051,6 +1051,35 @@ button.pager__btn {
   min-width: 0;
 }
 
+/* Every row of the status window, one under the other, each split like the first (SPEC §3.6). */
+.reader__rows {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 4px 0;
+}
+
+.reader__rows > .reader__status {
+  flex: none;
+}
+
+.reader__row {
+  overflow: hidden;
+  margin-right: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The status rows in the menu (when the top zone could not show them all). */
+.reader__status-all {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 16px;
+  border-bottom: 2px solid #000;
+  font-size: 16px;
+}
+
 .reader__score {
   flex-shrink: 0;
   margin-right: 16px;
