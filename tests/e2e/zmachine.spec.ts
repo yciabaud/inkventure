@@ -185,3 +185,57 @@ test('tap targets are ≥ 48 px during play', async ({ page }) => {
   });
   expect(small).toEqual([]);
 });
+
+test('every row of the status window shows, and the pages make room for them', async ({ page }) => {
+  await begin(page);
+  const top = page.getByRole('button', { name: 'Navigation' });
+  const height = (selector: string) =>
+    page.locator(selector).evaluate((e) => e.getBoundingClientRect().height);
+  const oneRow = await height('.reader__top');
+  // Enough text for earlier pages.
+  for (let i = 0; i < 6; i++) await send(page, 'look');
+  await send(page, 'open shed');
+  await send(page, 'east');
+
+  // The shed draws three rows: location and score, region and exits, a counter.
+  await expect(top).toContainText('Inside the Shed');
+  await expect(top).toContainText('Moves: 8');
+  await expect(top).toContainText('Saltmere Rock');
+  await expect(top).toContainText('W OUT');
+  await expect(top).toContainText('Sheds searched: 1/1');
+  await expect(page.locator('.reader__top .reader__status')).toHaveCount(3);
+  expect(await height('.reader__top')).toBeGreaterThan(oneRow + 30);
+  expect(await fits(page)).toBe(true);
+  const below = await page.evaluate(
+    () =>
+      document.querySelector('.reader__top')!.getBoundingClientRect().bottom <=
+      document.querySelector('.reader__page')!.getBoundingClientRect().top + 0.5,
+  );
+  expect(below).toBe(true);
+  // Earlier pages are laid out with the same, shorter text area.
+  expect((await indicator(page)).count).toBeGreaterThan(1);
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  expect(await fits(page)).toBe(true);
+  await page.keyboard.press('ArrowRight');
+  await expect(command(page)).toBeVisible();
+
+  // The menu opens under the taller top zone.
+  await top.click();
+  const menu = page.locator('.reader__bar');
+  await expect(menu).toBeVisible();
+  const [topBox, menuBox] = [await top.boundingBox(), await menu.boundingBox()];
+  expect(menuBox!.y).toBeGreaterThanOrEqual(topBox!.y + topBox!.height - 0.5);
+  await top.click();
+  await expect(menu).toBeHidden();
+
+  // Back outside: one row again, and the pages grow back.
+  await send(page, 'west');
+  await expect(top).toContainText('Moves: 9');
+  await expect(page.locator('.reader__top .reader__status')).toHaveCount(1);
+  await expect(top).not.toContainText('Saltmere Rock');
+  expect(Math.abs((await height('.reader__top')) - oneRow)).toBeLessThan(1);
+  expect(await fits(page)).toBe(true);
+  await page.keyboard.press('ArrowLeft');
+  expect(await fits(page)).toBe(true);
+});

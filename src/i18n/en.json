@@ -140,6 +140,7 @@
   "play.unsupported": "{format} games cannot be played in Inkventure yet.",
   "reader.text": "Story text",
   "reader.navigation": "Navigation",
+  "reader.statusWindow": "Status window",
   "reader.backToPresent": "Back to the present",
   "reader.inputSlot": "Commands will be typed here.",
   "reader.loading": "Loading…",

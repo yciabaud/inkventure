@@ -1,3 +1,4 @@
+import type { ComponentChildren } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { reportTiming } from '../../app/perf';
 import type { Engine, EngineKind, InputRequest, OutputBlock } from '../../engines/engine';
@@ -6,6 +7,8 @@ import {
   applyOutput,
   EMPTY_TRANSCRIPT,
   splitStatus,
+  statusRows,
+  type StatusRow,
   type Transcript,
 } from '../../engines/transcript';
 import { t } from '../../i18n/i18n';
@@ -492,7 +495,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
 
   if (state.phase === 'failed') return <ErrorPage message={state.message} />;
 
-  const status = splitStatus(transcript.status);
+  const status = statusRows(transcript.status);
   const time =
     perf && turnTime !== null ? (
       <span class="reader__score">{t('reader.turnTime', { ms: turnTime })}</span>
@@ -500,11 +503,14 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const heading =
     view === 'transcript' ? (
       <span class="reader__title">{t('transcript.title')}</span>
-    ) : status.left ? (
-      <span class="reader__status">
-        <span class="reader__title">{status.left}</span>
-        {status.right && <span class="reader__score">{status.right}</span>}
-        {time}
+    ) : status.shown.length ? (
+      <span class="reader__rows">
+        {status.shown.map((row, i) => (
+          <StatusLine key={i} row={row} first={i === 0}>
+            {i === 0 && time}
+          </StatusLine>
+        ))}
+        {status.overflow && <span class="reader__more">…</span>}
       </span>
     ) : time ? (
       <span class="reader__status">
@@ -514,6 +520,15 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     ) : (
       <span class="reader__title">{title}</span>
     );
+  // Rows past the top zone's cap are read in the menu, with the others.
+  const menuNote =
+    view === 'game' && status.overflow ? (
+      <div class="reader__status-all" role="group" aria-label={t('reader.statusWindow')}>
+        {status.all.map((row, i) => (
+          <StatusLine key={i} row={row} first={i === 0} />
+        ))}
+      </div>
+    ) : null;
 
   let slot = null;
   if (state.phase === 'ended') {
@@ -565,6 +580,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       <ReaderFrame
         tuid={tuid}
         heading={heading}
+        menuNote={menuNote}
         actions={
           state.phase === 'loading'
             ? []
@@ -617,6 +633,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               }
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
+              frameKey={status.shown.length + (status.overflow ? '+' : '')}
               imageUrl={imageUrl}
               pinToLast={typing}
               interceptTap={(isLastPage, point) => {
@@ -645,5 +662,24 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       </ReaderFrame>
       {dialogs}
     </>
+  );
+}
+
+/** One row of the status window: its left part (the location on the first row) and its right part. */
+function StatusLine({
+  row,
+  first,
+  children,
+}: {
+  row: StatusRow;
+  first: boolean;
+  children?: ComponentChildren;
+}) {
+  return (
+    <span class="reader__status">
+      <span class={first ? 'reader__title' : 'reader__row'}>{row.left}</span>
+      {row.right && <span class="reader__score">{row.right}</span>}
+      {children}
+    </span>
   );
 }

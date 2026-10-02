@@ -64,10 +64,39 @@ export function applyOutput(transcript: Transcript, blocks: OutputBlock[]): Tran
     : { paragraphs: paragraphs, status: status };
 }
 
-/** Status line text split into its left part (location) and right part (score / turns). */
-export function splitStatus(status: string[]): { left: string; right: string } {
-  const line = (status[0] || '').replace(/\s+$/, '');
+/** A row of the status window split into its left part (location) and right part (score / turns, exits). */
+export interface StatusRow {
+  left: string;
+  right: string;
+}
+
+function splitRow(row: string): StatusRow {
+  const line = row.replace(/\s+$/, '');
   const match = /^\s*(.*?)\s{2,}(\S.*)$/.exec(line);
   if (match) return { left: match[1], right: match[2] };
   return { left: line.trim(), right: '' };
+}
+
+/** Status line text (its first row) split into its left part (location) and right part (score / turns). */
+export function splitStatus(status: string[]): StatusRow {
+  return splitRow(status[0] || '');
+}
+
+/** Rows of the status window shown in the reader's top zone at most (SPEC §3.6); the others go to the menu. */
+export const MAX_STATUS_ROWS = 4;
+
+/**
+ * The status window as the top zone shows it: every non-empty row, split like the first one. Past `max` rows, the
+ * zone shows `max - 1` of them and an ellipsis line (`overflow`), and the menu shows them all (`all`).
+ */
+export function statusRows(
+  status: string[],
+  max: number = MAX_STATUS_ROWS,
+): { shown: StatusRow[]; all: StatusRow[]; overflow: boolean } {
+  const all: StatusRow[] = [];
+  for (let i = 0; i < status.length; i++) {
+    if (/\S/.test(status[i] || '')) all.push(splitRow(status[i]));
+  }
+  const overflow = all.length > max;
+  return { shown: overflow ? all.slice(0, max - 1) : all, all: all, overflow: overflow };
 }

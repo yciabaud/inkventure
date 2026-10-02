@@ -5,13 +5,16 @@
 !
 ! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
 ! objects, a locked container, a score and a winning ending; single-key prompts naming their keys: HELP ("Choose 1 or
-! 2.") and LOGBOOK ("Press Q to quit the menu.", any other key turns a page).
+! 2.") and LOGBOOK ("Press Q to quit the menu.", any other key turns a page); a status window of three rows inside the
+! shed (region and exits, a progress counter), one row elsewhere.
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
 Constant Story "THE LAMP AT SALTMERE";
 Constant Headline "^An Inkventure test fixture.^";
 Constant MAX_SCORE 3;
+
+Replace DrawStatusLine;
 
 Include "Parser";
 Include "VerbLib";
@@ -104,6 +107,30 @@ Object -> Lens "lens"
   has  scenery;
 
 Include "Grammar";
+
+! The library's status line (location, score, moves), plus two rows inside the shed, like the regions, compasses and
+! progress counters of larger games.
+[ DrawStatusLine width rows;
+    if (location == nothing || parent(player) == nothing) return;
+    rows = 1;
+    if (location == Shed) rows = 3;
+    StatusLineHeight(rows);
+    width = ScreenWidth();
+    MoveCursor(1, 1); spaces width;
+    if (rows == 3) {
+        MoveCursor(2, 1); spaces width;
+        MoveCursor(3, 1); spaces width;
+    }
+    MoveCursor(1, 2); print (name) location;
+    MoveCursor(1, width - 26); print (string) SCORE__TX, sline1;
+    MoveCursor(1, width - 13); print (string) MOVES__TX, sline2;
+    if (rows == 3) {
+        MoveCursor(2, 2); print "Saltmere Rock";
+        MoveCursor(2, width - 13); print "W  OUT";
+        MoveCursor(3, 2); print "Sheds searched: 1/1";
+    }
+    MainWindow();
+];
 
 [ HelpSub key;
     print "Choose 1 or 2.^";

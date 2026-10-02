@@ -327,7 +327,12 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
 - Refresh screen
 
 **Status line**: location and score/turns from the game (Z-machine status line / Glk status window);
-for choice games, the story title and chapter if provided.
+for choice games, the story title and chapter if provided. Every non-empty row of the status window shows in the top
+zone, one under the other in the UI font, each split like the first into a left part and a right part (region and
+exits, progress counters, a menu's legend); blank rows are dropped. Past 4 rows, the zone shows the first 3 and a "…"
+line, and the reader menu lists them all. The text area gets shorter by the zone's height: when the number of rows
+changes, the pages are laid out again at once, keeping the reading position, and all pages (earlier ones too) share
+the new text-area height.
 
 ---
 
