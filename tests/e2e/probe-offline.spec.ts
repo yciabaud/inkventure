@@ -14,8 +14,9 @@ async function mockNetwork(page: Page) {
 }
 
 function line(report: string, key: string): string {
-  const match = new RegExp('^' + key.replace(/\./g, '\\.') + ': (.*)$', 'm').exec(report);
-  return match ? match[1] : '';
+  const prefix = key + ': ';
+  const found = report.split('\n').find((row) => row.startsWith(prefix));
+  return found ? found.slice(prefix.length) : '';
 }
 
 async function report(page: Page): Promise<string> {
