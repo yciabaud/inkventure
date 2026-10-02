@@ -196,3 +196,68 @@ describe('GlkOteBridge pictures', () => {
     ]);
   });
 });
+
+describe('GlkOteBridge cleared window (S1.16)', () => {
+  function withInput() {
+    let transcript: Transcript = EMPTY_TRANSCRIPT;
+    const accepted: unknown[] = [];
+    const bridge = new GlkOteBridge(
+      {
+        output: (blocks: OutputBlock[]) => (transcript = applyOutput(transcript, blocks)),
+        input: () => undefined,
+        exit: () => undefined,
+        error: () => undefined,
+      },
+      80,
+    );
+    bridge.init({ accept: (event: unknown) => accepted.push(event) } as never);
+    let gen = 0;
+    const update = (data: Omit<Update, 'type' | 'gen'>) =>
+      bridge.update({ type: 'update', gen: ++gen, ...data });
+    return { bridge, update, transcript: () => transcript };
+  }
+  const line = (text: string, append = false) => ({
+    append: append,
+    content: [{ style: 'normal', text: text }],
+  });
+
+  it('echoes the command again when the game clears the window in its reply', () => {
+    const s = withInput();
+    s.update({
+      windows: WINDOWS,
+      content: [{ id: 1, text: [line('Landing Stage'), line('>')] }],
+      input: [{ id: 1, type: 'line', gen: 1, maxlen: 120 }],
+    });
+    s.bridge.sendLine('menu');
+    // Glk sends only what follows the clear: its own echo of the command is gone.
+    s.update({
+      content: [{ id: 1, clear: true, text: [line('> About the lamp')] }],
+      input: [{ id: 1, type: 'char', gen: 2 }],
+    });
+    const paragraphs = s.transcript().paragraphs;
+    expect(paragraphs.map((p) => p.text)).toEqual(['Landing Stage', '>menu', '> About the lamp']);
+    expect(paragraphs[1].input).toBe(true);
+    expect(paragraphs[2].screen).toBe(true);
+  });
+
+  it('adds nothing when the reply does not clear, or after a key', () => {
+    const s = withInput();
+    s.update({
+      windows: WINDOWS,
+      content: [{ id: 1, text: [line('>')] }],
+      input: [{ id: 1, type: 'line', gen: 1, maxlen: 120 }],
+    });
+    s.bridge.sendLine('look');
+    s.update({
+      content: [{ id: 1, text: [line('look', true), line('A stone jetty.')] }],
+      input: [{ id: 1, type: 'char', gen: 2 }],
+    });
+    s.bridge.sendChar('n');
+    s.update({ content: [{ id: 1, clear: true, text: [line('Menu')] }] });
+    expect(s.transcript().paragraphs.map((p) => p.text)).toEqual([
+      '>look',
+      'A stone jetty.',
+      'Menu',
+    ]);
+  });
+});

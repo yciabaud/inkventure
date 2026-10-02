@@ -224,3 +224,27 @@ describe('game saves', () => {
     expect(readProgress(store, TUID)).toEqual({ reader: { size: 3 }, turns: 5, lastPlayed: 456 });
   });
 });
+
+describe('screen starts in saves (S1.16)', () => {
+  it('keeps where screens start, counted from the transcript tail it keeps', () => {
+    const store = createStore(new MemoryBackend());
+    const paragraphs = [];
+    for (let i = 0; i < TAIL_BLOCKS + 50; i++)
+      paragraphs.push([{ text: 'P' + i, style: 'normal' as const }]);
+    const snapshot = { ...fake(3), paragraphs: paragraphs, screens: [10, TAIL_BLOCKS + 40] };
+    writeAutosave(store, TUID, snapshot, 1000);
+    const saved = readAutosave(store, TUID)!;
+    expect(saved.paragraphs).toHaveLength(TAIL_BLOCKS);
+    // The screen at 10 fell out of the tail; the other moved with it.
+    expect(saved.screens).toEqual([TAIL_BLOCKS - 10]);
+    expect(saved.paragraphs[saved.screens![0]]).toEqual([
+      { text: 'P' + (TAIL_BLOCKS + 40), style: 'normal' },
+    ]);
+  });
+
+  it('reads saves made without screens', () => {
+    const store = createStore(new MemoryBackend());
+    writeAutosave(store, TUID, fake(4), 1000);
+    expect(readAutosave(store, TUID)!.screens).toBeUndefined();
+  });
+});

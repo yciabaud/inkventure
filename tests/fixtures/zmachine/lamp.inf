@@ -6,7 +6,8 @@
 ! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
 ! objects, a locked container, a score and a winning ending; single-key prompts naming their keys: HELP ("Choose 1 or
 ! 2.") and LOGBOOK ("Press Q to quit the menu.", any other key turns a page); a status window of three rows inside the
-! shed (region and exits, a progress counter), one row elsewhere.
+! shed (region and exits, a progress counter), one row elsewhere; MENU, a menu like the Inform library's: it clears the
+! main window at each key, with its legend in a three-row status window (N / P move, Return opens a topic, Q quits).
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -150,5 +151,48 @@ Include "Grammar";
     }
 ];
 
+! A menu drawn like the Inform library's DoMenu: the main window is cleared and the menu drawn again after each key.
+Array topics --> "About the lamp" "About the keeper";
+
+[ MenuLegend;
+    @erase_window 1;
+    StatusLineHeight(3);
+    @set_window 1;
+    MoveCursor(1, 2); print "Saltmere help";
+    MoveCursor(2, 2); print "N = Next"; MoveCursor(2, 40); print "Q = Quit Menu";
+    MoveCursor(3, 2); print "P = Previous"; MoveCursor(3, 40); print "ENTER = Select";
+    MainWindow();
+];
+
+[ MenuSub cursor i key;
+    cursor = 0;
+    for (::) {
+        @erase_window 0;
+        MenuLegend();
+        print "^";
+        for (i = 0 : i < 2 : i++) {
+            if (i == cursor) print "> "; else print "  ";
+            print (string) topics-->i, "^";
+        }
+        key = KeyPress();
+        if (key == 'q' or 'Q') break;
+        if (key == 'n' or 'N') cursor = (cursor + 1) % 2;
+        if (key == 'p' or 'P') cursor = (cursor + 1) % 2;
+        if (key == 13 or 10) {
+            @erase_window 0;
+            MenuLegend();
+            if (cursor == 0) print "^The lamp burns paraffin. Fill it before you light it.^";
+            else print "^The keeper rowed out at dawn and has not come back.^";
+            print "^[Press any key.]^";
+            KeyPress();
+        }
+    }
+    @erase_window 0;
+    StatusLineHeight(1);
+    DrawStatusLine();
+    "You put the menu away.";
+];
+
+Verb meta 'menu' * -> Menu;
 Verb meta 'help' 'hint' 'hints' * -> Help;
 Verb meta 'logbook' 'log' * -> Logbook;

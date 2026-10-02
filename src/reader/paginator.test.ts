@@ -202,6 +202,38 @@ describe('keeping turns together', () => {
   });
 });
 
+describe('screens (S1.16)', () => {
+  // Blocks of 1 line (20 px) with 10 px gaps.
+  const blocks = [0, 1, 2, 3, 4].map((i) => text(10, String(i)));
+  const metrics = measure(blocks, 10);
+
+  it('opens a new page at each screen start, even with room left', () => {
+    const screens = blocks.map((_, i) => i === 2 || i === 3);
+    const pages = paginate(metrics, 1000, undefined, undefined, screens);
+    expect(pages.map((page) => page.start.block)).toEqual([0, 2, 3]);
+    // At the top of a page already: no empty page.
+    expect(
+      paginate(metrics, 1000, undefined, undefined, [true, false, false, false, false]),
+    ).toHaveLength(1);
+    expect(reassemble(blocks, pages)).toEqual(blocks.map((b) => b.text));
+  });
+
+  it('ends a turn at a new screen: the command stays with the text before it', () => {
+    // Page of 80 px: blocks 0-1 take 50 px; turn 2 (the command, 20 px) fits after them, its reply opens a screen.
+    const turns = blocks.map((_, i) => i === 2);
+    const screens = blocks.map((_, i) => i === 3);
+    const pages = paginate(metrics, 80, turns, undefined, screens);
+    expect(pages[0].end).toEqual({ block: 3, offset: 0 });
+    expect(pages[1].start).toEqual({ block: 3, offset: 0 });
+  });
+
+  it('keeps screen starts on the shorter last page', () => {
+    const screens = blocks.map((_, i) => i === 4);
+    const pages = paginate(metrics, 1000, undefined, 500, screens);
+    expect(pages.map((page) => page.start.block)).toEqual([0, 4]);
+  });
+});
+
 describe('a shorter last page (room for the command bar)', () => {
   // Five blocks of 2 lines (40 px) with 10 px gaps: 240 px in all.
   const blocks = [0, 1, 2, 3, 4].map((i) => text(20, String(i)));
