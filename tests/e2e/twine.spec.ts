@@ -170,14 +170,15 @@ test('Restart starts the story again and keeps no session', async ({ page }) => 
   );
 });
 
-test('animations jump to their end state: a faded-in story shows, links stay, nothing moves', async ({
-  page,
-}) => {
+/** Plays the Harlowe fixture with the motion of "Will Not Let Me Go" and checks that the text shows, at once. */
+async function playsWithoutMotion(page: Page) {
   // Like "Will Not Let Me Go" (S1.13): the story is hidden until a fade-in that fills forwards, links pulse for ever
-  // from opacity 0, and the passage slides in while its text fades in and out for ever (it would end invisible).
+  // from opacity 0, the passage slides in while its text fades in and out for ever (it would end invisible), and the
+  // story is centred with absolute positioning and a transform.
   const motion =
     '<style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}' +
-    'tw-story{opacity:0;animation:fadeIn .8s forwards}' +
+    'tw-story{opacity:0;animation:fadeIn .8s forwards;' +
+    'position:absolute;left:50%;top:25%;transform:translate(-50%,-50%)}' +
     '@keyframes pulse{0%,100%{opacity:0}50%{opacity:1}}' +
     'tw-link{opacity:0;animation:pulse 4s infinite forwards}' +
     '@keyframes slide{from{transform:translateX(-100%)}to{transform:none}}' +
@@ -205,19 +206,41 @@ test('animations jump to their end state: a faded-in story shows, links stay, no
         link: style('tw-link').opacity,
         passage: style('tw-passage').transform,
         text: style('tw-passage').opacity,
+        // The story starts inside the frame, not above its top.
+        top: document.querySelector('tw-story')!.getBoundingClientRect().top >= 0,
       };
     });
   // At once, well before the 0.8 s fade or the 5 s slide would have ended.
   await expect
     .poll(styles, { timeout: 1000 })
-    .toEqual({ story: '1', link: '1', passage: 'none', text: '1' });
+    .toEqual({ story: '1', link: '1', passage: 'none', text: '1', top: true });
   await expect(link(page, 'Walk up to the lighthouse')).toBeVisible();
 
   await press(link(page, 'Walk up to the lighthouse'));
   await expect(story(page).locator('tw-passage')).toContainText('The lighthouse door is ajar');
   await expect
     .poll(styles, { timeout: 1000 })
-    .toEqual({ story: '1', link: '1', passage: 'none', text: '1' });
+    .toEqual({ story: '1', link: '1', passage: 'none', text: '1', top: true });
+}
+
+test('animations jump to their end state: a faded-in story shows, links stay, nothing moves', async ({
+  page,
+}) => {
+  await playsWithoutMotion(page);
+});
+
+test('elements whose animation ends invisible show even when the browser reports no animation end', async ({
+  page,
+}) => {
+  // Some browsers may not fire animationend for animations that last 0 s: the frame script also looks after a change.
+  await page.addInitScript(() => {
+    const add = EventTarget.prototype.addEventListener;
+    EventTarget.prototype.addEventListener = function (this: EventTarget, type: string, ...rest) {
+      if (/animationend/i.test(type)) return;
+      return add.call(this, type, ...(rest as [EventListener]));
+    } as typeof add;
+  });
+  await playsWithoutMotion(page);
 });
 
 test('a catalogue Twine game downloads and plays in the frame, flagged experimental', async ({

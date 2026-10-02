@@ -35,6 +35,10 @@ describe('e-ink stylesheet', () => {
     // Scrolling is hidden only once the frame script pages.
     expect(css).toContain('html.ik-paged{overflow:hidden!important}');
     expect(css).toContain('min-height:48px');
+    // A story centred with absolute positioning and a transform stays in the page.
+    expect(css).toMatch(
+      /tw-story, tw-passage[^{]*\{position:static!important;transform:none!important/,
+    );
   });
 
   it('follows every setting', () => {

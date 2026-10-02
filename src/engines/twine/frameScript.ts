@@ -237,13 +237,27 @@ const FRAME_SCRIPT = `(function () {
   }
   // Animations jump to their end state (e-ink stylesheet). One that ends invisible (a loop stopped on its last frame,
   // a fade in and out) would hide its text for good: the element is shown instead.
+  function show(node) {
+    var style = getComputedStyle(node);
+    var name = style.animationName || style.webkitAnimationName;
+    if (name && name !== 'none' && parseFloat(style.opacity) < 0.1) node.style.setProperty('opacity', '1', 'important');
+  }
   function reveal(event) {
-    var node = event.target;
-    if (!node || node.nodeType !== 1 || !window.getComputedStyle) return;
-    if (parseFloat(getComputedStyle(node).opacity) < 0.1) node.style.setProperty('opacity', '1', 'important');
+    if (event.target && event.target.nodeType === 1 && window.getComputedStyle) show(event.target);
   }
   document.addEventListener('animationend', reveal, true);
   document.addEventListener('webkitAnimationEnd', reveal, true);
+  // In case the browser does not report animations that end at once: every element of the page, after a change.
+  var revealing = false;
+  function revealAll() {
+    if (revealing || !window.getComputedStyle) return;
+    revealing = true;
+    setTimeout(function () {
+      revealing = false;
+      var all = document.body.getElementsByTagName('*');
+      for (var i = 0; i < all.length; i++) show(all[i]);
+    }, 50);
+  }
   function start() {
     root.className += (root.className ? ' ' : '') + 'ik-paged';
     document.addEventListener('click', function (event) {
@@ -255,8 +269,12 @@ const FRAME_SCRIPT = `(function () {
     window.addEventListener('scroll', reportSoon);
     window.addEventListener('resize', reportSoon);
     if (window.MutationObserver) {
-      new MutationObserver(reportSoon).observe(document.body, { childList: true, subtree: true, characterData: true });
+      new MutationObserver(function () {
+        reportSoon();
+        revealAll();
+      }).observe(document.body, { childList: true, subtree: true, characterData: true });
     }
+    revealAll();
     report();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

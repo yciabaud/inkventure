@@ -62,7 +62,12 @@ export function eInkStylesheet(settings: ReaderSettings): string {
       '{background:#fff!important;color:#000!important;font-family:inherit!important;' +
       'font-size:inherit!important;line-height:inherit!important}',
     'html,body,tw-story{height:auto!important;min-height:0!important}',
-    'tw-story{padding:0!important;margin:0 auto!important;max-width:40em!important}',
+    // In the flow of the page: a story centred with absolute positioning and a transform (Will Not Let Me Go's
+    // "top:25%; transform:translate(-50%,-50%)") ends up above the top of a page whose height is its content's.
+    PAGE +
+      '{position:static!important;transform:none!important;top:auto!important;left:auto!important;' +
+      'right:auto!important;bottom:auto!important}',
+    'tw-story{padding:0!important;margin:0 auto!important;width:auto!important;max-width:40em!important}',
     // Harlowe's sidebar (undo / redo) as a row above the passage, instead of in the margin.
     'tw-sidebar{position:static!important;display:flex!important;flex-direction:row!important;' +
       'width:auto!important;left:auto!important;margin:0 0 8px!important}',
