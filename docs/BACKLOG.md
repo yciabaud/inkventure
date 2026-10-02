@@ -25,10 +25,13 @@ Statuses: `todo` · `in-progress` · `done` · `blocked` · `dropped`. Keep the 
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S1.18 → S1.19
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S1.18 → S1.19 → S0.9 → S5.3
 
 M6 (play fidelity) comes from the [2026-10-01 comparison](reports/rendering-2026-10-01/README.md) of the 32 featured games with Parchment and the original
 Twine pages: the two blockers first (S1.13 is the smallest), then the stories that make menus and questions usable.
+
+M7 (offline) started with a device spike: the S0.9 probe showed the Kindle can open a page and read kept files with Wi-Fi
+off, so S5.3 keeps its full scope.
 
 Stories of the **Post-V1** milestone are written but not in this order: they wait until V1 is out.
 
@@ -44,6 +47,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S0.6](stories/S0.6-storage-layer.md) | Storage layer (localStorage, versioned schema, quota, LRU) | E0 | M0 | S0.1 | done |
 | [S0.7](stories/S0.7-asset-size-budgets.md) | Asset size budgets in CI | E0 | M0 | S0.1 | done |
 | [S0.8](stories/S0.8-pr-preview-deployments.md) | Pull request preview deployments | E0 | M0 | S0.2 | done |
+| [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | done |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |
@@ -79,6 +83,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S4.2](stories/S4.2-home-my-adventures.md) | Home: My adventures & Continue hero | E4 | M3 | S4.1, S1.5 | done |
 | [S5.1](stories/S5.1-settings-screen.md) | Settings screen & About | E5 | M3 | S0.5, S0.6, S1.2 | done |
 | [S5.2](stories/S5.2-export-import.md) | Export / import data as a text code | E5 | M3 | S5.1, S1.5 | dropped |
+| [S5.3](stories/S5.3-offline-mode.md) | Offline mode: the app and kept adventures without Wi-Fi | E5 | M7 | S0.9, S4.2, S3.4 | todo |
 | [S6.1](stories/S6.1-ebook-build.md) | Ebook build pipeline (EPUB + KF8) | E6 | M5 | S2.4 | done |
 | [S6.2](stories/S6.2-ebook-content.md) | Ebook content (EN/FR) | E6 | M5 | S6.1 | done |
 | [S6.3](stories/S6.3-ebook-download-page.md) | Ebook download page (desktop) | E6 | M5 | S6.1 | in-progress |

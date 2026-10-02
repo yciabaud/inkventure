@@ -24,6 +24,7 @@ add a line to the table below, and update SPEC §2.2 / §13 with what changed.
 | 2026-09-29 | Kindle, 636×848 CSS px @2x (model / firmware not recorded) | Experimental browser (UA says WebKit 531 / Kindle 3.0, engine is modern) | [2026-09-29-kindle.txt](2026-09-29-kindle.txt) | Modern engine (ES2017, no `?.`), loads the **modern** bundle; IF Archive CORS **ok**, IFDB API blocked; Home in ~1.1 s; localStorage ~4.75M chars; SW / IndexedDB / Cache API present; touch events fire although `ontouchstart` is absent; downloads **woff2**. |
 | 2026-09-29 | Same Kindle, after sleep / wake (not a restart) | Experimental browser | [2026-09-29-kindle-after-sleep.txt](2026-09-29-kindle-after-sleep.txt) | localStorage kept across sleep / wake (`run #4`); a real restart is still to be tested. Other results unchanged; loop benchmark 454 ms vs 277 ms (expect ±60 % run-to-run variance on the CPU). |
 | 2026-09-29 | Same Kindle, after a real device restart | Experimental browser | (only this line was sent) `storage.persistence: run #6, first run 2026-09-29T21:09:29.495Z` | **localStorage survives a device restart.** |
+| 2026-10-02 | Same Kindle, offline probe (S0.9): Wi-Fi on, then airplane mode: reload, browser restart, device restart | Experimental browser | [2026-10-02-kindle-offline.txt](2026-10-02-kindle-offline.txt) | **Works offline.** The Service Worker serves the page with the network off, after a browser and a device restart. A story file and 1/5/20 MB files survive in both the Cache API and IndexedDB (20 MB read in ~1–1.2 s). Quota 100 MB; `persist()` refused; `estimate()` under-reports usage (27.5 MB for ~52 MB stored). |
 
 ## Device checklist (story S7.1)
 
@@ -33,6 +34,19 @@ Before each release, run the [device checklist](../device-checklist.md) and save
 | Date | Device | Version | Home | Library | Page turn | Z / Glulx turn (worst) | Report |
 |---|---|---|---|---|---|---|---|
 | 2026-10-01 | Kindle (as 2026-09-29) | `18e798a` | 1 918 ms | 2 225 ms | 109–191 ms | 178 / 889 ms | [2026-10-01-kindle-checklist.md](2026-10-01-kindle-checklist.md) |
+
+## Offline probe (story S0.9)
+
+1. With Wi-Fi **on**, open **https://yciabaud.github.io/inkventure/probe/offline/** (or the pull request preview's
+   `/probe/offline/`) and wait for **Done**. The `sw.*`, `cache.*` and `idb.*` lines say what was stored.
+2. Turn Wi-Fi **off** (airplane mode) and reload the page. The key line is `offline.reload`: `ok (page served by the
+   Service Worker…)` means the app can open without Wi-Fi. `cache.storyFile: kept…` means a story file can be
+   played offline.
+3. Still offline, close the browser, reopen it and come back to the page (history or bookmark), then restart the
+   device and do it again. The `run` counter and the `kept` lines show what survived.
+4. Send the report of each step (**Show QR code** works offline). Save it as
+   `docs/device-reports/<YYYY-MM-DD>-<device>-offline.txt`, add a line to the table above, and update S0.9.
+5. **Clear test data** removes everything the probe stored (up to ~52 MB with the 20 MB test files).
 
 ## Measuring turn latency (story S1.7)
 

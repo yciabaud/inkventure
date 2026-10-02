@@ -1,0 +1,100 @@
+# Kindle (as 2026-09-29), experimental browser, 2026-10-02. Offline probe (S0.9), PR #70 preview.
+# Four raw reports, each reassembled from its 2 QR parts, in order:
+# 1. Wi-Fi on; 2. airplane mode, page reloaded; 3. airplane mode, browser closed and reopened;
+# 4. airplane mode, device restarted. (Runs #2, #4 and #6 were intermediate reloads, not sent.)
+
+## 1. Wi-Fi on
+inkventure-offline-probe v1
+probe.startedAt: Fri, 02 Oct 2026 15:27:15 GMT
+device.userAgent: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+device.online: yes
+run: #1, first run Fri, 02 Oct 2026 15:27:15 GMT
+api: serviceWorker:yes caches:yes indexedDB:yes storageManager:yes
+net.site: reachable
+sw.controlledAtLoad: no
+offline.reload: not yet: wait for Done, then turn Wi-Fi off and reload
+storage.persist: refused
+storage.estimate: usage 26.1 MB of 100 MB
+idb.blob-1mb: stored now: 1048576 bytes, 180 ms
+sw.register: ok (installing, 363 ms)
+cache.storyFile: stored now: 87040 bytes, 398 ms
+cache.blob-1mb: stored now: 1048576 bytes, 180 ms
+sw.active: yes (1096 ms)
+sw.shellCached: 4 files
+sw.controlledNow: yes
+idb.blob-5mb: stored now: 5242880 bytes, 901 ms
+cache.blob-5mb: stored now: 5242880 bytes, 1046 ms
+cache.blob-20mb: stored now: 20971520 bytes, 2943 ms
+idb.blob-20mb: stored now: 20971520 bytes, 3580 ms
+
+## 2. Airplane mode, page reloaded
+inkventure-offline-probe v1
+probe.startedAt: Fri, 02 Oct 2026 15:29:10 GMT
+device.userAgent: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+device.online: no
+run: #3, first run Fri, 02 Oct 2026 15:27:15 GMT
+api: serviceWorker:yes caches:yes indexedDB:yes storageManager:yes
+net.site: unreachable (status 0)
+sw.controlledAtLoad: yes
+offline.reload: ok (page served by the Service Worker with the network off)
+sw.register: ok (activated, 9 ms)
+sw.active: yes (12 ms)
+storage.estimate: usage 27.5 MB of 100 MB
+storage.persist: refused
+cache.storyFile: kept from an earlier run: 87040 bytes, 74 ms
+sw.shellCached: 4 files
+sw.controlledNow: yes
+cache.blob-1mb: kept: 1048576 bytes, read 81 ms
+idb.blob-1mb: kept: 1048576 bytes, read 75 ms
+cache.blob-5mb: kept: 5242880 bytes, read 219 ms
+idb.blob-5mb: kept: 5242880 bytes, read 282 ms
+idb.blob-20mb: kept: 20971520 bytes, read 888 ms
+cache.blob-20mb: kept: 20971520 bytes, read 1173 ms
+
+## 3. Airplane mode, browser closed and reopened
+inkventure-offline-probe v1
+probe.startedAt: Fri, 02 Oct 2026 15:33:29 GMT
+device.userAgent: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+device.online: no
+run: #5, first run Fri, 02 Oct 2026 15:27:15 GMT
+api: serviceWorker:yes caches:yes indexedDB:yes storageManager:yes
+storage.persist: refused
+storage.estimate: usage 27.5 MB of 100 MB
+net.site: unreachable (status 0)
+sw.controlledAtLoad: yes
+offline.reload: ok (page served by the Service Worker with the network off)
+sw.register: ok (activated, 60 ms)
+sw.active: yes (64 ms)
+sw.shellCached: 4 files
+sw.controlledNow: yes
+idb.blob-1mb: kept: 1048576 bytes, read 165 ms
+cache.storyFile: kept from an earlier run: 87040 bytes, 140 ms
+cache.blob-1mb: kept: 1048576 bytes, read 98 ms
+idb.blob-5mb: kept: 5242880 bytes, read 284 ms
+cache.blob-5mb: kept: 5242880 bytes, read 246 ms
+idb.blob-20mb: kept: 20971520 bytes, read 1139 ms
+cache.blob-20mb: kept: 20971520 bytes, read 1222 ms
+
+## 4. Airplane mode, device restarted
+inkventure-offline-probe v1
+probe.startedAt: Fri, 02 Oct 2026 15:37:00 GMT
+device.userAgent: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+device.online: no
+run: #7, first run Fri, 02 Oct 2026 15:27:15 GMT
+api: serviceWorker:yes caches:yes indexedDB:yes storageManager:yes
+storage.persist: refused
+storage.estimate: usage 27.5 MB of 100 MB
+net.site: unreachable (status 0)
+sw.controlledAtLoad: yes
+offline.reload: ok (page served by the Service Worker with the network off)
+idb.blob-1mb: kept: 1048576 bytes, read 33 ms
+sw.register: ok (activated, 64 ms)
+sw.active: yes (71 ms)
+cache.storyFile: kept from an earlier run: 87040 bytes, 64 ms
+sw.shellCached: 4 files
+sw.controlledNow: yes
+idb.blob-5mb: kept: 5242880 bytes, read 312 ms
+cache.blob-1mb: kept: 1048576 bytes, read 284 ms
+cache.blob-5mb: kept: 5242880 bytes, read 392 ms
+idb.blob-20mb: kept: 20971520 bytes, read 1064 ms
+cache.blob-20mb: kept: 20971520 bytes, read 1179 ms
