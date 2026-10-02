@@ -174,14 +174,15 @@ test('animations jump to their end state: a faded-in story shows, links stay, no
   page,
 }) => {
   // Like "Will Not Let Me Go" (S1.13): the story is hidden until a fade-in that fills forwards, links pulse for ever
-  // from opacity 0, and the passage slides in.
+  // from opacity 0, and the passage slides in while its text fades in and out for ever (it would end invisible).
   const motion =
     '<style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}' +
     'tw-story{opacity:0;animation:fadeIn .8s forwards}' +
     '@keyframes pulse{0%,100%{opacity:0}50%{opacity:1}}' +
     'tw-link{opacity:0;animation:pulse 4s infinite forwards}' +
     '@keyframes slide{from{transform:translateX(-100%)}to{transform:none}}' +
-    'tw-passage{animation:slide 5s}</style></head>';
+    '@keyframes fadeInOut{0%,100%{opacity:0}50%{opacity:1}}' +
+    'tw-passage{opacity:0;animation:slide 5s,fadeInOut 3s infinite}</style></head>';
   await page.route('https://ifarchive.org/if-archive/games/twine/lanterns.html', (route) =>
     route.fulfill({
       status: 200,
@@ -203,15 +204,20 @@ test('animations jump to their end state: a faded-in story shows, links stay, no
         story: style('tw-story').opacity,
         link: style('tw-link').opacity,
         passage: style('tw-passage').transform,
+        text: style('tw-passage').opacity,
       };
     });
   // At once, well before the 0.8 s fade or the 5 s slide would have ended.
-  expect(await styles()).toEqual({ story: '1', link: '1', passage: 'none' });
+  await expect
+    .poll(styles, { timeout: 1000 })
+    .toEqual({ story: '1', link: '1', passage: 'none', text: '1' });
   await expect(link(page, 'Walk up to the lighthouse')).toBeVisible();
 
   await press(link(page, 'Walk up to the lighthouse'));
   await expect(story(page).locator('tw-passage')).toContainText('The lighthouse door is ajar');
-  expect(await styles()).toEqual({ story: '1', link: '1', passage: 'none' });
+  await expect
+    .poll(styles, { timeout: 1000 })
+    .toEqual({ story: '1', link: '1', passage: 'none', text: '1' });
 });
 
 test('a catalogue Twine game downloads and plays in the frame, flagged experimental', async ({

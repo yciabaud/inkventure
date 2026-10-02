@@ -235,6 +235,15 @@ const FRAME_SCRIPT = `(function () {
     }
     return false;
   }
+  // Animations jump to their end state (e-ink stylesheet). One that ends invisible (a loop stopped on its last frame,
+  // a fade in and out) would hide its text for good: the element is shown instead.
+  function reveal(event) {
+    var node = event.target;
+    if (!node || node.nodeType !== 1 || !window.getComputedStyle) return;
+    if (parseFloat(getComputedStyle(node).opacity) < 0.1) node.style.setProperty('opacity', '1', 'important');
+  }
+  document.addEventListener('animationend', reveal, true);
+  document.addEventListener('webkitAnimationEnd', reveal, true);
   function start() {
     root.className += (root.className ? ' ' : '') + 'ik-paged';
     document.addEventListener('click', function (event) {

@@ -32,7 +32,8 @@ const PAGE = 'tw-story, tw-passage, #story, #passages, .passage, #passage, main'
  *
  * Animations and transitions are not removed but made instant: they jump to their end state, which a story may need
  * to show its text at all (`opacity:0` + a fade-in that fills `forwards`, S1.13). A looping animation stops on its
- * last frame, so links are kept opaque whatever their animation ends on.
+ * last frame, so links are kept opaque whatever their animation ends on, and the frame script shows any element
+ * whose animation ends invisible.
  */
 export function eInkStylesheet(settings: ReaderSettings): string {
   const size = FONT_SIZES[settings.size];
