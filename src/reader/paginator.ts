@@ -24,6 +24,8 @@ export interface ReaderBlock {
   text: string;
   runs?: Run[];
   image?: ReaderImage;
+  /** Starts a screen (the game cleared its window before it): it opens a new page. */
+  screen?: boolean;
 }
 
 /** A place in the text: character `offset` in block `block`. */
@@ -102,24 +104,30 @@ function blockHeight(metrics: BlockMetrics): number {
  *
  * `lastPageHeight` (≤ `pageHeight`) is the room on the last page, which shows the command bar: when the text left
  * for it is taller, it is laid out again from that page on in pages of `lastPageHeight`. Earlier pages are unchanged.
+ *
+ * `screenStarts[b]` marks blocks that start a screen (the game cleared its window): they always open a new page.
  */
 export function paginate(
   metrics: BlockMetrics[],
   pageHeight: number,
   groupStarts?: boolean[],
   lastPageHeight?: number,
+  screenStarts?: boolean[],
 ): Page[] {
-  const first = layOut(metrics, groupStarts, () => pageHeight);
+  const first = layOut(metrics, groupStarts, screenStarts, () => pageHeight);
   if (lastPageHeight === undefined || lastPageHeight >= pageHeight) return first.pages;
   if (first.lastHeight <= lastPageHeight + EPSILON) return first.pages;
   const from = first.pages.length - 1;
-  return layOut(metrics, groupStarts, (page) => (page < from ? pageHeight : lastPageHeight)).pages;
+  return layOut(metrics, groupStarts, screenStarts, (page) =>
+    page < from ? pageHeight : lastPageHeight,
+  ).pages;
 }
 
 /** Lays the blocks out with `heightOf(page)` px for each page; also returns the height used on the last page. */
 function layOut(
   metrics: BlockMetrics[],
   groupStarts: boolean[] | undefined,
+  screenStarts: boolean[] | undefined,
   heightOf: (page: number) => number,
 ): { pages: Page[]; lastHeight: number } {
   const pages: Page[] = [];
@@ -136,10 +144,16 @@ function layOut(
 
   for (let b = 0; b < metrics.length; b++) {
     const lines = metrics[b].lines;
+    if (y > 0 && screenStarts && screenStarts[b]) breakAt({ block: b, offset: 0 });
     const gap = b > 0 && y > 0 ? metrics[b - 1].gapAfter : 0;
     if (y > 0 && groupStarts && groupStarts[b]) {
       let group = blockHeight(metrics[b]);
-      for (let g = b + 1; g < metrics.length && !groupStarts[g]; g++) {
+      // A group ends where the next one or a new screen starts.
+      for (
+        let g = b + 1;
+        g < metrics.length && !groupStarts[g] && !(screenStarts && screenStarts[g]);
+        g++
+      ) {
         group += metrics[g - 1].gapAfter + blockHeight(metrics[g]);
       }
       if (y + gap + group > pageHeight + EPSILON && group <= heightOf(pages.length + 1) + EPSILON) {

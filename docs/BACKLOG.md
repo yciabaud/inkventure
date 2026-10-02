@@ -57,7 +57,7 @@ Twine pages: the two blockers first (S1.13 is the smallest), then the stories th
 | [S1.13](stories/S1.13-twine-animation-end-state.md) | Twine: animations jump to their end state | E1 | M6 | S1.9 | done |
 | [S1.14](stories/S1.14-twine-readable-colours.md) | Twine: readable colours on e-ink | E1 | M6 | S1.9 | done |
 | [S1.15](stories/S1.15-status-line-rows.md) | Status line: every row of the status window | E1 | M6 | S1.6 | in-progress |
-| [S1.16](stories/S1.16-cleared-screens-and-menus.md) | Cleared screens and menus: one screen, not a pile | E1 | M6 | S1.12, S1.15 | todo |
+| [S1.16](stories/S1.16-cleared-screens-and-menus.md) | Cleared screens and menus: one screen, not a pile | E1 | M6 | S1.12, S1.15 | in-progress |
 | [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | todo |
 | [S1.18](stories/S1.18-small-rendering-fixes.md) | Small rendering fixes: spaces, 9:05's clock, Twine edges | E1 | M6 | S1.3, S1.9 | todo |
 | [S1.19](stories/S1.19-capitalised-command-chips.md) | Chips for the commands the text names in capitals | E1 | M6 | S1.4 | todo |

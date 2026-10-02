@@ -161,6 +161,8 @@ export class GlkOteBridge {
   private grids: Record<number, string[]> = {};
   /** Window waiting for input, and the kind of input. */
   private pending: { window: number; type: 'line' | 'char' } | null = null;
+  /** The line just sent, until its window's next content: echoed again if the game clears that window (S1.16). */
+  private sentLine: { window: number; text: string } | null = null;
   private exited = false;
 
   /** `dialog`: file storage, for Glk libraries that ask GlkOte for it (`getlibrary('Dialog')`, Quixe's). */
@@ -262,6 +264,7 @@ export class GlkOteBridge {
     const pending = this.pending;
     if (!pending || pending.type !== 'line' || !this.iface) return;
     this.pending = null;
+    this.sentLine = { window: pending.window, text: text };
     this.iface.accept({ type: 'line', gen: this.generation, window: pending.window, value: text });
   }
 
@@ -313,6 +316,19 @@ export class GlkOteBridge {
       const win = this.windows[update.id];
       if (!win) continue;
       if (win.type === 'buffer') {
+        const sent = this.sentLine;
+        if (sent && sent.window === update.id) {
+          this.sentLine = null;
+          // Glk drops what the window showed before a clear, the command's echo too: keep the command before the new
+          // screen, like an echo, so the turn that opened it is still in the transcript.
+          if (update.clear && sent.text) {
+            blocks.push({
+              type: 'paragraph',
+              runs: [{ text: sent.text, style: 'input' }],
+              append: true,
+            });
+          }
+        }
         if (update.clear) blocks.push({ type: 'clear' });
         const lines = update.text || [];
         for (let l = 0; l < lines.length; l++) {
