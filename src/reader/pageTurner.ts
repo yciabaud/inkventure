@@ -166,12 +166,18 @@ export class PageTurner {
     const measured = this.measure(area, text.className, width, imageMaxHeight);
     // Turns (an echoed command and its reply) are kept on one page when they fit.
     const turns: boolean[] = [];
-    for (let i = 0; i < this.blocks.length; i++) turns.push(this.blocks[i].kind === 'input');
+    // A cleared screen opens a new page (S1.16).
+    const screens: boolean[] = [];
+    for (let i = 0; i < this.blocks.length; i++) {
+      turns.push(this.blocks[i].kind === 'input');
+      screens.push(!!this.blocks[i].screen);
+    }
     this.pages = paginate(
       measured.metrics,
       height,
       turns,
       this.lastReserve > 0 ? Math.max(height - this.lastReserve, 1) : undefined,
+      screens,
     );
     this.index = this.pinLast ? this.pages.length - 1 : pageIndexOf(this.pages, this.anchor);
     if (this.pinLast && this.pages.length) this.anchor = this.pages[this.index].start;

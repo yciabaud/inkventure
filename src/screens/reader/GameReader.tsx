@@ -18,7 +18,7 @@ import { applyNoun } from '../../reader/commands/compose';
 import { findKeys, type KeyPrompt } from '../../reader/keys';
 import { recentNouns } from '../../reader/commands/nouns';
 import { verbTable } from '../../reader/commands/verbs';
-import { readerBlocks } from '../../reader/fromTranscript';
+import { lastScreenStart, readerBlocks } from '../../reader/fromTranscript';
 import { settingsKey, textStyle } from '../../reader/settings';
 import { PagedText } from '../../reader/PagedText';
 import { UndoStack } from '../../reader/undoStack';
@@ -75,21 +75,39 @@ interface TurnState {
   transcript: Transcript;
 }
 
+/** The snapshot of a turn: the transcript without the screens replaced by later ones, and where screens start. */
 function toGameSnapshot(turnState: TurnState): GameSnapshot {
-  return {
+  const paragraphs: GameSnapshot['paragraphs'] = [];
+  const screens: number[] = [];
+  const all = turnState.transcript.paragraphs;
+  for (let i = 0; i < all.length; i++) {
+    if (all[i].replaced) continue;
+    if (all[i].screen) screens.push(paragraphs.length);
+    paragraphs.push(all[i].image || all[i].runs);
+  }
+  const snapshot: GameSnapshot = {
     state: turnState.state,
     turn: turnState.turn,
-    paragraphs: turnState.transcript.paragraphs.map((p) => p.image || p.runs),
+    paragraphs: paragraphs,
     status: turnState.transcript.status,
   };
+  if (screens.length) snapshot.screens = screens;
+  return snapshot;
 }
 
 function fromGameSnapshot(saved: GameSnapshot): TurnState {
-  const blocks: OutputBlock[] = saved.paragraphs.map((paragraph): OutputBlock =>
-    Array.isArray(paragraph)
-      ? { type: 'paragraph', runs: paragraph }
-      : { type: 'image', ...paragraph },
-  );
+  const screens: Record<number, boolean> = {};
+  if (saved.screens)
+    for (let i = 0; i < saved.screens.length; i++) screens[saved.screens[i]] = true;
+  const blocks: OutputBlock[] = [];
+  saved.paragraphs.forEach((paragraph, i) => {
+    if (screens[i]) blocks.push({ type: 'clear' });
+    blocks.push(
+      Array.isArray(paragraph)
+        ? { type: 'paragraph', runs: paragraph }
+        : { type: 'image', ...paragraph },
+    );
+  });
   blocks.push({ type: 'status', lines: saved.status });
   return {
     state: saved.state,
@@ -98,11 +116,20 @@ function fromGameSnapshot(saved: GameSnapshot): TurnState {
   };
 }
 
-/** The block the pages open on after going back in time: the last command, so the last page is shown. */
+/**
+ * The block the pages open on after going back in time: the last command, or the screen the game cleared its window
+ * for after it, so the last page is shown.
+ */
 function lastTurnFocus(transcript: Transcript): number {
   const blocks = readerBlocks(transcript.paragraphs, true);
-  for (let i = blocks.length - 1; i >= 0; i--) if (blocks[i].kind === 'input') return i;
-  return 0;
+  let command = 0;
+  for (let i = blocks.length - 1; i >= 0; i--) {
+    if (blocks[i].kind === 'input') {
+      command = i;
+      break;
+    }
+  }
+  return Math.max(command, lastScreenStart(blocks));
 }
 
 type Dialogs = 'save' | 'restore' | 'restart' | null;
@@ -149,6 +176,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const turnStartRef = useRef<number | null>(null);
   // Number of paragraphs when the last key was sent: a menu redrawn after it is read from there.
   const keyMarkRef = useRef(-1);
+  // Screens started when the last input was sent: a screen started since then is where the pages open (S1.16).
+  const screensAtSendRef = useRef(0);
   const [turnTime, setTurnTime] = useState<number | null>(null);
 
   /** The game waits for input again (or has ended): the running turn is over. */
@@ -236,6 +265,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         restoringRef.current = false;
         turnRef.current = turnState.turn;
         showTranscript(turnState.transcript);
+        screensAtSendRef.current = turnState.transcript.screens;
         setFocus(lastTurnFocus(turnState.transcript));
         setState({ phase: 'playing' });
       },
@@ -385,6 +415,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     setView('game');
     turnRef.current = 0;
     keyMarkRef.current = -1;
+    screensAtSendRef.current = 0;
     undoStack.reset();
     setCanUndo(false);
     setFocus(0);
@@ -406,6 +437,18 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     () => readerBlocks(transcript.paragraphs, awaitingLine),
     [transcript, awaitingLine],
   );
+  // The Transcript view also shows the screens replaced by later ones (menu screens, intro pages).
+  const transcriptBlocks = useMemo(
+    () => (view === 'transcript' ? readerBlocks(transcript.paragraphs, awaitingLine, true) : []),
+    [transcript, awaitingLine, view],
+  );
+  // A screen started since the last input (the game cleared its window): the pages open on it, so a menu redrawn after
+  // a key shows at once. Otherwise on the start of the turn.
+  const openAt = useMemo(() => {
+    if (transcript.screens <= screensAtSendRef.current) return focus;
+    const start = lastScreenStart(blocks);
+    return start >= 0 ? start : focus;
+  }, [blocks, transcript.screens, focus]);
   const nouns = useMemo(() => {
     const texts: string[] = [];
     for (let i = Math.max(0, blocks.length - NOUN_PARAGRAPHS); i < blocks.length; i++) {
@@ -422,7 +465,11 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     let start = paragraphs.length;
     while (start > 0 && !paragraphs[start - 1].input && paragraphs.length - start < KEY_PARAGRAPHS)
       start--;
-    const texts = (from: number) => paragraphs.slice(from).map((p) => p.text);
+    const texts = (from: number) =>
+      paragraphs
+        .slice(from)
+        .filter((p) => !p.replaced)
+        .map((p) => p.text);
     const mark = keyMarkRef.current;
     if (mark > start && mark < paragraphs.length) {
       const recent = findKeys(texts(mark), transcript.status);
@@ -443,6 +490,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     setFocus(blocks.length);
     setRequest(null);
     keyMarkRef.current = transcriptRef.current.paragraphs.length;
+    screensAtSendRef.current = transcriptRef.current.screens;
     turnStartRef.current = Date.now();
     engine.sendChar(key);
   }
@@ -456,6 +504,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     setCommand('');
     if (text.trim()) setHistory((current) => current.concat(text.trim()));
     turnRef.current++;
+    screensAtSendRef.current = transcriptRef.current.screens;
     turnStartRef.current = Date.now();
     engine.sendLine(text);
   }
@@ -467,6 +516,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     setFocus(blocks.length);
     setRequest(null);
     turnRef.current++;
+    screensAtSendRef.current = transcriptRef.current.screens;
     turnStartRef.current = Date.now();
     engine.choose(index);
   }
@@ -611,9 +661,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
           ) : view === 'transcript' ? (
             <PagedText
               key="transcript"
-              blocks={blocks}
+              blocks={transcriptBlocks}
               // Opens on the last page: the latest turns.
-              focus={blocks.length}
+              focus={transcriptBlocks.length}
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
               imageUrl={imageUrl}
@@ -624,7 +674,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
             <PagedText
               key="game"
               blocks={blocks}
-              focus={focus}
+              focus={openAt}
               lastPageSlot={slot}
               lastSlotHeight={
                 kind === 'ink'

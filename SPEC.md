@@ -280,6 +280,13 @@ The core screen. It must feel like reading an ebook.
   (on earlier pages a short slot shows "Back to the present ›"). All pages share one text-area height; on the last
   page the taller command bar covers the bottom of it and the paginator gives that page less text, so earlier pages
   are not left with an empty band.
+- **Cleared screens**: when the game clears its main window (a menu, a title, a new chapter), the text after it opens
+  on a fresh page, and the pages open on it at once (no "Back to the present" step when it fits on one page). A screen
+  reached by key presses only (no command typed in it: a menu being browsed, a title page) is **replaced** by the next
+  one: browsing a menu never adds pages, and after it only the game's earlier pages and the new screen remain. The
+  Transcript view still shows the replaced screens, each on a page of its own; saves keep where screens start, not the
+  replaced screens. The command that opened a cleared screen stays at the end of the text before it (Glk drops its
+  echo with the window: the reader puts it back).
 - **Single-key prompts** (the game waits for one key): the slot under the text shows chips for the **keys the text
   names** ("Press N to begin", "R to restore", "Choose option 1 or 2", "Y/N", numbered options, a menu legend
   "N = Next  Q = Quit Menu"), read from the paragraphs since the last command and from every status row, in the order
@@ -389,7 +396,7 @@ licence allows (MIT); only the presentation layer is ours.
 `OutputBlock` (`src/engines/engine.ts`): `paragraph` (styled runs, Glk style names; `append` continues the previous
 paragraph, e.g. the echoed command after the prompt), `status` (the whole status line, one string per row), `image`
 (a picture on a line of its own: its Blorb number, size in px and alt text; the text around it on the same Glk line
-becomes the paragraphs before and after it) and `clear` (ignored by the paginated transcript, which keeps everything). The Z-machine runs on ZVM (`ifvms`) and the Glk API
+becomes the paragraphs before and after it) and `clear` (the main window was cleared: the next paragraph starts a new screen, §3.6). The Z-machine runs on ZVM (`ifvms`) and the Glk API
 library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
 bundle, one Glk instance per game (see `src/engines/README.md`). `load()` rejects when the story cannot start; the VM
 runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its own, newer Glk library and Blorb decoder,

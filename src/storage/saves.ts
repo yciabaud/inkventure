@@ -29,6 +29,8 @@ export interface GameSnapshot {
   /** The end of the transcript: paragraphs as styled runs (or pictures), and the status line. */
   paragraphs: SavedParagraph[];
   status: string[];
+  /** Indexes in `paragraphs` of those starting a screen (the game cleared its window before them, S1.16). */
+  screens?: number[];
 }
 
 /** Stored form, under `save:<tuid>:auto` and `save:<tuid>:<slot>`. */
@@ -81,15 +83,32 @@ export function transcriptTail<T extends SavedParagraph>(paragraphs: T[]): T[] {
   return paragraphs.slice(from);
 }
 
+/** The text part of a save: the transcript tail, its screen starts (counted from the tail) and the status line. */
+function savedText(snapshot: GameSnapshot): {
+  paragraphs: SavedParagraph[];
+  status: string[];
+  screens?: number[];
+} {
+  const paragraphs = transcriptTail(snapshot.paragraphs);
+  const text: { paragraphs: SavedParagraph[]; status: string[]; screens?: number[] } = {
+    paragraphs: paragraphs,
+    status: snapshot.status,
+  };
+  const from = snapshot.paragraphs.length - paragraphs.length;
+  const screens: number[] = [];
+  const all = snapshot.screens || [];
+  for (let i = 0; i < all.length; i++) if (all[i] >= from) screens.push(all[i] - from);
+  if (screens.length) text.screens = screens;
+  return text;
+}
+
 function toRecord(snapshot: GameSnapshot, date: number, name?: string): SaveRecord {
   const record: SaveRecord = {
     v: 1,
     date: date,
     turn: snapshot.turn,
     data: compressBytes(snapshot.state),
-    text: compressText(
-      JSON.stringify({ paragraphs: transcriptTail(snapshot.paragraphs), status: snapshot.status }),
-    ),
+    text: compressText(JSON.stringify(savedText(snapshot))),
   };
   if (name !== undefined) record.name = name;
   return record;
@@ -112,13 +131,17 @@ function fromRecord(record: unknown): GameSnapshot | undefined {
     const text = JSON.parse(decompressText(record.text)) as {
       paragraphs: SavedParagraph[];
       status: string[];
+      screens?: number[];
     };
-    return {
+    const snapshot: GameSnapshot = {
       state: decompressBytes(record.data),
       turn: record.turn,
       paragraphs: Array.isArray(text.paragraphs) ? text.paragraphs : [],
       status: Array.isArray(text.status) ? text.status : [],
     };
+    // Saves made before screens were kept (S1.16) have none.
+    if (Array.isArray(text.screens)) snapshot.screens = text.screens;
+    return snapshot;
   } catch {
     return undefined;
   }
