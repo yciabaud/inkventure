@@ -74,7 +74,7 @@ test('earlier pages keep a short slot; only the last page makes room for the com
     page.locator('.reader__slot').evaluate((e) => e.getBoundingClientRect().height);
   expect(await slotHeight()).toBeGreaterThan(150);
   await page.keyboard.press('ArrowLeft');
-  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Last page ›' })).toBeVisible();
   expect(await slotHeight()).toBeLessThanOrEqual(64);
   expect(await fits(page)).toBe(true);
 });
@@ -215,7 +215,7 @@ test('every row of the status window shows, and the pages make room for them', a
   // Earlier pages are laid out with the same, shorter text area.
   expect((await indicator(page)).count).toBeGreaterThan(1);
   await page.keyboard.press('ArrowLeft');
-  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Last page ›' })).toBeVisible();
   expect(await fits(page)).toBe(true);
   await page.keyboard.press('ArrowRight');
   await expect(command(page)).toBeVisible();

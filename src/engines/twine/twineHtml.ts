@@ -133,6 +133,11 @@ export function eInkStylesheet(settings: ReaderSettings): string {
     '#ui-bar,#ui-bar-tray,#ui-dialog,#ui-dialog-titlebar,#ui-dialog-body{background:#fff!important;' +
       'color:#000!important;border-color:#000!important}',
     '#ui-bar{border-right:2px solid #000!important}',
+    // A stowed UI bar leaves a strip wide enough for its toggle (at least 48 px), which SugarCube sizes for its own
+    // font (2em): with the reader's larger text the toggle was cut at the left edge (S1.18). The story clears it.
+    '#ui-bar-toggle{min-width:48px!important;min-height:48px!important}',
+    '#ui-bar.stowed{left:calc(56px - 17.5em)!important}',
+    '#ui-bar.stowed~#story{margin-left:64px!important}',
     '#ui-dialog{border:2px solid #000!important}',
     '#ui-overlay{background:#fff!important}',
     'a,tw-link,.enchantment-link,button{color:#000!important;font-weight:700!important;' +

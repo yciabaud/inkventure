@@ -7,7 +7,7 @@ import { PageTurner, type PageView, type TapInterceptor } from './pageTurner';
 import { imageBox, pageFragments, type Fragment, type ReaderBlock } from './paginator';
 
 /**
- * Height in px of the slot under the text ("Back to the present", the choices or input of the demo). The text area is
+ * Height in px of the slot under the text ("Last page", the choices or input of the demo). The text area is
  * the same on every page, so it never has to be measured again when turning pages.
  */
 export const SLOT_HEIGHT = 64;
@@ -24,7 +24,7 @@ interface Props {
   blocks: ReaderBlock[];
   /** Shown under the text on the last page only (command bar, choices). */
   lastPageSlot?: ComponentChildren;
-  /** Shown under the text on every page instead of `lastPageSlot` and "Back to the present" (read-only views). */
+  /** Shown under the text on every page instead of `lastPageSlot` and "Last page" (read-only views). */
   pageSlot?: (nav: PageNav) => ComponentChildren;
   /** Called before a tap or swipe turns the page; returning true consumes it (e.g. to close a menu). */
   interceptTap?: TapInterceptor;
@@ -224,7 +224,7 @@ export function PagedText({
           lastPageSlot
         ) : (
           <button type="button" class="reader__present" onClick={() => turner.last()}>
-            {t('reader.backToPresent')} ›
+            {t('reader.lastPage')} ›
           </button>
         )}
       </div>

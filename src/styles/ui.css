@@ -863,11 +863,13 @@ button.pager__btn {
   margin: 0 auto;
 }
 
-/* Hyphenation off: the paginator splits paragraphs at word starts. */
+/* Hyphenation off: the paginator splits paragraphs at word starts. Spaces are kept as the game printed them (an
+   indented line, a title centred with spaces, S1.18), and lines still wrap; a page break always falls on a word. */
 .reader__block {
   margin: 0 0 0.75em;
   hyphens: manual;
   overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .reader__text > :last-child {

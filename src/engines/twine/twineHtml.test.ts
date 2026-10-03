@@ -41,6 +41,10 @@ describe('e-ink stylesheet', () => {
     );
     // A story next to <body> keeps the side margins.
     expect(css).toContain('html>tw-story{padding:0 24px!important}');
+    // SugarCube's stowed UI bar keeps its whole toggle in the frame (S1.18).
+    expect(css).toContain('#ui-bar-toggle{min-width:48px!important;min-height:48px!important}');
+    expect(css).toContain('#ui-bar.stowed{left:calc(56px - 17.5em)!important}');
+    expect(css).toContain('#ui-bar.stowed~#story{margin-left:64px!important}');
   });
 
   it('follows every setting', () => {

@@ -1,0 +1,26 @@
+! Inkventure fixture game: a time game (story S1.18), like 9:05. A tiny Z-machine game written for Inkventure's
+! tests (MIT, like the app), built with Inform 6.41 and the standard library 6.12 by scripts/fixtures/build-z.sh.
+! It also prints a line indented with spaces ("  -----"), like 9:05's title, which the reader must keep.
+!
+! "Statusline time" sets bit 1 of the header's Flags 1, which the Inform library reads at startup to show the time
+! ("Time: 9:05 am") instead of the score and moves. Interpreters must leave that bit as the story file has it.
+
+Constant Story "THE CLOCK";
+Constant Headline "^An Inkventure test fixture.^";
+Statusline time;
+
+Include "Parser";
+Include "VerbLib";
+
+[ Initialise;
+    location = Kitchen;
+    SetTime(9 * 60 + 5, 1);
+    print "^The phone rings.^^  -----^";
+    "Plain line.";
+];
+
+Object Kitchen "Kitchen"
+  with description "A small kitchen. A clock ticks on the wall.",
+  has  light;
+
+Include "Grammar";

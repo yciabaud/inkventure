@@ -141,7 +141,7 @@
   "reader.text": "Story text",
   "reader.navigation": "Navigation",
   "reader.statusWindow": "Status window",
-  "reader.backToPresent": "Back to the present",
+  "reader.lastPage": "Last page",
   "reader.inputSlot": "Commands will be typed here.",
   "reader.loading": "Loading…",
   "reader.loadFailed": "The text could not be loaded.",

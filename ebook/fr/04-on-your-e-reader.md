@@ -31,7 +31,7 @@ fichier : leur page permet de choisir.
 
 L'histoire est mise en pages, comme un livre. Touchez la droite de l'écran pour tourner la page, la gauche pour
 revenir en arrière. Les nombres en bas (« 2 / 3 ») indiquent la page où vous êtes. Les boutons et le champ de
-commande sont sur la dernière page, avec la dernière réponse ; depuis une page précédente, **Retour au présent** vous
+commande sont sur la dernière page, avec la dernière réponse ; depuis une page précédente, **Dernière page** vous
 y ramène.
 
 Touchez la ligne en haut de la page (le lieu où vous êtes, le score) pour ouvrir le menu :

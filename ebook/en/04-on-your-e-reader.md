@@ -28,7 +28,7 @@ Games come in many languages; a few have a file in each, and their page lets you
 
 The story is laid out in pages, like a book. Tap the right side of the screen to turn the page, the left side to go
 back. The numbers at the bottom ("2 / 3") tell you which page you are on. The buttons and the command field are on
-the last page, with the latest reply; from an earlier page, **Back to the present** takes you there.
+the last page, with the latest reply; from an earlier page, **Last page** takes you there.
 
 Tap the line at the top of the page (the place where you are, the score) to open the menu:
 

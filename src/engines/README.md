@@ -25,7 +25,10 @@ Engine abstraction and adapters (SPEC §4).
 Only `ifvms/src/zvm.js` (and what it requires) and `glkote-term/src/glkapi.js` are bundled; their terminal front ends
 are not. Both run from an ES module bundle thanks to small patches applied at build time and checked by tests
 (`scripts/build/vendor-patches.ts`): `glkapi.js` becomes a factory (one Glk instance per game, no implicit globals) and
-`opcodes.js` stops reading `this` at module level. Upgrading either package means re-checking those patches.
+`opcodes.js` stops reading `this` at module level; `io.js` keeps bit 1 of Flags 1 (Inform's time game flag, S1.18),
+as upstream ZVM does after 1.1.6. Upgrading either package means re-checking those patches. The patches apply to the
+bundle (Vite / Rollup); in unit tests ZVM's modules are loaded by Node's `require`, unpatched, so the time game is
+checked in e2e (`tests/e2e/rendering.spec.ts`).
 
 Saves (S1.5): `saveState` uses ZVM's autosave snapshot (`do_autosave`: Quetzal RAM + Glk state, which needs ZVM's Glk
 dispatch layer `ifvms/src/zvm/dispatch.js`; importing it also sets an unused `window.GiDispa`). `restoreState` and

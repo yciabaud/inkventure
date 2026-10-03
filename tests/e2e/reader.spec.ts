@@ -95,7 +95,7 @@ test('opens the demo full screen, on page 1 of several, with the top bar hidden'
   expect(count).toBeGreaterThan(2);
   await expect(page.getByLabel(`Page 1 of ${count}`)).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Main navigation' })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Last page ›' })).toBeVisible();
   await expect(page.getByText('Commands will be typed here.')).toHaveCount(0);
 });
 
@@ -196,10 +196,10 @@ test('every page fits without scrolling, and the pages never skip or duplicate t
 test('the last page shows the input slot; earlier pages lead back to it', async ({ page }) => {
   await open(page);
   const { count } = await indicator(page);
-  await page.getByRole('button', { name: 'Back to the present ›' }).click();
+  await page.getByRole('button', { name: 'Last page ›' }).click();
   expect(await indicator(page)).toEqual({ page: count, count });
   await expect(page.getByText('Commands will be typed here.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Last page ›' })).toHaveCount(0);
 
   // Nothing after the last page.
   await tapPage(page, 0.8);
@@ -207,7 +207,7 @@ test('the last page shows the input slot; earlier pages lead back to it', async 
 
   await tapPage(page, 0.1);
   expect((await indicator(page)).page).toBe(count - 1);
-  await expect(page.getByRole('button', { name: 'Back to the present ›' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Last page ›' })).toBeVisible();
 });
 
 test('resizing re-paginates and keeps the reading position', async ({ page }) => {
@@ -260,7 +260,7 @@ test('the top zone shows and hides the top bar; a tap on the page closes it firs
 test('tap targets are ≥ 48 px and nothing overflows horizontally', async ({ page }) => {
   await open(page);
   for (const where of ['first', 'last']) {
-    if (where === 'last') await page.getByRole('button', { name: 'Back to the present ›' }).click();
+    if (where === 'last') await page.getByRole('button', { name: 'Last page ›' }).click();
     const small = await page.evaluate(() => {
       const found: string[] = [];
       const targets = document.querySelectorAll('a[href], button, input, [role=button]');

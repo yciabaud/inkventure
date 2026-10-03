@@ -81,9 +81,9 @@ test('browsing a menu replaces its screen: no page is added, and it shows at onc
 
   await press(page, /^N/, keys(page));
   await expect(text(page)).toContainText('> About the keeper');
-  // One screen, not a pile: the earlier menu screen is gone, no "Back to the present" step.
+  // One screen, not a pile: the earlier menu screen is gone, no "Last page" step.
   await expect(text(page)).not.toContainText('> About the lamp');
-  await expect(page.getByRole('button', { name: /Back to the present/ })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /Last page/ })).toHaveCount(0);
   expect(await pageCount(page)).toBe(pages);
 
   await press(page, /^P/, keys(page));

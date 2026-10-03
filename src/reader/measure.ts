@@ -62,6 +62,21 @@ function textNodes(
   return offset;
 }
 
+// A word, or the part of a word after a hyphen; a run of dashes alone ("-----") is one.
+const SEGMENT = /[^\s‐–—-]+[‐–—-]*|[‐–—-]+/g;
+
+/**
+ * Where a line may start in `text`: at each word, and after a hyphen inside one ("verb-noun-|preposition"), where the
+ * browser also breaks lines (S1.18). Never on a space, so a page never opens on the spaces the game printed.
+ */
+export function lineStartCandidates(text: string): number[] {
+  const starts: number[] = [];
+  SEGMENT.lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = SEGMENT.exec(text))) starts.push(match.index);
+  return starts;
+}
+
 function lineBoxes(p: HTMLElement, text: string, range: Range | null): LineBox[] {
   const box = p.getBoundingClientRect();
   const nodes: Array<{ node: Node; start: number }> = [];
@@ -75,18 +90,18 @@ function lineBoxes(p: HTMLElement, text: string, range: Range | null): LineBox[]
   const tops: number[] = [];
   let threshold = 0;
   let n = 0;
-  const word = /\S+/g;
-  let match: RegExpExecArray | null;
-  while ((match = word.exec(text))) {
-    // Words only move forward, and so does the text node holding their first character.
-    while (n + 1 < nodes.length && nodes[n + 1].start <= match.index) n++;
-    const local = match.index - nodes[n].start;
+  const candidates = lineStartCandidates(text);
+  for (let c = 0; c < candidates.length; c++) {
+    const index = candidates[c];
+    // Candidates only move forward, and so does the text node holding their first character.
+    while (n + 1 < nodes.length && nodes[n + 1].start <= index) n++;
+    const local = index - nodes[n].start;
     range.setStart(nodes[n].node, local);
     range.setEnd(nodes[n].node, local + 1);
     const rect = range.getBoundingClientRect();
     if (!threshold) threshold = Math.max(rect.height / 2, 1);
     if (!tops.length || rect.top > tops[tops.length - 1] + threshold) {
-      starts.push(match.index);
+      starts.push(index);
       tops.push(rect.top);
     }
   }
