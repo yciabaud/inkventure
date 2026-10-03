@@ -947,7 +947,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings | S3.1–S3.4, S4.1–S4.2, S5.1 |
 | **M4 — More formats** | Glulx, illustrated games, Ink, Twine | S1.7–S1.9, S2.5 |
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
-| **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21 |
+| **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21, S1.22 |
 | **M7 — Offline** | Offline probe on the Kindle, offline app shell and kept adventures | S0.9, S5.3 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
@@ -968,4 +968,4 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
 | 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
-| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures shipped in S5.3 (M7, §6.2); device check pending. `persist()` is refused, so a lost file degrades to "Needs Wi-Fi" (offline) or is downloaded again (online). |
+| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures shipped in S5.3 (M7, §6.2), checked on the Kindle on 2026-10-03; whether the ebook's link opens the app offline is to check after the release. `persist()` is refused, so a lost file degrades to "Needs Wi-Fi" (offline) or is downloaded again (online). |
