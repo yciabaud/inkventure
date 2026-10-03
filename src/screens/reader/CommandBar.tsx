@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { t } from '../../i18n/i18n';
 import type { AnswerChip } from '../../reader/commands/answers';
+import type { ParserQuestion } from '../../reader/commands/question';
 import { applyChip, applyNoun, awaitsObject, browseHistory } from '../../reader/commands/compose';
 import type { Chip, VerbTable } from '../../reader/commands/verbs';
 import { Dialog } from '../../ui/Dialog';
@@ -28,6 +29,8 @@ interface Props {
   answers?: AnswerChip[];
   /** Commands the game names in capitals ("type HELP"): first in the verbs row (S1.19). */
   named?: Chip<string>[];
+  /** The parser asks for an object: the verbs row shows the objects, and a tap sends one alone (S1.21). */
+  question?: ParserQuestion | null;
   field: string;
   onField: (field: string) => void;
   onSend: (command: string) => void;
@@ -46,6 +49,7 @@ export function CommandBar({
   nouns,
   answers = [],
   named = [],
+  question = null,
   field,
   onField,
   onSend,
@@ -54,6 +58,8 @@ export function CommandBar({
   onFocusChange,
 }: Props) {
   const [dialog, setDialog] = useState<'directions' | 'more' | null>(null);
+  // The parser question whose objects ✕ put away (each turn's question is a new object).
+  const [dismissed, setDismissed] = useState<ParserQuestion | null>(null);
   // Position in the history: history.length means "not browsing".
   const [position, setPosition] = useState(history.length);
   const directionsRow = useRef<HTMLDivElement>(null);
@@ -81,6 +87,8 @@ export function CommandBar({
   }
 
   function noun(word: string) {
+    // The parser asked for it: the object alone completes its command.
+    if (asking) return send(repeat ? repeat + ' ' + word : word);
     const action = applyNoun(field, word, table.verbs);
     if ('send' in action) send(action.send);
     else onField(action.field);
@@ -98,6 +106,14 @@ export function CommandBar({
   }
 
   const waiting = awaitsObject(field, table.verbs);
+  // A verb ending with "…" in the field composes its own command; otherwise the parser's question gets the objects.
+  const asking = !waiting && !!question && question !== dismissed;
+  // The objects the question names first, else those recently mentioned.
+  const objects = asking && question && question.options.length ? question.options : nouns;
+  // A question that does not say what it is for ("Pouvez-vous préciser ?"): its command, which the objects complete,
+  // comes first ("examiner…").
+  const repeat = (asking && question && question.repeat) || '';
+  const shift = repeat ? 1 : 0;
   const directions = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) >= 0);
   const otherDirections = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) < 0);
   const verbs = MAIN_VERBS.map((id) => table.verbs.filter((v) => v.id === id)[0]).filter(
@@ -151,14 +167,25 @@ export function CommandBar({
         </button>
       </div>
 
-      {waiting ? (
+      {waiting || asking ? (
         <div class="chips" role="group" aria-label={t('reader.nouns')} ref={nounsRow}>
-          {nouns.length ? (
-            nouns.map((word, i) => (
+          {repeat && (
+            <button
+              type="button"
+              class="chip chip--repeat"
+              data-fit
+              aria-label={t('reader.repeatCommand', { command: repeat })}
+              onClick={() => onField(repeat + ' ')}
+            >
+              {repeat + '…'}
+            </button>
+          )}
+          {objects.length ? (
+            objects.map((word, i) => (
               <button
                 key={word}
                 type="button"
-                class={fitClass('chip chip--noun', i, nounsShown)}
+                class={fitClass('chip chip--noun', shift + i, nounsShown)}
                 data-fit
                 onClick={() => noun(word)}
               >
@@ -172,8 +199,8 @@ export function CommandBar({
             type="button"
             class="chip chip--more"
             data-fit-reserve
-            aria-label={t('reader.cancelVerb')}
-            onClick={() => onField('')}
+            aria-label={t(asking ? 'reader.cancelQuestion' : 'reader.cancelVerb')}
+            onClick={() => (asking ? setDismissed(question) : onField(''))}
           >
             ✕
           </button>
