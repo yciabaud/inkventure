@@ -926,6 +926,11 @@ Tests are part of every story's definition of done; CI blocks merges when they f
   (`npm run test:production`, or the *Production smoke* workflow) against the live site, `ebook/config.json`'s `host`
   or `PROD_URL`: build and catalogue published, Home and Library, a featured Z-machine game downloaded from the IF
   Archive, the ebooks matching `books.json` and their links pointing to the site. Not part of `test:e2e`.
+- **Rendering survey** (S7.3, also live network, by hand): `npm run survey:rendering` plays the featured parser games
+  and the most-rated ones of the published catalogue headless, with the app's engines and GlkOte bridge (bundled by
+  esbuild with the vendor patches), and writes `docs/reports/rendering-survey-<date>.md`: what each game uses that the
+  reader drops or changes (tall upper windows, styles in them, several windows of a kind, graphics windows, timers,
+  hyperlinks, characters outside the bundled fonts, wide fixed-width layouts), ranked by number of games.
 
 ### 11.3 Legacy-compatibility gate
 
