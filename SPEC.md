@@ -326,7 +326,10 @@ itself never changes size, see above), in three rows:
    or the Y?", "Précisez : le X ou le Y ?", "Voulez-vous dire le X ou le Y ?"), this row shows noun
    chips too, without a verb in the field: the options the question names (in order, without their articles, at most
    8), else the objects recently mentioned; a tap sends the **noun alone**, which the parser takes to complete its
-   command; ✕ brings the verbs back for that turn. A parser question wins over answer chips and named commands. The
+   command; ✕ brings the verbs back for that turn. When the question does not say what it is for ("Pouvez-vous
+   préciser ?", French Inform 6 and 7 libraries), the last command comes first as a chip ending with "…"
+   ("fouiller…"): a noun chip sends that command with the noun ("fouiller ciré"), and the chip itself puts the command
+   in the field. A parser question wins over answer chips and named commands. The
    whole paragraph (or its last line) must be the question, so a question in the prose or a character's line does
    not count.
 

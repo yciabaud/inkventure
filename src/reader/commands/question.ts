@@ -12,6 +12,11 @@ export const MAX_OPTIONS = 8;
 export interface ParserQuestion {
   /** The objects the question names ("Which do you mean, the X or the Y?"), in order; empty when it names none. */
   options: string[];
+  /**
+   * The question does not say what it is for ("Pouvez-vous préciser ?"): the chips repeat the last command, which a
+   * noun completes ("examiner…" → "examiner lampe").
+   */
+  vague?: boolean;
 }
 
 // PATTERNS. Each must match the whole last paragraph, or its last line (prompt and the brackets of Inform 7 French
@@ -40,12 +45,13 @@ const WHICH = [
 // - FR, Ange 48 / 49: "Que voulez-vous prendre ?", "Qui voulez-vous attaquer ?", "À qui voulez-vous donner la pomme ?"
 //   (with the preposition typed: "Avec quoi …"); some games say "tu" ("Que veux-tu prendre ?").
 // - FR, Pontico 48 / 49: "Pouvez-vous préciser ?"; I7 (D) / (E): "[Pouvez-vous préciser ce qui est concerné par cette
-//   action ?]"; 47 and I7 (C): "… Lequel voulez-vous exactement ?", "… Lequel exactement ?".
+//   action ?]" (VAGUE: they do not say for what); 47 and I7 (C): "… Lequel voulez-vous exactement ?", "… Lequel
+//   exactement ?".
+const VAGUE = /^pouvez-vous\s+préciser\b[^?]*\?$/i;
 const WHAT = [
   /^(?:what|whom|who)\s+(?:do|does|did)\s+(?:you|i|we|he|she|they|it)\s+want\b[^?]*\?$/i,
   /\bwhich\s+exactly\s*\?$/i,
   /^(?:(?:à|a|au|aux|sur|dans|avec|de|du|en|contre|sous|vers|par|pour|chez|derrière|devant|entre)\s+)?(?:qui|quoi|que)\s+(?:voulez-vous|veux-tu)\b[^?]*\?$/i,
-  /^pouvez-vous\s+préciser\b[^?]*\?$/i,
   /\blequel\s+(?:voulez-vous\s+)?exactement\s*\?$/i,
 ];
 
@@ -96,6 +102,7 @@ export function parserQuestion(paragraphs: string[]): ParserQuestion | null {
     const match = WHICH[i].exec(question);
     if (match) return { options: questionOptions(match[1]) };
   }
+  if (VAGUE.test(question)) return { options: [], vague: true };
   for (let i = 0; i < WHAT.length; i++) {
     if (WHAT[i].test(question)) return { options: [] };
   }

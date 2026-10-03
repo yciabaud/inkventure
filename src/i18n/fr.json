@@ -171,6 +171,7 @@
   "reader.noNouns": "Touchez un mot du texte, ou tapez-le.",
   "reader.cancelVerb": "Annuler",
   "reader.cancelQuestion": "Retour aux actions",
+  "reader.repeatCommand": "Compléter « {command} »",
   "reader.historyPrev": "Commande précédente",
   "reader.historyNext": "Commande suivante",
   "reader.menu": "Lecture",

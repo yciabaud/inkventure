@@ -80,3 +80,32 @@ test('✕ puts the objects away and brings the verbs back', async ({ page }) => 
   await send(page, 'examine oilskin');
   await expect(objects(page).getByRole('button', { name: 'yellow oilskin' })).toBeVisible();
 });
+
+test('a question that does not say what it is for repeats the last command, which a tap on an object completes', async ({
+  page,
+}) => {
+  await toTower(page);
+  // Like the French Inform 6 library: "Pouvez-vous préciser ?".
+  await send(page, 'fouiller');
+  await expect(text(page)).toContainText('Pouvez-vous préciser ?');
+  const row = objects(page).locator('.chip:not(.fit-hidden):not(.chip--more)');
+  await expect(row.first()).toHaveText('fouiller…');
+  // The object completes the command: "fouiller oilskin", then the parser asks which one.
+  await press(objects(page).getByRole('button', { name: 'oilskin', exact: true }));
+  await expect(text(page)).toContainText('>fouiller oilskin');
+  await expect(text(page)).toContainText(
+    'Which do you mean, the yellow oilskin or the black oilskin?',
+  );
+  // That question names its options: the object alone answers it.
+  await expect(objects(page).locator('.chip--repeat')).toHaveCount(0);
+  await press(objects(page).getByRole('button', { name: 'black oilskin', exact: true }));
+  await expect(text(page)).toContainText('>black oilskin');
+  await expect(objects(page)).toHaveCount(0);
+});
+
+test('the repeated command can be tapped to complete it by hand', async ({ page }) => {
+  await toTower(page);
+  await send(page, 'fouiller');
+  await press(objects(page).getByRole('button', { name: 'Complete “fouiller”' }));
+  await expect(command(page)).toHaveValue('fouiller ');
+});

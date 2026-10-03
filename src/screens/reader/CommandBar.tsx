@@ -88,7 +88,7 @@ export function CommandBar({
 
   function noun(word: string) {
     // The parser asked for it: the object alone completes its command.
-    if (asking) return send(word);
+    if (asking) return send(repeat ? repeat + ' ' + word : word);
     const action = applyNoun(field, word, table.verbs);
     if ('send' in action) send(action.send);
     else onField(action.field);
@@ -110,6 +110,10 @@ export function CommandBar({
   const asking = !waiting && !!question && question !== dismissed;
   // The objects the question names first, else those recently mentioned.
   const objects = asking && question && question.options.length ? question.options : nouns;
+  // A question that does not say what it is for ("Pouvez-vous préciser ?"): the last command, which the objects
+  // complete, comes first ("examiner…").
+  const repeat = asking && question && question.vague ? history[history.length - 1] || '' : '';
+  const shift = repeat ? 1 : 0;
   const directions = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) >= 0);
   const otherDirections = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) < 0);
   const verbs = MAIN_VERBS.map((id) => table.verbs.filter((v) => v.id === id)[0]).filter(
@@ -165,12 +169,23 @@ export function CommandBar({
 
       {waiting || asking ? (
         <div class="chips" role="group" aria-label={t('reader.nouns')} ref={nounsRow}>
+          {repeat && (
+            <button
+              type="button"
+              class="chip chip--repeat"
+              data-fit
+              aria-label={t('reader.repeatCommand', { command: repeat })}
+              onClick={() => onField(repeat + ' ')}
+            >
+              {repeat + '…'}
+            </button>
+          )}
           {objects.length ? (
             objects.map((word, i) => (
               <button
                 key={word}
                 type="button"
-                class={fitClass('chip chip--noun', i, nounsShown)}
+                class={fitClass('chip chip--noun', shift + i, nounsShown)}
                 data-fit
                 onClick={() => noun(word)}
               >

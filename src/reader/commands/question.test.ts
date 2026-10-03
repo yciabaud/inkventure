@@ -32,13 +32,14 @@ describe('parser questions for an object', () => {
       options: [],
     });
     // Inform 6, Jean-Luc Pontico's library.
-    expect(ask('Pouvez-vous préciser ?')).toEqual({ options: [] });
+    expect(ask('Pouvez-vous préciser ?')).toEqual({ options: [], vague: true });
     expect(
       ask('Désolé, vous pouvez seulement avoir un objet ici. Lequel voulez-vous exactement ?'),
     ).toEqual({ options: [] });
     // Inform 7, French Language: in brackets.
     expect(ask('[Pouvez-vous préciser ce qui est concerné par cette action\u00a0?]')).toEqual({
       options: [],
+      vague: true,
     });
     // Some games say "tu".
     expect(ask('Que veux-tu prendre ?')).toEqual({ options: [] });
