@@ -1,8 +1,11 @@
 // UI translations (SPEC §7): English and French, plural forms, locale detection and an optional user override.
 // No reliance on Intl, which the Kindle browser may lack.
+//
+// English is in the bundle (the default, and the fallback for a missing key); French is a lazy chunk, loaded before
+// the first render when the UI is in French and when the user switches to it (S0.10), so a reader downloads one
+// dictionary only.
 import { useEffect, useState } from 'preact/hooks';
 import en from './en.json';
-import fr from './fr.json';
 
 export type Locale = 'en' | 'fr';
 
@@ -21,9 +24,18 @@ export interface PluralForms {
 export type Message = string | PluralForms;
 export type Catalogue = Record<string, Message>;
 
-const catalogues: Record<Locale, Catalogue> = { en, fr };
+const catalogues: Partial<Record<Locale, Catalogue>> = { en };
+
+/** Dictionaries not in the bundle, loaded on demand. */
+const LOADERS: Partial<Record<Locale, () => Promise<{ default: Catalogue }>>> = {
+  fr: () => import('./fr.json'),
+};
 
 let current: Locale = DEFAULT_LOCALE;
+/** The locale last asked for: a slower load that finishes after another choice is not applied. */
+let wanted: Locale = DEFAULT_LOCALE;
+/** The load of the locale asked for, if any (settles when it is applied, or when it failed). */
+let pending: Promise<void> = Promise.resolve();
 const listeners: Array<(locale: Locale) => void> = [];
 
 function supported(tag: string | null | undefined): Locale | undefined {
@@ -95,7 +107,16 @@ export function translateFrom(
 }
 
 export function translate(locale: Locale, key: MessageKey, params?: Params): string {
-  return translateFrom(catalogues[locale], catalogues[DEFAULT_LOCALE], locale, key, params);
+  return translateFrom(catalogues[locale] || en, en, locale, key, params);
+}
+
+/** Loads the dictionary of `locale` if it is not in the bundle yet. Rejects if it cannot be downloaded. */
+export function loadLocale(locale: Locale): Promise<void> {
+  const loader = LOADERS[locale];
+  if (catalogues[locale] || !loader) return Promise.resolve();
+  return loader().then((module) => {
+    catalogues[locale] = module.default;
+  });
 }
 
 export function t(key: MessageKey, params?: Params): string {
@@ -106,12 +127,34 @@ export function getLocale(): Locale {
   return current;
 }
 
-/** Switches the UI language and notifies subscribers (the app re-renders through `useLocale`). */
-export function setLocale(locale: Locale): void {
-  if (locale === current) return;
+function apply(locale: Locale): void {
+  if (locale !== wanted || locale === current) return;
   current = locale;
   if (typeof document !== 'undefined') document.documentElement.lang = locale;
   for (let i = 0; i < listeners.length; i++) listeners[i](locale);
+}
+
+/**
+ * Switches the UI language and notifies subscribers (the app re-renders through `useLocale`): at once when its
+ * dictionary is loaded, else once it is (the returned promise settles then; the UI stays as it was if it fails).
+ */
+export function setLocale(locale: Locale): Promise<void> {
+  wanted = locale;
+  if (catalogues[locale]) {
+    apply(locale);
+    pending = Promise.resolve();
+  } else {
+    pending = loadLocale(locale).then(
+      () => apply(locale),
+      () => undefined,
+    );
+  }
+  return pending;
+}
+
+/** Settles when the locale last asked for is applied (or could not be loaded): the first render waits for it. */
+export function localeReady(): Promise<void> {
+  return pending;
 }
 
 export function subscribeLocale(listener: (locale: Locale) => void): () => void {

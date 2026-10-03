@@ -59,6 +59,7 @@ const budgets: Budgets = {
   fontsWoff2: 70,
   lazyChunk: 100,
   catalogShard: 150,
+  firstLoad: 200,
   firstLoadLegacy: 200,
 };
 
@@ -106,11 +107,13 @@ describe('evaluate', () => {
     const rows = evaluate(manifest, files, sizes(), budgets);
     expect(rows.every((r) => r.ok)).toBe(true);
     const byLabel = Object.fromEntries(rows.map((r) => [r.label, r.bytes / KIB]));
-    expect(byLabel['Initial JS (legacy / Kindle)']).toBe(58);
-    expect(byLabel['Initial JS (modern)']).toBe(15);
+    expect(byLabel['Initial JS (legacy, old e-readers)']).toBe(58);
+    expect(byLabel['Initial JS (modern, Kindle)']).toBe(15);
     expect(byLabel['Lazy chunk assets/zvm.js']).toBe(60);
     expect(byLabel['Catalogue catalog/index-0.json']).toBe(120);
-    expect(byLabel['First load (Kindle: legacy JS + CSS + .woff)']).toBe(58 + 2 + 70);
+    // The baseline Kindle loads the modern bundle and the .woff2 fonts (S0.3); old e-readers the legacy ones.
+    expect(byLabel['First load (Kindle: modern JS + CSS + .woff2)']).toBe(15 + 2 + 56);
+    expect(byLabel['First load (old e-readers: legacy JS + CSS + .woff)']).toBe(58 + 2 + 70);
   });
 
   it('checks shards and meta.json one by one, and only the largest game detail', () => {
@@ -149,22 +152,23 @@ describe('evaluate', () => {
     );
     const failed = rows.filter((r) => !r.ok).map((r) => r.label);
     expect(failed).toEqual([
-      'Fonts (.woff, Kindle)',
+      'Fonts (.woff, old e-readers)',
       'Lazy chunk assets/zvm.js',
       'Catalogue catalog/index-0.json',
     ]);
   });
 
-  it('checks the Kindle first load as a whole, even when each part is within budget', () => {
+  it('checks each first load as a whole, even when each part is within budget', () => {
+    const first = (rows: ReturnType<typeof evaluate>, label: string) =>
+      rows.find((r) => r.label.indexOf(label) === 0)!;
     const within = evaluate(
       manifest,
       files,
       sizes({ 'assets/polyfills-legacy.js': 100, 'assets/font.woff': 79 }),
       budgets,
     );
-    const firstLoad = within[within.length - 1];
-    expect(firstLoad.bytes / KIB).toBe(118 + 2 + 79);
-    expect(firstLoad.ok).toBe(true);
+    expect(first(within, 'First load (old e-readers').bytes / KIB).toBe(118 + 2 + 79);
+    expect(within.every((r) => r.ok)).toBe(true);
 
     const heavier = evaluate(
       manifest,
@@ -173,7 +177,25 @@ describe('evaluate', () => {
       budgets,
     );
     expect(heavier.filter((r) => !r.ok).map((r) => r.label)).toEqual([
-      'First load (Kindle: legacy JS + CSS + .woff)',
+      'First load (old e-readers: legacy JS + CSS + .woff)',
+    ]);
+
+    // The Kindle's own first load: modern JS + CSS + .woff2.
+    const kindle = evaluate(
+      manifest,
+      files,
+      sizes({ 'assets/index.js': 74, 'assets/shared.js': 70, 'assets/font.woff2': 55 }),
+      budgets,
+    );
+    expect(first(kindle, 'First load (Kindle').bytes / KIB).toBe(144 + 2 + 55);
+    expect(kindle.filter((r) => !r.ok).map((r) => r.label)).toEqual([
+      'First load (Kindle: modern JS + CSS + .woff2)',
+    ]);
+    expect(first(kindle, 'First load (Kindle').files).toEqual([
+      'assets/index.js',
+      'assets/shared.js',
+      'assets/index.css',
+      'assets/font.woff2',
     ]);
   });
 });
@@ -182,6 +204,7 @@ describe('toMarkdown', () => {
   it('renders a table with the status of each row', () => {
     const md = toMarkdown(evaluate(manifest, files, sizes({ 'assets/index.css': 21 }), budgets));
     expect(md).toContain('| CSS | 21.0 KiB gz | 20 KiB | ❌ over |');
-    expect(md).toContain('| Fonts (.woff, Kindle) | 70.0 KiB | 80 KiB | ✅ |');
+    expect(md).toContain('| Fonts (.woff, old e-readers) | 70.0 KiB | 80 KiB | ✅ |');
+    expect(md).toContain('| Fonts (.woff2, Kindle) | 56.0 KiB | 70 KiB | ✅ |');
   });
 });

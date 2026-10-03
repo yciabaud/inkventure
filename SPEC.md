@@ -299,6 +299,13 @@ The core screen. It must feel like reading an ebook.
 itself never changes size, see above), in three rows:
 
 1. **Directions**: N, S, E, W, Up, Down, and ⋯ opening a dialog with all twelve directions (diagonals, In, Out).
+   When the game asks a question in its text (S1.17), its **answers** come first in this row, in bold, and the
+   directions that no longer fit move to the dialog: **Yes / No** (game language) when the last paragraph before the
+   prompt asks a yes/no question to the player (it ends with "?" and starts with an auxiliary verb with "you" / "I" /
+   "we" in it, or a French inversion "Voulez-vous…", or says "yes or no", "(y/n)", "oui ou non"); the **numbers** of
+   a numbered list of options that ends the text ("1. …", "1) …", "(1) …", from 1, in order, at least two, at most 9
+   chips, optionally followed by one short line asking for the choice), each with the start of its option when all
+   of them fit, the number alone otherwise. A tap sends the answer. A list wins over a yes/no question.
 2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
    Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
@@ -807,7 +814,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 
 | Area | Requirement |
 |---|---|
-| Payload | Budgets in `size-budget.json`, enforced in CI by `npm run check:size` (S0.7): initial JS ≤ 150 KiB gz (legacy and modern), CSS ≤ 20 KiB gz, fonts ≤ 80 KiB as `.woff` (Kindle fallback) and ≤ 70 KiB as `.woff2`, each lazy chunk (engines…) ≤ 100 KiB gz, each catalogue shard ≤ 150 KiB, Kindle first load (legacy JS + CSS + `.woff`) ≤ 200 KiB. Cover images are requested as IFDB thumbnails (§5.6). |
+| Payload | Budgets in `size-budget.json`, enforced in CI by `npm run check:size` (S0.7): initial JS ≤ 150 KiB gz (legacy and modern), CSS ≤ 20 KiB gz, fonts ≤ 80 KiB as `.woff` (old e-readers' fallback) and ≤ 70 KiB as `.woff2`, each lazy chunk (engines, the French dictionary…) ≤ 100 KiB gz, each catalogue shard ≤ 150 KiB. **First load** ≤ 200 KiB for the baseline Kindle, counted as it loads (§2.2: modern JS + CSS + `.woff2`), and ≤ 200 KiB for old e-readers (legacy JS + CSS + `.woff`) (S0.10). Test fixtures are never inlined in the bundle; only the active UI language's dictionary is loaded (English in the bundle, French a lazy chunk). Cover images are requested as IFDB thumbnails (§5.6). |
 | Speed (Kindle) | Home interactive < 3 s on Wi-Fi; page turn < 300 ms; Library first results < 4 s. |
 | Compatibility | Legacy bundle passes `es-check es5`; no runtime errors in the capability-probe browsers. |
 | Accessibility | Semantic HTML, labels on icon buttons, focus order, contrast ≥ 4.5:1, font scaling; dyslexia-friendly typeface option. |

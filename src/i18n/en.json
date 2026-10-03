@@ -161,6 +161,7 @@
   "twine.page": "{page} / {pages}",
   "twine.symbolLink": "Link",
   "reader.gameLoadFailed": "The game could not be loaded.",
+  "reader.answers": "Answers",
   "reader.directions": "Directions",
   "reader.moreDirections": "More directions",
   "reader.verbs": "Actions",

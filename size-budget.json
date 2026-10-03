@@ -1,5 +1,5 @@
 {
-  "$comment": "Asset size budgets in KiB (SPEC §10). gzip sizes for JS/CSS; font files and catalogue shards are measured as stored.",
+  "$comment": "Asset size budgets in KiB (SPEC §10). gzip sizes for JS/CSS; font files and catalogue shards are measured as stored. firstLoad: what the baseline Kindle loads (modern JS + CSS + .woff2, measured in S0.3); firstLoadLegacy: old e-readers (legacy JS + CSS + .woff).",
   "initialJsLegacy": 150,
   "initialJsModern": 150,
   "css": 20,
@@ -7,5 +7,6 @@
   "fontsWoff2": 70,
   "lazyChunk": 100,
   "catalogShard": 150,
+  "firstLoad": 200,
   "firstLoadLegacy": 200
 }

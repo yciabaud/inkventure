@@ -7,7 +7,9 @@
 ! objects, a locked container, a score and a winning ending; single-key prompts naming their keys: HELP ("Choose 1 or
 ! 2.") and LOGBOOK ("Press Q to quit the menu.", any other key turns a page); a status window of three rows inside the
 ! shed (region and exits, a progress counter), one row elsewhere; MENU, a menu like the Inform library's: it clears the
-! main window at each key, with its legend in a three-row status window (N / P move, Return opens a topic, Q quits).
+! main window at each key, with its legend in a three-row status window (N / P move, Return opens a topic, Q quits);
+! questions answered with a line: BOAT asks a yes/no question (the library's YesOrNo) and SIGNAL offers three
+! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -194,5 +196,28 @@ Array topics --> "About the lamp" "About the keeper";
 ];
 
 Verb meta 'menu' * -> Menu;
+
+[ BoatSub;
+    print "Do you want to call the boat back? ";
+    if (YesOrNo()) "You shout, but the boat is too far away to hear you.";
+    "You let the boat go.";
+];
+
+[ SignalSub key;
+    print "How will you signal the ships?^";
+    print "1. Wave the lantern^2. Ring the bell^3. Light a flare^";
+    for (::) {
+        print "^> ";
+        KeyboardPrimitive(buffer2, parse2);
+        key = buffer2->2;
+        if (key == '1') "You wave the lantern, but its light is too weak.";
+        if (key == '2') "The bell rings out over the water.";
+        if (key == '3') "You have no flare.";
+        print "Please choose 1, 2 or 3.";
+    }
+];
+
+Verb 'boat' * -> Boat;
+Verb 'signal' * -> Signal;
 Verb meta 'help' 'hint' 'hints' * -> Help;
 Verb meta 'logbook' 'log' * -> Logbook;

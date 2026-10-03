@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { MemoryBackend } from '../storage/backend';
 import { getPrefs } from '../storage/prefs';
 import { createStore } from '../storage/store';
@@ -10,6 +10,7 @@ import {
   formatNumber,
   formatRelativeDate,
   getLocale,
+  loadLocale,
   pluralCategory,
   resolveLocale,
   setLocale,
@@ -28,6 +29,8 @@ function placeholders(message: unknown): string[] {
   return (text.match(/\{\w+\}/g) || []).sort();
 }
 
+// French is a lazy chunk (S0.10): loaded once for the tests that use it.
+beforeAll(() => loadLocale('fr'));
 afterEach(() => setLocale('en'));
 
 describe('catalogues', () => {
@@ -171,6 +174,41 @@ describe('current locale', () => {
     const languages = vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en-US']);
     expect(initLocale(store)).toBe('en');
     languages.mockRestore();
+  });
+});
+
+describe('French on demand (S0.10)', () => {
+  /** A fresh copy of the module, French not loaded yet. */
+  async function freshI18n() {
+    vi.resetModules();
+    return import('./i18n');
+  }
+
+  it('applies French once its dictionary is loaded, and English at once', async () => {
+    const i18n = await freshI18n();
+    const done = i18n.setLocale('fr');
+    // Not loaded yet: the UI stays in English until it is.
+    expect(i18n.getLocale()).toBe('en');
+    expect(i18n.t('nav.library')).toBe('Library');
+    await done;
+    await i18n.localeReady();
+    expect(i18n.getLocale()).toBe('fr');
+    expect(i18n.t('nav.library')).toBe('Bibliothèque');
+    // English needs no load.
+    expect(i18n.setLocale('en')).toBeInstanceOf(Promise);
+    expect(i18n.getLocale()).toBe('en');
+  });
+
+  it('does not apply a French load that finishes after a switch back to English', async () => {
+    const i18n = await freshI18n();
+    const french = i18n.setLocale('fr');
+    i18n.setLocale('en');
+    await french;
+    expect(i18n.getLocale()).toBe('en');
+    // Loaded now: a later switch is immediate.
+    i18n.setLocale('fr');
+    expect(i18n.getLocale()).toBe('fr');
+    i18n.setLocale('en');
   });
 });
 
