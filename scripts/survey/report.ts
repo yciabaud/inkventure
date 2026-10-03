@@ -66,7 +66,7 @@ export const KINDS: Record<FindingKind, { title: string; meaning: string }> = {
 const INFO: FindingKind[] = ['upper-screen'];
 
 function cell(text: string): string {
-  return text.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  return text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 }
 
 /** The report: a summary ranked by number of games, then a table of games and their findings. */
