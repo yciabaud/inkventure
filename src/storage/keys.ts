@@ -15,6 +15,10 @@ export const keys = {
     return 'save:' + tuid + ':' + slot;
   },
   file: (tuid: string) => 'file:' + tuid,
+  /** Adventures kept offline (S5.3): what each holds and its size; the files themselves are in `kept.ts`'s stores. */
+  kept: 'kept',
+  /** A kept story file in localStorage, on a browser without the Cache API: pinned, never evicted. */
+  keptFile: (tuid: string) => 'kept:' + tuid,
   /** A Twine story's own storage (its format's saves and session), kept like a named save. */
   twine: (tuid: string) => 'save:' + tuid + ':twine',
 };
@@ -34,6 +38,10 @@ export function parseGameId(id: string): { tuid: string; language?: string } {
 }
 
 const AUTOSAVE = /^save:(.+):auto$/;
+
+export function isKeptFileKey(key: string): boolean {
+  return key.indexOf('kept:') === 0;
+}
 
 export function isFileKey(key: string): boolean {
   return key.indexOf('file:') === 0;

@@ -3,7 +3,7 @@
   "printWidth": 100,
   "overrides": [
     {
-      "files": "public/probe/**/*.js",
+      "files": ["public/probe/**/*.js", "src/sw/**/*.js"],
       "options": {
         "trailingComma": "none"
       }

@@ -60,10 +60,14 @@ test('Play downloads the story with a progress page, starts it, and keeps it for
   await started(page);
   expect(requests).toBe(1);
 
-  // Small files are cached (a moment after the start): the next session needs no network.
+  // Kept offline (S5.3), a moment after the start: the next session needs no network.
   await expect
-    .poll(() => page.evaluate((tuid) => !!localStorage.getItem('ik:v1:file:' + tuid), LAMP))
-    .toBe(true);
+    .poll(() =>
+      page.evaluate((tuid) => {
+        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
+      }, LAMP),
+    )
+    .toBe(0);
   await page.unroute(LAMP_URL);
   await page.route(LAMP_URL, (route) => route.abort());
   await page.reload();

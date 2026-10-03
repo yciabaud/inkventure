@@ -81,10 +81,14 @@ test('a zipped Twine story shows its own pictures, font, style and script, then 
     page.frameLocator('iframe.twine__frame').getByText('Light the lamp', { exact: true }),
   ).toBeVisible();
 
-  // Cached with its files (written a little after the start).
+  // Kept offline with its files (S5.3; written a little after the start).
   await expect
-    .poll(() => page.evaluate((key) => localStorage.getItem(key) !== null, 'ik:v1:file:' + TUID))
-    .toBe(true);
+    .poll(() =>
+      page.evaluate((tuid) => {
+        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
+      }, TUID),
+    )
+    .toBe(0);
 
   // Again without the network.
   await page.unroute(ZIP_URL);

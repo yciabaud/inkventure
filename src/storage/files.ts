@@ -31,7 +31,8 @@ export interface StoryData {
 const STORY_ENTRY = 'story';
 const FILE_PREFIX = 'f/';
 
-function pack(story: StoryData): Uint8Array {
+/** The story as one block of bytes: itself, or a zip of it and its files. */
+export function pack(story: StoryData): Uint8Array {
   if (!story.files || !Object.keys(story.files).length) return story.bytes;
   const entries: Record<string, Uint8Array> = {};
   entries[STORY_ENTRY] = story.bytes;
@@ -40,7 +41,8 @@ function pack(story: StoryData): Uint8Array {
   return zipSync(entries, { level: 0 });
 }
 
-function unpack(bytes: Uint8Array): StoryData {
+/** The story (and its files) from `pack`'s zip. */
+export function unpack(bytes: Uint8Array): StoryData {
   const entries = unzipSync(bytes);
   const files: StoryFiles = {};
   for (const name of Object.keys(entries)) {

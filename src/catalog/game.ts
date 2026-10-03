@@ -2,6 +2,8 @@
 // paragraphs.
 import type { GameDetail } from '../../scripts/catalog/emitter';
 import type { StoryFile } from '../../scripts/catalog/resolver';
+import { isOnline } from '../app/offline';
+import { getKept, getStore } from '../storage';
 import { gameId, parseGameId } from '../storage/keys';
 import { CATALOG_BASE, getJson } from './loader';
 
@@ -93,6 +95,45 @@ export function loadGame(
       if (/^HTTP 404\b/.test(error.message)) return { status: 'missing' as const };
       throw error;
     },
+  );
+}
+
+export type GameResult =
+  { status: 'ready'; game: GameDetail; kept?: boolean } | { status: 'missing' };
+
+/** The kept version of the game `tuid` to read its page data from: `id` when it is kept, else any. */
+function keptIdOf(tuid: string, id: string): string | undefined {
+  const list = getKept(getStore());
+  if (list[id]) return id;
+  const ids = Object.keys(list);
+  for (let i = 0; i < ids.length; i++) if (parseGameId(ids[i]).tuid === tuid) return ids[i];
+  return undefined;
+}
+
+/**
+ * A game's detail from the catalogue; for an adventure kept offline (S5.3), from the device when it is offline or the
+ * catalogue cannot be reached. `id` is the version that will be played.
+ */
+export function loadGameOrKept(
+  tuid: string,
+  id: string = tuid,
+  base: string = CATALOG_BASE,
+): Promise<GameResult> {
+  const kept = keptIdOf(tuid, id);
+  if (!kept) return loadGame(tuid, base);
+  const fromKept = () =>
+    import('./offline')
+      .then((module) => module.readKeptDetail(getStore(), kept))
+      .then((data) => {
+        const game = data as GameDetail | null;
+        if (!game || game.tuid !== tuid || !game.file) throw new Error('No kept detail: ' + kept);
+        return { status: 'ready' as const, game: game, kept: true };
+      });
+  if (!isOnline()) return fromKept().catch(() => loadGame(tuid, base));
+  return loadGame(tuid, base).catch((error: Error) =>
+    fromKept().catch(() => {
+      throw error;
+    }),
   );
 }
 

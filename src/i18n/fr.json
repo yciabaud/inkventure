@@ -321,5 +321,28 @@
   "perf.home": "Accueil prêt en {ms} ms",
   "perf.library": "Premiers résultats en {ms} ms",
   "perf.page": "Page tournée en {ms} ms",
-  "perf.turn": "Tour joué en {ms} ms"
+  "perf.turn": "Tour joué en {ms} ms",
+  "offline.keep": "Garder hors ligne",
+  "offline.keeping": "Enregistrement sur cet appareil…",
+  "offline.keepingProgress": "Enregistrement sur cet appareil… {loaded} Ko",
+  "offline.kept": "Gardé sur cet appareil : {size}. Il se joue sans Wi-Fi.",
+  "offline.remove": "Retirer de l’appareil",
+  "offline.keepFailed": "Impossible de le garder sur cet appareil : vérifiez le Wi-Fi, ou libérez de la place dans les Réglages.",
+  "offline.needsWifi": "Wi-Fi nécessaire",
+  "offline.needsWifiText": "Cette aventure n’est pas gardée sur cet appareil. Connectez-vous au Wi-Fi pour y jouer.",
+  "offline.lostText": "Le fichier de cette aventure n’est plus sur cet appareil. Connectez-vous au Wi-Fi pour le télécharger de nouveau.",
+  "offline.title": "Hors ligne",
+  "offline.catalogue": "Hors ligne : connectez-vous pour parcourir le catalogue.",
+  "settings.offline": "Gardés sur l’appareil",
+  "settings.offlineHint": "Les aventures gardées se jouent sans Wi-Fi. Un jeu que vous commencez est gardé automatiquement tant qu’elles prennent moins de {budget}.",
+  "settings.offlineTotal": {
+    "one": "{count} aventure gardée : {size}",
+    "other": "{count} aventures gardées : {size}"
+  },
+  "settings.offlineEmpty": "Aucune aventure n’est encore gardée sur cet appareil. Utilisez « Garder hors ligne » sur la page d’un jeu.",
+  "settings.offlineList": "Aventures gardées",
+  "settings.usageKept": {
+    "one": "{count} fichier de jeu gardé hors ligne : {size}",
+    "other": "{count} fichiers de jeu gardés hors ligne : {size}"
+  }
 }

@@ -16,6 +16,15 @@ export {
   type Adventure,
   type HomeEntry,
 } from './home';
+export {
+  AUTO_KEEP_BUDGET,
+  getKept,
+  isKept,
+  keptEntry,
+  keptSize,
+  type KeptEntry,
+  type KeptList,
+} from './kept';
 export { getPrefs, setPrefs, type Prefs } from './prefs';
 export type { StorageUsage, UsageGroup } from './usage';
 export { isStorageFullError, type StorageEvent, type StorageFullError, type Store } from './store';

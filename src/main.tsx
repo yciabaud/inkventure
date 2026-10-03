@@ -3,6 +3,7 @@ import '@fontsource/literata/latin-400.css';
 import '@fontsource/literata/latin-700.css';
 import '@fontsource/source-sans-3/latin-400.css';
 import { App } from './app/App';
+import { registerServiceWorker } from './app/offline';
 import { installTestHook } from './app/testHook';
 import { localeReady } from './i18n/i18n';
 import { initLocale } from './i18n/locale';
@@ -17,4 +18,6 @@ installTestHook();
 localeReady().then(() => {
   const root = document.getElementById('app');
   if (root) render(<App />, root);
+  // The offline app shell (S5.3), once the page is up.
+  registerServiceWorker();
 });

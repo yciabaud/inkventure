@@ -97,6 +97,15 @@ describe('chunk classification', () => {
     expect(initialChunks(manifest, false)).toEqual(['assets/index.js', 'assets/shared.js']);
   });
 
+  it('counts the Service Worker as initial JS of the modern bundle', () => {
+    const sizes: Sizes = {};
+    for (const file of files.concat('sw.js')) sizes[file] = kib(1);
+    const rows = evaluate(manifest, files.concat('sw.js'), sizes, budgets);
+    expect(rows[0].files).not.toContain('sw.js');
+    expect(rows[1].files).toContain('sw.js');
+    expect(rows.some((r) => r.label.indexOf('Lazy chunk sw.js') === 0)).toBe(false);
+  });
+
   it('treats every other JS chunk as lazy', () => {
     expect(lazyChunks(manifest)).toEqual(['assets/zvm.js']);
   });

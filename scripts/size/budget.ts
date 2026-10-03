@@ -48,6 +48,9 @@ export const KIB = 1024;
 
 const LEGACY_POLYFILLS = 'vite/legacy-polyfills-legacy';
 
+/** The app's Service Worker, counted as initial JS of the modern bundle. */
+export const SERVICE_WORKER = 'sw.js';
+
 function isLegacyEntry(key: string, chunk: ManifestChunk): boolean {
   return key === LEGACY_POLYFILLS || (!!chunk.isEntry && /-legacy\.html$/.test(key));
 }
@@ -110,8 +113,11 @@ export function evaluate(
   sizes: Sizes,
   budgets: Budgets,
 ): Row[] {
+  // The Service Worker (S5.3) counts with the modern bundle: a browser that needs the legacy one (no ES modules) has
+  // in practice no Service Worker either.
+  const worker = files.indexOf(SERVICE_WORKER) >= 0 ? [SERVICE_WORKER] : [];
   const legacyJs = initialChunks(manifest, true);
-  const modernJs = initialChunks(manifest, false);
+  const modernJs = initialChunks(manifest, false).concat(worker);
   const css = files.filter((f) => /\.css$/.test(f)).sort();
   const woff = files.filter((f) => /\.woff$/.test(f)).sort();
   const woff2 = files.filter((f) => /\.woff2$/.test(f)).sort();
