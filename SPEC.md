@@ -309,7 +309,15 @@ itself never changes size, see above), in three rows:
    chips, optionally followed by one short line asking for the choice), each with the start of its option when all
    of them fit, the number alone otherwise. A tap sends the answer. A list wins over a yes/no question.
 2. **Verbs**: Look, Examine…, Take…, Inventory, and "More…" opening a dialog with Drop…, Open…, Talk to…, Wait, Again,
-   Undo and the command history (previous / next). After a verb ending with "…" the verb goes into the field and this
+   Undo and the command history (previous / next). The **commands the game names in capitals** (S1.19) come first in
+   this row, in bold (at most 4; the verbs that no longer fit move to "More…"): runs of 1–3 capital words of 2+ letters
+   (optionally a number, "PS 1") in the text since the last command, when announced ("type", "try", "enter", "use",
+   "tapez", "essayez"…, or listed after one in the same sentence: "type WAKE UP …, or LOGBOOK"), marked (quotes,
+   `[ ]`, `* *`, `( )`), followed by "command" / "commande", or followed by a placeholder ("TALK TO someone": the
+   chip fills the field instead of sending); a usual meta command alone (HELP, HINTS, ABOUT, CREDITS, GUIDE, AIDE…)
+   needs no signal. Never: a paragraph all in capitals, a heading, the room name and status rows, Roman numerals,
+   what the bar already has, nor SAVE / RESTORE / RESTART / QUIT / UNDO (the menu has them). A chip shows the command
+   as written and sends it in lower case. After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
    excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
 

@@ -26,6 +26,8 @@ interface Props {
   nouns: string[];
   /** The answers to a question the game asks (Yes / No, numbered options): first in the directions row. */
   answers?: AnswerChip[];
+  /** Commands the game names in capitals ("type HELP"): first in the verbs row (S1.19). */
+  named?: Chip<string>[];
   field: string;
   onField: (field: string) => void;
   onSend: (command: string) => void;
@@ -43,6 +45,7 @@ export function CommandBar({
   table,
   nouns,
   answers = [],
+  named = [],
   field,
   onField,
   onSend,
@@ -100,7 +103,9 @@ export function CommandBar({
   const verbs = MAIN_VERBS.map((id) => table.verbs.filter((v) => v.id === id)[0]).filter(
     (v) => !!v,
   );
-  const otherVerbs = verbs
+  // The commands the game names come first; what does not fit goes to "More…", as on narrow screens.
+  const rowVerbs: Chip<string>[] = (named as Chip<string>[]).concat(verbs);
+  const otherVerbs = rowVerbs
     .slice(verbsShown)
     .concat(table.verbs.filter((v) => MAIN_VERBS.indexOf(v.id) < 0));
 
@@ -175,11 +180,11 @@ export function CommandBar({
         </div>
       ) : (
         <div class="chips" role="group" aria-label={t('reader.verbs')} ref={verbsRow}>
-          {verbs.map((v, i) => (
+          {rowVerbs.map((v, i) => (
             <button
               key={v.id}
               type="button"
-              class={fitClass('chip', i, verbsShown)}
+              class={fitClass(i < named.length ? 'chip chip--named' : 'chip', i, verbsShown)}
               data-fit
               onClick={() => chip(v)}
             >

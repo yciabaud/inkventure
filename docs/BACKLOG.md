@@ -67,7 +67,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S1.16](stories/S1.16-cleared-screens-and-menus.md) | Cleared screens and menus: one screen, not a pile | E1 | M6 | S1.12, S1.15 | done |
 | [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | done |
 | [S1.18](stories/S1.18-small-rendering-fixes.md) | Small rendering fixes: spaces, 9:05's clock, Twine edges | E1 | M6 | S1.3, S1.9 | done |
-| [S1.19](stories/S1.19-capitalised-command-chips.md) | Chips for the commands the text names in capitals | E1 | M6 | S1.4 | todo |
+| [S1.19](stories/S1.19-capitalised-command-chips.md) | Chips for the commands the text names in capitals | E1 | M6 | S1.4 | done |
 | [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | Post-V1 | S1.15, S1.4 | todo |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
