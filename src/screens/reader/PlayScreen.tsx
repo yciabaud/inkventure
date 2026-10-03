@@ -1,11 +1,14 @@
 // Playing a catalogue game (SPEC §5.5; story S3.4): its detail (`games/<tuid>.json`) gives the file and the format,
 // the story comes from the cache or is downloaded with a progress page, then the engine of its format runs it.
+// An adventure kept offline (S5.3) needs neither the catalogue nor the network; one that is not says "Needs Wi-Fi"
+// offline. Starting a game keeps it offline when there is room.
 import type { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { reportUrl } from '../../app/links';
+import { isOnline } from '../../app/offline';
 import { formatHash } from '../../app/router';
 import { formatName } from '../../catalog/filters';
-import { loadGame, versionOf, type GameDetail } from '../../catalog/game';
+import { loadGameOrKept, versionOf, type GameDetail } from '../../catalog/game';
 import {
   isStoryFileError,
   storyFileError,
@@ -14,7 +17,7 @@ import {
 import type { EngineKind } from '../../engines/engine';
 import { engineFor, isAvailable, loadEngine } from '../../engines/formats';
 import { t } from '../../i18n/i18n';
-import { getStore, parseGameId } from '../../storage';
+import { getStore, isKept, parseGameId } from '../../storage';
 import type { StoryData } from '../../storage/files';
 import { Button, LinkButton } from '../../ui/Button';
 import { EmptyState } from '../../ui/EmptyState';
@@ -28,6 +31,8 @@ type State =
   | { phase: 'loading' }
   | { phase: 'missing' }
   | { phase: 'detailFailed' }
+  /** Offline, and the game is not kept (`lost`: it was, but its files are gone). */
+  | { phase: 'needsWifi'; lost: boolean }
   | { phase: 'unsupported'; game: GameDetail }
   | { phase: 'downloading'; game: GameDetail; loaded: number; total: number }
   | { phase: 'failed'; game: GameDetail; error: StoryFileError }
@@ -165,7 +170,9 @@ export function PlayScreen({
       setState({ phase: 'failed', game: game, error: failure });
     };
     setState({ phase: 'loading' });
-    loadGame(parseGameId(tuid).tuid).then(
+    const store = getStore();
+    const needsWifi = () => live && setState({ phase: 'needsWifi', lost: isKept(store, tuid) });
+    loadGameOrKept(parseGameId(tuid).tuid, tuid).then(
       (result) => {
         if (!live) return;
         const version = result.status === 'ready' ? versionOf(result.game, tuid) : undefined;
@@ -173,9 +180,10 @@ export function PlayScreen({
           setState({ phase: 'missing' });
           return;
         }
+        const detail = result.game;
         // The version played, under its own id (its file is cached under it).
         const game: GameDetail = {
-          ...result.game,
+          ...detail,
           tuid: tuid,
           file: version.file,
           language: version.language,
@@ -187,32 +195,49 @@ export function PlayScreen({
         }
         // The engine's chunk loads during the download.
         if (kind !== 'twine') loadEngine(kind).catch(() => undefined);
-        setState({ phase: 'downloading', game: game, loaded: 0, total: 0 });
         let step = 0;
-        import('../../catalog/storyFile').then(
-          (module) => {
+        Promise.all([import('../../catalog/storyFile'), import('../../catalog/offline')]).then(
+          ([files, offline]) => {
             if (!live) return;
-            const loading = module.fetchStory(game, kind, getStore(), {
-              onProgress: (loaded, total) => {
-                const next = progressStep(loaded, total);
-                if (!live || next === step) return;
-                step = next;
-                setState({ phase: 'downloading', game: game, loaded: loaded, total: total });
-              },
+            offline.readKept(store, tuid, game.file.url).then((kept) => {
+              if (!live) return;
+              if (kept) {
+                setState({ phase: 'ready', game: game, kind: kind, story: kept });
+                return;
+              }
+              if (!isOnline()) {
+                needsWifi();
+                return;
+              }
+              setState({ phase: 'downloading', game: game, loaded: 0, total: 0 });
+              const loading = files.fetchStory(game, kind, store, {
+                onProgress: (loaded, total) => {
+                  const next = progressStep(loaded, total);
+                  if (!live || next === step) return;
+                  step = next;
+                  setState({ phase: 'downloading', game: game, loaded: loaded, total: total });
+                },
+                keep: offline.autoKeeper(store, detail, version),
+              });
+              abort = loading.abort;
+              loading.promise.then(
+                (story) =>
+                  live && setState({ phase: 'ready', game: game, kind: kind, story: story }),
+                (error: Error) => {
+                  if (!live) return;
+                  if (!isOnline()) needsWifi();
+                  else fail(game, error);
+                },
+              );
             });
-            abort = loading.abort;
-            loading.promise.then(
-              (story) => live && setState({ phase: 'ready', game: game, kind: kind, story: story }),
-              (error: Error) => {
-                if (!live) return;
-                fail(game, error);
-              },
-            );
           },
           (error: Error) => fail(game, error),
         );
       },
-      () => live && setState({ phase: 'detailFailed' }),
+      () => {
+        if (!isOnline()) needsWifi();
+        else if (live) setState({ phase: 'detailFailed' });
+      },
     );
     return () => {
       live = false;
@@ -278,6 +303,16 @@ export function PlayScreen({
             <LinkButton href={formatHash({ name: 'library' })}>{t('game.toLibrary')}</LinkButton>
           </EmptyState>
         </div>
+      );
+      break;
+    case 'needsWifi':
+      page = (
+        <ErrorPage
+          title={t('offline.needsWifi')}
+          message={t(state.lost ? 'offline.lostText' : 'offline.needsWifiText')}
+        >
+          <Button onClick={retry}>{t('play.retry')}</Button>
+        </ErrorPage>
       );
       break;
     case 'detailFailed':

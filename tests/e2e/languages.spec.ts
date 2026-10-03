@@ -22,8 +22,12 @@ function serve(route: Route) {
   });
 }
 
-function stored(page: Page, key: string) {
-  return page.evaluate((k) => localStorage.getItem('ik:v1:' + k) !== null, key);
+/** Whether the game `id` is kept offline (S5.3). */
+function kept(page: Page, id: string) {
+  return page.evaluate(
+    (i) => Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(i) >= 0,
+    id,
+  );
 }
 
 test.beforeEach(async ({ page }) => {
@@ -71,14 +75,14 @@ test.describe('in English', () => {
       '#/play/' + CAVE,
     );
 
-    // The English version: its own file, cached under its own id.
+    // The English version: its own file, kept offline (S5.3) under its own id.
     await press(english);
     await press(page.getByRole('link', { name: 'Play' }));
     await expect(page).toHaveURL(new RegExp('#/play/' + CAVE + '-en$'));
     await expect(page.getByText('[Press any key to begin.]')).toBeVisible();
     expect(requests).toEqual([ENGLISH_URL]);
-    await expect.poll(() => stored(page, 'file:' + CAVE + '-en')).toBe(true);
-    expect(await stored(page, 'file:' + CAVE)).toBe(false);
+    await expect.poll(() => kept(page, CAVE + '-en')).toBe(true);
+    expect(await kept(page, CAVE)).toBe(false);
   });
 
   test('the Library finds the game under each of its languages', async ({ page }) => {

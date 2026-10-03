@@ -126,6 +126,13 @@
   color: #000;
 }
 
+/* An action that cannot be taken now (offline: "Needs Wi-Fi", S5.3): dashed, not tappable. */
+.btn--off {
+  border-style: dashed;
+  background: #fff;
+  color: #000;
+}
+
 .btn--block {
   display: flex;
   width: 100%;
@@ -360,6 +367,10 @@ button.pager__btn {
   cursor: pointer;
 }
 
+.menu__item:disabled {
+  color: #555;
+}
+
 .menu li + li .menu__item {
   border-top: 1px solid #767676;
 }
@@ -512,6 +523,27 @@ button.pager__btn {
 
 .game__actions > :first-child {
   margin-right: 8px;
+}
+
+/* Keep offline / Remove from device (S5.3), and what is kept. */
+.game__offline {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin: 0 0 12px;
+}
+
+.game__offline .btn {
+  flex-shrink: 0;
+  margin-right: 12px;
+  padding-right: 16px;
+  padding-left: 16px;
+}
+
+.game__offline-text {
+  margin: 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
 }
 
 .game__notice,
@@ -1698,6 +1730,12 @@ button.pager__btn {
   margin: 16px 0 0;
 }
 
+.home__offline {
+  margin: 16px 0 0;
+  font-family: 'Source Sans 3', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+}
+
 .help__actions {
   display: flex;
   flex-shrink: 0;
@@ -1938,6 +1976,27 @@ a.menu__item {
   margin: 0 0 8px;
   font-size: 18px;
   font-weight: 700;
+}
+
+/* Adventures kept offline (S5.3): title and size, then Remove from device. */
+.kept {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kept__row {
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  border-top: 1px solid #767676;
+}
+
+.kept__text {
+  flex: 1;
+  min-width: 0;
+  margin: 8px 12px 8px 0;
+  overflow-wrap: break-word;
 }
 
 .settings-page__list {

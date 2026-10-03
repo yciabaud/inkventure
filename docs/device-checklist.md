@@ -70,6 +70,17 @@ Z-machine turn **< 1 s**, Glulx turn **< 3 s**.
 2. *Data and storage*: the space used is shown.
 3. Set **Timings** back to **Hidden**.
 
+## 7. Offline (3 min)
+
+1. Wi-Fi on: open a Z-machine game's page and tap **Keep offline**; wait for *Kept on this device: … KB*. Its cover
+   on Home has no badge; another game that is not kept will show *Needs Wi-Fi* in step 2.
+2. Airplane mode on. Reload the page, then close and reopen the browser: Home opens; *Library* says *Offline:
+   connect to browse the catalogue*.
+3. Play the kept game: a turn, then reload: it resumes. A game that is not kept says *Needs Wi-Fi*.
+4. Still offline, open the app from the ebook's link (if the ebook is on the device): does the browser open it, or
+   ask for Wi-Fi first? Note which.
+5. Wi-Fi back on: *Settings → Kept on this device* lists the game with its size; **Remove from device** removes it.
+
 ## Results
 
 | Item | Target | Measured | Pass |
@@ -84,4 +95,6 @@ Z-machine turn **< 1 s**, Glulx turn **< 3 s**.
 | Home, Library, game page work as described | — | | |
 | Save, restore, undo, resume after reload | — | | |
 | Ink and Twine play | — | | |
+| Offline: Home opens, kept game plays and resumes (reload, browser restart) | — | | |
+| Offline: ebook link opens the app, or asks for Wi-Fi | — | | |
 | Problems seen (step, what happened) | — | | |

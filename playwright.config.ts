@@ -42,6 +42,8 @@ export default defineConfig({
   use: {
     baseURL: `http://localhost:${port}`,
     trace: 'retain-on-failure',
+    // The app's Service Worker (S5.3) would answer requests before `page.route` sees them; the offline tests allow it.
+    serviceWorkers: 'block',
   },
   projects,
   // Tests run against the production build (modern + legacy bundles), not the dev server.

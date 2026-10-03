@@ -221,6 +221,11 @@ export function storyData(file: StoryFile, kind: EngineKind, bytes: Uint8Array):
 interface FetchOptions extends DownloadOptions {
   /** Runs the cache write; by default a little later, so it does not delay the start of the game. */
   defer?: (write: () => void) => void;
+  /**
+   * Keeps the story offline (S5.3) instead of caching it, when it resolves true; run at the same moment as the cache
+   * write would be.
+   */
+  keep?: (story: StoryData) => Promise<boolean>;
 }
 
 /** Delay before a downloaded file is written to the cache (deflating it is slow on an e-reader). */
@@ -228,8 +233,8 @@ const CACHE_DELAY_MS = 2000;
 
 /**
  * The story of a catalogue game (with its files, for a zipped Twine story): from the cache when it holds this file,
- * else downloaded (and unzipped), checked against the engine's format and cached when small. Rejects with a
- * `StoryFileError`.
+ * else downloaded (and unzipped), checked against the engine's format and cached when small, or kept offline
+ * (`keep`). Rejects with a `StoryFileError`.
  */
 export function fetchStory(
   game: { tuid: string; file: StoryFile },
@@ -238,18 +243,26 @@ export function fetchStory(
   options: FetchOptions = {},
 ): { promise: Promise<StoryData>; abort(): void } {
   const url = game.file.url;
-  const cached = readCachedStory(store, game.tuid, url);
-  if (cached) return { promise: Promise.resolve(cached), abort: () => undefined };
-
   const defer = options.defer || ((write: () => void) => setTimeout(write, CACHE_DELAY_MS));
+  const keep = options.keep;
+  const cached = readCachedStory(store, game.tuid, url);
+  if (cached) {
+    if (keep) defer(() => void keep(cached).catch(() => undefined));
+    return { promise: Promise.resolve(cached), abort: () => undefined };
+  }
+
   const loading = download(url, options);
   return {
-    promise: loading.promise.then((bytes) => {
-      const story = storyData(game.file, kind, bytes);
-      if (!looksLikeStory(kind, story.bytes))
+    promise: loading.promise.then((story) => {
+      const data = storyData(game.file, kind, story);
+      if (!looksLikeStory(kind, data.bytes))
         throw storyFileError('format', 'Not a story file: ' + url);
-      defer(() => cacheFile(store, game.tuid, url, story.bytes, story.files));
-      return story;
+      const write = () => cacheFile(store, game.tuid, url, data.bytes, data.files);
+      defer(() => {
+        if (!keep) write();
+        else keep(data).then((kept) => kept || write(), write);
+      });
+      return data;
     }),
     abort: loading.abort,
   };

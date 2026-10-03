@@ -114,7 +114,8 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
 - **Offline:** not relied upon; Wi-Fi is needed to load the app and a game, but a loaded game keeps working and
   autosaves locally. **Measured (S0.9, 2026-10-02):** a Service Worker serves a page with Wi-Fi off, after a browser
   and a device restart; the Cache API and IndexedDB keep files of up to 20 MB across both (quota 100 MB,
-  `persist()` refused, `estimate()` under-reports usage). The offline mode is planned in S5.3 (see §6.2).
+  `persist()` refused, `estimate()` under-reports usage). **Offline mode (S5.3, §6.2):** the app shell is kept by a
+  Service Worker and adventures can be kept on the device, so a kept adventure plays with Wi-Fi off.
 - **CPU:** slow — interpreters must stay responsive (see [§4.5](#45-performance)).
 
 ### 2.3 Consequences for the whole app
@@ -140,8 +141,9 @@ allowed; problems on old devices are fixed case by case when reported. Other ass
 ```
 
 Settings keeps every page scroll-free: its first page holds the UI language (Automatic / English / Français) and
-links to one page per section, `#/settings?s=reading` (reader defaults, with a preview), `?s=data` (storage usage,
-reset) and `?s=about` (version, credits, privacy).
+links to one page per section, `#/settings?s=reading` (reader defaults, with a preview), `?s=offline` (adventures
+kept on the device, with their sizes and *Remove from device*, S5.3), `?s=data` (storage usage, reset) and `?s=about`
+(version, credits, privacy).
 
 A persistent top bar (like the Kindle header) shows: app name/Home, Library and a ⋯ Menu (icon buttons,
 ≥ 48 px); the menu holds Settings, Free ebook (the download page, `ebook/`) and Refresh screen. A focus outline is only drawn for keyboard focus
@@ -170,8 +172,12 @@ Purpose: get back into a game in one tap, or start a recommended one.
   again if it was removed). A grid of covers like the Library's (as many rows and columns as fit), last played (or
   added) first; no list view or sort on Home (decided in S4.2 review:
   too much for a shelf). A "⋮" over the bottom right corner of each cover, like the Kindle library, opens the game's
-  menu: the game (cover, title, author, progress), then Continue / Play, its page, *Remove from Home* (keeps saves and
-  progress unless "also delete saves" is checked; the cached story file stays either way).
+  menu: the game (cover, title, author, progress), then Continue / Play, its page, *Keep offline* or *Remove from
+  device* (S5.3, §6.2), *Remove from Home* (keeps saves and progress unless "also delete saves" is checked; the cached
+  or kept story file stays either way).
+- **Offline** (S5.3): Home runs on local data. An adventure that is not kept shows a "Needs Wi-Fi" badge (and the
+  Continue hero a "Needs Wi-Fi" button instead of Continue) and cannot be started; the Featured shelf, which needs the
+  catalogue, says "Offline: connect to browse the catalogue".
 - **One shelf at a time** (so its covers can be large): when the player has adventures and there are featured games,
   a tab row "My adventures | Featured" replaces the shelf title (`#/home?shelf=featured`, replaced in the history);
   the shelf takes the height left under the hero, with a compact "‹ 2 / 5 ›" pager on the same header row (without
@@ -229,7 +235,10 @@ Purpose: find the next adventure in the playable catalogue.
 - Cover, title, author(s), year, language, genre, format badge, "Illustrated" badge when relevant, ★ rating and count, playtime, forgiveness.
 - Blurb (IFDB description, HTML sanitized to plain paragraphs, paginated if long: one CSS column per page, turned
   with the pager).
-- Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**.
+- Actions: **Play** (or **Continue** if a save exists), **Add to Home / Remove from Home**; under them **Keep offline**
+  (downloads the story, keeps it with the page data and adds the game to Home; S5.3), or, once kept, its size and
+  **Remove from device**. Offline, a kept game's page opens from its kept copy; a game that is not kept shows "Needs
+  Wi-Fi" instead of Play.
 - **Language** (S2.6), for a game with a file per language: one button per language; Play, Continue, Home, the
   language shown and the IF Archive link follow the chosen one. The page opens on the language a link names
   (`#/game/<tuid>-<lang>`), else the one last played, else the UI language, else the default file's.
@@ -670,6 +679,10 @@ The curated file drives the game cards in the ebook and, with the ratings, the H
   version is re-downloaded; LRU, see §6); larger files are re-downloaded per session on Kindle. A Twine story kept
   with the files of its zip (§4.3) is cached with them, packed together, under the same limit for the whole. Caching a file only
   ever evicts other cached files, never saves.
+- **Kept offline** (S5.3, §6.2): a game started is kept on the device (Cache API) instead, while kept adventures take
+  less than 40 MB; "Keep offline" keeps one whatever its size. A kept story is read before the cache and the network;
+  offline, a game that is not kept says "Needs Wi-Fi" (its file was dropped by the browser: "no longer on this
+  device"), and Library shows "Offline: connect to browse the catalogue".
 
 ### 5.6 Attribution & terms
 
@@ -703,6 +716,8 @@ All keys are prefixed and versioned:
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
 | `ik:v1:save:<tuid>:twine` | a Twine story's own storage (§4.3): `{v, date, local, session}` (string maps), counted with the saves |
 | `ik:v1:file:<tuid>` | cached story file (small files only) |
+| `ik:v1:kept` | adventures kept offline (S5.3): `{<tuid>: {url, kind, title, author, size, date, where, files?, auto?}}` (`where`: `cache` or `local`; their files are in the Cache API, §6.2) |
+| `ik:v1:kept:<tuid>` | a kept story in localStorage, on a browser without the Cache API (< 512 KB): `{v, story, game}`; pinned, never evicted |
 
 A game played in another language than its default file's (S2.6) is stored as its own game under the id
 `<tuid>-<lang>` (TUIDs have no `-`): its progress, saves, cached file and Home entry; `#/play/<tuid>-<lang>` plays it.
@@ -714,7 +729,7 @@ A game played in another language than its default file's (S2.6) is stored as it
   silently — warn the user instead.
 - **Schema migrations:** a `ik:schema` key and ordered migration functions.
 - **Reset all data** (Settings, two confirmations) removes every `ik:` key (any schema version and `ik:schema`) and
-  nothing else, then shows Home as on a first launch.
+  the kept adventures' cache (`inkventure-kept`, S5.3), nothing else, then shows Home as on a first launch.
 - **Storage unavailable** (disabled site data, private mode): the app runs on an in-memory store and shows a
   non-blocking warning that progress will not be kept.
 
@@ -723,10 +738,26 @@ A game played in another language than its default file's (S2.6) is stored as it
 - IndexedDB for story files and catalogue shards; Service Worker for offline app shell + recently played
   games. Feature-detected; never required. The Kindle measured in S0.3 exposes all three APIs, so this may reach
   class A too once it is shown to work there (§13 #11).
-- **Offline mode (M7):** the offline probe (S0.9, `/probe/offline/`) showed on the Kindle that a Service Worker
-  serves a page with Wi-Fi off and that story files survive restarts in the Cache API and IndexedDB. S5.3 adds an
-  offline app shell and "Keep offline" adventures (pinned story files in the Cache API, never evicted). Sizes are
-  counted by the app, since `estimate()` under-reports usage there.
+- **Offline mode (M7, S5.3):** the offline probe (S0.9, `/probe/offline/`) showed on the Kindle that a Service Worker
+  serves a page with Wi-Fi off and that story files survive restarts in the Cache API and IndexedDB.
+  - **App shell.** `sw.js` at the app's folder (its scope; registered once the page is up, production builds only)
+    caches the page, the JS and CSS bundles (modern and legacy), the fonts and the small lazy chunks (French
+    dictionary, saves, story files…) when it installs, in `inkventure-app-<version>`; the version changes with every
+    build and the previous cache is deleted on activation. The precache list is generated from Vite's manifest
+    (`scripts/build/service-worker.ts`). Each engine's chunks are cached only for the formats of kept adventures
+    (listed in the kept cache's `kept/index.json`, read at install, and sent by the page when one is kept); files of
+    the previous build are copied rather than downloaded again. The page and its files are served cache first, so
+    the app opens with Wi-Fi off; online, a new build installs in the background and takes over at once, and the
+    running page reloads at its next change of screen (it would otherwise ask for removed files). Everything else
+    (catalogue, covers, game files, previews and other pages of the site) is left to the network.
+  - **Kept adventures.** The story (with a Twine story's files) and the game's page data (`games/<tuid>.json`) are
+    stored in the Cache API (`inkventure-kept`, kept by every build), pinned: nothing evicts them, only *Remove from
+    device* (Settings › Kept on this device, game page, Home menu) or *Reset all data*. Without the Cache API, small
+    stories (< 512 KB) go to localStorage (`ik:v1:kept:<tuid>`), which the LRU never evicts. IndexedDB is not used:
+    every browser with a Service Worker has the Cache API. The list (`ik:v1:kept`) is in localStorage, so Home and
+    the game page know at once what is kept. Sizes are counted by the app, since `estimate()` under-reports usage
+    there. Covers are not kept: IFDB sends no CORS headers, and an opaque response is padded heavily in the quota
+    (offline, kept games show their typographic cover).
 
 ### 6.3 Export / import (dropped from V1)
 
@@ -937,4 +968,4 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 8 | Licences of mirrored story files (if fallback 2 is needed). | Mirror only files with explicit free licences; record licence in index. |
 | 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
-| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures in S5.3 (M7). `persist()` is refused, so a lost file must degrade to "Needs Wi-Fi". |
+| 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures shipped in S5.3 (M7, §6.2); device check pending. `persist()` is refused, so a lost file degrades to "Needs Wi-Fi" (offline) or is downloaded again (online). |

@@ -321,5 +321,28 @@
   "perf.home": "Home ready in {ms} ms",
   "perf.library": "First results in {ms} ms",
   "perf.page": "Page turned in {ms} ms",
-  "perf.turn": "Turn played in {ms} ms"
+  "perf.turn": "Turn played in {ms} ms",
+  "offline.keep": "Keep offline",
+  "offline.keeping": "Keeping it on this device…",
+  "offline.keepingProgress": "Keeping it on this device… {loaded} KB",
+  "offline.kept": "Kept on this device: {size}. It plays without Wi-Fi.",
+  "offline.remove": "Remove from device",
+  "offline.keepFailed": "It could not be kept on this device: check the Wi-Fi, or free some space in Settings.",
+  "offline.needsWifi": "Needs Wi-Fi",
+  "offline.needsWifiText": "This adventure is not kept on this device. Connect to the Wi-Fi to play it.",
+  "offline.lostText": "This adventure's file is no longer on this device. Connect to the Wi-Fi to download it again.",
+  "offline.title": "Offline",
+  "offline.catalogue": "Offline: connect to browse the catalogue.",
+  "settings.offline": "Kept on this device",
+  "settings.offlineHint": "Kept adventures play without Wi-Fi. A game you start is kept automatically while they take less than {budget}.",
+  "settings.offlineTotal": {
+    "one": "{count} adventure kept: {size}",
+    "other": "{count} adventures kept: {size}"
+  },
+  "settings.offlineEmpty": "No adventure is kept on this device yet. Use “Keep offline” on a game's page.",
+  "settings.offlineList": "Kept adventures",
+  "settings.usageKept": {
+    "one": "{count} story file kept offline: {size}",
+    "other": "{count} story files kept offline: {size}"
+  }
 }

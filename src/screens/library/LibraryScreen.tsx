@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { isOnline } from '../../app/offline';
 import { useReadyTiming } from '../../app/perf';
 import { formatHash, formatQuery, type Query } from '../../app/router';
 import {
@@ -263,6 +264,13 @@ export function LibraryScreen({ query }: { query: Query }) {
           ? t('library.loadingProgress', { loaded: state.loaded, total: state.total })
           : t('library.loading')}
       </p>
+    );
+  } else if (state.status === 'error' && !isOnline()) {
+    // Offline (S5.3): the catalogue is not kept on the device.
+    body = (
+      <EmptyState title={t('offline.title')} text={t('offline.catalogue')}>
+        <Button onClick={retry}>{t('library.retry')}</Button>
+      </EmptyState>
     );
   } else if (state.status === 'error') {
     body = (

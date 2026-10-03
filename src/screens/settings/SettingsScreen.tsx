@@ -1,7 +1,7 @@
 // Settings (SPEC §3.1, §6, §7; story S5.1): the UI language on the first page, then one page per section (reading
-// defaults, data and storage, about) so that nothing scrolls.
-import type { ComponentChildren } from 'preact';
-import { useState } from 'preact/hooks';
+// defaults, adventures kept offline, data and storage, about) so that nothing scrolls.
+import type { ComponentChildren, JSX } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import { formatHash, navigate } from '../../app/router';
 import {
   detectLocale,
@@ -21,10 +21,11 @@ import { Dialog } from '../../ui/Dialog';
 import { PagedParagraphs } from '../../ui/PagedParagraphs';
 import { Choice, ReaderSettingsForm } from '../reader/TextSettings';
 
-type Section = 'reading' | 'data' | 'about';
+type Section = 'reading' | 'offline' | 'data' | 'about';
 
 const SECTIONS: Array<{ name: Section; label: MessageKey }> = [
   { name: 'reading', label: 'settings.reading' },
+  { name: 'offline', label: 'settings.offline' },
   { name: 'data', label: 'settings.data' },
   { name: 'about', label: 'settings.about' },
 ];
@@ -79,7 +80,7 @@ function sectionHref(section?: Section): string {
 }
 
 /** A section page: its title follows a "‹" back to the first page of Settings. */
-function SectionPage({ title, children }: { title: string; children: ComponentChildren }) {
+export function SectionPage({ title, children }: { title: string; children: ComponentChildren }) {
   return (
     <div class="screen settings-page ui-font">
       <h1 class="screen__title settings-page__title">
@@ -180,6 +181,7 @@ function Data() {
         <UsageLine label="settings.usageSaves" group={usage.saves} />
         <UsageLine label="settings.usageAutosaves" group={usage.autosaves} />
         <UsageLine label="settings.usageFiles" group={usage.files} />
+        <UsageLine label="settings.usageKept" group={usage.kept} />
         {usage.other.count > 0 && (
           <li>{t('settings.usageOther', { size: formatSize(usage.other.size) })}</li>
         )}
@@ -220,10 +222,37 @@ function Data() {
   );
 }
 
-/** Deletes every `ik:` entry, then shows Home as on a first launch (language back to the browser's). */
+/** The adventures kept offline (S5.3): a lazy chunk, like the reader of Twine stories (SPEC §10's first load). */
+function Offline() {
+  const [page, setPage] = useState<{ component: () => JSX.Element } | null>(null);
+  useEffect(() => {
+    import('./OfflinePage').then(
+      (module) => setPage({ component: module.OfflinePage }),
+      () => undefined,
+    );
+  }, []);
+  if (!page) {
+    return (
+      <SectionPage title={t('settings.offline')}>
+        <p class="settings-page__hint">{t('game.loading')}</p>
+      </SectionPage>
+    );
+  }
+  const Component = page.component;
+  return <Component />;
+}
+
+/**
+ * Deletes every `ik:` entry and the kept files, then shows Home as on a first launch (language back to the
+ * browser's).
+ */
 function resetAll() {
   const store = getStore();
   store.clearAll();
+  import('../../catalog/offline').then(
+    (offline) => offline.clearKeptCache(),
+    () => undefined,
+  );
   initLocale(store);
   navigate({ name: 'home' });
 }
@@ -285,6 +314,8 @@ export function SettingsScreen({ query = {} }: { query?: Record<string, string> 
   switch (query.s) {
     case 'reading':
       return <Reading />;
+    case 'offline':
+      return <Offline />;
     case 'data':
       return <Data />;
     case 'about':

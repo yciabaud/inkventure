@@ -217,6 +217,37 @@ describe('fetchStory', () => {
     expect(log).toEqual(['GET ' + URL_Z]);
   });
 
+  it('keeps the story offline instead of caching it, when it can (S5.3)', async () => {
+    const store = createStore(new MemoryBackend());
+    const kept: string[] = [];
+    const keep = (answer: boolean) => (story: { bytes: Uint8Array }) => {
+      kept.push(String(story.bytes.length));
+      return Promise.resolve(answer);
+    };
+    const game = { tuid: 'lamp', file: { url: URL_Z } };
+    await fetchStory(game, 'zmachine', store, {
+      createXhr: fakeXhr({ status: 200, body: STORY }),
+      defer: now,
+      keep: keep(true),
+    }).promise;
+    await Promise.resolve();
+    expect(kept).toEqual([String(STORY.length)]);
+    expect(store.keys()).not.toContain(keys.file('lamp'));
+
+    // Not kept (no room): cached as before.
+    await fetchStory(game, 'zmachine', store, {
+      createXhr: fakeXhr({ status: 200, body: STORY }),
+      defer: now,
+      keep: keep(false),
+    }).promise;
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(store.keys()).toContain(keys.file('lamp'));
+
+    // A story from the cache is offered to `keep` too (played before it could be kept).
+    await fetchStory(game, 'zmachine', store, { defer: now, keep: keep(true) }).promise;
+    expect(kept).toHaveLength(3);
+  });
+
   it('unzips the story, and rejects a file that is not one', async () => {
     const store = createStore(new MemoryBackend());
     const zipped = { url: URL_ZIP, archive: { type: 'zip' as const, primary: 'hollow/HOLLOW.Z3' } };

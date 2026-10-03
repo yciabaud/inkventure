@@ -1,6 +1,8 @@
 // Game detail (SPEC §3.5; story S3.3): cover, metadata, badges, the blurb in pages, Play / Continue, Add to or
-// Remove from Home, and credits. Loads `games/<tuid>.json` alone, so a deep link works on a cold start.
-import { useEffect, useState } from 'preact/hooks';
+// Remove from Home, Keep offline (S5.3), and credits. Loads `games/<tuid>.json` alone, so a deep link works on a cold
+// start; a kept game's page opens offline from the copy kept with it.
+import { useEffect, useRef, useState } from 'preact/hooks';
+import { useOnline } from '../../app/offline';
 import { formatHash } from '../../app/router';
 import { formatName, languageName } from '../../catalog/filters';
 import {
@@ -8,7 +10,7 @@ import {
   gameVersions,
   initialVersion,
   isIfArchive,
-  loadGame,
+  loadGameOrKept,
   thumbnailUrl,
   versionOf,
   type GameDetail,
@@ -20,6 +22,7 @@ import {
   getStore,
   isInHome,
   isStorageFullError,
+  keptEntry,
   keys,
   parseGameId,
   removeFromHome,
@@ -29,6 +32,7 @@ import { Button, LinkButton } from '../../ui/Button';
 import { Cover } from '../../ui/Cover';
 import { EmptyState } from '../../ui/EmptyState';
 import { PagedParagraphs } from '../../ui/PagedParagraphs';
+import { formatSize } from '../settings/SettingsScreen';
 
 /** Cover slot (the `cover--medium` size). */
 const COVER_WIDTH = 120;
@@ -40,20 +44,20 @@ type State =
   | { status: 'missing' }
   | { status: 'error' };
 
-function useGame(tuid: string): [State, () => void] {
+function useGame(tuid: string, id: string): [State, () => void] {
   const [state, setState] = useState<State>({ status: 'loading' });
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let live = true;
     setState({ status: 'loading' });
-    loadGame(tuid).then(
+    loadGameOrKept(tuid, id).then(
       (result) => live && setState(result),
       () => live && setState({ status: 'error' }),
     );
     return () => {
       live = false;
     };
-  }, [tuid, attempt]);
+  }, [tuid, id, attempt]);
   return [state, () => setAttempt((n) => n + 1)];
 }
 
@@ -69,6 +73,93 @@ function playtime(minutes: number): string {
   return t('library.hours', { count: Math.round(minutes / 60) });
 }
 
+type Keeping = { status: 'idle' } | { status: 'keeping'; loaded: number } | { status: 'failed' };
+
+/**
+ * Keep offline / Remove from device (S5.3), for the version shown: its download, then what is kept and its size.
+ * Offline, a game that is not kept cannot be kept.
+ */
+function KeepOffline({
+  game,
+  version,
+  online,
+  onChange,
+}: {
+  game: GameDetail;
+  version: GameVersion;
+  online: boolean;
+  onChange: () => void;
+}) {
+  const store = getStore();
+  const entry = keptEntry(store, version.id);
+  const [state, setState] = useState<Keeping>({ status: 'idle' });
+  const abort = useRef<() => void>(() => undefined);
+  useEffect(() => () => abort.current(), []);
+
+  const keepIt = () => {
+    setState({ status: 'keeping', loaded: 0 });
+    let shown = 0;
+    import('../../catalog/offline').then(
+      (offline) => {
+        const keeping = offline.keepGame(store, game, version, (loaded) => {
+          // Redrawn every 64 KB at most: each repaint is slow on e-ink.
+          if (loaded - shown < 65536) return;
+          shown = loaded;
+          setState({ status: 'keeping', loaded: loaded });
+        });
+        abort.current = keeping.abort;
+        keeping.promise.then(
+          () => {
+            setState({ status: 'idle' });
+            onChange();
+          },
+          () => setState({ status: 'failed' }),
+        );
+      },
+      () => setState({ status: 'failed' }),
+    );
+  };
+  const removeIt = () => {
+    import('../../catalog/offline')
+      .then((offline) => offline.removeKept(store, version.id))
+      .then(onChange, onChange);
+  };
+
+  let text = '';
+  if (state.status === 'keeping') {
+    text = state.loaded
+      ? t('offline.keepingProgress', { loaded: Math.round(state.loaded / 1024) })
+      : t('offline.keeping');
+  } else if (state.status === 'failed') text = t('offline.keepFailed');
+  else if (entry) text = t('offline.kept', { size: formatSize(entry.size) });
+  if (!entry && !online && !text) return null;
+
+  return (
+    <div class="game__offline">
+      {entry ? (
+        <Button variant="secondary" onClick={removeIt}>
+          {t('offline.remove')}
+        </Button>
+      ) : state.status === 'keeping' ? (
+        <span class="btn btn--secondary btn--off" aria-disabled="true">
+          {t('offline.keep')}
+        </span>
+      ) : (
+        online && (
+          <Button variant="secondary" onClick={keepIt}>
+            {t('offline.keep')}
+          </Button>
+        )
+      )}
+      {text && (
+        <p class="game__offline-text" role={state.status === 'failed' ? 'alert' : 'status'}>
+          {text}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function Details({ game, id }: { game: GameDetail; id: string }) {
   const locale = useLocale();
   const store = getStore();
@@ -78,7 +169,11 @@ function Details({ game, id }: { game: GameDetail; id: string }) {
   );
   const [inHome, setInHome] = useState(() => isInHome(store, version.id));
   const [full, setFull] = useState(false);
+  // Redrawn when the game is kept or removed from the device.
+  const [, setKeptVersion] = useState(0);
+  const online = useOnline();
   const started = store.keys().indexOf(keys.autosave(version.id)) >= 0;
+  const playable = online || !!keptEntry(store, version.id);
 
   const choose = (next: GameVersion) => {
     setVersion(next);
@@ -155,13 +250,29 @@ function Details({ game, id }: { game: GameDetail; id: string }) {
         </div>
       )}
       <div class="game__actions">
-        <LinkButton href={formatHash({ name: 'play', tuid: version.id })}>
-          {started ? t('game.continue') : t('game.play')}
-        </LinkButton>
+        {playable ? (
+          <LinkButton href={formatHash({ name: 'play', tuid: version.id })}>
+            {started ? t('game.continue') : t('game.play')}
+          </LinkButton>
+        ) : (
+          <span class="btn btn--primary btn--off" aria-disabled="true">
+            {t('offline.needsWifi')}
+          </span>
+        )}
         <Button variant="secondary" onClick={toggleHome}>
           {inHome ? t('game.removeFromHome') : t('game.addToHome')}
         </Button>
       </div>
+      <KeepOffline
+        key={version.id}
+        game={game}
+        version={version}
+        online={online}
+        onChange={() => {
+          setInHome(isInHome(store, version.id));
+          setKeptVersion((n) => n + 1);
+        }}
+      />
       {full && (
         <p class="game__notice" role="alert">
           {t('game.homeFull')}
@@ -191,7 +302,7 @@ function Details({ game, id }: { game: GameDetail; id: string }) {
 
 /** `tuid` is a game id: a TUID, or `<tuid>-<lang>` to open the page on the game's file in that language (S2.6). */
 export function GameScreen({ tuid }: { tuid: string }) {
-  const [state, retry] = useGame(parseGameId(tuid).tuid);
+  const [state, retry] = useGame(parseGameId(tuid).tuid, tuid);
   useLocale();
   if (state.status === 'ready' && (!parseGameId(tuid).language || versionOf(state.game, tuid))) {
     return <Details key={tuid} game={state.game} id={tuid} />;

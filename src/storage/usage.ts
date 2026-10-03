@@ -1,6 +1,6 @@
 // Storage usage summary for Settings (SPEC §6.1; story S5.1). Sizes are in characters (keys + values), which is how
 // browsers count the localStorage quota.
-import { autosaveTuid, isFileKey, PREFIX } from './keys';
+import { autosaveTuid, isFileKey, isKeptFileKey, PREFIX } from './keys';
 
 export interface UsageGroup {
   count: number;
@@ -15,6 +15,8 @@ export interface StorageUsage {
   autosaves: UsageGroup;
   /** Cached story files. */
   files: UsageGroup;
+  /** Story files kept offline in localStorage (S5.3; the Cache API's are counted by the kept list). */
+  kept: UsageGroup;
   /** Everything else: preferences, My adventures, progress records, LRU list, schema version. */
   other: UsageGroup;
 }
@@ -28,6 +30,7 @@ export function computeUsage(entries: Array<{ key: string; length: number }>): S
     saves: { count: 0, size: 0 },
     autosaves: { count: 0, size: 0 },
     files: { count: 0, size: 0 },
+    kept: { count: 0, size: 0 },
     other: { count: 0, size: 0 },
   };
   for (let i = 0; i < entries.length; i++) {
@@ -37,6 +40,7 @@ export function computeUsage(entries: Array<{ key: string; length: number }>): S
     const key = raw.indexOf(PREFIX) === 0 ? raw.slice(PREFIX.length) : '';
     let group = usage.other;
     if (isFileKey(key)) group = usage.files;
+    else if (isKeptFileKey(key)) group = usage.kept;
     else if (autosaveTuid(key) !== undefined) group = usage.autosaves;
     else if (SAVE.test(key)) group = usage.saves;
     group.count++;

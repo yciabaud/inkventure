@@ -51,10 +51,14 @@ test('a zipped ink web export plays a choice, reloads and continues to its endin
     )
     .toBe(true);
 
-  // Again, from the cache: the story alone was kept, without the export's page and scripts.
+  // Again, kept offline (S5.3): the story alone was kept, without the export's page and scripts.
   await expect
-    .poll(() => page.evaluate((key) => localStorage.getItem(key) !== null, 'ik:v1:file:' + TUID))
-    .toBe(true);
+    .poll(() =>
+      page.evaluate((tuid) => {
+        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
+      }, TUID),
+    )
+    .toBe(0);
   await page.unroute(ZIP_URL);
   await page.route('https://ifarchive.org/**', (route) => route.abort());
   await page.reload();

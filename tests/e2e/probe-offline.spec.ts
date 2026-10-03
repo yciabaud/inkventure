@@ -1,5 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// Its own Service Worker is the subject of these tests (blocked by default, playwright.config.ts).
+test.use({ serviceWorkers: 'allow' });
+
 // The offline probe (S0.9) stores a story file from the IF Archive: answer with a small CORS-enabled file.
 const STORY_BYTES = 2048;
 

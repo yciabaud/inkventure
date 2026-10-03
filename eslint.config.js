@@ -56,5 +56,15 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
     },
   },
+  {
+    // The app's Service Worker template (S5.3): plain ES5, copied into dist/sw.js by the build.
+    files: ['src/sw/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 5,
+      sourceType: 'script',
+      // Promise is ES2015 but every browser with a Service Worker has it.
+      globals: { ...globals.serviceworker, Promise: 'readonly' },
+    },
+  },
   prettier,
 );
