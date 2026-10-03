@@ -9,13 +9,14 @@ import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
 import { LazyTwineReader as TwineReader } from './LazyTwineReader';
 // The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx`,
-// `fixture-glulx-picture`, `fixture-ink`, `fixture-twine-harlowe` and `fixture-twine-sugarcube`.
-import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url';
-import fixturePictureUrl from '../../../tests/fixtures/glulx/picture.gblorb?url';
-import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url';
-import fixtureHarloweUrl from '../../../tests/fixtures/twine/lamp-harlowe.html?url';
-import fixtureSugarCubeUrl from '../../../tests/fixtures/twine/lamp-sugarcube.html?url';
-import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url';
+// `fixture-glulx-picture`, `fixture-ink`, `fixture-twine-harlowe` and `fixture-twine-sugarcube`. Never inlined: each is
+// a file of its own, fetched only by its route, not part of the bundle (S0.10).
+import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url&no-inline';
+import fixturePictureUrl from '../../../tests/fixtures/glulx/picture.gblorb?url&no-inline';
+import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url&no-inline';
+import fixtureHarloweUrl from '../../../tests/fixtures/twine/lamp-harlowe.html?url&no-inline';
+import fixtureSugarCubeUrl from '../../../tests/fixtures/twine/lamp-sugarcube.html?url&no-inline';
+import fixtureZUrl from '../../../tests/fixtures/zmachine/lamp.z5?url&no-inline';
 import type { EngineKind } from '../../engines/engine';
 
 /** `#/play/demo`: a long static text in the paginated reader. */

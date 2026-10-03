@@ -8,7 +8,9 @@ test.describe('French browser', () => {
   test.use({ locale: 'fr-FR' });
 
   test('the shell is in French', async ({ page }) => {
+    // French is a lazy chunk (S0.10), loaded before the first render: the first heading drawn is already French.
     await page.goto('/#/home');
+    await expect(page.locator('h1').first()).toHaveText('Accueil');
     await expect(page.getByRole('heading', { level: 1, name: 'Accueil' })).toBeVisible();
     await expect(nav(page).getByRole('link', { name: 'Accueil' })).toBeVisible();
     await expect(nav(page).getByRole('link', { name: 'Bibliothèque' })).toBeVisible();
@@ -44,6 +46,18 @@ test.describe('French browser', () => {
 
 test.describe('English browser', () => {
   test.use({ locale: 'en-US' });
+
+  test('an English UI never downloads the French dictionary (S0.10)', async ({ page }) => {
+    const french: string[] = [];
+    page.on('request', (request) => {
+      if (/\/fr-[^/]*\.js$/.test(new URL(request.url()).pathname)) french.push(request.url());
+    });
+    await page.goto('/#/home');
+    await expect(page.getByRole('heading', { level: 1, name: 'Home' })).toBeVisible();
+    await page.goto('/#/library');
+    await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
+    expect(french).toEqual([]);
+  });
 
   test('the shell is in English, and switching language re-renders without reload', async ({
     page,

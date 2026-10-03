@@ -20,6 +20,9 @@ export interface Budgets {
   fontsWoff2: number;
   lazyChunk: number;
   catalogShard: number;
+  /** The baseline Kindle's first load: modern JS + CSS + .woff2 (S0.3 measured both, S0.10). */
+  firstLoad: number;
+  /** Old e-readers' first load: legacy JS + CSS + .woff (best effort, SPEC §2.2). */
   firstLoadLegacy: number;
 }
 
@@ -98,7 +101,8 @@ function row(
 
 /**
  * Builds the report. `files` lists every file in dist/ (relative paths, forward slashes).
- * Fonts: the Kindle browser is assumed to use the .woff fallback, so the Kindle first load counts .woff files.
+ * The baseline Kindle loads the modern bundle and the .woff2 fonts (measured in S0.3, SPEC §2.2); old e-readers load
+ * the legacy bundle and the .woff fallback. Each gets a first-load row (S0.10).
  */
 export function evaluate(
   manifest: Manifest,
@@ -116,11 +120,11 @@ export function evaluate(
   const details = files.filter((f) => /^catalog\/games\/[^/]+\.json$/.test(f));
 
   const rows: Row[] = [
-    row('Initial JS (legacy / Kindle)', legacyJs, sizes, 'gzip', budgets.initialJsLegacy),
-    row('Initial JS (modern)', modernJs, sizes, 'gzip', budgets.initialJsModern),
+    row('Initial JS (legacy, old e-readers)', legacyJs, sizes, 'gzip', budgets.initialJsLegacy),
+    row('Initial JS (modern, Kindle)', modernJs, sizes, 'gzip', budgets.initialJsModern),
     row('CSS', css, sizes, 'gzip', budgets.css),
-    row('Fonts (.woff, Kindle)', woff, sizes, 'raw', budgets.fontsWoff),
-    row('Fonts (.woff2)', woff2, sizes, 'raw', budgets.fontsWoff2),
+    row('Fonts (.woff, old e-readers)', woff, sizes, 'raw', budgets.fontsWoff),
+    row('Fonts (.woff2, Kindle)', woff2, sizes, 'raw', budgets.fontsWoff2),
   ];
   for (const chunk of lazyChunks(manifest)) {
     rows.push(row('Lazy chunk ' + chunk, [chunk], sizes, 'gzip', budgets.lazyChunk));
@@ -132,16 +136,30 @@ export function evaluate(
     const largest = details.reduce((max, f) => (sizes[f].raw > sizes[max].raw ? f : max));
     rows.push(row('Largest catalogue game detail', [largest], sizes, 'raw', budgets.catalogShard));
   }
-  const firstLoad = rows[0].bytes + rows[2].bytes + rows[3].bytes;
-  rows.push({
-    label: 'First load (Kindle: legacy JS + CSS + .woff)',
-    files: legacyJs.concat(css, woff),
-    bytes: firstLoad,
-    measure: 'gzip',
-    budget: budgets.firstLoadLegacy,
-    ok: firstLoad <= budgets.firstLoadLegacy * KIB,
-  });
+  rows.push(
+    firstLoad(
+      'First load (Kindle: modern JS + CSS + .woff2)',
+      [rows[1], rows[2], rows[4]],
+      budgets.firstLoad,
+    ),
+    firstLoad(
+      'First load (old e-readers: legacy JS + CSS + .woff)',
+      [rows[0], rows[2], rows[3]],
+      budgets.firstLoadLegacy,
+    ),
+  );
   return rows;
+}
+
+/** A first-load row: the sum of `parts` (JS, CSS, fonts) against `budget`. */
+function firstLoad(label: string, parts: Row[], budget: number): Row {
+  let bytes = 0;
+  let files: string[] = [];
+  for (let i = 0; i < parts.length; i++) {
+    bytes += parts[i].bytes;
+    files = files.concat(parts[i].files);
+  }
+  return { label, files, bytes, measure: 'gzip', budget, ok: bytes <= budget * KIB };
 }
 
 function kib(bytes: number): string {

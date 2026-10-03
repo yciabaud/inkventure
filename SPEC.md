@@ -814,7 +814,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 
 | Area | Requirement |
 |---|---|
-| Payload | Budgets in `size-budget.json`, enforced in CI by `npm run check:size` (S0.7): initial JS ≤ 150 KiB gz (legacy and modern), CSS ≤ 20 KiB gz, fonts ≤ 80 KiB as `.woff` (Kindle fallback) and ≤ 70 KiB as `.woff2`, each lazy chunk (engines…) ≤ 100 KiB gz, each catalogue shard ≤ 150 KiB, Kindle first load (legacy JS + CSS + `.woff`) ≤ 200 KiB. Cover images are requested as IFDB thumbnails (§5.6). |
+| Payload | Budgets in `size-budget.json`, enforced in CI by `npm run check:size` (S0.7): initial JS ≤ 150 KiB gz (legacy and modern), CSS ≤ 20 KiB gz, fonts ≤ 80 KiB as `.woff` (old e-readers' fallback) and ≤ 70 KiB as `.woff2`, each lazy chunk (engines, the French dictionary…) ≤ 100 KiB gz, each catalogue shard ≤ 150 KiB. **First load** ≤ 200 KiB for the baseline Kindle, counted as it loads (§2.2: modern JS + CSS + `.woff2`), and ≤ 200 KiB for old e-readers (legacy JS + CSS + `.woff`) (S0.10). Test fixtures are never inlined in the bundle; only the active UI language's dictionary is loaded (English in the bundle, French a lazy chunk). Cover images are requested as IFDB thumbnails (§5.6). |
 | Speed (Kindle) | Home interactive < 3 s on Wi-Fi; page turn < 300 ms; Library first results < 4 s. |
 | Compatibility | Legacy bundle passes `es-check es5`; no runtime errors in the capability-probe browsers. |
 | Accessibility | Semantic HTML, labels on icon buttons, focus order, contrast ≥ 4.5:1, font scaling; dyslexia-friendly typeface option. |
