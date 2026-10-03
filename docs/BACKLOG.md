@@ -65,7 +65,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S1.14](stories/S1.14-twine-readable-colours.md) | Twine: readable colours on e-ink | E1 | M6 | S1.9 | done |
 | [S1.15](stories/S1.15-status-line-rows.md) | Status line: every row of the status window | E1 | M6 | S1.6 | done |
 | [S1.16](stories/S1.16-cleared-screens-and-menus.md) | Cleared screens and menus: one screen, not a pile | E1 | M6 | S1.12, S1.15 | done |
-| [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | in-progress |
+| [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | done |
 | [S1.18](stories/S1.18-small-rendering-fixes.md) | Small rendering fixes: spaces, 9:05's clock, Twine edges | E1 | M6 | S1.3, S1.9 | done |
 | [S1.19](stories/S1.19-capitalised-command-chips.md) | Chips for the commands the text names in capitals | E1 | M6 | S1.4 | todo |
 | [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | Post-V1 | S1.15, S1.4 | todo |
