@@ -26,6 +26,8 @@ export interface ReaderBlock {
   image?: ReaderImage;
   /** Starts a screen (the game cleared its window before it): it opens a new page. */
   screen?: boolean;
+  /** Centred (a title the game centred in its upper window, S1.22). */
+  align?: 'center';
 }
 
 /** A place in the text: character `offset` in block `block`. */
@@ -61,6 +63,7 @@ export interface Fragment {
   text: string;
   runs?: Run[];
   image?: ReaderImage;
+  align?: 'center';
 }
 
 // Measurements are fractional; tolerate rounding so a line that exactly fits is not pushed to the next page.
@@ -214,6 +217,7 @@ export function pageFragments(blocks: ReaderBlock[], page: Page): Fragment[] {
     if (runs) fragment.runs = sliceRuns(runs, start, end);
     const image = blocks[b].image;
     if (image) fragment.image = image;
+    if (blocks[b].align) fragment.align = blocks[b].align;
     fragments.push(fragment);
   }
   return fragments;

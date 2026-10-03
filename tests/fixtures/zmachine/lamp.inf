@@ -10,6 +10,8 @@
 ! main window at each key, with its legend in a three-row status window (N / P move, Return opens a topic, Q quits);
 ! questions answered with a line: BOAT asks a yes/no question (the library's YesOrNo) and SIGNAL offers three
 ! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
+! GUIDE, a menu drawn in the upper window like Lost Pig's HELP (a centred title, a legend in two columns, three
+! subjects with "> " on the selected one; N / P move, Return opens a subject, Q resumes the game).
 ! TIPS names commands in capitals ("Type WAKE UP … or LOGBOOK …"); the library answers WAKE UP.
 ! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
 ! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". OPEN alone asks
@@ -211,6 +213,64 @@ Array topics --> "About the lamp" "About the keeper";
 ];
 
 Verb meta 'menu' * -> Menu;
+
+! GUIDE: a menu drawn in the upper window, like Lost Pig's HELP (the Inform menu library's style): the main window is
+! cleared, the upper window holds a centred title, a legend in two columns and the subjects, the selected one marked
+! "> ", and it is drawn again after each key. Return opens a subject in the main window; Q closes the guide.
+Array subjects --> "The lamp" "The keeper" "The boat";
+
+[ GuideSubject n;
+    switch (n) {
+        0: print "The lamp burns paraffin. Fill it, then light it with a match.";
+        1: print "The keeper rowed out at dawn and has not come back.";
+        2: print "The last boat has gone for the night.";
+    }
+];
+
+[ GuideDraw cursor width i;
+    width = ScreenWidth();
+    @erase_window 1;
+    StatusLineHeight(8);
+    @set_window 1;
+    for (i = 1 : i <= 8 : i++) { MoveCursor(i, 1); spaces width; }
+    MoveCursor(1, (width - 14) / 2 + 1); print "Saltmere guide";
+    MoveCursor(2, 2); print "N = next subject"; MoveCursor(2, width - 13); print "P = previous";
+    MoveCursor(3, 2); print "RETURN = read subject"; MoveCursor(3, width - 16); print "Q = resume game";
+    for (i = 0 : i < 3 : i++) {
+        if (i == cursor) { MoveCursor(6 + i, 3); print "> "; }
+        else MoveCursor(6 + i, 5);
+        print (string) subjects-->i;
+    }
+    MainWindow();
+];
+
+[ GuideSub cursor key;
+    cursor = 0;
+    for (::) {
+        @erase_window 0;
+        GuideDraw(cursor);
+        key = KeyPress();
+        if (key == 'q' or 'Q') break;
+        if (key == 'n' or 'N') cursor = (cursor + 1) % 3;
+        if (key == 'p' or 'P') cursor = (cursor + 2) % 3;
+        if (key == 13 or 10) {
+            @erase_window 0;
+            StatusLineHeight(1);
+            @set_window 1;
+            MoveCursor(1, 1); spaces ScreenWidth();
+            MoveCursor(1, 2); print (string) subjects-->cursor;
+            MainWindow();
+            print "^"; GuideSubject(cursor); print "^^[SPACE.]^";
+            KeyPress();
+        }
+    }
+    @erase_window 0;
+    StatusLineHeight(1);
+    DrawStatusLine();
+    "You close the guide.";
+];
+
+Verb meta 'guide' * -> Guide;
 
 [ BoatSub;
     print "Do you want to call the boat back? ";
