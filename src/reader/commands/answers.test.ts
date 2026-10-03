@@ -19,21 +19,21 @@ describe('yes/no questions', () => {
   it('finds an explicit "yes or no", with or without a question mark', () => {
     expect(asksYesNo('Please answer yes or no.')).toBe(true);
     expect(asksYesNo('Restart the game (y/n)')).toBe(true);
-    expect(asksYesNo('Voulez-vous recommencer ? [o/n]')).toBe(true);
-    expect(asksYesNo('Répondez par oui ou non.')).toBe(true);
+    expect(asksYesNo('Voulez-vous recommencer ? [o/n]', 'fr')).toBe(true);
+    expect(asksYesNo('Répondez par oui ou non.', 'fr')).toBe(true);
   });
 
   it('finds French questions to the player', () => {
-    expect(asksYesNo('Voulez-vous des instructions ?')).toBe(true);
-    expect(asksYesNo('As-tu déjà joué à une fiction interactive ?')).toBe(true);
-    expect(asksYesNo('Est-ce que vous voulez continuer ?')).toBe(true);
+    expect(asksYesNo('Voulez-vous des instructions ?', 'fr')).toBe(true);
+    expect(asksYesNo('As-tu déjà joué à une fiction interactive ?', 'fr')).toBe(true);
+    expect(asksYesNo('Est-ce que vous voulez continuer ?', 'fr')).toBe(true);
   });
 
   it('ignores questions that are not yes/no questions to the player', () => {
     // A question in a description, a "wh-" question, a question in the middle of a paragraph.
     expect(asksYesNo('Is that a light in the distance?')).toBe(false);
     expect(asksYesNo('What do you want to do now?')).toBe(false);
-    expect(asksYesNo('Où voulez-vous aller ?')).toBe(false);
+    expect(asksYesNo('Où voulez-vous aller ?', 'fr')).toBe(false);
     expect(asksYesNo('Would you like tea? The kettle whistles in the kitchen.')).toBe(false);
     expect(asksYesNo('(For help, use "HELP".)')).toBe(false);
     expect(asksYesNo('>')).toBe(false);

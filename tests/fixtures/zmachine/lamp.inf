@@ -12,9 +12,8 @@
 ! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
 ! TIPS names commands in capitals ("Type WAKE UP … or LOGBOOK …"); the library answers WAKE UP.
 ! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
-! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". FOUILLER alone
-! answers like the French Inform 6 library ("Pouvez-vous préciser ?"), which does not say what it is for; FOUILLER
-! OILSKIN searches.
+! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". OPEN alone asks
+! in words of its own ("Open what, exactly?"), which no phrase table knows.
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -237,14 +236,13 @@ Verb meta 'menu' * -> Menu;
     "Type WAKE UP if you feel sleepy, or LOGBOOK to read the keeper's log.";
 ];
 
-! The French library's question for a missing object, which names neither the action nor the object.
-[ VagueSub;
-    "Pouvez-vous pr@'eciser ?";
+! A question for a missing object in words of its own, like a game that replaces the library's messages.
+[ OpenWhatSub;
+    "Open what, exactly?";
 ];
 
 Verb meta 'tips' * -> Tips;
-Verb 'fouiller' * -> Vague
-                * noun -> Search;
+Extend 'open' first * -> OpenWhat;
 Verb 'boat' * -> Boat;
 Verb 'signal' * -> Signal;
 Verb meta 'help' 'hint' 'hints' * -> Help;

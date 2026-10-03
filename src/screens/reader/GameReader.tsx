@@ -75,6 +75,18 @@ function glkKey(event: KeyboardEvent): string | null {
   return event.key && event.key.length === 1 ? event.key : null;
 }
 
+/** The command echoed in an input paragraph: its input runs, else its text without the prompt. */
+function commandOf(paragraph: {
+  text: string;
+  runs: Array<{ text: string; style: string }>;
+}): string {
+  const typed = paragraph.runs
+    .filter((run) => run.style === 'input')
+    .map((run) => run.text)
+    .join('');
+  return (typed || paragraph.text.replace(/^\s*>+/, '')).trim();
+}
+
 type SavesModule = typeof import('../../storage/saves');
 
 /** The game at the start of a turn: engine state, turn number and the transcript up to there. */
@@ -466,22 +478,30 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return recentNouns(texts, table, splitStatus(transcript.status).left);
   }, [blocks, table, transcript.status]);
 
-  // The text since the last command, for the questions the game asks before the prompt.
-  const sinceCommand = useMemo(() => {
-    if (!awaitingLine) return [];
-    const paragraphs = transcript.paragraphs;
+  // The text since the last command, for the questions the game asks before the prompt, and that command.
+  const { sinceCommand, lastCommand } = useMemo(() => {
     const texts: string[] = [];
-    for (let i = paragraphs.length - 1; i >= 0 && texts.length < ANSWER_PARAGRAPHS; i--) {
-      if (paragraphs[i].replaced) continue;
-      // The last command's echo ends the search.
-      if (paragraphs[i].input) break;
-      if (paragraphs[i].text.trim()) texts.unshift(paragraphs[i].text);
+    let command = '';
+    if (awaitingLine) {
+      const paragraphs = transcript.paragraphs;
+      for (let i = paragraphs.length - 1; i >= 0 && texts.length < ANSWER_PARAGRAPHS; i--) {
+        if (paragraphs[i].replaced) continue;
+        // The last command's echo ends the search.
+        if (paragraphs[i].input) {
+          command = commandOf(paragraphs[i]);
+          break;
+        }
+        if (paragraphs[i].text.trim()) texts.unshift(paragraphs[i].text);
+      }
     }
-    return texts;
+    return { sinceCommand: texts, lastCommand: command };
   }, [transcript, awaitingLine]);
 
   // The parser asks for an object ("What do you want to examine?"): noun chips instead of the verbs (S1.21).
-  const question = useMemo(() => parserQuestion(sinceCommand), [sinceCommand]);
+  const question = useMemo(
+    () => parserQuestion(sinceCommand, table, lastCommand),
+    [sinceCommand, table, lastCommand],
+  );
 
   // The answers to a question the game asks before the prompt (Yes / No, numbered options); a parser question wins.
   const answers = useMemo(

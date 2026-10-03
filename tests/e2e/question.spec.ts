@@ -81,18 +81,18 @@ test('✕ puts the objects away and brings the verbs back', async ({ page }) => 
   await expect(objects(page).getByRole('button', { name: 'yellow oilskin' })).toBeVisible();
 });
 
-test('a question that does not say what it is for repeats the last command, which a tap on an object completes', async ({
+test('a question in words no table knows, after a verb alone, repeats the verb, which a tap on an object completes', async ({
   page,
 }) => {
   await toTower(page);
-  // Like the French Inform 6 library: "Pouvez-vous préciser ?".
-  await send(page, 'fouiller');
-  await expect(text(page)).toContainText('Pouvez-vous préciser ?');
+  // The game asks in its own words: the verb sent alone and the short question are enough.
+  await send(page, 'open');
+  await expect(text(page)).toContainText('Open what, exactly?');
   const row = objects(page).locator('.chip:not(.fit-hidden):not(.chip--more)');
-  await expect(row.first()).toHaveText('fouiller…');
-  // The object completes the command: "fouiller oilskin", then the parser asks which one.
+  await expect(row.first()).toHaveText('open…');
+  // The object completes the command.
   await press(objects(page).getByRole('button', { name: 'oilskin', exact: true }));
-  await expect(text(page)).toContainText('>fouiller oilskin');
+  await expect(text(page)).toContainText('>open oilskin');
   await expect(text(page)).toContainText(
     'Which do you mean, the yellow oilskin or the black oilskin?',
   );
@@ -103,9 +103,9 @@ test('a question that does not say what it is for repeats the last command, whic
   await expect(objects(page)).toHaveCount(0);
 });
 
-test('the repeated command can be tapped to complete it by hand', async ({ page }) => {
+test('the repeated verb can be tapped to complete it by hand', async ({ page }) => {
   await toTower(page);
-  await send(page, 'fouiller');
-  await press(objects(page).getByRole('button', { name: 'Complete “fouiller”' }));
-  await expect(command(page)).toHaveValue('fouiller ');
+  await send(page, 'open');
+  await press(objects(page).getByRole('button', { name: 'Complete “open”' }));
+  await expect(command(page)).toHaveValue('open ');
 });

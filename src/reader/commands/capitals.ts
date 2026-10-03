@@ -2,7 +2,8 @@
 // "HELP".)", "The *GUIDE* command", "[PS 1]". A heuristic over the text since the last command, so that a player on an
 // e-reader taps the command instead of typing it.
 
-import type { Chip, VerbTable } from './verbs';
+import { alternation, compiled, LETTER, phrases, wordPattern, type PhraseTable } from './phrases';
+import type { Chip, GameLanguage, VerbTable } from './verbs';
 
 /** At most this many chips; other commands can still be tapped in the text or typed. */
 export const MAX_NAMED = 4;
@@ -16,31 +17,54 @@ export interface NamedSource {
 // A run of 1–3 words in capitals (each of at least 2 letters), optionally followed by a number ("PS 1").
 const RUN =
   /(^|[^A-Za-zÀ-ÿ0-9'’])((?:[A-ZÀ-Þ][A-ZÀ-Þ'’-]+)(?: +[A-ZÀ-Þ][A-ZÀ-Þ'’-]+){0,2}(?: +\d{1,3})?)(?![A-Za-zÀ-ÿ0-9'’-])/g;
-// Words that announce a command just before it: "type HELP", "try ABOUT", "use "HELP"", "tapez AIDE".
-const CUE =
-  /\b(type|typing|typed|try|trying|enter|say|use|using|command|tapez|taper|tape|essayez|essaie|entrez|dites|commande|utilisez)\s*["'“‘[*(]*$/i;
-// "type HELP or ABOUT", "type WAKE UP if you feel sleepy, or LOGBOOK": a command listed after one with a cue, in
-// the same sentence.
-const OR = /(\bor|\bou|\band|\bet|,)\s*["'“‘[*(]*$/i;
 const SENTENCE_END = /[.!?;]/;
 // Marks around a command: "HELP", 'HELP', [HELP], *GUIDE*, (HELP).
 const OPEN = /["'“‘[*(]\s*$/;
 const CLOSE = /^\s*["'”’\]*)]/;
-// "The GUIDE command", "la commande AIDE".
-const COMMAND_AFTER = /^\s*["'”’\]*)]*\s+(command|commande)\b/i;
-// Commands games name without a cue that are worth a chip on their own ("CREDITS and COPYRIGHT are available").
-const META =
-  /^(HELP|HINT|HINTS|ABOUT|CREDITS|COPYRIGHT|INFO|INTRO|INSTRUCTIONS|VERBS|MENU|GUIDE|AMUSING|AIDE|INDICE|INDICES|CRÉDITS|CREDITS|APROPOS)$/;
-// What the reader's menu already does, or what would stop or reset the game: never a chip.
-const RESERVED =
-  /^(SAVE|RESTORE|RESTART|QUIT|Q|UNDO|SCRIPT|UNSCRIPT|TRANSCRIPT|SAUVER|SAUVEGARDER|CHARGER|RECOMMENCER|QUITTER|ANNULER)$/;
+// Marks between a cue and its command.
+const MARKS = '\\s*["\'“‘[*(]*$';
+
+interface NamedPatterns {
+  /** A cue just before the run: "type HELP", "try ABOUT", "use "HELP"", "tapez AIDE". */
+  cue: RegExp;
+  /** "type HELP or ABOUT", "type WAKE UP if you feel sleepy, or LOGBOOK": a run listed after a cued one. */
+  or: RegExp;
+  /** "The GUIDE command", "la commande AIDE". */
+  commandAfter: RegExp;
+  /** After the run, a placeholder for an object or a person: the chip fills the field ("TALK TO someone"). */
+  placeholder: RegExp;
+  meta: Record<string, boolean>;
+  reserved: Record<string, boolean>;
+}
+
+const patterns: Partial<Record<GameLanguage, NamedPatterns>> = {};
+
+function upperSet(words: string[]): Record<string, boolean> {
+  const set: Record<string, boolean> = {};
+  for (const word of words) set[word.toUpperCase()] = true;
+  return set;
+}
+
+function namedPatterns(table: PhraseTable): NamedPatterns {
+  return compiled(patterns, table, (t) => ({
+    cue: wordPattern(t.cues, '', MARKS),
+    or: new RegExp('(?:' + wordPattern(t.or.concat(t.and)).source + '|,)' + MARKS, 'i'),
+    commandAfter: new RegExp(
+      '^\\s*["\'”’\\]*)]*\\s+(?:' + alternation(t.commandWords) + ')(?![' + LETTER + '])',
+      'i',
+    ),
+    placeholder: new RegExp(
+      '^\\s+(?:' + alternation(t.placeholders) + ')(?![' + LETTER + '])',
+      'i',
+    ),
+    meta: upperSet(t.meta),
+    reserved: upperSet(t.reserved),
+  }));
+}
+
 // Roman numerals of two letters or more (chapters, acts): "ACT II", "PART IV".
 const ROMAN =
   /^(?=[IVXLC]{2})X{0,3}(IX|IV|V?I{0,3})$|^(?=[IVXLC]{2})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
-// After the run, a placeholder for an object or a person: the chip fills the field instead of sending ("TALK TO
-// someone" → "talk to ").
-const PLACEHOLDER =
-  /^\s+(someone|somebody|something|anyone|anything|object|person|thing|quelqu['’]un|quelque chose|objet|personne)\b/i;
 const HEADINGS = /^(header|subheader)$/;
 
 interface Found {
@@ -51,7 +75,7 @@ interface Found {
 }
 
 /** The commands the command bar already offers (directions, verbs, their usual abbreviations), upper case. */
-function barCommands(table: VerbTable): Record<string, boolean> {
+function barCommands(table: VerbTable, abbreviations: string[]): Record<string, boolean> {
   const out: Record<string, boolean> = {};
   const add = (word: string) => (out[word.toUpperCase()] = true);
   for (const d of table.directions) {
@@ -62,7 +86,7 @@ function barCommands(table: VerbTable): Record<string, boolean> {
     add(v.label.replace(/…$/, ''));
     add(v.command);
   }
-  ['L', 'I', 'X', 'Z', 'G', 'INV', 'GET', 'UP', 'DOWN', 'IN', 'OUT'].forEach(add);
+  abbreviations.forEach(add);
   return out;
 }
 
@@ -95,7 +119,9 @@ export function namedCommands(
   table: VerbTable,
   exclude: string[] = [],
 ): Chip<string>[] {
-  const bar = barCommands(table);
+  const said = phrases(table.language);
+  const p = namedPatterns(said);
+  const bar = barCommands(table, said.abbreviations);
   const excluded: Record<string, boolean> = {};
   for (const text of exclude) excluded[text.trim().toUpperCase()] = true;
   const found: Record<string, Found> = {};
@@ -116,10 +142,10 @@ export function namedCommands(
       const before = text.slice(0, start);
       const after = text.slice(end);
       const listed: boolean =
-        cued && !SENTENCE_END.test(text.slice(lastEnd, start)) && OR.test(before);
-      const announced: boolean = CUE.test(before) || listed;
+        cued && !SENTENCE_END.test(text.slice(lastEnd, start)) && p.or.test(before);
+      const announced: boolean = p.cue.test(before) || listed;
       const marked = OPEN.test(before) && CLOSE.test(after);
-      const named = COMMAND_AFTER.test(after);
+      const named = p.commandAfter.test(after);
       cued = announced;
       lastEnd = end;
       const words = label.split(' ');
@@ -127,16 +153,16 @@ export function namedCommands(
       if (
         excluded[key] ||
         bar[key] ||
-        RESERVED.test(words[0]) ||
+        p.reserved[words[0]] ||
         words.some((w) => ROMAN.test(w)) ||
         headings.some((r) => start < r[1] && end > r[0])
       ) {
         continue;
       }
-      const needsObject = PLACEHOLDER.test(after);
+      const needsObject = p.placeholder.test(after);
       // A placeholder after it ("TALK TO someone") shows a command too.
       const strong = announced || marked || named || needsObject;
-      if (!strong && !(words.length === 1 && META.test(key))) continue;
+      if (!strong && !(words.length === 1 && p.meta[key])) continue;
       if (found[key]) {
         if (strong) found[key].strong = true;
         continue;

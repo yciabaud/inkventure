@@ -110,9 +110,9 @@ export function CommandBar({
   const asking = !waiting && !!question && question !== dismissed;
   // The objects the question names first, else those recently mentioned.
   const objects = asking && question && question.options.length ? question.options : nouns;
-  // A question that does not say what it is for ("Pouvez-vous préciser ?"): the last command, which the objects
-  // complete, comes first ("examiner…").
-  const repeat = asking && question && question.vague ? history[history.length - 1] || '' : '';
+  // A question that does not say what it is for ("Pouvez-vous préciser ?"): its command, which the objects complete,
+  // comes first ("examiner…").
+  const repeat = (asking && question && question.repeat) || '';
   const shift = repeat ? 1 : 0;
   const directions = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) >= 0);
   const otherDirections = table.directions.filter((d) => MAIN_DIRECTIONS.indexOf(d.id) < 0);

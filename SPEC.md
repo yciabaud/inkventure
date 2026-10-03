@@ -320,18 +320,26 @@ itself never changes size, see above), in three rows:
    as written and sends it in lower case. After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
    excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
-   When the last paragraph before the prompt is the **parser asking for an object** (S1.21; the Inform 6 / Inform 7
-   forms, EN and FR: "What / Whom do you want [X] to …?", "Which exactly?", "Que / Qui / À qui / Avec quoi …
-   voulez-vous … ?", "Pouvez-vous préciser … ?", "Lequel (voulez-vous) exactement ?", and "Which / Who do you mean, the X
-   or the Y?", "Précisez : le X ou le Y ?", "Voulez-vous dire le X ou le Y ?"), this row shows noun
+   When the last paragraph before the prompt is the **parser asking for an object** (S1.21), this row shows noun
    chips too, without a verb in the field: the options the question names (in order, without their articles, at most
    8), else the objects recently mentioned; a tap sends the **noun alone**, which the parser takes to complete its
-   command; ✕ brings the verbs back for that turn. When the question does not say what it is for ("Pouvez-vous
-   préciser ?", French Inform 6 and 7 libraries), the last command comes first as a chip ending with "…"
-   ("fouiller…"): a noun chip sends that command with the noun ("fouiller ciré"), and the chip itself puts the command
-   in the field. A parser question wins over answer chips and named commands. The
-   whole paragraph (or its last line) must be the question, so a question in the prose or a character's line does
-   not count.
+   command; ✕ brings the verbs back for that turn. Recognised: the Inform 6 / Inform 7 forms of the game language's
+   phrase table (EN: "What / Whom do you want [X] to …?", "Which exactly?", "Which / Who do you mean, the X or the Y?";
+   FR: "Que / Qui / À qui … voulez-vous … ?", "Lequel (voulez-vous) exactement ?", "Précisez : le X ou le Y ?",
+   "Voulez-vous dire le X ou le Y ?", "Pouvez-vous préciser … ?"); and, in any language, a short question alone after
+   the command that lists objects sharing a word with it ("examine coat" → "…, the red coat or the blue coat?"), or
+   that follows a verb of the bar sent alone ("examine" → "…?", not a yes/no question). When the question does not say
+   what it is for ("Pouvez-vous préciser ?", or the second case without a phrase), the command comes first as a chip
+   ending with "…" ("open…"): a noun chip sends it with the noun ("open door"), and the chip itself puts the command in
+   the field. A parser question wins over answer chips and named commands. The whole paragraph (or its last line)
+   must be the question, so a question in the prose or a character's line does not count.
+
+**Languages of the heuristics** — the chips that read the game's text (answers, named commands, parser questions)
+use one algorithm for every language; the words they look for are data, one phrase table per game language
+(`src/reader/commands/phrases.ts`: Yes / No, "or", articles, the auxiliaries of a yes/no question, cue words, meta
+and reserved commands, the library's questions). A game's table gets the English words a game prints as they are
+(meta commands, library messages), never English grammar. EN and FR are checked against the Inform libraries and the
+featured games; ES, DE and IT are stubs to verify, which also rely on the signals that need no words.
 
 Rows never wrap nor cut a label: on narrow screens (phones), the directions and verbs that do not fit move, from the
 end of the lists above, into the ⋯ and "More…" dialogs, and only the noun chips that fit are shown.
