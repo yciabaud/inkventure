@@ -39,4 +39,14 @@ describe('rendering survey report (S7.3)', () => {
     expect(text).toContain('**Not played** (download): HTTP 404');
     expect(text).toContain('4 parser games (3 played)');
   });
+
+  it('escapes backslashes and pipes in table cells', () => {
+    const odd = report(
+      [game('A\\B | C', [{ kind: 'glyphs', step: 'look', detail: 'x \\| y' }])],
+      '2026-10-03',
+      'look',
+    );
+    expect(odd).toContain('| A\\\\B \\| C | zcode |');
+    expect(odd).toContain('x \\\\\\| y');
+  });
 });
