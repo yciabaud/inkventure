@@ -8,5 +8,5 @@
   "lazyChunk": 100,
   "catalogShard": 150,
   "firstLoad": 200,
-  "firstLoadLegacy": 200
+  "firstLoadLegacy": 250
 }
