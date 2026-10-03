@@ -41,7 +41,7 @@
     "preact": "^10.29.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.7",
+    "@babel/core": "^8.0.6",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "1.63.0",
     "@preact/preset-vite": "^2.10.6",
