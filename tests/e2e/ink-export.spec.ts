@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Locator, type Page } from '@playwright/test';
+import { keptOnDevice, reopen } from './helpers/session';
 
 // An ink game of the sample catalogue published as Inky's web export, zipped (S2.7): its story is read out of the
 // export's script, played with the choice buttons, resumed after a reload; the Library's format filter finds it.
@@ -23,8 +24,8 @@ function text(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://ifdb.org/**', (route) => route.abort());
-  await page.route(ZIP_URL, (route) =>
+  await page.context().route('https://ifdb.org/**', (route) => route.abort());
+  await page.context().route(ZIP_URL, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/zip',
@@ -52,21 +53,16 @@ test('a zipped ink web export plays a choice, reloads and continues to its endin
     .toBe(true);
 
   // Again, kept offline (S5.3): the story alone was kept, without the export's page and scripts.
-  await expect
-    .poll(() =>
-      page.evaluate((tuid) => {
-        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
-      }, TUID),
-    )
-    .toBe(0);
-  await page.unroute(ZIP_URL);
-  await page.route('https://ifarchive.org/**', (route) => route.abort());
-  await page.reload();
-  await expect(choice(page, 'Fill the lamp')).toBeVisible();
-  await press(choice(page, 'Fill the lamp'));
-  await press(choice(page, 'Light the lamp'));
-  await expect(text(page)).toContainText('THE END: you have lit the lamp.');
-  await expect(page.getByText('The story has ended.')).toBeVisible();
+  await expect.poll(() => keptOnDevice(page, TUID)).toBe(true);
+  await page.context().unroute(ZIP_URL);
+  await page.context().route('https://ifarchive.org/**', (route) => route.abort());
+  page.context().on('page', (next) => next.on('pageerror', (error) => errors.push(error.message)));
+  const again = await reopen(page);
+  await expect(choice(again, 'Fill the lamp')).toBeVisible();
+  await press(choice(again, 'Fill the lamp'));
+  await press(choice(again, 'Light the lamp'));
+  await expect(text(again)).toContainText('THE END: you have lit the lamp.');
+  await expect(again.getByText('The story has ended.')).toBeVisible();
   // The export's own scripts never ran (its main.js throws).
   expect(errors).toEqual([]);
 });
