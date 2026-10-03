@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Frame, type Page } from '@playwright/test';
+import { keptOnDevice, reopen } from './helpers/session';
 
 // A zipped Twine story with files of its own (S1.11): its picture, font, linked stylesheet and script are served
 // from the zip, after a download and from the cache.
@@ -9,12 +10,12 @@ const ZIP_URL = 'https://ifarchive.org/if-archive/games/twine/lamp-files.zip';
 
 /** The sample catalogue's Twine game, pointed to the zipped fixture. */
 async function serveZip(page: Page) {
-  await page.route('**/catalog/games/' + TUID + '.json', async (route) => {
+  await page.context().route('**/catalog/games/' + TUID + '.json', async (route) => {
     const game = await (await route.fetch()).json();
     game.file = { url: ZIP_URL, archive: { type: 'zip', primary: 'Lamp/index.html' } };
     await route.fulfill({ json: game });
   });
-  await page.route(ZIP_URL, (route) =>
+  await page.context().route(ZIP_URL, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/zip',
@@ -68,7 +69,7 @@ async function expectFiles(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://ifdb.org/**', (route) => route.abort());
+  await page.context().route('https://ifdb.org/**', (route) => route.abort());
 });
 
 test('a zipped Twine story shows its own pictures, font, style and script, then plays from the cache', async ({
@@ -82,17 +83,10 @@ test('a zipped Twine story shows its own pictures, font, style and script, then 
   ).toBeVisible();
 
   // Kept offline with its files (S5.3; written a little after the start).
-  await expect
-    .poll(() =>
-      page.evaluate((tuid) => {
-        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
-      }, TUID),
-    )
-    .toBe(0);
+  await expect.poll(() => keptOnDevice(page, TUID)).toBe(true);
 
   // Again without the network.
-  await page.unroute(ZIP_URL);
-  await page.route('https://ifarchive.org/**', (route) => route.abort());
-  await page.reload();
-  await expectFiles(page);
+  await page.context().unroute(ZIP_URL);
+  await page.context().route('https://ifarchive.org/**', (route) => route.abort());
+  await expectFiles(await reopen(page));
 });

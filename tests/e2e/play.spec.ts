@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Locator, type Page, type Route } from '@playwright/test';
 import { zipSync } from 'fflate';
+import { keptOnDevice, reopen } from './helpers/session';
 
 // The committed sample catalogue (public/catalog): "The Lamp at Saltmere" points to lamp.z5 on the IF Archive,
 // "Hollow Mountain" to hollow.zip holding hollow/HOLLOW.Z3. Both are served from the fixture story: no network.
@@ -31,7 +32,7 @@ async function started(page: Page) {
 }
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://ifdb.org/**', (route) => route.abort());
+  await page.context().route('https://ifdb.org/**', (route) => route.abort());
 });
 
 test('Play downloads the story with a progress page, starts it, and keeps it for next time', async ({
@@ -40,7 +41,7 @@ test('Play downloads the story with a progress page, starts it, and keeps it for
   let release: () => void = () => undefined;
   const held = new Promise<void>((resolve) => (release = resolve));
   let requests = 0;
-  await page.route(LAMP_URL, async (route) => {
+  await page.context().route(LAMP_URL, async (route) => {
     requests++;
     await held;
     await serve(route, STORY);
@@ -61,30 +62,27 @@ test('Play downloads the story with a progress page, starts it, and keeps it for
   expect(requests).toBe(1);
 
   // Kept offline (S5.3), a moment after the start: the next session needs no network.
-  await expect
-    .poll(() =>
-      page.evaluate((tuid) => {
-        return Object.keys(JSON.parse(localStorage.getItem('ik:v1:kept') || '{}')).indexOf(tuid);
-      }, LAMP),
-    )
-    .toBe(0);
-  await page.unroute(LAMP_URL);
-  await page.route(LAMP_URL, (route) => route.abort());
-  await page.reload();
-  await started(page);
+  await expect.poll(() => keptOnDevice(page, LAMP)).toBe(true);
+  await page.context().unroute(LAMP_URL);
+  await page.context().route(LAMP_URL, (route) => route.abort());
+  await started(await reopen(page));
 });
 
 test('a zipped story is unzipped and started', async ({ page }) => {
-  await page.route(HOLLOW_URL, (route) => serve(route, zipSync({ 'hollow/HOLLOW.Z3': STORY })));
+  await page
+    .context()
+    .route(HOLLOW_URL, (route) => serve(route, zipSync({ 'hollow/HOLLOW.Z3': STORY })));
   await page.goto('/#/play/' + HOLLOW);
   await started(page);
 });
 
 test('a failed download shows the error page; Try again starts the game', async ({ page }) => {
   let fail = true;
-  await page.route(LAMP_URL, (route) =>
-    fail ? route.fulfill({ status: 404, body: 'Not found' }) : serve(route, STORY),
-  );
+  await page
+    .context()
+    .route(LAMP_URL, (route) =>
+      fail ? route.fulfill({ status: 404, body: 'Not found' }) : serve(route, STORY),
+    );
   await page.goto('/#/play/' + LAMP);
   await expect(
     page.getByRole('heading', { level: 1, name: 'The game could not be downloaded' }),
@@ -104,9 +102,9 @@ test('a failed download shows the error page; Try again starts the game', async 
 });
 
 test('a file that is not a story is refused', async ({ page }) => {
-  await page.route(LAMP_URL, (route) =>
-    serve(route, Buffer.from('<!DOCTYPE html>' + ' '.repeat(99))),
-  );
+  await page
+    .context()
+    .route(LAMP_URL, (route) => serve(route, Buffer.from('<!DOCTYPE html>' + ' '.repeat(99))));
   await page.goto('/#/play/' + LAMP);
   await expect(
     page.getByText('The downloaded file is not a story this app can open.'),
@@ -115,11 +113,13 @@ test('a file that is not a story is refused', async ({ page }) => {
 
 test('a format without an engine says so, without downloading', async ({ page }) => {
   const detail = JSON.parse(readFileSync('public/catalog/games/' + CAVE + '.json', 'utf8'));
-  await page.route('**/catalog/games/' + CAVE + '.json', (route) =>
-    route.fulfill({ status: 200, json: { ...detail, format: 'tads' } }),
-  );
+  await page
+    .context()
+    .route('**/catalog/games/' + CAVE + '.json', (route) =>
+      route.fulfill({ status: 200, json: { ...detail, format: 'tads' } }),
+    );
   let downloads = 0;
-  await page.route('https://www.ifarchive.org/**', (route) => {
+  await page.context().route('https://www.ifarchive.org/**', (route) => {
     downloads++;
     return route.abort();
   });
@@ -130,9 +130,9 @@ test('a format without an engine says so, without downloading', async ({ page })
 });
 
 test('a game no longer in the catalogue leads to the library', async ({ page }) => {
-  await page.route('**/catalog/games/nosuchgame.json', (route) =>
-    route.fulfill({ status: 404, body: '' }),
-  );
+  await page
+    .context()
+    .route('**/catalog/games/nosuchgame.json', (route) => route.fulfill({ status: 404, body: '' }));
   await page.goto('/#/play/nosuchgame');
   await expect(page.getByRole('heading', { name: 'Adventure not found' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Go to the library' })).toBeVisible();
