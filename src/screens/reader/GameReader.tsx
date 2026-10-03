@@ -19,6 +19,7 @@ import { namedCommands } from '../../reader/commands/capitals';
 import { applyNoun } from '../../reader/commands/compose';
 import { findKeys, type KeyPrompt } from '../../reader/keys';
 import { recentNouns } from '../../reader/commands/nouns';
+import { parserQuestion } from '../../reader/commands/question';
 import { verbTable } from '../../reader/commands/verbs';
 import { lastScreenStart, readerBlocks } from '../../reader/fromTranscript';
 import { settingsKey, textStyle } from '../../reader/settings';
@@ -465,9 +466,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return recentNouns(texts, table, splitStatus(transcript.status).left);
   }, [blocks, table, transcript.status]);
 
-  // The answers to a question the game asks before the prompt (Yes / No, numbered options), from the text since the
-  // last command.
-  const answers = useMemo(() => {
+  // The text since the last command, for the questions the game asks before the prompt.
+  const sinceCommand = useMemo(() => {
     if (!awaitingLine) return [];
     const paragraphs = transcript.paragraphs;
     const texts: string[] = [];
@@ -477,13 +477,22 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       if (paragraphs[i].input) break;
       if (paragraphs[i].text.trim()) texts.unshift(paragraphs[i].text);
     }
-    return findAnswers(texts, table.language);
-  }, [transcript, awaitingLine, table]);
+    return texts;
+  }, [transcript, awaitingLine]);
+
+  // The parser asks for an object ("What do you want to examine?"): noun chips instead of the verbs (S1.21).
+  const question = useMemo(() => parserQuestion(sinceCommand), [sinceCommand]);
+
+  // The answers to a question the game asks before the prompt (Yes / No, numbered options); a parser question wins.
+  const answers = useMemo(
+    () => (question ? [] : findAnswers(sinceCommand, table.language)),
+    [sinceCommand, question, table],
+  );
 
   // The commands the game names in capitals since the last command ("type HELP"), not the room name nor the status
   // rows (S1.19).
   const named = useMemo(() => {
-    if (!awaitingLine) return [];
+    if (!awaitingLine || question) return [];
     const paragraphs = transcript.paragraphs;
     const sources: Array<{ text: string; runs: Array<{ text: string; style: string }> }> = [];
     for (let i = paragraphs.length - 1; i >= 0 && sources.length < NAMED_PARAGRAPHS; i--) {
@@ -493,7 +502,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     }
     const exclude = [splitStatus(transcript.status).left].concat(transcript.status);
     return namedCommands(sources, table, exclude);
-  }, [transcript, awaitingLine, table]);
+  }, [transcript, awaitingLine, table, question]);
 
   // The keys a single-key prompt names, in every status row and in the text since the last command. When the game printed
   // keys after the last key sent (a new screen of a menu), only those: a "Press any key" that follows a menu does not.
@@ -635,6 +644,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         nouns={nouns}
         answers={answers}
         named={named}
+        question={question}
         field={command}
         onField={setCommand}
         onSend={sendLine}

@@ -320,6 +320,15 @@ itself never changes size, see above), in three rows:
    as written and sends it in lower case. After a verb ending with "…" the verb goes into the field and this
    row shows **noun chips** instead (objects recently mentioned, guessed from the last paragraphs after their articles,
    excluding directions and the room name), plus ✕ to cancel; a noun chip completes and sends the command.
+   When the last paragraph before the prompt is the **parser asking for an object** (S1.21; the Inform 6 / Inform 7
+   forms, EN and FR: "What / Whom do you want [X] to …?", "Which exactly?", "Que / Qui / À qui / Avec quoi …
+   voulez-vous … ?", "Pouvez-vous préciser … ?", "Lequel (voulez-vous) exactement ?", and "Which / Who do you mean, the X
+   or the Y?", "Précisez : le X ou le Y ?", "Voulez-vous dire le X ou le Y ?"), this row shows noun
+   chips too, without a verb in the field: the options the question names (in order, without their articles, at most
+   8), else the objects recently mentioned; a tap sends the **noun alone**, which the parser takes to complete its
+   command; ✕ brings the verbs back for that turn. A parser question wins over answer chips and named commands. The
+   whole paragraph (or its last line) must be the question, so a question in the prose or a character's line does
+   not count.
 
 Rows never wrap nor cut a label: on narrow screens (phones), the directions and verbs that do not fit move, from the
 end of the lists above, into the ⋯ and "More…" dialogs, and only the noun chips that fit are shown.

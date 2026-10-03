@@ -11,6 +11,8 @@
 ! questions answered with a line: BOAT asks a yes/no question (the library's YesOrNo) and SIGNAL offers three
 ! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
 ! TIPS names commands in capitals ("Type WAKE UP … or LOGBOOK …"); the library answers WAKE UP.
+! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
+! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?".
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -71,9 +73,20 @@ Object -> Matches "box of matches"
 
 Object Tower "Foot of the Tower"
   with description
-        "A round whitewashed room. Iron stairs spiral up into the dark; the jetty is back to the south.",
+        "A round whitewashed room. Iron stairs spiral up into the dark; the jetty is back to the south. A
+        yellow oilskin and a black oilskin hang by the door.",
        s_to Landing, out_to Landing, u_to Lamp_Room,
   has  light;
+
+Object -> Yellow_Oilskin "yellow oilskin"
+  with name 'yellow' 'oilskin' 'coat',
+       description "A yellow oilskin, stiff with salt.",
+  has  scenery;
+
+Object -> Black_Oilskin "black oilskin"
+  with name 'black' 'oilskin' 'coat',
+       description "The keeper's black oilskin. Its pockets are empty.",
+  has  scenery;
 
 Object Lamp_Room "Lamp Room"
   with description

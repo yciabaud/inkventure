@@ -105,6 +105,23 @@ describe('ZVM adapter', () => {
     expect(s.errors).toEqual([]);
   });
 
+  it('asks what to act on, and takes the object alone as the answer', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    s.take();
+    send(s, 'north');
+    expect(send(s, 'examine')).toContain('What do you want to examine?');
+    expect(send(s, 'oilskin')).toContain(
+      'Which do you mean, the yellow oilskin or the black oilskin?',
+    );
+    expect(send(s, 'yellow oilskin')).toContain('A yellow oilskin, stiff with salt.');
+    expect(send(s, 'examine oilskin')).toContain(
+      'Which do you mean, the yellow oilskin or the black oilskin?',
+    );
+    expect(send(s, 'black oilskin')).toContain("The keeper's black oilskin.");
+    expect(s.errors).toEqual([]);
+  });
+
   it('echoes commands after the prompt as input', async () => {
     const s = await start();
     s.engine.sendChar('return');

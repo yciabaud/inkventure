@@ -170,6 +170,7 @@
   "reader.nouns": "Objects mentioned",
   "reader.noNouns": "Tap a word in the text, or type it.",
   "reader.cancelVerb": "Cancel",
+  "reader.cancelQuestion": "Back to the actions",
   "reader.historyPrev": "Previous command",
   "reader.historyNext": "Next command",
   "reader.menu": "Reader",
