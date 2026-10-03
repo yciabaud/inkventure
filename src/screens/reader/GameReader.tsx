@@ -15,6 +15,7 @@ import { t } from '../../i18n/i18n';
 import type { GameSnapshot, SlotInfo } from '../../storage/saves';
 import { addToHome, getStore, isStorageFullError } from '../../storage';
 import { findAnswers } from '../../reader/commands/answers';
+import { namedCommands } from '../../reader/commands/capitals';
 import { applyNoun } from '../../reader/commands/compose';
 import { findKeys, type KeyPrompt } from '../../reader/keys';
 import { recentNouns } from '../../reader/commands/nouns';
@@ -39,6 +40,9 @@ const NOUN_PARAGRAPHS = 12;
 
 /** Paragraphs scanned for the answers to a question the game asks: the latest ones since the last command. */
 const ANSWER_PARAGRAPHS = 12;
+
+/** Paragraphs scanned for the commands the game names in capitals: the latest ones since the last command. */
+const NAMED_PARAGRAPHS = 20;
 
 /** Paragraphs scanned for the keys a single-key prompt names: the latest ones since the last command. */
 const KEY_PARAGRAPHS = 12;
@@ -476,6 +480,21 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     return findAnswers(texts, table.language);
   }, [transcript, awaitingLine, table]);
 
+  // The commands the game names in capitals since the last command ("type HELP"), not the room name nor the status
+  // rows (S1.19).
+  const named = useMemo(() => {
+    if (!awaitingLine) return [];
+    const paragraphs = transcript.paragraphs;
+    const sources: Array<{ text: string; runs: Array<{ text: string; style: string }> }> = [];
+    for (let i = paragraphs.length - 1; i >= 0 && sources.length < NAMED_PARAGRAPHS; i--) {
+      if (paragraphs[i].replaced) continue;
+      if (paragraphs[i].input) break;
+      if (paragraphs[i].text.trim()) sources.unshift(paragraphs[i]);
+    }
+    const exclude = [splitStatus(transcript.status).left].concat(transcript.status);
+    return namedCommands(sources, table, exclude);
+  }, [transcript, awaitingLine, table]);
+
   // The keys a single-key prompt names, in every status row and in the text since the last command. When the game printed
   // keys after the last key sent (a new screen of a menu), only those: a "Press any key" that follows a menu does not.
   const keyPrompt = useMemo(() => {
@@ -615,6 +634,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         table={table}
         nouns={nouns}
         answers={answers}
+        named={named}
         field={command}
         onField={setCommand}
         onSend={sendLine}
