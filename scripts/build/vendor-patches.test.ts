@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { applyPatch, PATCHES } from './vendor-patches.ts';
 
 const [GLKAPI, OPCODES, QUIXE, QUIXE_GLKAPI, GI_DISPA, GI_BLORB] = PATCHES;
+const ZVM_IO = PATCHES[PATCHES.length - 1];
 
 function load(code: string) {
   const module = { exports: {} as unknown };
@@ -33,6 +34,15 @@ describe('opcodes.js patch', () => {
     const patched = applyPatch(source, OPCODES.replacements);
     expect(patched).toContain('stack_var = new Variable( undefined, 0 ),');
     expect(patched).not.toMatch(/^stack_var = new Variable\( this\.e/m);
+  });
+});
+
+describe('io.js patch (ifvms)', () => {
+  it("keeps Flags 1 bit 1, Inform's time game flag, in versions 4 and later", () => {
+    const source = readFileSync('node_modules/ifvms/src/zvm/io.js', 'utf8');
+    const patched = applyPatch(source, ZVM_IO.replacements);
+    expect(ZVM_IO.id.test('node_modules/ifvms/src/zvm/io.js')).toBe(true);
+    expect(patched).toContain('| (ram.getUint8(0x01) & 0x02) // Preserve bit 1');
   });
 });
 

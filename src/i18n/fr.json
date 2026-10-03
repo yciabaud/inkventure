@@ -141,7 +141,7 @@
   "reader.text": "Texte de l’histoire",
   "reader.navigation": "Navigation",
   "reader.statusWindow": "Fenêtre d’état",
-  "reader.backToPresent": "Retour au présent",
+  "reader.lastPage": "Dernière page",
   "reader.inputSlot": "Les commandes se taperont ici.",
   "reader.loading": "Chargement…",
   "reader.loadFailed": "Le texte n’a pas pu être chargé.",

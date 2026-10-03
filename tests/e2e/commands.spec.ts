@@ -165,7 +165,7 @@ test('on a phone-sized screen no chip is cut: those that do not fit move to the 
   await page.goto(GAME + '?lang=fr');
   await press(page, 'Continue ›');
   // The opening turn is longer than one page at this size: jump to its end, where the bar is.
-  await press(page, 'Back to the present ›');
+  await press(page, 'Last page ›');
   await expect(command(page)).toBeVisible();
   for (const name of ['Directions', 'Actions']) {
     const row = page.getByRole('group', { name: name });

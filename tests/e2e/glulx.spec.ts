@@ -214,7 +214,7 @@ test('shows the picture of an illustrated Glulx game in grayscale, and again aft
   // Opens on the first page; the picture is on it or a later one.
   const picture = await findPicture(page, 'ArrowRight');
   await expectPictureShown(picture);
-  const present = button(page, 'Back to the present ›');
+  const present = button(page, 'Last page ›');
   if (await present.count()) await press(present);
   await expect(command(page)).toBeVisible();
 

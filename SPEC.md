@@ -270,18 +270,20 @@ The core screen. It must feel like reading an ebook.
 - Game output is laid out into pages that exactly fit the text area (no scrollbars). The paginator works
   on measured DOM heights with the current font settings, and re-paginates on settings change/orientation,
   keeping the reading position (the start of the page last turned to). Long paragraphs are split between lines,
-  at a word start (no hyphenation in the reader).
+  at a word start, or after a hyphen inside a word, where the browser breaks lines too (no hyphenation in the
+  reader). Spaces are kept as the game printed them (an indented line, a title centred with spaces, two spaces after
+  a full stop), and lines still wrap (S1.18).
 - Tap zones: left 30 % = previous page, right 70 % = next page (Kindle convention); swipe left/right when
   supported. Page indicator "3 / 3" at the bottom.
 - New output after a command opens on the page containing the echoed command; if output spans several
   pages, a "▸ more" marker invites turning the page. A turn (echoed command + reply) that does not fit in the rest of
   the page but fits on a page of its own starts a new page, so most replies are read whole, with the command bar.
 - While the game waits for a command, its bare prompt (">") is not shown: the command field stands for it. The command bar is visible only on the **last** page
-  (on earlier pages a short slot shows "Back to the present ›"). All pages share one text-area height; on the last
+  (on earlier pages a short slot shows "Last page ›", which opens it). All pages share one text-area height; on the last
   page the taller command bar covers the bottom of it and the paginator gives that page less text, so earlier pages
   are not left with an empty band.
 - **Cleared screens**: when the game clears its main window (a menu, a title, a new chapter), the text after it opens
-  on a fresh page, and the pages open on it at once (no "Back to the present" step when it fits on one page). A screen
+  on a fresh page, and the pages open on it at once (no "Last page" step when it fits on one page). A screen
   reached by key presses only (no command typed in it: a menu being browsed, a title page) is **replaced** by the next
   one: browsing a menu never adds pages, and after it only the game's earlier pages and the new screen remain. The
   Transcript view still shows the replaced screens, each on a page of its own; saves keep where screens start, not the
@@ -405,7 +407,8 @@ paragraph, e.g. the echoed command after the prompt), `status` (the whole status
 (a picture on a line of its own: its Blorb number, size in px and alt text; the text around it on the same Glk line
 becomes the paragraphs before and after it) and `clear` (the main window was cleared: the next paragraph starts a new screen, §3.6). The Z-machine runs on ZVM (`ifvms`) and the Glk API
 library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
-bundle, one Glk instance per game (see `src/engines/README.md`). `load()` rejects when the story cannot start; the VM
+bundle, one Glk instance per game (see `src/engines/README.md`), and keep bit 1 of the header's Flags 1 in versions 4
+and later, which the Inform library reads as a time game ("Time: 9:05 am"), as upstream ZVM does since 1.1.6 (S1.18). `load()` rejects when the story cannot start; the VM
 runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its own, newer Glk library and Blorb decoder,
 downloaded unchanged at install time from the upstream `quixe-2.2.6` tag into `vendor/quixe/` (Quixe is not on npm;
 the files are checked against SHA-256 hashes kept in the repository, and ignored by git) and patched at build time; `.gblorb` files are unpacked
@@ -426,7 +429,8 @@ the ink functions of the same name.
 - An e-ink stylesheet is injected first in its `<head>` (black on white, the reader's text settings with system fonts,
   bold underlined links at least 48 px tall and always opaque, no motion: animations and transitions are not removed but
   made instant, so they jump to their end state, which a story that fades its text in from `opacity:0` needs to show
-  at all; SugarCube's UI bar and Harlowe's sidebar restyled; readable colours: every element of the story, its
+  at all; SugarCube's UI bar and Harlowe's sidebar restyled, a stowed UI bar
+  leaving its whole toggle (≥ 48 px) in the frame; readable colours: every element of the story, its
   `::before` and `::after` in black, over the story's own `!important` rules, with no background colour, and no
   background image on links and controls; pictures stay: `img`, `svg`, `canvas`, `video` and a `url(…)` background
   elsewhere; the frame script clears a gradient behind text and turns visible borders black, a

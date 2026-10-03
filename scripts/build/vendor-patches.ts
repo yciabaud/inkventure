@@ -8,6 +8,9 @@
 //   variables declared, solves both.
 // - opcodes.js (ifvms) reads `this.e` at module level, which is `undefined` in Node (`this` is `module.exports`) but
 //   becomes a read of the not-yet-assigned exports once the CommonJS module is converted: pass `undefined` directly.
+// - io.js (ifvms): in versions 4 and later, Flags 1 keeps its bit 1 instead of being cleared. The Inform library reads
+//   it as "this is a time game" to show "Time: 9:05 am" instead of the score (9:05, S1.18). Upstream fixed it after
+//   1.1.6 the same way (ifvms.js master, src/zvm/io.js: "Preserve bit 1 … it is used by Inform").
 //
 // Quixe (vendor/quixe/, copied unchanged from upstream; see vendor/quixe/README.md) is made of browser scripts that
 // define classes as globals and export them only to CommonJS:
@@ -157,6 +160,16 @@ export const PATCHES: Patch[] = [
         'export { BlorbClass };',
       ],
       [/^ {8}if \(chunktype == "IFmd"\) \{$/m, '        if (false) { /* IFmd: needs jQuery */'],
+    ],
+  },
+  {
+    id: /[\\/]ifvms[\\/]src[\\/]zvm[\\/]io\.js$/,
+    replacements: [
+      [
+        /^(\t+)\(this\.Glk\.glk_gestalt\(0x1100, 0\) \? 1 : 0\) \/\/ Check if colour is supported$/m,
+        '$1(this.Glk.glk_gestalt(0x1100, 0) ? 1 : 0) // Check if colour is supported\n' +
+          '$1| (ram.getUint8(0x01) & 0x02) // Preserve bit 1: the Inform library reads it as a time game (S1.18)',
+      ],
     ],
   },
 ];
