@@ -92,4 +92,4 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S6.3](stories/S6.3-ebook-download-page.md) | Ebook download page (desktop) | E6 | M5 | S6.1 | done |
 | [S7.1](stories/S7.1-device-checklist-perf.md) | Real-device checklist & performance budgets | E7 | M5 | S4.2, S3.4 | done |
 | [S7.2](stories/S7.2-launch.md) | Launch: domain, README, credits, licences | E7 | M5 | S7.1, S6.2, S6.3 | done |
-| [S7.3](stories/S7.3-rendering-survey.md) | Rendering survey of the catalogue | E7 | M6 | S1.22 | todo |
+| [S7.3](stories/S7.3-rendering-survey.md) | Rendering survey of the catalogue | E7 | M6 | S1.22 | done |
