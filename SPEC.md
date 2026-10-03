@@ -385,9 +385,17 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
 for choice games, the story title and chapter if provided. Every non-empty row of the status window shows in the top
 zone, one under the other in the UI font, each split like the first into a left part and a right part (region and
 exits, progress counters, a menu's legend); blank rows are dropped. Past 4 rows, the zone shows the first 3 and a "…"
-line, and the reader menu lists them all. The text area gets shorter by the zone's height: when the number of rows
-changes, the pages are laid out again at once, keeping the reading position, and all pages (earlier ones too) share
-the new text-area height.
+line, and the reader menu lists them all. A row the game centred (a title) stays centred; an indented row is one
+left part. The text area gets shorter by the zone's height: when the number of rows changes, the pages are laid out
+again at once, keeping the reading position, and all pages (earlier ones too) share the new text-area height.
+
+**Menus drawn in the upper window** (S1.22, like Lost Pig's HELP): while the game waits for a key, its main window
+cleared with nothing printed since, and its upper window has more than 4 non-empty rows, those rows take the text
+area as a screen of their own, redrawn in place at each key (no page added): one paragraph per row, a centred row
+centred, the selected entry (marked "> ") in bold, a legend's two parts on one line. The top zone shows only the first
+row when it is a centred title (else the game's title). The key chips (S1.12) are unchanged. When the game goes back to
+its main window (a subject opened, the menu closed), the reader shows it as before, on a fresh page (S1.16). These
+screens are not in the Transcript view (they are the status window, not the game's text).
 
 ---
 

@@ -912,6 +912,11 @@ button.pager__btn {
   font-weight: 700;
 }
 
+/* A row the game centred in its upper window (a menu's title, S1.22). */
+.reader__block--center {
+  text-align: center;
+}
+
 /* Pictures (Glulx games): their size is set inline (imageBox), known before they load, so pages never reflow. Shown
    in grayscale, as an e-ink screen would. */
 .reader__image {
@@ -1096,6 +1101,11 @@ button.pager__btn {
 
 .reader__rows > .reader__status {
   flex: none;
+}
+
+/* A row the game centred (a title, S1.22). */
+.reader__status--center {
+  justify-content: center;
 }
 
 .reader__row {

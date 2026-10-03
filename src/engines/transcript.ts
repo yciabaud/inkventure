@@ -131,13 +131,30 @@ export function applyOutput(transcript: Transcript, blocks: OutputBlock[]): Tran
 export interface StatusRow {
   left: string;
   right: string;
+  /** The game centred it (a title): one part, as many spaces before as after it (S1.22). */
+  center?: boolean;
+}
+
+/**
+ * Whether the game centred `row` in the window's width (its rows come padded with spaces to that width): a single
+ * part, at least 2 spaces before it and about as many after it.
+ */
+export function centredRow(row: string): boolean {
+  const text = row.trim();
+  if (!text || /\S\s{2,}\S/.test(text)) return false;
+  const before = row.length - row.replace(/^\s+/, '').length;
+  const after = row.length - row.replace(/\s+$/, '').length;
+  return before >= 2 && Math.abs(before - after) <= 2;
 }
 
 function splitRow(row: string): StatusRow {
-  const line = row.replace(/\s+$/, '');
-  const match = /^\s*(.*?)\s{2,}(\S.*)$/.exec(line);
+  // Leading spaces are an indent, not the gap before a right part.
+  const line = row.trim();
+  const match = /^(.*?)\s{2,}(\S.*)$/.exec(line);
   if (match) return { left: match[1], right: match[2] };
-  return { left: line.trim(), right: '' };
+  const split: StatusRow = { left: line, right: '' };
+  if (centredRow(row)) split.center = true;
+  return split;
 }
 
 /** Status line text (its first row) split into its left part (location) and right part (score / turns). */

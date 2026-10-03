@@ -3,8 +3,8 @@
 // the browser lays the text out a single time.
 import { imageBox, type BlockMetrics, type LineBox, type ReaderBlock } from './paginator';
 
-export function blockClass(kind: ReaderBlock['kind']): string {
-  return 'reader__block reader__block--' + kind;
+export function blockClass(kind: ReaderBlock['kind'], align?: ReaderBlock['align']): string {
+  return 'reader__block reader__block--' + kind + (align ? ' reader__block--' + align : '');
 }
 
 export function runClass(style: string): string {
@@ -31,7 +31,7 @@ function blockElement(block: ReaderBlock, width: number, imageMaxHeight: number)
     return div;
   }
   const p = document.createElement('p');
-  p.className = blockClass(block.kind);
+  p.className = blockClass(block.kind, block.align);
   if (block.runs) {
     for (let i = 0; i < block.runs.length; i++) {
       const span = document.createElement('span');

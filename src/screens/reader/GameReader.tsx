@@ -25,6 +25,7 @@ import { lastScreenStart, readerBlocks } from '../../reader/fromTranscript';
 import { settingsKey, textStyle } from '../../reader/settings';
 import { PagedText } from '../../reader/PagedText';
 import { UndoStack } from '../../reader/undoStack';
+import { isUpperScreen, upperBlocks, upperRows, upperTitle } from '../../reader/upperWindow';
 import { wordAt } from '../../reader/wordAt';
 import { ErrorPage } from '../../ui/ErrorPage';
 import { choicesHeight, ChoiceList } from './ChoiceList';
@@ -458,6 +459,12 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     () => readerBlocks(transcript.paragraphs, awaitingLine),
     [transcript, awaitingLine],
   );
+  // A menu drawn in the upper window (S1.22): its rows take the text area while the game waits for a key.
+  const upper = useMemo(() => {
+    if (!isUpperScreen(transcript.status, !!transcript.cleared, awaitingChar)) return null;
+    const rows = upperRows(transcript.status);
+    return { title: upperTitle(rows), blocks: upperBlocks(rows) };
+  }, [transcript.status, transcript.cleared, awaitingChar]);
   // The Transcript view also shows the screens replaced by later ones (menu screens, intro pages).
   const transcriptBlocks = useMemo(
     () => (view === 'transcript' ? readerBlocks(transcript.paragraphs, awaitingLine, true) : []),
@@ -620,6 +627,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const heading =
     view === 'transcript' ? (
       <span class="reader__title">{t('transcript.title')}</span>
+    ) : upper ? (
+      <span class="reader__title">{upper.title || title}</span>
     ) : status.shown.length ? (
       <span class="reader__rows">
         {status.shown.map((row, i) => (
@@ -639,7 +648,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
     );
   // Rows past the top zone's cap are read in the menu, with the others.
   const menuNote =
-    view === 'game' && status.overflow ? (
+    view === 'game' && status.overflow && !upper ? (
       <div class="reader__status-all" role="group" aria-label={t('reader.statusWindow')}>
         {status.all.map((row, i) => (
           <StatusLine key={i} row={row} first={i === 0} />
@@ -742,9 +751,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
             />
           ) : (
             <PagedText
-              key="game"
-              blocks={blocks}
-              focus={openAt}
+              key={upper ? 'upper' : 'game'}
+              blocks={upper ? upper.blocks : blocks}
+              focus={upper ? 0 : openAt}
               lastPageSlot={slot}
               lastSlotHeight={
                 kind === 'ink'
@@ -753,7 +762,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               }
               textStyle={textStyle(settings)}
               layoutKey={settingsKey(settings)}
-              frameKey={status.shown.length + (status.overflow ? '+' : '')}
+              frameKey={upper ? 'upper' : status.shown.length + (status.overflow ? '+' : '')}
               imageUrl={imageUrl}
               pinToLast={typing}
               interceptTap={(isLastPage, point) => {
@@ -796,7 +805,7 @@ function StatusLine({
   children?: ComponentChildren;
 }) {
   return (
-    <span class="reader__status">
+    <span class={row.center ? 'reader__status reader__status--center' : 'reader__status'}>
       <span class={first ? 'reader__title' : 'reader__row'}>{row.left}</span>
       {row.right && <span class="reader__score">{row.right}</span>}
       {children}
