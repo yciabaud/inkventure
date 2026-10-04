@@ -931,6 +931,12 @@ Tests are part of every story's definition of done; CI blocks merges when they f
   esbuild with the vendor patches), and writes `docs/reports/rendering-survey-<date>.md`: what each game uses that the
   reader drops or changes (tall upper windows, styles in them, several windows of a kind, graphics windows, timers,
   hyperlinks, characters outside the bundled fonts, wide fixed-width layouts), ranked by number of games.
+- **Story-file scan** (S7.4, live network, by hand): `npm run survey:scan` reads the story file of every parser game of
+  the published catalogue without playing it (a Z-machine disassembler and a Glulx reader in `scripts/survey/`) and
+  writes `docs/reports/story-file-scan-<date>.md`: the games whose own code uses a display feature the reader drops or
+  changes (quote boxes, drawing in the upper window, timed input, graphics or extra windows, hyperlinks, colours,
+  sound, characters outside the fonts…), library code told apart by its frequency, and the games to replay with the
+  rendering survey.
 
 ### 11.3 Legacy-compatibility gate
 

@@ -30,7 +30,8 @@
     "catalog:featured": "node scripts/catalog/build-featured.ts",
     "ebook": "node scripts/ebook/build.ts",
     "ebook:screenshots": "node scripts/ebook/screenshots.ts",
-    "survey:rendering": "node scripts/survey/rendering.ts"
+    "survey:rendering": "node scripts/survey/rendering.ts",
+    "survey:scan": "node scripts/survey/scan.ts"
   },
   "dependencies": {
     "@fontsource/literata": "^5.3.0",
