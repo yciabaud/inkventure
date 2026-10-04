@@ -966,7 +966,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M3 — Library & Home** | Library, game detail, file loader, Home shelves, settings | S3.1–S3.4, S4.1–S4.2, S5.1 |
 | **M4 — More formats** | Glulx, illustrated games, Ink, Twine | S1.7–S1.9, S2.5 |
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
-| **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21–S1.23, S7.3, S7.4 |
+| **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21–S1.25, S2.8, S7.3, S7.4 |
 | **M7 — Offline** | Offline probe on the Kindle, offline app shell and kept adventures | S0.9, S5.3 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
