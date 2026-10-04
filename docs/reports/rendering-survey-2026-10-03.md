@@ -11,7 +11,7 @@ timer, and none opened two windows of a kind.
    epigraph centred in the upper window (Curses, Vespers, Jigsaw, An Act of Murder, Hunter in Darkness), and some games
    draw their title card or intro there (Filaments, Aisle). The game then waits for a key (or goes on with a line
    prompt, Vespers): the main window is not cleared, so S1.22 does not apply, and the top zone shows the first 3
-   non-empty rows and "…". The quotation is cut; the rest is only in the ⋯ menu. **Proposed story S1.23:** show such a
+   non-empty rows and "…". The quotation is cut; the rest is only in the ⋯ menu. **Story [S1.23](../stories/S1.23-upper-window-quote-boxes.md):** show such a
    box in the text area, after the turn's text, as a centred block, and leave the top zone to the status line.
 2. **Menus drawn in the upper window — 13 games**, now shown in the text area (S1.22). All mark the selection with `>`
    (Savoir-Faire, Slouching Towards Bedlam and City of Secrets set a subtitle in bold, which the reader shows plain;
