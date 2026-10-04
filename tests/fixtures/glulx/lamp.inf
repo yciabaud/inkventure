@@ -5,7 +5,7 @@
 ! Rebuild with scripts/fixtures/build-glulx.sh.
 !
 ! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
-! objects, a locked container, a score and a winning ending.
+! objects, a locked container, a score and a winning ending; QUOTE shows an epigraph in a quote box (Inform's `box`).
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -103,3 +103,15 @@ Object -> Lens "lens"
   has  scenery;
 
 Include "Grammar";
+
+! QUOTE: an epigraph in a quote box (Inform's `box`), drawn in the upper window over the text.
+[ QuoteSub;
+    box "The sea is calm tonight."
+        "The tide is full, the moon lies fair"
+        "Upon the straits."
+        ""
+        "-- Matthew Arnold, Dover Beach";
+    "You remember the poem the keeper liked.";
+];
+
+Verb meta 'quote' * -> Quote;

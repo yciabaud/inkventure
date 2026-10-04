@@ -12,6 +12,7 @@
 ! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
 ! GUIDE, a menu drawn in the upper window like Lost Pig's HELP (a centred title, a legend in two columns, three
 ! subjects with "> " on the selected one; N / P move, Return opens a subject, Q resumes the game).
+! QUOTE shows an epigraph in a quote box (Inform's `box`, drawn in the upper window).
 ! TIPS names commands in capitals ("Type WAKE UP … or LOGBOOK …"); the library answers WAKE UP.
 ! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
 ! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". OPEN alone asks
@@ -302,6 +303,18 @@ Verb meta 'guide' * -> Guide;
 ];
 
 Verb meta 'tips' * -> Tips;
+
+! QUOTE: an epigraph in a quote box (Inform's `box`), drawn in the upper window over the text.
+[ QuoteSub;
+    box "The sea is calm tonight."
+        "The tide is full, the moon lies fair"
+        "Upon the straits."
+        ""
+        "-- Matthew Arnold, Dover Beach";
+    "You remember the poem the keeper liked.";
+];
+
+Verb meta 'quote' * -> Quote;
 Extend 'open' first * -> OpenWhat;
 Verb 'boat' * -> Boat;
 Verb 'signal' * -> Signal;

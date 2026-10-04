@@ -5,16 +5,13 @@
 //   npm run survey:rendering -- [--top 50] [--catalog DIR] [--only TUID,…] [--out FILE] [--json FILE]
 //
 // The catalogue is the one the weekly workflow publishes on the `catalog` branch (fetched here), or `--catalog DIR`.
-import { execFileSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { unzipSync } from 'fflate';
 import { build } from 'esbuild';
 import { applyPatch, PATCHES } from '../build/vendor-patches.ts';
-import { RateLimiter, USER_AGENT } from '../catalog/fetcher.ts';
+import { catalogDir, gameFile, PARSER, parserGames, storyBytes } from './catalog.ts';
 import type { Finding } from './detect.ts';
 import type { PlayResult } from './play.ts';
 import { report, type GameResult } from './report.ts';
@@ -29,81 +26,6 @@ const { values } = parseArgs({
     cache: { type: 'string', default: 'data/cache/survey' },
   },
 });
-
-interface Row {
-  t: string;
-  n: string;
-  f: string;
-  rc?: number;
-}
-
-interface GameFile {
-  url: string;
-  archive?: { type: string; primary: string };
-}
-
-const PARSER: Record<string, 'zmachine' | 'glulx'> = { zcode: 'zmachine', glulx: 'glulx' };
-const readJson = <T>(path: string): T => JSON.parse(readFileSync(path, 'utf8')) as T;
-
-/** The published catalogue's folder: `--catalog`, else the `catalog` branch extracted to a temporary folder. */
-function catalogDir(): string {
-  if (values.catalog) return values.catalog;
-  const dir = mkdtempSync(join(tmpdir(), 'inkventure-catalog-'));
-  execFileSync('git', ['fetch', '--quiet', '--depth', '1', 'origin', 'catalog']);
-  const tar = execFileSync('git', ['archive', 'FETCH_HEAD', 'catalog'], { maxBuffer: 1 << 30 });
-  execFileSync('tar', ['-x', '-C', dir], { input: tar });
-  return join(dir, 'catalog');
-}
-
-/** The games to play: the curated featured list first, then the most-rated parser games. */
-function selection(dir: string): Array<Row & { featured: boolean }> {
-  const meta = readJson<{ shards: string[] }>(join(dir, 'meta.json'));
-  const rows: Row[] = [];
-  for (const shard of meta.shards) rows.push(...readJson<{ rows: Row[] }>(join(dir, shard)).rows);
-  const parser = rows.filter((row) => PARSER[row.f]);
-  if (values.only) {
-    const ids = values.only.split(',');
-    return parser
-      .filter((row) => ids.indexOf(row.t) >= 0)
-      .map((row) => ({ ...row, featured: false }));
-  }
-  const curated = readJson<{ items: Array<{ tuid: string }> }>('content/featured.json').items.map(
-    (i) => i.tuid,
-  );
-  const featured = parser.filter((row) => curated.indexOf(row.t) >= 0);
-  const top = parser
-    .filter((row) => curated.indexOf(row.t) < 0)
-    .sort((a, b) => (b.rc || 0) - (a.rc || 0))
-    .slice(0, Number(values.top));
-  return featured
-    .map((row) => ({ ...row, featured: true }))
-    .concat(top.map((row) => ({ ...row, featured: false })));
-}
-
-const limiter = new RateLimiter(1000);
-
-/** The story file, from the cache or downloaded (then cached), unzipped when the catalogue says it is a zip. */
-async function storyFile(file: GameFile): Promise<ArrayBuffer> {
-  const cached = join(values.cache!, createHash('sha1').update(file.url).digest('hex'));
-  let bytes: Uint8Array;
-  if (existsSync(cached)) {
-    bytes = readFileSync(cached);
-  } else {
-    await limiter.wait();
-    const response = await fetch(file.url, { headers: { 'User-Agent': USER_AGENT } });
-    if (!response.ok) throw new Error('HTTP ' + response.status);
-    bytes = new Uint8Array(await response.arrayBuffer());
-    mkdirSync(values.cache!, { recursive: true });
-    writeFileSync(cached, bytes);
-  }
-  if (file.archive && file.archive.type === 'zip') {
-    const entries = unzipSync(bytes);
-    const primary = entries[file.archive.primary];
-    if (!primary) throw new Error('Not in the zip: ' + file.archive.primary);
-    bytes = primary;
-  }
-  return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer;
-}
 
 /**
  * The player (play.ts and the app's engines), bundled for Node with esbuild and the same vendor patches as the app's
@@ -138,8 +60,8 @@ async function loadPlayer(): Promise<unknown> {
 }
 
 async function main() {
-  const dir = catalogDir();
-  const games = selection(dir);
+  const dir = catalogDir(values.catalog);
+  const games = parserGames(dir, values.only, Number(values.top));
   console.log('Playing ' + games.length + ' games from ' + dir);
   const { play, COMMANDS, MENU_KEYS } = (await loadPlayer()) as {
     play: (story: ArrayBuffer, kind: 'zmachine' | 'glulx') => Promise<PlayResult>;
@@ -157,8 +79,11 @@ async function main() {
       turns: 0,
     };
     try {
-      const detail = readJson<{ file: GameFile }>(join(dir, 'games', game.t + '.json'));
-      const story = await storyFile(detail.file);
+      const bytes = await storyBytes(gameFile(dir, game.t), values.cache!);
+      const story = bytes.buffer.slice(
+        bytes.byteOffset,
+        bytes.byteOffset + bytes.byteLength,
+      ) as ArrayBuffer;
       const played = await play(story, PARSER[game.f]);
       result.findings = played.findings;
       result.turns = played.turns;
