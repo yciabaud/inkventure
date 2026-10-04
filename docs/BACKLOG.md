@@ -25,7 +25,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked` · `dropped`. Keep the 
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S0.10 → S1.18 → S1.19 → S1.21 → S0.9 → S5.3 → S1.22 → S7.3 → S1.23
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S0.10 → S1.18 → S1.19 → S1.21 → S0.9 → S5.3 → S1.22 → S7.3 → S1.23 → S7.4
 
 M6 (play fidelity) comes from the [2026-10-01 comparison](reports/rendering-2026-10-01/README.md) of the 32 featured games with Parchment and the original
 Twine pages: the two blockers first (S1.13 is the smallest), then the stories that make menus and questions usable.
@@ -94,3 +94,4 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S7.1](stories/S7.1-device-checklist-perf.md) | Real-device checklist & performance budgets | E7 | M5 | S4.2, S3.4 | done |
 | [S7.2](stories/S7.2-launch.md) | Launch: domain, README, credits, licences | E7 | M5 | S7.1, S6.2, S6.3 | done |
 | [S7.3](stories/S7.3-rendering-survey.md) | Rendering survey of the catalogue | E7 | M6 | S1.22 | done |
+| [S7.4](stories/S7.4-story-file-scan.md) | Static scan of the catalogue's story files | E7 | M6 | S7.3 | todo |
