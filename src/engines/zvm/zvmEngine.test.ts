@@ -217,6 +217,22 @@ describe('ZVM adapter', () => {
     expect(t.errors).toEqual([]);
   });
 
+  it("goes on after the game's own RESTORE: the file prompt is cancelled, the game says so (S1.24)", async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    s.take();
+    s.engine.sendLine('restore');
+    // The bridge answers the file prompt on a timer; the game then says the restore failed and asks again.
+    let after = '';
+    for (let i = 0; i < 100 && after.indexOf('Restore failed.') < 0; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 5));
+      after += s.take();
+    }
+    expect(after).toContain('Restore failed.');
+    expect(send(s, 'look')).toContain('A stone jetty at the foot of the lighthouse.');
+    expect(s.errors).toEqual([]);
+  });
+
   it('refuses to save while a key is expected', async () => {
     const s = await start();
     await expect(s.engine.saveState()).rejects.toThrow(/between turns/);

@@ -22,6 +22,11 @@ describe('glkapi.js patch', () => {
     expect(a).not.toBe(b);
   });
 
+  it('lets a cancelled prompt for a file to read resume the game (S1.24)', () => {
+    const patched = applyPatch(source, GLKAPI.replacements);
+    expect(patched).toContain("if ( fref && ui_specialinput.filemode === 'read'");
+  });
+
   it('runs in strict mode (no implicit globals)', () => {
     const createGlk = load('"use strict";\n' + applyPatch(source, GLKAPI.replacements));
     expect(typeof createGlk().init).toBe('function');

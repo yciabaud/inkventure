@@ -5,7 +5,8 @@
 //   implicit global (`Glk = function () {…}()`) and a few more inside (undeclared loop and temp variables), which
 //   throw in the strict mode of an ES module; and it keeps all Glk state in that one instance, so a second game in the
 //   same page would inherit the first one's windows and event generation. A fresh instance per game, with those
-//   variables declared, solves both.
+//   variables declared, solves both. And a cancelled prompt for a file to read (the game's own RESTORE) no longer
+//   throws on the missing file, which froze the game (S1.24).
 // - opcodes.js (ifvms) reads `this.e` at module level, which is `undefined` in Node (`this` is `module.exports`) but
 //   becomes a read of the not-yet-assigned exports once the CommonJS module is converted: pass `undefined` directly.
 // - io.js (ifvms): in versions 4 and later, Flags 1 keeps its bit 1 instead of being cleared. The Inform library reads
@@ -60,6 +61,12 @@ export const PATCHES: Patch[] = [
         '/* exported by the factory */',
       ],
       [/return api;\s*\}\(\);\s*\/\* End of Glk library\. \*\//, 'return api;\n};'],
+      // A cancelled prompt for a file to read (the game's own RESTORE, S1.24): no file, so nothing to check. Upstream
+      // reads `fref.ref` on null there, throws in a timer and the game never resumes.
+      [
+        /if \( ui_specialinput\.filemode === 'read' && !Dialog\.file_ref_exists\( fref\.ref \) \)/,
+        "if ( fref && ui_specialinput.filemode === 'read' && !Dialog.file_ref_exists( fref.ref ) )",
+      ],
     ],
   },
   {

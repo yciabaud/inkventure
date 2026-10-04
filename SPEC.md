@@ -515,7 +515,8 @@ the ink functions of the same name.
 - Z-machine state: ZVM's own autosave snapshot (the RAM and stacks as a Quetzal file with uncompressed memory, plus the
   Glk library state, so a pending line input resumes), in a small JSON envelope naming the story; a plain Quetzal file
   can only be resumed by the game's own `@restore`. The game's SAVE / RESTORE commands are cancelled: saves go through
-  the reader menu.
+  the reader menu; the game reports the failure and goes on (a vendor patch keeps glkote-term from freezing on a
+  cancelled restore, S1.24).
 - Glulx state: Quixe's autosave snapshot (RAM, stack, heap and the Glk library state) in a JSON envelope naming the
   story (its first 64 bytes); the RAM is stored XORed with the story's initial RAM and deflated at once, so a state
   (Undo keeps 10 in memory) is a few KB even for a game with 1–2 MB of RAM.
