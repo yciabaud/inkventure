@@ -25,7 +25,7 @@ Statuses: `todo` · `in-progress` · `done` · `blocked` · `dropped`. Keep the 
 
 The order respects dependencies and reaches a playable Z-machine game (end of M1) as early as possible:
 
-S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S0.10 → S1.18 → S1.19 → S1.21 → S0.9 → S5.3 → S1.22 → S7.3 → S1.23 → S7.4
+S0.1 → S0.4 → S0.7 → S0.6 → S0.2 → S0.3 → S0.5 → S0.8 → S1.1 → S1.3 → S1.2 → S1.4 → S1.5 → S1.6 → S2.1 → S2.2 → S2.3 → S3.1 → S2.4 → S3.2 → S3.3 → S3.4 → S4.1 → S4.2 → S5.1 → S1.7 → S1.8 → S1.9 → S1.10 → S1.11 → S2.5 → S2.6 → S6.1 → S6.2 → S6.3 → S7.1 → S2.7 → S7.2 → S1.13 → S1.12 → S1.14 → S1.15 → S1.16 → S1.17 → S0.10 → S1.18 → S1.19 → S1.21 → S0.9 → S5.3 → S1.22 → S7.3 → S7.4 → S1.24 → S1.23 → S2.8 → S1.25
 
 M6 (play fidelity) comes from the [2026-10-01 comparison](reports/rendering-2026-10-01/README.md) of the 32 featured games with Parchment and the original
 Twine pages: the two blockers first (S1.13 is the smallest), then the stories that make menus and questions usable.
@@ -71,7 +71,9 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | Post-V1 | S1.15, S1.4 | todo |
 | [S1.21](stories/S1.21-parser-question-nouns.md) | Object chips when the parser asks what to act on | E1 | M6 | S1.4, S1.17, S1.19 | done |
 | [S1.22](stories/S1.22-upper-window-menus.md) | Menus drawn in the upper window | E1 | M6 | S1.15, S1.16, S1.12 | done |
-| [S1.23](stories/S1.23-upper-window-quote-boxes.md) | Quote boxes and title cards in the upper window | E1 | M6 | S1.22, S7.3 | todo |
+| [S1.23](stories/S1.23-upper-window-quote-boxes.md) | Tall upper windows: quote boxes, title cards and extra rows | E1 | M6 | S1.22, S7.3, S7.4 | todo |
+| [S1.24](stories/S1.24-restore-prompt-freeze.md) | Z-machine games freeze on a cancelled restore prompt | E1 | M6 | S1.3 | todo |
+| [S1.25](stories/S1.25-timer-events.md) | Timer events for games that run on a clock | E1 | M6 | S1.3, S1.7 | todo |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
@@ -79,6 +81,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S2.5](stories/S2.5-illustrated-games.md) | Illustrated games: detection, badge & filter | E2 | M4 | S1.10, S2.3, S3.2 | done |
 | [S2.6](stories/S2.6-file-language.md) | The language of the file we play, not of every version | E2 | M4 | S2.2, S2.3 | done |
 | [S2.7](stories/S2.7-ink-web-exports.md) | Ink games published as web exports | E2 | M4 | S1.8, S2.2, S3.4 | done |
+| [S2.8](stories/S2.8-catalogue-story-file-check.md) | The catalogue keeps only story files that open | E2 | M6 | S2.2, S7.4 | todo |
 | [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | done |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | done |
