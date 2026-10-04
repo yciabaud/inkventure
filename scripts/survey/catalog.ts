@@ -70,6 +70,8 @@ export function gameFile(dir: string, tuid: string): GameFile {
 
 const limiter = new RateLimiter(1000);
 
+const baseName = (path: string) => path.slice(path.lastIndexOf('/') + 1);
+
 /** The story file, from the cache or downloaded (then cached), unzipped when the catalogue says it is a zip. */
 export async function storyBytes(file: GameFile, cache: string): Promise<Uint8Array> {
   const cached = join(cache, createHash('sha1').update(file.url).digest('hex'));
@@ -85,8 +87,12 @@ export async function storyBytes(file: GameFile, cache: string): Promise<Uint8Ar
     writeFileSync(cached, bytes);
   }
   if (file.archive && file.archive.type === 'zip') {
-    const entries = unzipSync(bytes);
-    const primary = entries[file.archive.primary];
+    // As the app does (src/catalog/storyFile.ts, extractPrimary): the file of that name, whatever its folder.
+    const wanted = baseName(file.archive.primary);
+    const entries = unzipSync(bytes, { filter: (entry) => baseName(entry.name) === wanted });
+    const names = Object.keys(entries);
+    const primary =
+      entries[file.archive.primary] || (names.length === 1 ? entries[names[0]] : undefined);
     if (!primary) throw new Error('Not in the zip: ' + file.archive.primary);
     bytes = primary;
   }

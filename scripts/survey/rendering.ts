@@ -78,21 +78,33 @@ async function main() {
       findings: [],
       turns: 0,
     };
+    let downloaded = false;
     try {
       const bytes = await storyBytes(gameFile(dir, game.t), values.cache!);
+      downloaded = true;
       const story = bytes.buffer.slice(
         bytes.byteOffset,
         bytes.byteOffset + bytes.byteLength,
       ) as ArrayBuffer;
-      const played = await play(story, PARSER[game.f]);
+      // An error thrown outside the engine's callbacks (a vendor library's timer) stops this game, not the run.
+      let failed: (error: unknown) => void = () => undefined;
+      const crash = new Promise<never>((_, reject) => (failed = reject));
+      const onCrash = (error: unknown) => failed(error);
+      process.on('uncaughtException', onCrash);
+      let played: PlayResult;
+      try {
+        played = await Promise.race([play(story, PARSER[game.f]), crash]);
+      } finally {
+        process.off('uncaughtException', onCrash);
+      }
       result.findings = played.findings;
       result.turns = played.turns;
     } catch (error) {
-      const finding: Finding = {
-        kind: 'load',
-        step: 'download',
-        detail: String(error).slice(0, 120),
-      };
+      // Not downloaded (or not opened), or an error of the engine while it played.
+      const detail = String(error).slice(0, 120);
+      const finding: Finding = downloaded
+        ? { kind: 'error', step: 'play', detail: detail }
+        : { kind: 'load', step: 'download', detail: detail };
       result.findings = [finding];
     }
     console.log(
