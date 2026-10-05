@@ -4,7 +4,13 @@ import { readFileSync } from 'node:fs';
 import { inflateSync } from 'fflate';
 import { describe, expect, it } from 'vitest';
 import type { Engine, InputRequest } from '../engine';
-import { applyOutput, EMPTY_TRANSCRIPT, splitStatus, type Transcript } from '../transcript';
+import {
+  applyOutput,
+  EMPTY_TRANSCRIPT,
+  splitStatus,
+  withBox,
+  type Transcript,
+} from '../transcript';
 import { createQuixeEngine } from './quixeEngine';
 
 const STORY = readFileSync('tests/fixtures/glulx/lamp.ulx');
@@ -143,6 +149,31 @@ describe('Quixe engine', () => {
     expect(await send(session, 'fill lamp')).toContain('You pour the paraffin into the reservoir.');
     const ending = await send(session, 'light lamp');
     expect(ending).toMatch(/won/i);
+    expect(session.errors).toEqual([]);
+  });
+
+  it('shows the QUOTE box (a window of its own) at the start of the turn, and keeps it there (S1.23)', async () => {
+    const session = await start();
+    await begin(session);
+    await send(session, 'quote');
+    const turn = (paragraphs: Transcript['paragraphs']) => {
+      const texts = paragraphs
+        .filter((p) => p.text.trim())
+        .map((p) => (p.box ? '[box] ' : '') + p.text);
+      return texts.slice(texts.lastIndexOf('>quote'));
+    };
+    const quote = [
+      '>quote',
+      '[box] The sea is calm tonight.\nThe tide is full, the moon lies fair\nUpon the straits.',
+      '[box] -- Matthew Arnold, Dover Beach',
+      'You remember the poem the keeper liked.',
+    ];
+    expect(turn(withBox(session.transcript())).slice(0, 4)).toEqual(quote);
+    expect(session.transcript().screens).toBe(0);
+    expect(splitStatus(session.transcript().status).left).toBe('Landing Stage');
+    await send(session, 'look');
+    expect(session.transcript().box).toBeUndefined();
+    expect(turn(session.transcript().paragraphs).slice(0, 4)).toEqual(quote);
     expect(session.errors).toEqual([]);
   });
 

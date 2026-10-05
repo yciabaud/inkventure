@@ -261,3 +261,62 @@ describe('GlkOteBridge cleared window (S1.16)', () => {
     ]);
   });
 });
+
+describe('GlkOteBridge other buffer windows (S1.23)', () => {
+  const line = (text: string, append = false) => ({
+    append: append,
+    content: [{ style: 'blockquote', text: text }],
+  });
+
+  it('reports the text of a buffer window other than the main one as a quote, and its closing', () => {
+    const s = setup();
+    s.update({
+      windows: WINDOWS,
+      content: [{ id: 1, text: [{ content: [{ style: 'normal', text: '>' }] }] }],
+    });
+    // Inform's quote box in Glulx: a buffer window opened over the main one, then closed the next turn.
+    s.update({
+      windows: WINDOWS.concat([{ id: 3, type: 'buffer' as const }]),
+      content: [
+        {
+          id: 3,
+          clear: true,
+          text: [line('The sea is calm'), line(' tonight.', true), line('-- M. Arnold')],
+        },
+        { id: 1, text: [{ append: true, content: [{ style: 'input', text: 'quote' }] }] },
+      ],
+    });
+    let t = s.transcript();
+    expect(t.quote).toEqual(['The sea is calm tonight.', '-- M. Arnold']);
+    expect(t.paragraphs.map((p) => p.text)).toEqual(['>quote']);
+    expect(t.screens).toBe(0);
+    s.update({ windows: WINDOWS });
+    t = s.transcript();
+    expect(t.quote).toBeUndefined();
+    expect(t.paragraphs.map((p) => p.text)).toEqual([
+      '>quote',
+      'The sea is calm tonight.\n-- M. Arnold',
+    ]);
+  });
+
+  it('takes the window that asks for input as the main one', () => {
+    const s = setup();
+    s.update({
+      windows: [
+        { id: 4, type: 'buffer' as const },
+        { id: 5, type: 'buffer' as const },
+      ],
+      content: [
+        { id: 4, text: [line('A side panel')] },
+        { id: 5, text: [{ content: [{ style: 'normal', text: 'The story.' }] }] },
+      ],
+      input: [{ id: 5, type: 'line', gen: 1, maxlen: 120 }],
+    });
+    s.update({
+      content: [{ id: 5, text: [{ content: [{ style: 'normal', text: 'More story.' }] }] }],
+    });
+    const t = s.transcript();
+    expect(t.paragraphs.map((p) => p.text)).toEqual(['The story.', 'More story.']);
+    expect(t.quote).toEqual(['A side panel']);
+  });
+});

@@ -96,9 +96,10 @@ describe('Glulx reader (S7.4)', () => {
 });
 
 describe('display features (S7.4)', () => {
-  it('Z-machine: the fixture quote box, its own drawing in the upper window, no timer or colour', () => {
+  it('Z-machine: the fixture quote boxes, its own drawing in the upper window, no timer or colour', () => {
     const counts = features(storyFacts(LAMP_Z), NO_LIBRARY);
-    expect(counts['quote-box']).toBe(1);
+    // QUOTE and VERSE (S1.23).
+    expect(counts['quote-box']).toBe(2);
     expect(counts['upper-window']).toBeGreaterThan(0);
     expect(counts.colour).toBeUndefined();
     expect(counts['version-6']).toBeUndefined();

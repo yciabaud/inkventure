@@ -31,6 +31,8 @@ export interface GameSnapshot {
   status: string[];
   /** Indexes in `paragraphs` of those starting a screen (the game cleared its window before them, S1.16). */
   screens?: number[];
+  /** Indexes in `paragraphs` of the rows of a box the game drew in its upper window (S1.23). */
+  boxes?: number[];
 }
 
 /** Stored form, under `save:<tuid>:auto` and `save:<tuid>:<slot>`. */
@@ -83,22 +85,32 @@ export function transcriptTail<T extends SavedParagraph>(paragraphs: T[]): T[] {
   return paragraphs.slice(from);
 }
 
-/** The text part of a save: the transcript tail, its screen starts (counted from the tail) and the status line. */
-function savedText(snapshot: GameSnapshot): {
+interface SavedText {
   paragraphs: SavedParagraph[];
   status: string[];
   screens?: number[];
-} {
+  boxes?: number[];
+}
+
+/** Indexes in the tail (paragraphs from `from` on) of those in `all`. */
+function inTail(all: number[] | undefined, from: number): number[] {
+  const out: number[] = [];
+  if (all) for (let i = 0; i < all.length; i++) if (all[i] >= from) out.push(all[i] - from);
+  return out;
+}
+
+/**
+ * The text part of a save: the transcript tail, its screen starts and box rows (counted from the tail) and the status
+ * line.
+ */
+function savedText(snapshot: GameSnapshot): SavedText {
   const paragraphs = transcriptTail(snapshot.paragraphs);
-  const text: { paragraphs: SavedParagraph[]; status: string[]; screens?: number[] } = {
-    paragraphs: paragraphs,
-    status: snapshot.status,
-  };
+  const text: SavedText = { paragraphs: paragraphs, status: snapshot.status };
   const from = snapshot.paragraphs.length - paragraphs.length;
-  const screens: number[] = [];
-  const all = snapshot.screens || [];
-  for (let i = 0; i < all.length; i++) if (all[i] >= from) screens.push(all[i] - from);
+  const screens = inTail(snapshot.screens, from);
   if (screens.length) text.screens = screens;
+  const boxes = inTail(snapshot.boxes, from);
+  if (boxes.length) text.boxes = boxes;
   return text;
 }
 
@@ -128,11 +140,7 @@ function isRecord(value: unknown): value is SaveRecord {
 function fromRecord(record: unknown): GameSnapshot | undefined {
   if (!isRecord(record)) return undefined;
   try {
-    const text = JSON.parse(decompressText(record.text)) as {
-      paragraphs: SavedParagraph[];
-      status: string[];
-      screens?: number[];
-    };
+    const text = JSON.parse(decompressText(record.text)) as SavedText;
     const snapshot: GameSnapshot = {
       state: decompressBytes(record.data),
       turn: record.turn,
@@ -141,6 +149,8 @@ function fromRecord(record: unknown): GameSnapshot | undefined {
     };
     // Saves made before screens were kept (S1.16) have none.
     if (Array.isArray(text.screens)) snapshot.screens = text.screens;
+    // And those made before boxes were kept (S1.23), no boxes.
+    if (Array.isArray(text.boxes)) snapshot.boxes = text.boxes;
     return snapshot;
   } catch {
     return undefined;

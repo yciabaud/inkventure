@@ -7,7 +7,9 @@ import {
   applyOutput,
   EMPTY_TRANSCRIPT,
   splitStatus,
+  splitUpper,
   statusRows,
+  withBox,
   type Transcript,
 } from '../transcript';
 import { createZvmEngine } from './zvmEngine';
@@ -161,6 +163,32 @@ describe('ZVM adapter', () => {
     expect(statusRows(s.transcript().status).shown).toEqual([
       { left: 'Landing Stage', right: expect.stringMatching(/^Score: 0\s+Moves: 3$/) },
     ]);
+  });
+
+  it('shows the QUOTE box at the start of the turn, under the status line, and keeps it there (S1.23)', async () => {
+    const s = await start();
+    s.engine.sendChar(' ');
+    s.take();
+    send(s, 'quote');
+    const turn = (paragraphs: Transcript['paragraphs']) => {
+      const texts = paragraphs
+        .filter((p) => p.text.trim())
+        .map((p) => (p.box ? '[box] ' : '') + p.text);
+      return texts.slice(texts.lastIndexOf('>quote'));
+    };
+    const quote = [
+      '>quote',
+      '[box] The sea is calm tonight.\nThe tide is full, the moon lies fair\nUpon the straits.',
+      '[box] -- Matthew Arnold, Dover Beach',
+      'You remember the poem the keeper liked.',
+    ];
+    expect(turn(withBox(s.transcript())).slice(0, 4)).toEqual(quote);
+    expect(splitUpper(s.transcript().status).status).toHaveLength(1);
+    expect(splitStatus(s.transcript().status).left).toBe('Landing Stage');
+    send(s, 'look');
+    expect(s.transcript().box).toBeUndefined();
+    expect(turn(s.transcript().paragraphs).slice(0, 4)).toEqual(quote);
+    expect(s.errors).toEqual([]);
   });
 
   it('ignores input that was not asked for', async () => {

@@ -32,6 +32,7 @@ function blockElement(block: ReaderBlock, width: number, imageMaxHeight: number)
   }
   const p = document.createElement('p');
   p.className = blockClass(block.kind, block.align);
+  if (block.indent) p.style.textIndent = block.indent + '%';
   if (block.runs) {
     for (let i = 0; i < block.runs.length; i++) {
       const span = document.createElement('span');

@@ -242,6 +242,22 @@ describe('screen starts in saves (S1.16)', () => {
     ]);
   });
 
+  it('keeps the rows of boxes the same way (S1.23)', () => {
+    const store = createStore(new MemoryBackend());
+    const paragraphs = [];
+    for (let i = 0; i < TAIL_BLOCKS + 50; i++)
+      paragraphs.push([{ text: 'P' + i, style: 'normal' as const }]);
+    writeAutosave(
+      store,
+      TUID,
+      { ...fake(3), paragraphs: paragraphs, boxes: [5, TAIL_BLOCKS + 45] },
+      1000,
+    );
+    expect(readAutosave(store, TUID)!.boxes).toEqual([TAIL_BLOCKS - 5]);
+    writeAutosave(store, TUID, fake(4), 1000);
+    expect(readAutosave(store, TUID)!.boxes).toBeUndefined();
+  });
+
   it('reads saves made without screens', () => {
     const store = createStore(new MemoryBackend());
     writeAutosave(store, TUID, fake(4), 1000);

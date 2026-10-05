@@ -189,6 +189,7 @@ export function PagedText({
               <p
                 key={fragment.block + ':' + fragment.start}
                 class={blockClass(fragment.kind, fragment.align)}
+                style={fragment.indent ? { textIndent: fragment.indent + '%' } : undefined}
                 data-block={fragment.block}
                 data-start={fragment.start}
                 data-end={fragment.end}

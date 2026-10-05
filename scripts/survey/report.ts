@@ -18,6 +18,16 @@ export const KINDS: Record<FindingKind, { title: string; meaning: string }> = {
     meaning:
       'More than 4 rows in the upper window, outside the menus S1.22 shows in the text area: the top zone shows 3 rows and "…" (the others are in the ⋯ menu).',
   },
+  'upper-box': {
+    title: 'Box drawn in the upper window',
+    meaning:
+      'A box under the status line (a quotation, a title card): shown in the text area since S1.23 (informative: check it reads well).',
+  },
+  'many-boxes': {
+    title: 'Boxes on many turns',
+    meaning:
+      'The text kept a box of the upper window 3 times or more: maybe a status window read as a box (S1.23), check.',
+  },
   'upper-screen': {
     title: 'Menu drawn in the upper window',
     meaning: 'Shown in the text area since S1.22 (informative: check it reads well).',
@@ -30,7 +40,7 @@ export const KINDS: Record<FindingKind, { title: string; meaning: string }> = {
   windows: {
     title: 'Several windows of a kind',
     meaning:
-      'Grid windows share the one status zone; buffer windows (side panels) are mixed into the main text.',
+      'Grid windows share the one status zone; the text of another buffer window (a side panel) is shown as a box in the main text (S1.23).',
   },
   graphics: {
     title: 'Graphics window',
@@ -63,7 +73,7 @@ export const KINDS: Record<FindingKind, { title: string; meaning: string }> = {
 };
 
 /** Kinds that are informative, not problems: left out of the ranking. */
-const INFO: FindingKind[] = ['upper-screen'];
+const INFO: FindingKind[] = ['upper-screen', 'upper-box'];
 
 function cell(text: string): string {
   return text.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');

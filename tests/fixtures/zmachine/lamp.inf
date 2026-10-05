@@ -12,7 +12,8 @@
 ! numbered options ("1. Wave the lantern" …), read as a line like a conversation menu.
 ! GUIDE, a menu drawn in the upper window like Lost Pig's HELP (a centred title, a legend in two columns, three
 ! subjects with "> " on the selected one; N / P move, Return opens a subject, Q resumes the game).
-! QUOTE shows an epigraph in a quote box (Inform's `box`, drawn in the upper window).
+! QUOTE shows an epigraph in a quote box (Inform's `box`, drawn in the upper window); VERSE shows a quotation in a box
+! at a key prompt, like an opening epigraph. The intro centres the title with spaces for an 80-column screen.
 ! TIPS names commands in capitals ("Type WAKE UP … or LOGBOOK …"); the library answers WAKE UP.
 ! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
 ! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". OPEN alone asks
@@ -31,7 +32,9 @@ Include "VerbLib";
 
 [ Initialise;
     location = Landing;
-    print "^^[Press any key to begin.]^";
+    print "^^";
+    spaces 30; print "The Lamp at Saltmere^";
+    print "^[Press any key to begin.]^";
     KeyPress();
     print "^The last boat has gone. The keeper has not come back, and night is falling on Saltmere. Someone has to light
         the lamp.^^";
@@ -314,7 +317,19 @@ Verb meta 'tips' * -> Tips;
     "You remember the poem the keeper liked.";
 ];
 
+! VERSE: a quotation in a box at a key prompt, like a game's opening epigraph.
+[ VerseSub;
+    box "Sunset and evening star,"
+        "And one clear call for me!"
+        ""
+        "-- Alfred Tennyson, Crossing the Bar";
+    print "[Press any key.]^";
+    KeyPress();
+    "You close the book of verse.";
+];
+
 Verb meta 'quote' * -> Quote;
+Verb meta 'verse' * -> Verse;
 Extend 'open' first * -> OpenWhat;
 Verb 'boat' * -> Boat;
 Verb 'signal' * -> Signal;

@@ -6,8 +6,11 @@ import { loadEngine } from '../../engines/formats';
 import {
   applyOutput,
   EMPTY_TRANSCRIPT,
+  GAME_COLUMNS,
   splitStatus,
+  splitUpper,
   statusRows,
+  withBox,
   type StatusRow,
   type Transcript,
 } from '../../engines/transcript';
@@ -50,9 +53,6 @@ const NAMED_PARAGRAPHS = 20;
 const KEY_PARAGRAPHS = 12;
 
 const NO_KEYS: KeyPrompt = { keys: [], space: false };
-
-// Status line width, in characters, asked of the game.
-const COLUMNS = 80;
 
 /** Glk key name for a keyboard event, or null for keys the game should not get (modifiers alone). */
 function glkKey(event: KeyboardEvent): string | null {
@@ -101,10 +101,12 @@ interface TurnState {
 function toGameSnapshot(turnState: TurnState): GameSnapshot {
   const paragraphs: GameSnapshot['paragraphs'] = [];
   const screens: number[] = [];
+  const boxes: number[] = [];
   const all = turnState.transcript.paragraphs;
   for (let i = 0; i < all.length; i++) {
     if (all[i].replaced) continue;
     if (all[i].screen) screens.push(paragraphs.length);
+    if (all[i].box) boxes.push(paragraphs.length);
     paragraphs.push(all[i].image || all[i].runs);
   }
   const snapshot: GameSnapshot = {
@@ -114,6 +116,7 @@ function toGameSnapshot(turnState: TurnState): GameSnapshot {
     status: turnState.transcript.status,
   };
   if (screens.length) snapshot.screens = screens;
+  if (boxes.length) snapshot.boxes = boxes;
   return snapshot;
 }
 
@@ -121,14 +124,14 @@ function fromGameSnapshot(saved: GameSnapshot): TurnState {
   const screens: Record<number, boolean> = {};
   if (saved.screens)
     for (let i = 0; i < saved.screens.length; i++) screens[saved.screens[i]] = true;
+  const boxes: Record<number, boolean> = {};
+  if (saved.boxes) for (let i = 0; i < saved.boxes.length; i++) boxes[saved.boxes[i]] = true;
   const blocks: OutputBlock[] = [];
   saved.paragraphs.forEach((paragraph, i) => {
     if (screens[i]) blocks.push({ type: 'clear' });
-    blocks.push(
-      Array.isArray(paragraph)
-        ? { type: 'paragraph', runs: paragraph }
-        : { type: 'image', ...paragraph },
-    );
+    if (!Array.isArray(paragraph)) blocks.push({ type: 'image', ...paragraph });
+    else if (boxes[i]) blocks.push({ type: 'paragraph', runs: paragraph, box: true });
+    else blocks.push({ type: 'paragraph', runs: paragraph });
   });
   blocks.push({ type: 'status', lines: saved.status });
   return {
@@ -143,7 +146,7 @@ function fromGameSnapshot(saved: GameSnapshot): TurnState {
  * for after it, so the last page is shown.
  */
 function lastTurnFocus(transcript: Transcript): number {
-  const blocks = readerBlocks(transcript.paragraphs, true);
+  const blocks = readerBlocks(withBox(transcript), true);
   let command = 0;
   for (let i = blocks.length - 1; i >= 0; i--) {
     if (blocks[i].kind === 'input') {
@@ -330,7 +333,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         });
         // The engine keeps the buffer: give it a copy that is exactly the story.
         const data = story.buffer.slice(story.byteOffset, story.byteOffset + story.byteLength);
-        return engine.load(data as ArrayBuffer, { columns: COLUMNS }).then(() => {
+        return engine.load(data as ArrayBuffer, { columns: GAME_COLUMNS }).then(() => {
           // Resume from the autosave; if it does not restore, the story starts afresh.
           const saved = saves.readAutosave(getStore(), tuid);
           if (!saved || cancelled) return;
@@ -455,10 +458,9 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const awaitingChoice = request !== null && request.type === 'choice';
   // Height of the choice list under the text, as last measured.
   const [choiceHeight, setChoiceHeight] = useState(0);
-  const blocks = useMemo(
-    () => readerBlocks(transcript.paragraphs, awaitingLine),
-    [transcript, awaitingLine],
-  );
+  // The box the game shows in its upper window (S1.23) is in the turn's text.
+  const paragraphs = useMemo(() => withBox(transcript), [transcript]);
+  const blocks = useMemo(() => readerBlocks(paragraphs, awaitingLine), [paragraphs, awaitingLine]);
   // A menu drawn in the upper window (S1.22): its rows take the text area while the game waits for a key.
   const upper = useMemo(() => {
     if (!isUpperScreen(transcript.status, !!transcript.cleared, awaitingChar)) return null;
@@ -467,8 +469,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   }, [transcript.status, transcript.cleared, awaitingChar]);
   // The Transcript view also shows the screens replaced by later ones (menu screens, intro pages).
   const transcriptBlocks = useMemo(
-    () => (view === 'transcript' ? readerBlocks(transcript.paragraphs, awaitingLine, true) : []),
-    [transcript, awaitingLine, view],
+    () => (view === 'transcript' ? readerBlocks(paragraphs, awaitingLine, true) : []),
+    [paragraphs, awaitingLine, view],
   );
   // A screen started since the last input (the game cleared its window): the pages open on it, so a menu redrawn after
   // a key shows at once. Otherwise on the start of the turn.
@@ -619,7 +621,12 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
 
   if (state.phase === 'failed') return <ErrorPage message={state.message} />;
 
-  const status = statusRows(transcript.status);
+  // The top zone: the status line, without the box under it that the text shows (S1.23).
+  const status = statusRows(
+    transcript.box && !transcript.cleared
+      ? splitUpper(transcript.status).status
+      : transcript.status,
+  );
   const time =
     perf && turnTime !== null ? (
       <span class="reader__score">{t('reader.turnTime', { ms: turnTime })}</span>

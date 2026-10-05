@@ -33,6 +33,8 @@ export type FindingKind =
   | 'wide-fixed'
   | 'upper-screen'
   | 'tall-upper'
+  | 'upper-box'
+  | 'many-boxes'
   | 'no-output'
   | 'error'
   | 'timeout'

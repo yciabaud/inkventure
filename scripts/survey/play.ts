@@ -5,7 +5,12 @@ import { ZVM } from 'ifvms';
 import type { Engine, InputRequest } from '../../src/engines/engine';
 import { GlkOteBridge } from '../../src/engines/glkote-bridge/bridge';
 import { createQuixeEngine } from '../../src/engines/quixe/quixeEngine';
-import { applyOutput, EMPTY_TRANSCRIPT, type Transcript } from '../../src/engines/transcript';
+import {
+  applyOutput,
+  EMPTY_TRANSCRIPT,
+  splitUpper,
+  type Transcript,
+} from '../../src/engines/transcript';
 import { createZvmEngine } from '../../src/engines/zvm/zvmEngine';
 import { isUpperScreen, upperRows } from '../../src/reader/upperWindow';
 import { MAX_STATUS_ROWS } from '../../src/engines/transcript';
@@ -133,10 +138,24 @@ export async function play(
     if (highlight) findings.add('grid-styles', step, highlight);
     const rows = upperRows(transcript.status).length;
     const key = waiting.type === 'char';
+    const boxed = !!transcript.box && !transcript.cleared;
+    const top = upperRows(boxed ? splitUpper(transcript.status).status : transcript.status).length;
     if (isUpperScreen(transcript.status, !!transcript.cleared, key)) {
       findings.add('upper-screen', step, rows + ' rows');
-    } else if (rows > MAX_STATUS_ROWS) {
-      findings.add('tall-upper', step, rows + ' rows, ' + (key ? 'key' : 'line') + ' input');
+    } else if (top > MAX_STATUS_ROWS) {
+      findings.add('tall-upper', step, top + ' rows, ' + (key ? 'key' : 'line') + ' input');
+    }
+    if (boxed && !isUpperScreen(transcript.status, !!transcript.cleared, key)) {
+      const box = transcript.box ? transcript.box.paragraphs : [];
+      findings.add(
+        'upper-box',
+        step,
+        (transcript.quote ? 'quote window' : 'under ' + top + ' status rows') +
+          ', ' +
+          (key ? 'key' : 'line') +
+          ' input: ' +
+          JSON.stringify(box.map((p) => p.text).join(' / ')).slice(0, 80),
+      );
     }
   }
 
@@ -187,6 +206,12 @@ export async function play(
   } finally {
     recording = null;
   }
+  // Boxes kept in the text, counted as runs of box paragraphs.
+  let boxes = 0;
+  transcript.paragraphs.forEach((p, i) => {
+    if (p.box && !(i > 0 && transcript.paragraphs[i - 1].box)) boxes++;
+  });
+  if (boxes >= 3) findings.add('many-boxes', 'end', boxes + ' boxes kept');
   analyse(records, findings);
   return { findings: findings.list, turns: turns };
 }
