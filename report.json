@@ -7,7 +7,7 @@
     "twine"
   ],
   "counts": {
-    "kept": 3052,
+    "kept": 3053,
     "dropped": {
       "unsupported-format": 1308,
       "adult-content": 157,
@@ -21,7 +21,7 @@
       "zcode": 1693,
       "glulx": 720,
       "twine": 1064,
-      "ink": 69
+      "ink": 70
     },
     "pictures": {
       "blorbs": 382,
@@ -2495,6 +2495,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "6adyzijdbnnslx4a",
+      "title": "Leaving the Suit Behind? You Are Invited to Fill Out the Robin Exit Interview",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "6an369h19swxc2w",
       "title": "The Man Who Calls The Shots",
       "reason": "unreadable-host",
@@ -2849,12 +2855,6 @@
     {
       "tuid": "73r18x4k9plpdf1u",
       "title": "It Was Meant to End Like This",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
-      "tuid": "73r9qoqvmw6b4f3l",
-      "title": "In Transit",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
