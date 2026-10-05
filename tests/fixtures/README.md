@@ -7,7 +7,7 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   distributed freely). A key prompt, a status line, a few rooms and a winning ending, plus HELP and LOGBOOK, two
   single-key prompts that name their keys, BOAT (yes/no) and SIGNAL (numbered options) for answer chips, GUIDE (a
   menu drawn in the upper window like Lost Pig's HELP, S1.22), QUOTE (an epigraph in a quote box, Inform's `box`,
-  S7.4), and TIPS, which names commands in capitals ("Type WAKE
+  S7.4), VERSE (a quotation in a box at a key prompt, S1.23), a title centred with spaces in the intro (S1.23), and TIPS, which names commands in capitals ("Type WAKE
   UP …, or LOGBOOK …", S1.19); the walkthrough is in the source.
 - `zmachine/clock.inf` → `clock.z5` (S1.18): a one-room time game (`Statusline time`), like 9:05: its status line
   shows "Time: 9:05 am" only if the interpreter keeps bit 1 of the header's Flags 1. Same compiler and library.

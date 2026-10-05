@@ -26,8 +26,10 @@ export interface ReaderBlock {
   image?: ReaderImage;
   /** Starts a screen (the game cleared its window before it): it opens a new page. */
   screen?: boolean;
-  /** Centred (a title the game centred in its upper window, S1.22). */
+  /** Centred (a title the game centred in its upper window, S1.22; a box, a line centred with spaces, S1.23). */
   align?: 'center';
+  /** Indent of the first line, in % of the text column: the spaces of a line laid out for the game's screen (S1.23). */
+  indent?: number;
 }
 
 /** A place in the text: character `offset` in block `block`. */
@@ -64,6 +66,7 @@ export interface Fragment {
   runs?: Run[];
   image?: ReaderImage;
   align?: 'center';
+  indent?: number;
 }
 
 // Measurements are fractional; tolerate rounding so a line that exactly fits is not pushed to the next page.
@@ -218,6 +221,8 @@ export function pageFragments(blocks: ReaderBlock[], page: Page): Fragment[] {
     const image = blocks[b].image;
     if (image) fragment.image = image;
     if (blocks[b].align) fragment.align = blocks[b].align;
+    // The first line's indent: on the fragment that starts the block only.
+    if (blocks[b].indent && start === 0) fragment.indent = blocks[b].indent;
     fragments.push(fragment);
   }
   return fragments;

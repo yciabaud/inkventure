@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { applyOutput, EMPTY_TRANSCRIPT } from '../engines/transcript';
-import { lastScreenStart, readerBlocks } from './fromTranscript';
+import { lastScreenStart, lineLayout, readerBlocks } from './fromTranscript';
 
 const run = (text: string, style = 'normal' as const) => ({ text, style });
 
@@ -86,5 +86,59 @@ describe('readerBlocks and screens (S1.16)', () => {
     expect(
       lastScreenStart(readerBlocks(applyOutput(EMPTY_TRANSCRIPT, [p('a')]).paragraphs, false)),
     ).toBe(-1);
+  });
+});
+
+// Lines laid out for an 80-column screen, recorded with the rendering survey (S7.3).
+const ANCHORHEAD = ' '.repeat(29) + 'A N C H O R H E A D';
+const PRESS_R = ' '.repeat(15) + "[Press 'R' to restore; any other key to begin]";
+const WELCOME = ' '.repeat(30) + 'Welcome to CURSES';
+const FILAMENTS = ' '.repeat(25) + 'F.I.L.A.M.E.N.T.S';
+const BYLINE = ' '.repeat(88) + 'par JB Ferrant, lejibe@hotmail.com';
+
+describe('lineLayout (S1.23)', () => {
+  it('centres a line the game centred with spaces', () => {
+    for (const line of [ANCHORHEAD, PRESS_R, WELCOME]) {
+      expect(lineLayout(line)).toEqual({
+        trim: line.length - line.trimStart().length,
+        align: 'center',
+      });
+    }
+  });
+
+  it('turns a wide indent into a share of the column, and drops it from a line wider than the screen', () => {
+    expect(lineLayout(FILAMENTS)).toEqual({ trim: 25, indent: 31.3 });
+    expect(lineLayout(BYLINE)).toEqual({ trim: 88 });
+  });
+
+  it('keeps a small indent, a blank line and several lines as typed', () => {
+    expect(lineLayout('   ...de nos jours...')).toBeNull();
+    expect(lineLayout('    ')).toBeNull();
+    expect(lineLayout('          one\n          two')).toBeNull();
+    expect(lineLayout('No indent at all')).toBeNull();
+  });
+
+  it('lays out the blocks: spaces dropped from the runs, boxes and the echoed command left alone', () => {
+    const t = applyOutput(EMPTY_TRANSCRIPT, [
+      {
+        type: 'paragraph',
+        runs: [run(ANCHORHEAD.slice(0, 10)), run(ANCHORHEAD.slice(10), 'user1' as never)],
+      },
+      { type: 'paragraph', runs: [run(FILAMENTS)] },
+      { type: 'paragraph', runs: [run('Box line\nAnother')], box: true },
+      { type: 'paragraph', runs: [run('>' + ' '.repeat(20) + 'x')] },
+      { type: 'paragraph', runs: [run('look', 'input' as never)], append: true },
+    ]);
+    const blocks = readerBlocks(t.paragraphs, false);
+    expect(blocks[0]).toMatchObject({
+      text: 'A N C H O R H E A D',
+      align: 'center',
+      runs: [{ text: 'A N C H O R H E A D', style: 'user1' }],
+    });
+    expect(blocks[1]).toMatchObject({ text: 'F.I.L.A.M.E.N.T.S', indent: 31.3 });
+    expect(blocks[1].align).toBeUndefined();
+    expect(blocks[2]).toMatchObject({ text: 'Box line\nAnother', align: 'center' });
+    expect(blocks[3]).toMatchObject({ kind: 'input', text: '>' + ' '.repeat(20) + 'xlook' });
+    expect(blocks[3].align).toBeUndefined();
   });
 });

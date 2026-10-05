@@ -170,6 +170,14 @@ describe('pageFragments', () => {
       { block: 2, start: 0, end: 2, kind: 'text', text: 'A ' },
     ]);
   });
+
+  it('indents only the fragment that starts a block (S1.23)', () => {
+    const blocks: ReaderBlock[] = [{ kind: 'text', text: 'One two three four', indent: 12.5 }];
+    const first = { start: { block: 0, offset: 0 }, end: { block: 0, offset: 8 } };
+    const next = { start: { block: 0, offset: 8 }, end: { block: 0, offset: 18 } };
+    expect(pageFragments(blocks, first)[0].indent).toBe(12.5);
+    expect(pageFragments(blocks, next)[0].indent).toBeUndefined();
+  });
 });
 
 describe('keeping turns together', () => {

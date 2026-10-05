@@ -159,6 +159,10 @@ export class GlkOteBridge {
   private generation = 0;
   private windows: Record<number, WindowUpdate> = {};
   private grids: Record<number, string[]> = {};
+  /** The main buffer window: the one that asked for input, else the first opened. */
+  private main: number | null = null;
+  /** The lines of the other buffer windows (Inform's quote box in Glulx, S1.23). */
+  private quotes: Record<number, string[]> = {};
   /** Window waiting for input, and the kind of input. */
   private pending: { window: number; type: 'line' | 'char' } | null = null;
   /** The line just sent, until its window's next content: echoed again if the game clears that window (S1.16). */
@@ -210,6 +214,13 @@ export class GlkOteBridge {
     this.generation = data.gen;
 
     if (data.windows) this.updateWindows(data.windows);
+    // The window that asks for input is the main one, for the text of this update too.
+    if (data.input) {
+      for (let i = 0; i < data.input.length; i++) {
+        const win = this.windows[data.input[i].id];
+        if (win && win.type === 'buffer') this.setMain(win.id);
+      }
+    }
     if (data.content && data.content.length) this.updateContent(data.content);
     if (data.specialinput) {
       // File prompts (the game's own SAVE / RESTORE / SCRIPT commands): cancelled, saves go through the reader's
@@ -300,13 +311,47 @@ export class GlkOteBridge {
       }
     }
     this.windows = next;
-    // Closed grid windows: the status line goes away.
+    if (this.main !== null && !next[this.main]) this.main = null;
+    if (this.main === null) {
+      for (const id in next) {
+        if (next[id].type === 'buffer' && (this.main === null || +id < this.main)) this.main = +id;
+      }
+    }
+    // Closed grid windows: the status line goes away. Closed quote windows: their box too.
     for (const id in this.grids) {
       if (!next[+id]) {
         delete this.grids[+id];
         this.sink.output([{ type: 'status', lines: [] }]);
       }
     }
+    for (const id in this.quotes) {
+      if (!next[+id] || +id === this.main) {
+        delete this.quotes[+id];
+        this.sink.output([{ type: 'quote', lines: [] }]);
+      }
+    }
+  }
+
+  private setMain(id: number): void {
+    if (this.main === id) return;
+    this.main = id;
+    if (this.quotes[id]) {
+      delete this.quotes[id];
+      this.sink.output([{ type: 'quote', lines: [] }]);
+    }
+  }
+
+  /** Text for a buffer window other than the main one: its lines, as a box (S1.23). */
+  private quoteContent(update: ContentUpdate): OutputBlock {
+    const lines = update.clear ? [] : this.quotes[update.id] || [];
+    const text = update.text || [];
+    for (let l = 0; l < text.length; l++) {
+      const line = runsText(text[l].content);
+      if (text[l].append && lines.length) lines[lines.length - 1] += line;
+      else lines.push(line);
+    }
+    this.quotes[update.id] = lines;
+    return { type: 'quote', lines: lines.slice(0) };
   }
 
   private updateContent(content: ContentUpdate[]): void {
@@ -315,7 +360,9 @@ export class GlkOteBridge {
       const update = content[i];
       const win = this.windows[update.id];
       if (!win) continue;
-      if (win.type === 'buffer') {
+      if (win.type === 'buffer' && update.id !== this.main) {
+        blocks.push(this.quoteContent(update));
+      } else if (win.type === 'buffer') {
         const sent = this.sentLine;
         if (sent && sent.window === update.id) {
           this.sentLine = null;

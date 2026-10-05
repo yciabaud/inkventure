@@ -36,10 +36,14 @@ export interface ImageRef {
  * - `status`: the whole status line (Z-machine upper window / Glk grid window), one string per row.
  * - `image`: a picture drawn in the main window, on a line of its own (`Engine.imageUrl` gives its data).
  * - `clear`: the game cleared its main window.
+ * - `quote`: the text of a window other than the main one and the status window (Inform's quote box in Glulx), one
+ *   string per line; no lines when the window closes (S1.23).
+ * A `paragraph` with `box` is part of a box the game drew in its upper window, kept in the transcript (S1.23).
  */
 export type OutputBlock =
-  | { type: 'paragraph'; runs: TextRun[]; append?: boolean }
+  | { type: 'paragraph'; runs: TextRun[]; append?: boolean; box?: boolean }
   | { type: 'status'; lines: string[] }
+  | { type: 'quote'; lines: string[] }
   | ({ type: 'image' } & ImageRef)
   | { type: 'clear' };
 

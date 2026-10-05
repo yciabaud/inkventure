@@ -1,6 +1,47 @@
 // Turns the engine transcript into the reader's page blocks.
-import type { Paragraph } from '../engines/transcript';
-import type { ReaderBlock, ReaderImage } from './paginator';
+import { GAME_COLUMNS, type Paragraph } from '../engines/transcript';
+import type { ReaderBlock, ReaderImage, Run } from './paginator';
+
+/** Leading spaces from which a line is laid out for the game's fixed-width screen (S1.23); fewer are kept as typed. */
+export const LAYOUT_INDENT = 8;
+/** Difference between the margins of a line centred with spaces (games round, or centre for a slightly other width). */
+const CENTRE_SLACK = 4;
+
+/**
+ * How the reader shows a line the game laid out for its screen of `columns` characters with leading spaces (S1.23):
+ * centred when its margins are about equal, its indent dropped when it is wider than that screen, else its indent as
+ * a share of the text column (`indent`, in %), so it never wraps a run of spaces on a narrower screen. Null for a line
+ * with fewer than LAYOUT_INDENT leading spaces (an indented paragraph, a poem: kept as typed) or several lines.
+ */
+export function lineLayout(
+  text: string,
+  columns: number = GAME_COLUMNS,
+): { trim: number; align?: 'center'; indent?: number } | null {
+  if (text.indexOf('\n') >= 0) return null;
+  const body = text.replace(/^\s+/, '');
+  const trim = text.length - body.length;
+  const width = body.replace(/\s+$/, '').length;
+  if (trim < LAYOUT_INDENT || !width) return null;
+  const right = columns - trim - width;
+  if (right < 0) return { trim: trim };
+  if (Math.abs(trim - right) <= CENTRE_SLACK) return { trim: trim, align: 'center' };
+  return { trim: trim, indent: Math.round((trim / columns) * 1000) / 10 };
+}
+
+/** `runs` without their first `count` characters. */
+function dropStart(runs: Run[], count: number): Run[] {
+  const out: Run[] = [];
+  for (let i = 0; i < runs.length; i++) {
+    const text = runs[i].text;
+    if (count >= text.length) {
+      count -= text.length;
+      continue;
+    }
+    out.push({ text: text.slice(count), style: runs[i].style });
+    count = 0;
+  }
+  return out;
+}
 
 // One block per paragraph object: unchanged paragraphs keep their block, so the page turner reuses their metrics.
 const cache = new WeakMap<Paragraph, ReaderBlock>();
@@ -17,11 +58,17 @@ function toBlock(paragraph: Paragraph): ReaderBlock {
     cache.set(paragraph, block);
   }
   if (!block) {
-    block = {
-      kind: paragraph.input ? 'input' : 'text',
-      text: paragraph.text,
-      runs: paragraph.runs.map((run) => ({ text: run.text, style: run.style })),
-    };
+    let runs: Run[] = paragraph.runs.map((run) => ({ text: run.text, style: run.style }));
+    let text = paragraph.text;
+    const layout = paragraph.input || paragraph.box ? null : lineLayout(text);
+    if (layout) {
+      runs = dropStart(runs, layout.trim);
+      text = text.slice(layout.trim);
+    }
+    block = { kind: paragraph.input ? 'input' : 'text', text: text, runs: runs };
+    // A box (S1.23): its rows centred, as the game centred the box.
+    if (paragraph.box || (layout && layout.align)) block.align = 'center';
+    if (layout && layout.indent) block.indent = layout.indent;
     cache.set(paragraph, block);
   }
   if (paragraph.screen) block.screen = true;

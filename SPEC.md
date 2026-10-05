@@ -280,8 +280,11 @@ The core screen. It must feel like reading an ebook.
   on measured DOM heights with the current font settings, and re-paginates on settings change/orientation,
   keeping the reading position (the start of the page last turned to). Long paragraphs are split between lines,
   at a word start, or after a hyphen inside a word, where the browser breaks lines too (no hyphenation in the
-  reader). Spaces are kept as the game printed them (an indented line, a title centred with spaces, two spaces after
-  a full stop), and lines still wrap (S1.18).
+  reader). Spaces are kept as the game printed them (an indented line, two spaces after a full stop), and lines still
+  wrap (S1.18). A line laid out for the game's 80-column screen with 8 leading spaces or more (S1.23) is shown as the
+  game meant it on any width: centred when its margins are about equal (a title, "[Press SPACE to begin.]"), its indent
+  dropped when it is wider than 80 columns, else its indent as a share of the text column (`text-indent` in %), so a
+  narrow screen never wraps a run of spaces onto a line of its own.
 - Tap zones: left 30 % = previous page, right 70 % = next page (Kindle convention); swipe left/right when
   supported. Page indicator "3 / 3" at the bottom.
 - New output after a command opens on the page containing the echoed command; if output spans several
@@ -385,7 +388,7 @@ end of the lists above, into the ⋯ and "More…" dialogs, and only the noun ch
 for choice games, the story title and chapter if provided. Every non-empty row of the status window shows in the top
 zone, one under the other in the UI font, each split like the first into a left part and a right part (region and
 exits, progress counters, a menu's legend); blank rows are dropped. Past 4 rows, the zone shows the first 3 and a "…"
-line, and the reader menu lists them all. A row the game centred (a title) stays centred; an indented row is one
+line, and the reader menu lists them all (a box under the status line is shown in the text, below). A row the game centred (a title) stays centred; an indented row is one
 left part. The text area gets shorter by the zone's height: when the number of rows changes, the pages are laid out
 again at once, keeping the reading position, and all pages (earlier ones too) share the new text-area height.
 
@@ -396,6 +399,17 @@ centred, the selected entry (marked "> ") in bold, a legend's two parts on one l
 row when it is a centred title (else the game's title). The key chips (S1.12) are unchanged. When the game goes back to
 its main window (a subject opened, the menu closed), the reader shows it as before, on a fresh page (S1.16). These
 screens are not in the Transcript view (they are the status window, not the game's text).
+
+**Boxes drawn in the upper window** (S1.23, Inform's `box`: an epigraph, a title card): outside those menus, rows under
+the status line, after a blank row and all indented (a box is centred; a map or a list of exits starts at the margin),
+are a box. The top zone keeps the status line (the rows above the blank one; none for an opening epigraph), and the
+text area shows the box at the start of the turn (after the echoed command, or opening the screen when the game cleared
+its window), as the window sits above the turn's text: one centred paragraph per group of rows (blank rows set the
+spacing), one line per row, in the reading font. When the game redraws its upper window without it, the box stays
+there in the text, the Transcript view and the saves. Rows drawn again after a command are a part of the status window
+(Metamorphoses' humours), not a box: they go back to the top zone. In Glulx, the library's quote box is a text window
+of its own: the text of any buffer window other than the main one (the one asking for input) is shown the same way.
+No box is kept while the main window is cleared and empty (a menu).
 
 ---
 
@@ -443,14 +457,14 @@ interface Engine {
 ```
 
 For ZVM and Quixe, we implement a **GlkOte-compatible display layer** (the API Parchment's engines talk
-to) that translates Glk window updates into `OutputBlock`s: buffer window → transcript, grid window →
-status line, pictures drawn in the buffer window → grayscale images, graphics windows and sound → ignored. Existing Parchment code is reused where its
+to) that translates Glk window updates into `OutputBlock`s: the main buffer window → transcript, another buffer
+window → a box (§3.6, S1.23), grid window → status line, pictures drawn in the buffer window → grayscale images, graphics windows and sound → ignored. Existing Parchment code is reused where its
 licence allows (MIT); only the presentation layer is ours.
 
 `OutputBlock` (`src/engines/engine.ts`): `paragraph` (styled runs, Glk style names; `append` continues the previous
 paragraph, e.g. the echoed command after the prompt), `status` (the whole status line, one string per row), `image`
 (a picture on a line of its own: its Blorb number, size in px and alt text; the text around it on the same Glk line
-becomes the paragraphs before and after it) and `clear` (the main window was cleared: the next paragraph starts a new screen, §3.6). The Z-machine runs on ZVM (`ifvms`) and the Glk API
+becomes the paragraphs before and after it), `clear` (the main window was cleared: the next paragraph starts a new screen, §3.6) and `quote` (the lines of another buffer window, none when it closes: a box, §3.6; a `paragraph` with `box` restores a kept box from a save). The Z-machine runs on ZVM (`ifvms`) and the Glk API
 library `glkapi.js` (`glkote-term`), both MIT and pinned; small build-time patches let them run from an ES module
 bundle, one Glk instance per game (see `src/engines/README.md`), and keep bit 1 of the header's Flags 1 in versions 4
 and later, which the Inform library reads as a time game ("Time: 9:05 am"), as upstream ZVM does since 1.1.6 (S1.18). `load()` rejects when the story cannot start; the VM
