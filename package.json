@@ -48,7 +48,7 @@
     "@playwright/test": "1.63.0",
     "@preact/preset-vite": "^2.10.6",
     "@types/jsdom": "^30.0.0",
-    "@types/node": "^26.6.3",
+    "@types/node": "^26.6.4",
     "@vitejs/plugin-legacy": "^7.2.1",
     "autoprefixer": "^10.6.1",
     "es-check": "^9.8.1",
