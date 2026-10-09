@@ -411,7 +411,8 @@ spacing), one line per row, in the reading font. When the game redraws its upper
 there in the text, the Transcript view and the saves. Rows drawn again after a command are a part of the status window
 (Metamorphoses' humours), not a box: they go back to the top zone. In Glulx, the library's quote box is a text window
 of its own: the text of any buffer window other than the main one (the one asking for input) is shown the same way.
-No box is kept while the main window is cleared and empty (a menu).
+No box is kept while the main window is cleared and empty (a menu), nor a box another box replaces on a timer: those
+are the frames of an animation (Shrapnel's title, S1.25), shown one at a time, and only the last one stays.
 
 ---
 

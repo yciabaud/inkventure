@@ -257,6 +257,23 @@ describe('boxes in the upper window (S1.23)', () => {
     expect(t.paragraphs[0].text).toMatch(/^The oldest and strongest emotion of mankind\n/);
   });
 
+  it('drops a box replaced by another on a timer: frames of an animation (S1.25)', () => {
+    // Shrapnel's title: one centred row in the upper window, redrawn every tick while the game waits for a key.
+    const frame = (text: string) => rows(BLANK, '                         ' + text);
+    const tick = (lines: string[]): OutputBlock => ({ type: 'status', lines: lines, timer: true });
+    let t = applyOutput(EMPTY_TRANSCRIPT, [status(frame('You are standing west'))]);
+    t = applyOutput(t, [tick(frame('*** You have died ***'))]);
+    t = applyOutput(t, [tick(frame('shrapnel by adam cadre'))]);
+    expect(texts(withBox(t))).toEqual(['[box] shrapnel by adam cadre']);
+    // The last frame is kept as a box when the game goes on (a key, a command).
+    t = applyOutput(t, [status(rows(' West of the house')), p('West of the house')]);
+    expect(texts(t.paragraphs)).toEqual(['[box] shrapnel by adam cadre', 'West of the house']);
+    // A box the game only takes away on a timer stays in the text.
+    let u = applyOutput(EMPTY_TRANSCRIPT, [status(frame('A quotation')), p('>')]);
+    u = applyOutput(u, [tick(rows(' Kitchen'))]);
+    expect(texts(u.paragraphs)).toEqual(['[box] A quotation', '>']);
+  });
+
   it('keeps no box while the main window is cleared and empty: the upper window is a menu (S1.22)', () => {
     let t = applyOutput(EMPTY_TRANSCRIPT, [
       p('>'),
