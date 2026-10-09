@@ -71,7 +71,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | Post-V1 | S1.15, S1.4 | todo |
 | [S1.21](stories/S1.21-parser-question-nouns.md) | Object chips when the parser asks what to act on | E1 | M6 | S1.4, S1.17, S1.19 | done |
 | [S1.22](stories/S1.22-upper-window-menus.md) | Menus drawn in the upper window | E1 | M6 | S1.15, S1.16, S1.12 | done |
-| [S1.23](stories/S1.23-upper-window-quote-boxes.md) | Tall upper windows: quote boxes, title cards and extra rows | E1 | M6 | S1.22, S7.3, S7.4 | in-progress |
+| [S1.23](stories/S1.23-upper-window-quote-boxes.md) | Tall upper windows: quote boxes, title cards and extra rows | E1 | M6 | S1.22, S7.3, S7.4 | done |
 | [S1.24](stories/S1.24-restore-prompt-freeze.md) | Z-machine games freeze on a cancelled restore prompt | E1 | M6 | S1.3 | done |
 | [S1.25](stories/S1.25-timer-events.md) | Timer events for games that run on a clock | E1 | M6 | S1.3, S1.7 | todo |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
