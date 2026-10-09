@@ -33,7 +33,10 @@ Twine pages: the two blockers first (S1.13 is the smallest), then the stories th
 M7 (offline) started with a device spike: the S0.9 probe showed the Kindle can open a page and read kept files with Wi-Fi
 off, so S5.3 keeps its full scope.
 
-Stories of the **Post-V1** milestone are written but not in this order: they wait until V1 is out.
+**V1.1** comes after V1, from the follow-ups of the [story-file scan](reports/story-file-scan-2026-10-04.md) and the
+[rendering survey](reports/rendering-survey-2026-10-05.md), plus the Decker spike of [post-v1-ideas.md](post-v1-ideas.md):
+
+S1.26 → S1.20 → S1.28 → S1.27 → S0.11
 
 ## Stories
 
@@ -49,6 +52,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S0.8](stories/S0.8-pr-preview-deployments.md) | Pull request preview deployments | E0 | M0 | S0.2 | done |
 | [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | done |
 | [S0.10](stories/S0.10-first-load-budget.md) | First-load budget: measure what the Kindle loads, and slim the bundle | E0 | M6 | S0.7, S0.3 | done |
+| [S0.11](stories/S0.11-decker-spike.md) | Decker on the Kindle (spike) | E0 | V1.1 | S0.3 | todo |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |
@@ -68,12 +72,15 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S1.17](stories/S1.17-contextual-answer-chips.md) | Answer chips for yes/no and numbered questions | E1 | M6 | S1.4 | done |
 | [S1.18](stories/S1.18-small-rendering-fixes.md) | Small rendering fixes: spaces, 9:05's clock, Twine edges | E1 | M6 | S1.3, S1.9 | done |
 | [S1.19](stories/S1.19-capitalised-command-chips.md) | Chips for the commands the text names in capitals | E1 | M6 | S1.4 | done |
-| [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | Post-V1 | S1.15, S1.4 | todo |
+| [S1.20](stories/S1.20-tappable-compass.md) | Tappable compass in the status window | E1 | V1.1 | S1.15, S1.4 | todo |
 | [S1.21](stories/S1.21-parser-question-nouns.md) | Object chips when the parser asks what to act on | E1 | M6 | S1.4, S1.17, S1.19 | done |
 | [S1.22](stories/S1.22-upper-window-menus.md) | Menus drawn in the upper window | E1 | M6 | S1.15, S1.16, S1.12 | done |
 | [S1.23](stories/S1.23-upper-window-quote-boxes.md) | Tall upper windows: quote boxes, title cards and extra rows | E1 | M6 | S1.22, S7.3, S7.4 | done |
 | [S1.24](stories/S1.24-restore-prompt-freeze.md) | Z-machine games freeze on a cancelled restore prompt | E1 | M6 | S1.3 | done |
 | [S1.25](stories/S1.25-timer-events.md) | Timer events for games that run on a clock | E1 | M6 | S1.3, S1.7 | done |
+| [S1.26](stories/S1.26-glk-hyperlinks.md) | Tappable links in parser games | E1 | V1.1 | S1.3, S1.7 | todo |
+| [S1.27](stories/S1.27-upper-window-styles.md) | Styles of the upper window: titles and selections that read | E1 | V1.1 | S1.15, S1.22 | todo |
+| [S1.28](stories/S1.28-wide-fixed-width-text.md) | Wide fixed-width text: maps and tables that keep their columns | E1 | V1.1 | S1.1, S1.2 | todo |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |

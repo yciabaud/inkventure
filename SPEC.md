@@ -1022,6 +1022,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
 | **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21–S1.25, S2.8, S7.3, S7.4 |
 | **M7 — Offline** | Offline probe on the Kindle, offline app shell and kept adventures | S0.9, S5.3 |
+| **V1.1** | Tappable links and compass, styled upper-window rows, wide fixed-width text, Decker spike | S1.20, S1.26–S1.28, S0.11 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
