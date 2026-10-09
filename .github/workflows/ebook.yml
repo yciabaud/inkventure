@@ -2,7 +2,8 @@ name: Ebook
 
 # Builds the EN and FR ebooks (SPEC §8; story S6.1) on a version tag, on pull requests that change them, or on
 # demand: EPUB 3 (Pandoc, checked with EPUBCheck) and AZW3 (Calibre), with game cards from the published catalogue's
-# featured lists. The books are uploaded as a workflow artifact.
+# featured lists. The books are uploaded as a workflow artifact; on a version tag, the EPUB and AZW3 files are also
+# attached to the tag's GitHub release (a draft is created when the tag has no release yet).
 on:
   push:
     tags: ['v*']
@@ -49,3 +50,38 @@ jobs:
             ebook/build/*-cover.jpg
             ebook/build/books.json
           if-no-files-found: error
+
+  # On a version tag only: attach the books to the tag's release, replacing files of the same name (a re-run). The
+  # release is the one created with the tag (GitHub UI); a tag pushed with git gets a draft release, whose notes the
+  # owner fills from docs/release-notes-template.md before publishing it.
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: ebook
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ebooks
+          path: ebooks
+      - name: Attach the books to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          shopt -s failglob
+          files=(ebooks/*.epub ebooks/*.azw3)
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" "${files[@]}" --clobber
+          else
+            gh release create "$TAG" "${files[@]}" --draft --verify-tag --title "Inkventure $TAG" \
+              --notes 'Draft: fill the notes from docs/release-notes-template.md, then publish.'
+          fi
+          {
+            echo "### Release $TAG"
+            echo
+            for f in "${files[@]}"; do echo "- $(basename "$f") ($(du -k "$f" | cut -f1) KiB)"; done
+          } >> "$GITHUB_STEP_SUMMARY"

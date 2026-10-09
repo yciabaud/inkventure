@@ -1,6 +1,6 @@
 # Release notes template
 
-Copy this into the GitHub release of a `v*` tag (the Ebook workflow builds the books for it). Fill the device results
+Copy this into the GitHub release of a `v*` tag (the Ebook workflow builds the books and attaches them to it). Fill the device results
 from the [device checklist](device-checklist.md), run on the release's build.
 
 ```markdown
