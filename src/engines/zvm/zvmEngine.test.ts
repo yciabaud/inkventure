@@ -1,7 +1,7 @@
 // @vitest-environment node
 // Headless adapter test: the fixture Z-machine game played through ZVM, glkapi and our GlkOte bridge, no DOM.
 import { readFileSync } from 'node:fs';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Engine, InputRequest } from '../engine';
 import {
   applyOutput,
@@ -296,5 +296,100 @@ describe('ZVM adapter', () => {
   it('leaves undo to the reader', async () => {
     const s = await start();
     await expect(s.engine.undo()).resolves.toBe(false);
+  });
+
+  describe('timed input (S1.25)', () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    async function atPrompt(): Promise<Session> {
+      vi.useFakeTimers();
+      const s = await start();
+      s.engine.sendChar(' ');
+      s.take();
+      return s;
+    }
+
+    it('calls the routine of a timed key prompt on time, until it ends the prompt', async () => {
+      const s = await atPrompt();
+      expect(send(s, 'tide')).toContain('You watch the water and wait.');
+      expect(s.input()).toEqual({ type: 'char' });
+      vi.advanceTimersByTime(1900);
+      expect(s.take()).not.toContain('The tide rises.');
+      vi.advanceTimersByTime(100);
+      expect(s.take()).toContain('The tide rises.');
+      expect(s.input()).toEqual({ type: 'char' });
+      vi.advanceTimersByTime(2000);
+      const end = s.take();
+      expect(end).toContain('The tide is full.');
+      expect(end).toContain('You stop watching the tide.');
+      expect(s.input()).toMatchObject({ type: 'line' });
+      // The timer stopped with the prompt.
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('The tide');
+      expect(s.errors).toEqual([]);
+    });
+
+    it('stops the timer when a key ends the prompt first', async () => {
+      const s = await atPrompt();
+      send(s, 'tide');
+      s.engine.sendChar('x');
+      expect(s.take()).toContain('You stop watching the tide.');
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('The tide rises.');
+      expect(send(s, 'look')).toContain('A stone jetty');
+      expect(s.errors).toEqual([]);
+    });
+
+    it('lets the routine print during a timed line, and ends the line when it returns true', async () => {
+      const s = await atPrompt();
+      expect(send(s, 'bell')).toContain('What do you call out?');
+      vi.advanceTimersByTime(2000);
+      expect(s.take()).toContain('A bell rings out at sea.');
+      // Still waiting for the same line: no new request, no blank line echoed.
+      expect(s.input()).toMatchObject({ type: 'line' });
+      expect(s.transcript().paragraphs.filter((p) => p.input)).toHaveLength(1);
+      vi.advanceTimersByTime(4000);
+      const end = s.take();
+      expect(end.match(/A bell rings out at sea\./g)).toHaveLength(2);
+      expect(end).toContain('The bell falls silent.');
+      expect(send(s, 'look')).toContain('A stone jetty');
+      expect(s.errors).toEqual([]);
+    });
+
+    it('takes a line typed before the routine ends it', async () => {
+      const s = await atPrompt();
+      send(s, 'bell');
+      vi.advanceTimersByTime(2000);
+      expect(send(s, 'hello')).toContain('only the bell answers');
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('A bell rings');
+      expect(s.errors).toEqual([]);
+    });
+
+    it('keeps the timer of a timed line in a saved state', async () => {
+      const s = await atPrompt();
+      send(s, 'bell');
+      const state = await s.engine.saveState();
+      const t = await start();
+      await t.engine.restoreState(state);
+      t.take();
+      vi.advanceTimersByTime(2000);
+      expect(t.take()).toContain('A bell rings out at sea.');
+      expect(send(t, 'hello')).toContain('only the bell answers');
+      expect(t.errors).toEqual([]);
+    });
+
+    it('sends no timer event while timers are off', async () => {
+      const s = await atPrompt();
+      send(s, 'tide');
+      s.engine.setTimersActive!(false);
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('The tide rises.');
+      s.engine.setTimersActive!(true);
+      vi.advanceTimersByTime(2000);
+      expect(s.take()).toContain('The tide rises.');
+    });
   });
 });

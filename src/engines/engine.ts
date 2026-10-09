@@ -96,6 +96,11 @@ export interface Engine {
   restart(): Promise<void>;
   /** Takes back the last turn when the engine can; false lets the reader restore its previous snapshot instead. */
   undo(): Promise<boolean>;
+  /**
+   * Timer events on or off (S1.25, parser games): off while the reader does not show the game, and for good when it
+   * closes. Engines without timers leave it out.
+   */
+  setTimersActive?(active: boolean): void;
   /** A URL (`data:`) of picture `image` of the loaded story, or null; only engines that draw pictures have it. */
   imageUrl?(image: number): string | null;
 }

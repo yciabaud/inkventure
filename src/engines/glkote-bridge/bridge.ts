@@ -61,10 +61,18 @@ export interface Update {
   content?: ContentUpdate[];
   input?: InputUpdate[];
   specialinput?: { type: string };
+  /** The game's timer: an interval in ms, or null when it stops (only in an update that changes it). */
+  timer?: number | null;
   /** GlkOte 2.3 (Quixe's Glk): the game has ended, in an `update`. Older libraries send `type: 'exit'` instead. */
   exit?: boolean;
   message?: string;
 }
+
+/**
+ * The shortest interval between two timer events (S1.25). A game that asks for a faster timer (an animation, a clock
+ * ticking every 10 ms) gets one event a second: on e-ink, each event may redraw the screen.
+ */
+export const MIN_TIMER_MS = 1000;
 
 const STYLES: TextStyle[] = [
   'normal',
@@ -168,6 +176,13 @@ export class GlkOteBridge {
   /** The line just sent, until its window's next content: echoed again if the game clears that window (S1.16). */
   private sentLine: { window: number; text: string } | null = null;
   private exited = false;
+  /** The VM waits in glk_select for an event (it has sent its update and has not been given an event since). */
+  private waiting = false;
+  /** The game's timer interval (ms, never below MIN_TIMER_MS), or null; and the pending timeout. */
+  private timerMs: number | null = null;
+  private timerId: ReturnType<typeof setTimeout> | null = null;
+  /** Timer events are sent only while the reader shows the game. */
+  private timersOn = true;
 
   /** `dialog`: file storage, for Glk libraries that ask GlkOte for it (`getlibrary('Dialog')`, Quixe's). */
   constructor(
@@ -200,7 +215,7 @@ export class GlkOteBridge {
       outspacingy: 0,
     };
     // Runs the VM until it first waits for input.
-    iface.accept({ type: 'init', gen: this.generation, metrics: metrics, support: [] });
+    iface.accept({ type: 'init', gen: this.generation, metrics: metrics, support: ['timer'] });
   }
 
   update(data: Update): void {
@@ -212,6 +227,8 @@ export class GlkOteBridge {
     if (data.type !== 'update' && data.type !== 'exit') return;
     if (data.gen <= this.generation) return;
     this.generation = data.gen;
+    this.waiting = true;
+    if (data.timer !== undefined) this.setTimer(data.timer);
 
     if (data.windows) this.updateWindows(data.windows);
     // The window that asks for input is the main one, for the text of this update too.
@@ -229,6 +246,7 @@ export class GlkOteBridge {
       const gen = this.generation;
       setTimeout(() => {
         if (iface) {
+          this.waiting = false;
           iface.accept({
             type: 'specialresponse',
             gen: gen,
@@ -242,6 +260,7 @@ export class GlkOteBridge {
     if (data.type === 'exit' || data.exit) {
       this.exited = true;
       this.pending = null;
+      this.setTimer(null);
       this.sink.exit();
     }
   }
@@ -264,6 +283,7 @@ export class GlkOteBridge {
 
   error(message: unknown): void {
     this.pending = null;
+    this.setTimer(null);
     this.sink.error(String(message));
   }
 
@@ -276,6 +296,7 @@ export class GlkOteBridge {
     if (!pending || pending.type !== 'line' || !this.iface) return;
     this.pending = null;
     this.sentLine = { window: pending.window, text: text };
+    this.waiting = false;
     this.iface.accept({ type: 'line', gen: this.generation, window: pending.window, value: text });
   }
 
@@ -283,7 +304,24 @@ export class GlkOteBridge {
     const pending = this.pending;
     if (!pending || pending.type !== 'char' || !this.iface) return;
     this.pending = null;
+    this.waiting = false;
     this.iface.accept({ type: 'char', gen: this.generation, window: pending.window, value: key });
+  }
+
+  /**
+   * Timer events on or off: off while the reader does not show the game (another view, the app hidden). Back on, the
+   * next event comes a full interval later.
+   */
+  setTimersActive(active: boolean): void {
+    if (active === this.timersOn) return;
+    this.timersOn = active;
+    this.armTimer();
+  }
+
+  /** This game is replaced or closed: no more timer events. */
+  dispose(): void {
+    this.timersOn = false;
+    this.armTimer();
   }
 
   get hasExited(): boolean {
@@ -293,6 +331,37 @@ export class GlkOteBridge {
   /** The kind of input the game waits for, or null (running, ended or failed). */
   get waitingFor(): 'line' | 'char' | null {
     return this.pending ? this.pending.type : null;
+  }
+
+  // ---- Timer ----
+
+  private setTimer(interval: number | null): void {
+    this.timerMs = interval && interval > 0 ? Math.max(interval, MIN_TIMER_MS) : null;
+    this.armTimer();
+  }
+
+  private armTimer(): void {
+    if (this.timerId !== null) clearTimeout(this.timerId);
+    this.timerId = null;
+    if (this.timerMs === null || !this.timersOn || this.exited) return;
+    this.timerId = setTimeout(() => this.tick(), this.timerMs);
+  }
+
+  private tick(): void {
+    this.timerId = null;
+    const iface = this.iface;
+    // While the VM runs (a Glulx turn between slices) the tick is skipped: the next one comes an interval later.
+    if (iface && this.waiting && !this.exited) {
+      this.waiting = false;
+      try {
+        iface.accept({ type: 'timer', gen: this.generation });
+      } catch (error) {
+        this.error(error instanceof Error ? error.message : error);
+        return;
+      }
+    }
+    // The update the event caused may have set the timer again already.
+    if (this.timerId === null) this.armTimer();
   }
 
   // ---- Update handling ----

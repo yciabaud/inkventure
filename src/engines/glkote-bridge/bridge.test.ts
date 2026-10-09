@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { OutputBlock } from '../engine';
 import { applyOutput, EMPTY_TRANSCRIPT, splitStatus, type Transcript } from '../transcript';
-import { GlkOteBridge, type Update } from './bridge';
+import { GlkOteBridge, MIN_TIMER_MS, type Update } from './bridge';
 
 /** A bridge fed GlkOte updates by hand, collecting what it reports into a transcript. */
 function setup() {
@@ -318,5 +318,106 @@ describe('GlkOteBridge other buffer windows (S1.23)', () => {
     const t = s.transcript();
     expect(t.paragraphs.map((p) => p.text)).toEqual(['The story.', 'More story.']);
     expect(t.quote).toEqual(['A side panel']);
+  });
+});
+
+describe('GlkOteBridge timer events (S1.25)', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  /** A bridge whose game answers each timer event with another update (as glkapi does after glk_select). */
+  function withTimer() {
+    vi.useFakeTimers();
+    const accepted: Array<Record<string, unknown>> = [];
+    const bridge = new GlkOteBridge(
+      {
+        output: () => undefined,
+        input: () => undefined,
+        exit: () => undefined,
+        error: () => undefined,
+      },
+      80,
+    );
+    let gen = 0;
+    const update = (data: Omit<Update, 'type' | 'gen'>) =>
+      bridge.update({ type: 'update', gen: ++gen, ...data });
+    bridge.init({
+      accept: (event: Record<string, unknown>) => {
+        accepted.push(event);
+        if (event.type === 'timer') update({});
+      },
+    } as never);
+    const timers = () => accepted.filter((event) => event.type === 'timer');
+    return { bridge, update, accepted, timers };
+  }
+
+  it('declares timer support to the Glk library', () => {
+    const s = withTimer();
+    expect(s.accepted[0]).toMatchObject({ type: 'init', support: ['timer'] });
+  });
+
+  it('sends timer events at the interval the game asks for, then stops on 0', () => {
+    const s = withTimer();
+    s.update({ windows: WINDOWS, timer: 2000 });
+    vi.advanceTimersByTime(1999);
+    expect(s.timers()).toHaveLength(0);
+    vi.advanceTimersByTime(1);
+    expect(s.timers()).toHaveLength(1);
+    // With the generation of the update it answers.
+    expect(s.timers()[0]).toEqual({ type: 'timer', gen: 1 });
+    vi.advanceTimersByTime(4000);
+    expect(s.timers()).toHaveLength(3);
+    s.update({ timer: null });
+    vi.advanceTimersByTime(10000);
+    expect(s.timers()).toHaveLength(3);
+  });
+
+  it('never sends them more often than once a second', () => {
+    const s = withTimer();
+    s.update({ windows: WINDOWS, timer: 10 });
+    vi.advanceTimersByTime(MIN_TIMER_MS - 1);
+    expect(s.timers()).toHaveLength(0);
+    vi.advanceTimersByTime(MIN_TIMER_MS * 5 + 1);
+    expect(s.timers()).toHaveLength(6);
+  });
+
+  it('sends none while timers are off, nor after the game ends or is replaced', () => {
+    const s = withTimer();
+    s.update({ windows: WINDOWS, timer: 1000 });
+    s.bridge.setTimersActive(false);
+    vi.advanceTimersByTime(5000);
+    expect(s.timers()).toHaveLength(0);
+    // Back on: a full interval later.
+    s.bridge.setTimersActive(true);
+    vi.advanceTimersByTime(999);
+    expect(s.timers()).toHaveLength(0);
+    vi.advanceTimersByTime(1);
+    expect(s.timers()).toHaveLength(1);
+    s.bridge.dispose();
+    vi.advanceTimersByTime(5000);
+    expect(s.timers()).toHaveLength(1);
+
+    const t = withTimer();
+    t.update({ windows: WINDOWS, timer: 1000 });
+    t.bridge.update({ type: 'update', gen: 99, exit: true });
+    vi.advanceTimersByTime(5000);
+    expect(t.timers()).toHaveLength(0);
+  });
+
+  it('skips a tick while the game is running (no update since its last event)', () => {
+    const s = withTimer();
+    s.update({
+      windows: WINDOWS,
+      input: [{ id: 1, type: 'line', gen: 1, maxlen: 120 }],
+      timer: 1000,
+    });
+    // A command sent: the game runs (a Glulx turn between slices) until its next update.
+    s.bridge.sendLine('wait');
+    vi.advanceTimersByTime(1000);
+    expect(s.timers()).toHaveLength(0);
+    s.update({ input: [{ id: 1, type: 'line', gen: 2, maxlen: 120 }] });
+    vi.advanceTimersByTime(1000);
+    expect(s.timers()).toHaveLength(1);
   });
 });
