@@ -8,7 +8,8 @@
 //
 // Boxes (story S1.23): a box the game draws in its upper window under the status line (Inform's quote box, a title
 // card) is shown in the text, at the start of the turn, as the window sits above the turn's text. It is kept as
-// paragraphs once the game redraws its upper window without it.
+// paragraphs once the game redraws its upper window without it, unless another box replaces it on a timer (frames of an
+// animation, S1.25).
 import type { ImageRef, OutputBlock, TextRun } from './engine';
 
 export interface Paragraph {
@@ -118,8 +119,9 @@ export function applyOutput(transcript: Transcript, blocks: OutputBlock[]): Tran
         continue;
       }
       // The box the game showed is gone (or another one replaces it): it stays in the text. Not a menu's rows (the
-      // main window cleared and still empty, S1.22).
-      if (box && !cleared) {
+      // main window cleared and still empty, S1.22), nor a frame of an animation: a box replaced by another one on the
+      // game's clock (Shrapnel's title, S1.25).
+      if (box && !cleared && !(block.timer && next)) {
         paragraphs = insertBox(paragraphs, box.paragraphs);
         copied = true;
       }

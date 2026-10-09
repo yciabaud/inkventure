@@ -39,11 +39,12 @@ export interface ImageRef {
  * - `quote`: the text of a window other than the main one and the status window (Inform's quote box in Glulx), one
  *   string per line; no lines when the window closes (S1.23).
  * A `paragraph` with `box` is part of a box the game drew in its upper window, kept in the transcript (S1.23).
+ * A `status` or `quote` with `timer` was drawn on a timer event (S1.25): a box it replaces was a frame of an animation.
  */
 export type OutputBlock =
   | { type: 'paragraph'; runs: TextRun[]; append?: boolean; box?: boolean }
-  | { type: 'status'; lines: string[] }
-  | { type: 'quote'; lines: string[] }
+  | { type: 'status'; lines: string[]; timer?: boolean }
+  | { type: 'quote'; lines: string[]; timer?: boolean }
   | ({ type: 'image' } & ImageRef)
   | { type: 'clear' };
 

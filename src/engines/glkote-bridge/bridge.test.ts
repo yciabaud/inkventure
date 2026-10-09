@@ -405,6 +405,45 @@ describe('GlkOteBridge timer events (S1.25)', () => {
     expect(t.timers()).toHaveLength(0);
   });
 
+  it('marks what the game draws on a timer, until the player sends something', () => {
+    vi.useFakeTimers();
+    const blocks: OutputBlock[] = [];
+    const bridge = new GlkOteBridge(
+      {
+        output: (out: OutputBlock[]) => blocks.push(...out),
+        input: () => undefined,
+        exit: () => undefined,
+        error: () => undefined,
+      },
+      80,
+    );
+    let gen = 0;
+    const row = (text: string) => [{ line: 0, content: [{ style: 'normal', text: text }] }];
+    bridge.init({
+      accept: (event: Record<string, unknown>) => {
+        if (event.type === 'timer') {
+          bridge.update({ type: 'update', gen: ++gen, content: [{ id: 2, lines: row('Tick') }] });
+        }
+      },
+    } as never);
+    bridge.update({
+      type: 'update',
+      gen: ++gen,
+      windows: WINDOWS,
+      content: [{ id: 2, lines: row('Start') }],
+      input: [{ id: 1, type: 'line', gen: 1, maxlen: 120 }],
+      timer: 1000,
+    });
+    vi.advanceTimersByTime(1000);
+    bridge.sendLine('look');
+    bridge.update({ type: 'update', gen: ++gen, content: [{ id: 2, lines: row('Turn') }] });
+    expect(blocks.map((b) => [b.type === 'status' && b.lines[0], 'timer' in b])).toEqual([
+      ['Start', false],
+      ['Tick', true],
+      ['Turn', false],
+    ]);
+  });
+
   it('skips a tick while the game is running (no update since its last event)', () => {
     const s = withTimer();
     s.update({

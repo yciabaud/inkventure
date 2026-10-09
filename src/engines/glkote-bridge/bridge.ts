@@ -183,6 +183,8 @@ export class GlkOteBridge {
   private timerId: ReturnType<typeof setTimeout> | null = null;
   /** Timer events are sent only while the reader shows the game. */
   private timersOn = true;
+  /** The last event sent was a timer event: what the game draws now, it draws on its clock. */
+  private fromTimer = false;
 
   /** `dialog`: file storage, for Glk libraries that ask GlkOte for it (`getlibrary('Dialog')`, Quixe's). */
   constructor(
@@ -247,6 +249,7 @@ export class GlkOteBridge {
       setTimeout(() => {
         if (iface) {
           this.waiting = false;
+          this.fromTimer = false;
           iface.accept({
             type: 'specialresponse',
             gen: gen,
@@ -297,6 +300,7 @@ export class GlkOteBridge {
     this.pending = null;
     this.sentLine = { window: pending.window, text: text };
     this.waiting = false;
+    this.fromTimer = false;
     this.iface.accept({ type: 'line', gen: this.generation, window: pending.window, value: text });
   }
 
@@ -305,6 +309,7 @@ export class GlkOteBridge {
     if (!pending || pending.type !== 'char' || !this.iface) return;
     this.pending = null;
     this.waiting = false;
+    this.fromTimer = false;
     this.iface.accept({ type: 'char', gen: this.generation, window: pending.window, value: key });
   }
 
@@ -353,6 +358,7 @@ export class GlkOteBridge {
     // While the VM runs (a Glulx turn between slices) the tick is skipped: the next one comes an interval later.
     if (iface && this.waiting && !this.exited) {
       this.waiting = false;
+      this.fromTimer = true;
       try {
         iface.accept({ type: 'timer', gen: this.generation });
       } catch (error) {
@@ -420,7 +426,9 @@ export class GlkOteBridge {
       else lines.push(line);
     }
     this.quotes[update.id] = lines;
-    return { type: 'quote', lines: lines.slice(0) };
+    const block: OutputBlock = { type: 'quote', lines: lines.slice(0) };
+    if (this.fromTimer) block.timer = true;
+    return block;
   }
 
   private updateContent(content: ContentUpdate[]): void {
@@ -456,7 +464,9 @@ export class GlkOteBridge {
         const lines = update.lines || [];
         for (let l = 0; l < lines.length; l++) grid[lines[l].line] = runsText(lines[l].content);
         this.grids[update.id] = grid;
-        blocks.push({ type: 'status', lines: grid.slice(0) });
+        const status: OutputBlock = { type: 'status', lines: grid.slice(0) };
+        if (this.fromTimer) status.timer = true;
+        blocks.push(status);
       }
     }
     if (blocks.length) this.sink.output(blocks);
