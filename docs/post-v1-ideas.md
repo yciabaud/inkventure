@@ -215,8 +215,10 @@ import) can be reused.
 
 ## Written as stories
 
-- **Tappable compass** in the status window (Bronze's exits): [S1.20](stories/S1.20-tappable-compass.md), milestone
-  Post-V1 in the [backlog](BACKLOG.md).
+Milestone V1.1 in the [backlog](BACKLOG.md):
+
+- **Tappable compass** in the status window (Bronze's exits): [S1.20](stories/S1.20-tappable-compass.md).
+- **Decker spike** on the Kindle (next step 1 below): [S0.11](stories/S0.11-decker-spike.md).
 
 ## Possible next steps
 
