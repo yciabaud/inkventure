@@ -4,6 +4,7 @@ import type { GameRecord } from './ifdb.ts';
 import type { RawDataset, RawGame } from './crawler.ts';
 import type { InkExport } from './ink.ts';
 import { isCandidate, MIN_PICTURES } from './pictures.ts';
+import type { StoryVerdict } from './stories.ts';
 
 /** Story formats the app knows. A format plays once its engine exists; `enabledFormats` lists those. */
 export type StoryFormat = 'zcode' | 'glulx' | 'twine' | 'ink';
@@ -46,6 +47,7 @@ export type DropReason =
   | 'insecure-url'
   | 'unreadable-host'
   | 'no-ink-story'
+  | 'story-does-not-open'
   | 'adult-content'
   | 'excluded';
 
@@ -80,6 +82,11 @@ export interface ResolveOptions {
    * names is assumed to hold the story (fixtures, local runs).
    */
   inkStory?: (link: InkExport) => string | null;
+  /**
+   * Whether a Z-machine or Glulx file opens, and where its story is in a zip when IFDB names another file (S2.8), from
+   * the checks of `check-stories.ts`; undefined when not checked. Without it, every file is assumed to open.
+   */
+  storyVerdict?: (file: StoryFile, format: StoryFormat) => StoryVerdict | undefined;
 }
 
 /** The file the app downloads. `archive`: the story is `primary` inside a zip. */
@@ -251,7 +258,8 @@ type Choice = { file: Candidate; others: Candidate[] } | { reason: DropReason; d
  * (its CORS headers are verified, SPEC §5.5), an uncompressed file, a blorb (with its cover and metadata), then
  * IFDB's order. A zip is only usable when IFDB names the story file inside it (`compressedPrimary`). With
  * `readable`, a file outside the IF Archive is only used when there is no IF Archive file and its host lets the app
- * read it (CORS, SPEC §5.5); `readable` is asked about those files only.
+ * read it (CORS, SPEC §5.5); `readable` is asked about those files only. With `storyVerdict`, a file that does not
+ * open is left out, and a zip's story is the file the check found (S2.8).
  */
 export function chooseFile(
   record: GameRecord,
@@ -259,6 +267,7 @@ export function chooseFile(
   enabled: StoryFormat[],
   readable?: (url: string) => boolean,
   inkStory?: (link: InkExport) => string | null,
+  storyVerdict?: (file: StoryFile, format: StoryFormat) => StoryVerdict | undefined,
 ): Choice {
   const links = ((record.ifdb.downloads && record.ifdb.downloads.links) || []) as Link[];
   const candidates: Candidate[] = [];
@@ -296,8 +305,15 @@ export function chooseFile(
       if (file.archive) file.archive.primary = story;
       else file.url = story;
     }
+    const verdict = storyVerdict ? storyVerdict(file, detected.format) : undefined;
+    if (verdict && !verdict.opens) {
+      problems.push({ reason: 'story-does-not-open', detail: verdict.why + ' (' + url + ')' });
+      return;
+    }
+    if (verdict && verdict.primary && file.archive) file.archive.primary = verdict.primary;
     candidates.push({
-      format: detected.format,
+      // The story's own format when IFDB lists another (a Glulx story listed as Z-code, S2.8).
+      format: (verdict && verdict.opens && verdict.format) || detected.format,
       file: file,
       blorb: detected.blorb,
       onArchive: IF_ARCHIVE_HOST.test(hostOf(file.url)),
@@ -318,6 +334,7 @@ export function chooseFile(
     }
     // Report the most telling problem: an unknown format hides the others.
     const order: DropReason[] = [
+      'story-does-not-open',
       'no-ink-story',
       'unsupported-format',
       'compressed-no-primary',
@@ -831,6 +848,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       ALL_FORMATS,
       undefined,
       options.inkStory,
+      options.storyVerdict,
     );
     if ('reason' in choice) {
       drop(game, choice.reason, choice.detail);
@@ -844,6 +862,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       options.enabledFormats,
       options.readable,
       options.inkStory,
+      options.storyVerdict,
     );
     if ('reason' in enabledChoice) {
       drop(game, enabledChoice.reason, enabledChoice.detail);

@@ -81,7 +81,7 @@ Stories of the **Post-V1** milestone are written but not in this order: they wai
 | [S2.5](stories/S2.5-illustrated-games.md) | Illustrated games: detection, badge & filter | E2 | M4 | S1.10, S2.3, S3.2 | done |
 | [S2.6](stories/S2.6-file-language.md) | The language of the file we play, not of every version | E2 | M4 | S2.2, S2.3 | done |
 | [S2.7](stories/S2.7-ink-web-exports.md) | Ink games published as web exports | E2 | M4 | S1.8, S2.2, S3.4 | done |
-| [S2.8](stories/S2.8-catalogue-story-file-check.md) | The catalogue keeps only story files that open | E2 | M6 | S2.2, S7.4 | todo |
+| [S2.8](stories/S2.8-catalogue-story-file-check.md) | The catalogue keeps only story files that open | E2 | M6 | S2.2, S7.4 | in-progress |
 | [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | done |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | done |

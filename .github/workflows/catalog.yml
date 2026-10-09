@@ -1,8 +1,8 @@
 name: Catalogue
 
 # Rebuilds the catalogue from IFDB every week (SPEC §5.2): crawl (incremental, with the record cache kept on the
-# `catalog` branch), find the stories of ink web exports, check CORS and count Blorb pictures (their caches kept there
-# too), resolve playability, emit and
+# `catalog` branch), find the stories of ink web exports, check CORS, open the story files and count Blorb pictures
+# (their caches kept there too), resolve playability, emit and
 # validate the index, then publish it on the `catalog` branch.
 # The deployment (deploy.yml) runs after it and builds the site with that catalogue. Never triggered by pull requests.
 on:
@@ -42,32 +42,36 @@ jobs:
           if [ -f catalog-data/cache/cors.json ]; then cp catalog-data/cache/cors.json data/cache/; fi
           if [ -f catalog-data/cache/pictures.json ]; then cp catalog-data/cache/pictures.json data/cache/; fi
           if [ -f catalog-data/cache/ink.json ]; then cp catalog-data/cache/ink.json data/cache/; fi
+          if [ -f catalog-data/cache/stories.json ]; then cp catalog-data/cache/stories.json data/cache/; fi
       - name: Crawl ifdb.org
         run: npm run catalog:crawl
       - name: Find the stories in the web exports of ink games
         run: npm run catalog:ink -- --summary "$GITHUB_STEP_SUMMARY"
       - name: Check that the app can read the story files outside the IF Archive (CORS)
         run: npm run catalog:cors -- --ink data/cache/ink.json --summary "$GITHUB_STEP_SUMMARY"
+      - name: Open the Z-machine and Glulx story files (left out when they do not open)
+        run: npm run catalog:stories -- --ink data/cache/ink.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Count the pictures in the Blorbs (illustrated games)
         run: |
           npm run catalog:pictures -- --cors data/cache/cors.json --ink data/cache/ink.json \
-            --summary "$GITHUB_STEP_SUMMARY"
+            --stories data/cache/stories.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Resolve playability
         run: |
           npm run catalog:resolve -- --cors data/cache/cors.json --pictures data/cache/pictures.json \
-            --ink data/cache/ink.json --summary "$GITHUB_STEP_SUMMARY"
+            --ink data/cache/ink.json --stories data/cache/stories.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Emit and validate the catalogue
         run: npm run catalog:emit -- --previous catalog-data/catalog/meta.json --summary "$GITHUB_STEP_SUMMARY"
       - name: Publish on the catalog branch
         run: |
           rm -rf catalog-data/catalog catalog-data/cache/viewgame catalog-data/cache/cors.json \
-            catalog-data/cache/pictures.json catalog-data/cache/ink.json
+            catalog-data/cache/pictures.json catalog-data/cache/ink.json catalog-data/cache/stories.json
           mkdir -p catalog-data/cache
           cp -R data/catalog catalog-data/catalog
           cp -R data/cache/viewgame catalog-data/cache/viewgame
           cp data/cache/cors.json catalog-data/cache/cors.json
           cp data/cache/pictures.json catalog-data/cache/pictures.json
           cp data/cache/ink.json catalog-data/cache/ink.json
+          cp data/cache/stories.json catalog-data/cache/stories.json
           cp data/resolved/report.json catalog-data/report.json
           printf '%s\n' '# Catalogue data' '' \
             'Published by the Catalogue workflow (.github/workflows/catalog.yml) on main. Do not edit by hand.' '' \
@@ -76,6 +80,7 @@ jobs:
             '- `cache/cors.json`: whether the app can read each story file outside the IF Archive (CORS).' \
             '- `cache/pictures.json`: pictures besides the cover in each Blorb that could hold some (illustrated games).' \
             '- `cache/ink.json`: the file holding the story in each web export of an ink game.' \
+            '- `cache/stories.json`: whether each Z-machine and Glulx story file opens.' \
             '- `report.json`: games left out, with their reasons.' > catalog-data/README.md
           cd catalog-data
           git add -A
