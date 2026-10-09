@@ -2,7 +2,7 @@
 // games and a report of the games left out, with their reasons.
 //
 //   node scripts/catalog/resolve.ts [--in FILE] [--out DIR] [--cors FILE] [--pictures FILE] [--ink FILE]
-//                                   [--summary FILE]
+//                                   [--stories FILE] [--summary FILE]
 //
 // CONTENT_POLICY=general (default) | adult. Formats: scripts/catalog/playability.json. Policy lists:
 // scripts/catalog/content-policy.json. --summary appends a Markdown summary (e.g. $GITHUB_STEP_SUMMARY).
@@ -10,6 +10,7 @@
 // Without it every host is assumed readable (local runs on fixtures).
 // --pictures: the checks of `check-pictures.ts`; games whose Blorb holds pictures besides the cover are illustrated.
 // --ink: the checks of `check-ink.ts`; an ink web export is then used only when it holds a story, pointing at it.
+// --stories: the checks of `check-stories.ts`; a Z-machine or Glulx file is then used only when it opens.
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -23,6 +24,7 @@ import {
 import { readableFrom, type CorsCache } from './cors.ts';
 import { inkStoryFrom, type InkCache } from './ink.ts';
 import { picturesFrom, type PicturesCache } from './pictures.ts';
+import { storyVerdictFrom, type StoriesCache } from './stories.ts';
 import { summarize } from './summary.ts';
 
 const { values } = parseArgs({
@@ -32,6 +34,7 @@ const { values } = parseArgs({
     cors: { type: 'string' },
     pictures: { type: 'string' },
     ink: { type: 'string' },
+    stories: { type: 'string' },
     summary: { type: 'string' },
   },
 });
@@ -56,6 +59,9 @@ const resolution = resolve(dataset, {
   readable: values.cors ? readableFrom(readJson<CorsCache>(values.cors)) : undefined,
   pictures: values.pictures ? picturesFrom(readJson<PicturesCache>(values.pictures)) : undefined,
   inkStory: values.ink ? inkStoryFrom(readJson<InkCache>(values.ink)) : undefined,
+  storyVerdict: values.stories
+    ? storyVerdictFrom(readJson<StoriesCache>(values.stories))
+    : undefined,
 });
 
 mkdirSync(values.out, { recursive: true });

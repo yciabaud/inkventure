@@ -615,6 +615,17 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    (`archive.primary` for a zip, the script's URL for a page, whose CORS is the one checked) and drops exports
    without a story (`no-ink-story`). An HTML page of an ink game is never Twine. The job summary counts the ink games
    kept and dropped, by reason.
+   **Story files that open** (S2.8, `check-stories.ts` after the CORS check): every Z-machine and Glulx file the
+   resolver may pick is opened once as the app would (≤ 1 request/s): a zip whole (up to 64 MB), where the story is the
+   file IFDB names, else the only file of that name in another case or folder, else the only story of the game's
+   format; a bare file by its head only (an HTTP `Range` request, and the start of a Blorb's executable chunk when it
+   lies further). It must hold a story of the game's format, and a Z-machine story must be version 3, 4, 5 or 8
+   (ZVM's: version 6 games such as Zork Zero are left out). The result is cached per file in `cache/stories.json` on
+   the `catalog` branch for 180 days (a network error is checked again at the next run, the file kept meanwhile). The
+   resolver skips the files that do not open, takes the next best one, and drops a game left without any
+   (`story-does-not-open`, with the reason and the file); a zip's story found under another name becomes
+   `archive.primary`. The job summary lists the files that do not open with their games (to report to IFDB when the
+   record is wrong) and the stories found under another name.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts (games, illustrated games), facet values (genres, languages, formats) with

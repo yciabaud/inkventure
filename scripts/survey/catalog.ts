@@ -70,7 +70,8 @@ export function gameFile(dir: string, tuid: string): GameFile {
 
 const limiter = new RateLimiter(1000);
 
-const baseName = (path: string) => path.slice(path.lastIndexOf('/') + 1);
+// As the app does: any case (src/catalog/storyFile.ts).
+const baseName = (path: string) => path.slice(path.lastIndexOf('/') + 1).toLowerCase();
 
 /** The story file, from the cache or downloaded (then cached), unzipped when the catalogue says it is a zip. */
 export async function storyBytes(file: GameFile, cache: string): Promise<Uint8Array> {
@@ -87,7 +88,7 @@ export async function storyBytes(file: GameFile, cache: string): Promise<Uint8Ar
     writeFileSync(cached, bytes);
   }
   if (file.archive && file.archive.type === 'zip') {
-    // As the app does (src/catalog/storyFile.ts, extractPrimary): the file of that name, whatever its folder.
+    // As the app does (src/catalog/storyFile.ts, extractPrimary): the file of that name, whatever its case or folder.
     const wanted = baseName(file.archive.primary);
     const entries = unzipSync(bytes, { filter: (entry) => baseName(entry.name) === wanted });
     const names = Object.keys(entries);

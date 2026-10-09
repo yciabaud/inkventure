@@ -73,8 +73,11 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
 - **Ink web exports** (`--ink FILE`, S2.7): a zip or page of an ink game is used only when `check-ink.ts` found its
   story; the game's file then points at it (`archive.primary` in a zip, the script's URL for a page). Without
   `--ink` the file IFDB names is assumed to hold it.
+- **Story files that open** (`--stories FILE`, S2.8): a Z-machine or Glulx file is used only when `check-stories.ts`
+  opened it; a zip's story is then the file it found there. A game whose files all fail is dropped
+  (`story-does-not-open`, with the reason and the file). Without `--stories` every file is assumed to open.
 - **Reasons**: `no-game-file`, `unsupported-format`, `format-not-enabled`, `compressed-no-primary`, `insecure-url`,
-  `unreadable-host`, `no-ink-story`, `adult-content`, `excluded`. The summary also counts the ink games kept and
+  `unreadable-host`, `no-ink-story`, `story-does-not-open`, `adult-content`, `excluded`. The summary also counts the ink games kept and
   dropped, by reason.
 - `--summary FILE` appends a Markdown summary, including the distribution of the raw IFDB fields (link formats,
   compression, languages, genres); the manual workflow writes it to the job summary.
@@ -99,10 +102,25 @@ send `Access-Control-Allow-Origin: *` or that origin, and none may lead to plain
 answers are `transient` and checked again at the next run. The weekly workflow keeps the file on the `catalog` branch
 and passes it to `resolve.ts --cors`.
 
+## Story files (S2.8)
+
+`check-stories.ts` (`npm run catalog:stories`, live network, ≤ 1 request/s, project `User-Agent`) lists every
+Z-machine and Glulx file the resolver may pick in the raw dataset (`storiesToCheck`, the files of other languages
+included) and opens each one as the app would. A zip is downloaded whole (up to 64 MB): its story is the file IFDB
+names, else the only file of that name in another case or folder, else the only story of the game's format in it. Of
+a bare file only the head is read (a `Range` request for 4 KB; the start of a Blorb's executable chunk when it lies
+further). The story must be one of the game's format (a Z-machine header or Glulx's magic number, bare or in a
+Blorb), and a Z-machine story version 3, 4, 5 or 8 (ZVM's). Results go to `data/cache/stories.json` (`{ "url" or
+"url#primary": { checked, ok?, version?, primary?, problem?, detail?, transient? } }`; problems: `http`, `too-big`,
+`bad-zip`, `not-in-zip`, `not-a-story`, `wrong-format`, `unsupported-version`), reused for 180 days; network errors
+and 5xx answers are `transient`, checked again at the next run, and the file is kept meanwhile. It runs after the
+CORS check; `check-pictures.ts` and `resolve.ts` take `--stories FILE`. The summary lists the files that do not open,
+with the games and the reason (to report to IFDB when the record is wrong), and the stories found under another name.
+
 ## Illustrated games (S2.5)
 
 `check-pictures.ts` (`npm run catalog:pictures`, live network, ≤ 1 request/s, project `User-Agent`) resolves the raw
-dataset offline (same options as `resolve.ts`, `--cors FILE` included) and inspects the files of the kept games that
+dataset offline (same options as `resolve.ts`, `--cors FILE` and `--stories FILE` included) and inspects the files of the kept games that
 are uncompressed Blorbs in a format whose engine draws pictures (`PICTURE_FORMATS`: Glulx). It reads the resource
 index (`RIdx`) from the head of the file: a `Range` request for 4 KB, asked once more when the index is longer (up to
 256 KB), or the first bytes of the whole response when the host ignores `Range` (closed as soon as they arrive). It
