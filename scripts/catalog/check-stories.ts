@@ -16,6 +16,7 @@ import {
   inspectStory,
   isFresh,
   MAX_ZIP_BYTES,
+  STORIES_CHECK_VERSION,
   storiesToCheck,
   storyKey,
   type FetchRange,
@@ -69,7 +70,9 @@ for (const file of files) {
   const key = storyKey(file);
   if (isFresh(cache[key], now)) continue;
   try {
-    cache[key] = await inspectStory(file, fetchRange, now);
+    const entry = await inspectStory(file, fetchRange, now);
+    if (!entry.ok) entry.v = STORIES_CHECK_VERSION;
+    cache[key] = entry;
   } catch (error) {
     cache[key] = {
       checked: now.toISOString(),

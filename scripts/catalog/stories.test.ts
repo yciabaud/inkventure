@@ -56,6 +56,33 @@ function blorbWithLateStory(story: Uint8Array): Uint8Array {
   return bytes;
 }
 
+/** A Blorb with `pictures` index entries before its `Exec` entry (an index longer than the head first read). */
+function blorbWithLongIndex(story: Uint8Array, pictures: number): Uint8Array {
+  const count = pictures + 1;
+  const exec = 24 + count * 12;
+  const size = exec + 8 + story.length;
+  const bytes = new Uint8Array(size);
+  const view = new DataView(bytes.buffer);
+  const tag = (at: number, text: string) => bytes.set(strToU8(text), at);
+  tag(0, 'FORM');
+  view.setUint32(4, size - 8);
+  tag(8, 'IFRS');
+  tag(12, 'RIdx');
+  view.setUint32(16, 4 + count * 12);
+  view.setUint32(20, count);
+  for (let i = 0; i < pictures; i++) {
+    tag(24 + i * 12, 'Pict');
+    view.setUint32(28 + i * 12, i + 1);
+    view.setUint32(32 + i * 12, size);
+  }
+  tag(24 + pictures * 12, 'Exec');
+  view.setUint32(32 + pictures * 12, exec);
+  tag(exec, 'GLUL');
+  view.setUint32(exec + 4, story.length);
+  bytes.set(story, exec + 8);
+  return bytes;
+}
+
 /** A host serving `files` (URL → bytes, or an HTTP status), honouring Range; logs the requests. */
 function host(files: Record<string, Uint8Array | number>) {
   const log: string[] = [];
@@ -77,7 +104,8 @@ describe('reading a story file (S2.8)', () => {
     expect(sniffStory(LAMP_G)).toEqual({ kind: 'glulx' });
     expect(sniffStory(PICTURE_G)).toEqual({ kind: 'glulx' });
     expect(sniffStory(PAGE)).toEqual({ kind: 'page' });
-    expect(sniffStory(strToU8('PK\u0003\u0004 not a story'))).toEqual({ kind: 'unknown' });
+    expect(sniffStory(strToU8('PK\u0003\u0004 a zip'))).toEqual({ kind: 'zip' });
+    expect(sniffStory(strToU8('Just some text, not a story at all.'))).toEqual({ kind: 'unknown' });
     // A byte from 1 to 8 is not enough: the header must hold.
     const noHeader = new Uint8Array(128);
     noHeader[0] = 5;
@@ -113,6 +141,31 @@ describe('opening a file as the app would (S2.8)', () => {
     expect(
       await inspectStory({ url: A + 'monk.gblorb', format: 'zcode' }, h.fetchRange, NOW),
     ).toEqual({ checked: CHECKED, ok: true, format: 'glulx' });
+  });
+
+  it('reads the whole resource index of a Blorb with many pictures', async () => {
+    const long = blorbWithLongIndex(LAMP_G, 400);
+    const h = host({ [A + 'gallery.gblorb']: long });
+    expect(
+      await inspectStory({ url: A + 'gallery.gblorb', format: 'glulx' }, h.fetchRange, NOW),
+    ).toEqual({ checked: CHECKED, ok: true });
+    expect(h.log).toEqual([
+      A + 'gallery.gblorb 0+' + HEAD_BYTES,
+      A + 'gallery.gblorb 0+' + (24 + 401 * 12),
+      // The story starts right after the index.
+      A + 'gallery.gblorb ' + (24 + 401 * 12) + '+72',
+    ]);
+  });
+
+  it('names a zip IFDB does not mark as compressed', async () => {
+    const h = host({ [A + 'speedif.zip']: zipSync({ 'one.z5': LAMP_Z, 'two.z5': LAMP_Z }) });
+    expect(
+      await inspectStory({ url: A + 'speedif.zip', format: 'zcode' }, h.fetchRange, NOW),
+    ).toEqual({
+      checked: CHECKED,
+      problem: 'not-a-story',
+      detail: 'a zip IFDB does not name a file in',
+    });
   });
 
   it("reads a Blorb's executable chunk where its index says, when it lies beyond the head", async () => {
@@ -156,6 +209,10 @@ describe('opening a file as the app would (S2.8)', () => {
     const down = await inspect(A + 'down.z5', 'zcode');
     expect(down).toMatchObject({ problem: 'http', detail: 'HTTP 503', transient: true });
     expect(isFresh(down, NOW)).toBe(false);
+    // A failure of an older check is checked again; a success is kept.
+    expect(isFresh({ checked: CHECKED, problem: 'not-a-story' }, NOW)).toBe(false);
+    expect(isFresh({ checked: CHECKED, problem: 'not-a-story', v: 2 }, NOW)).toBe(true);
+    expect(isFresh({ checked: CHECKED, ok: true }, NOW)).toBe(true);
   });
 
   it("finds a zip's story by the name IFDB gives, in any case or folder, or as its only story", () => {

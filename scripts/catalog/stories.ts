@@ -19,8 +19,17 @@ export const ZCODE_VERSIONS = [3, 4, 5, 8];
 /** A check is reused this long: story files seldom change. */
 export const STORIES_MAX_AGE_DAYS = 180;
 
+/**
+ * Version of the check: a file that failed an older one is checked again at the next run (2: a Blorb's long resource
+ * index is read whole, and a bare zip is named).
+ */
+export const STORIES_CHECK_VERSION = 2;
+
 /** Bytes read first from a bare file: a story's header, or a Blorb's resource index. */
 export const HEAD_BYTES = 4096;
+
+/** A Blorb's resource index needing more than this is not believed (a broken or hostile file). */
+export const MAX_INDEX_BYTES = 256 * 1024;
 
 /** A zip bigger than this is not opened (a compilation, a game shipped with its interpreter). */
 export const MAX_ZIP_BYTES = 64 * 1024 * 1024;
@@ -32,6 +41,8 @@ export type StoryProblem =
 export interface StoryEntry {
   /** Date of the check (ISO). */
   checked: string;
+  /** Version of the check that failed (STORIES_CHECK_VERSION); 1 when absent. */
+  v?: number;
   /** The file opens. */
   ok?: true;
   /** The story's format, when it is not the one IFDB gives (a Glulx story listed as Z-code). */
@@ -67,6 +78,7 @@ export function storyKey(file: { url: string; primary?: string }): string {
 /** Whether a cached check is recent enough to reuse. */
 export function isFresh(entry: StoryEntry | undefined, now: Date): boolean {
   if (!entry || entry.transient) return false;
+  if (!entry.ok && (entry.v || 1) < STORIES_CHECK_VERSION) return false;
   const age = now.getTime() - new Date(entry.checked).getTime();
   return age >= 0 && age < STORIES_MAX_AGE_DAYS * 24 * 3600 * 1000;
 }
@@ -141,9 +153,14 @@ function u16(bytes: Uint8Array, at: number): number {
 export type Sniffed =
   | { kind: 'zcode'; version: number }
   | { kind: 'glulx' }
-  /** A Blorb whose executable chunk starts at `exec` (beyond the bytes read, or not found when undefined). */
-  | { kind: 'blorb'; exec?: number }
+  /**
+   * A Blorb whose executable chunk starts at `exec`, beyond the bytes read; or whose resource index ends at `index`,
+   * beyond them (a Blorb with many pictures); neither when it has no executable chunk.
+   */
+  | { kind: 'blorb'; exec?: number; index?: number }
   | { kind: 'page' }
+  /** A zip (a link IFDB does not mark as compressed). */
+  | { kind: 'zip' }
   | { kind: 'unknown' };
 
 /**
@@ -156,7 +173,8 @@ export function sniffStory(bytes: Uint8Array): Sniffed {
   if (bytes.length >= 12 && ascii(bytes, 0) === 'FORM' && ascii(bytes, 8) === 'IFRS') {
     if (bytes.length < 24 || ascii(bytes, 12) !== 'RIdx') return { kind: 'blorb' };
     const count = u32(bytes, 20);
-    for (let i = 0; i < count && 24 + i * 12 + 12 <= bytes.length; i++) {
+    for (let i = 0; i < count; i++) {
+      if (24 + i * 12 + 12 > bytes.length) return { kind: 'blorb', index: 24 + count * 12 };
       const at = 24 + i * 12;
       if (ascii(bytes, at) !== 'Exec') continue;
       const exec = u32(bytes, at + 8);
@@ -177,6 +195,7 @@ export function sniffStory(bytes: Uint8Array): Sniffed {
     // High memory and static memory start after the header.
     if (u16(bytes, 4) >= 64 && u16(bytes, 14) >= 64) return { kind: 'zcode', version: bytes[0] };
   }
+  if (bytes.length >= 4 && ascii(bytes, 0) === 'PK\u0003\u0004') return { kind: 'zip' };
   const text = String.fromCharCode.apply(null, Array.from(bytes.subarray(0, 512)));
   if (/^\s*</.test(text) && /<(!doctype|html|head|body)\b/i.test(text)) return { kind: 'page' };
   return { kind: 'unknown' };
@@ -210,6 +229,13 @@ export function storyEntry(sniffed: Sniffed, format: StoryFormat, checked: strin
   }
   if (sniffed.kind === 'page')
     return { checked: checked, problem: 'not-a-story', detail: 'a web page' };
+  if (sniffed.kind === 'zip') {
+    return {
+      checked: checked,
+      problem: 'not-a-story',
+      detail: 'a zip IFDB does not name a file in',
+    };
+  }
   return { checked: checked, problem: 'not-a-story', detail: 'not a story file' };
 }
 
@@ -289,9 +315,15 @@ export async function inspectStory(
     }
     return zipStory(response.bytes, file.primary, file.format, checked);
   }
-  const head = await fetchRange(file.url, 0, HEAD_BYTES);
+  let head = await fetchRange(file.url, 0, HEAD_BYTES);
   if (!ok(head.status)) return httpProblem(head.status, checked);
   let sniffed = sniffStory(head.bytes);
+  if (sniffed.kind === 'blorb' && sniffed.index !== undefined && sniffed.index <= MAX_INDEX_BYTES) {
+    // A long resource index (many pictures): asked again, whole.
+    head = await fetchRange(file.url, 0, sniffed.index);
+    if (!ok(head.status)) return httpProblem(head.status, checked);
+    sniffed = sniffStory(head.bytes);
+  }
   if (sniffed.kind === 'blorb' && sniffed.exec !== undefined) {
     // The executable chunk lies further: its header and the story's.
     const exec = sniffed.exec;
