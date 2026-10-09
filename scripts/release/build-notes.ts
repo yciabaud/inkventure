@@ -57,7 +57,10 @@ const repo = process.env.GITHUB_REPOSITORY || 'yciabaud/inkventure';
 
 const notes = releaseNotes({
   tag,
-  date: new Date().toISOString().slice(0, 10),
+  // The day the tag was made, so a re-run keeps it; today before the tag exists (a preview).
+  date:
+    git('for-each-ref', '--format=%(creatordate:short)', 'refs/tags/' + tag)?.trim() ||
+    new Date().toISOString().slice(0, 10),
   commit: process.env.GITHUB_SHA || git('rev-parse', 'HEAD')?.trim() || 'unknown',
   previousTag: previousTag === tag ? null : previousTag,
   repoUrl: (process.env.GITHUB_SERVER_URL || 'https://github.com') + '/' + repo,

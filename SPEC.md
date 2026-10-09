@@ -988,7 +988,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
   creates a **draft** GitHub release (title `Inkventure <tag>`) with the EPUB and AZW3 files attached and generated
   notes; the owner reads it and publishes it. A release created with its tag in GitHub's interface gets the books, and
   the notes only if its own are empty. A re-run replaces the attached files.
-- The notes (`scripts/release/`, story S7.5) say: the catalogue (games by format, build date), the stories done since
+- The notes (`scripts/release/`, story S7.5), titled `Inkventure <tag> — <date of the tag>`, say: the catalogue (games by format, build date), the stories done since
   the previous tag (`docs/BACKLOG.md` at both tags; all of them for the first), the Results table of the latest
   `docs/device-reports/*-checklist.md`, the first-load sizes (`check:size --json`), the known issues (the open
   stories outside Post-V1) and the books with their sizes. An optional `docs/releases/<tag>.md` adds the highlights
