@@ -7,25 +7,26 @@
     "twine"
   ],
   "counts": {
-    "kept": 3053,
+    "kept": 3002,
     "dropped": {
       "unsupported-format": 1308,
+      "story-does-not-open": 73,
       "adult-content": 157,
-      "unreadable-host": 494,
+      "unreadable-host": 472,
       "insecure-url": 275,
       "no-game-file": 9,
       "no-ink-story": 30,
       "compressed-no-primary": 20
     },
     "formats": {
-      "zcode": 1693,
-      "glulx": 720,
+      "zcode": 1623,
+      "glulx": 717,
       "twine": 1064,
       "ink": 70
     },
     "pictures": {
-      "blorbs": 382,
-      "inspected": 381,
+      "blorbs": 399,
+      "inspected": 399,
       "illustrated": 55
     }
   },
@@ -198,6 +199,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "05aqnleagcdwgh9w",
+      "title": "The Black River Emerald",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://www.ifarchive.org/if-archive/games/zcode/sh2.zblorb)"
+    },
+    {
       "tuid": "0a70hpnq8ke4rv4c",
       "title": "Slay the Wickham",
       "reason": "unsupported-format",
@@ -318,6 +325,12 @@
       "detail": "https://web.archive.org/web/20140731120757/http://zombiecamel.ae/withinthewallsenglish.html"
     },
     {
+      "tuid": "14bcaej7pniv1z1",
+      "title": "Transilvania Corruption",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://www.ifarchive.org/if-archive/games/glulx/spanish/Transilvania_Corruption.zip)"
+    },
+    {
       "tuid": "14k36btoyy5f2tay",
       "title": "Le Pantin Electrique : Prologue",
       "reason": "unreadable-host",
@@ -370,6 +383,18 @@
       "title": "Rage Quest: Disciple of Peace",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "17coplfu323xif76",
+      "title": "Zork Zero: The Revenge of Megaboz",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a Blorb without a story (https://curiousdannii.github.io/infocom-frotz/zork0-r393-s890714-graphics.zblorb)"
+    },
+    {
+      "tuid": "1985kxxeze4f2r77",
+      "title": "Fingertips: I Walk Along Darkened Corridors",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no 37 Fingertips-I Walk Along Darkened Corridorsdarkened-corridors.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
     },
     {
       "tuid": "1b6ba7ryw2q7eup",
@@ -552,6 +577,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "1lxrhw9107rt6oiz",
+      "title": "Imprisoned",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp19.zip)"
+    },
+    {
       "tuid": "1m4zgbqv5qeiwbnc",
       "title": "Andromeda Acolytes",
       "reason": "unsupported-format",
@@ -612,6 +643,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "1qie1vk17usv2rkr",
+      "title": "Fade to Black",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 1 (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Century.zip)"
+    },
+    {
       "tuid": "1qub5s59hxvqgwod",
       "title": "The Little Match Girl 6: Fulcrum of the Telkon Vortex (IntroComp Demo)",
       "reason": "unreadable-host",
@@ -628,6 +665,12 @@
       "title": "idle hands",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "1u0purqymtppbv4k",
+      "title": "The Dying of the Light",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip)"
     },
     {
       "tuid": "1udmovti1bxa30y3",
@@ -693,6 +736,12 @@
       "title": "Elftor and the Quest of the Screaming King",
       "reason": "unreadable-host",
       "detail": "https://www.springthing.net/2023/play_online/ElftorAndTheQuestOfTheScreamingKing/index.html"
+    },
+    {
+      "tuid": "1yti1am4l16mjkti",
+      "title": "Grubbyville",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip)"
     },
     {
       "tuid": "1zxtch399c45i5x",
@@ -771,6 +820,12 @@
       "title": "Two",
       "reason": "unsupported-format",
       "detail": "executable"
+    },
+    {
+      "tuid": "2752o3sh6y05ob1p",
+      "title": "Journey",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://curiousdannii.github.io/infocom-frotz/journey-r83-s890706-graphics.zblorb)"
     },
     {
       "tuid": "27cnrw57lizyl4yy",
@@ -1009,8 +1064,8 @@
     {
       "tuid": "2q5yhu7c5md07wf9",
       "title": "Raygun Diplomacy",
-      "reason": "unreadable-host",
-      "detail": "https://reason-optional.herokuapp.com/raygun-diplomacy/Raygun%20Diplomacy.gblorb"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://reason-optional.herokuapp.com/raygun-diplomacy/Raygun%20Diplomacy.gblorb)"
     },
     {
       "tuid": "2q8n2qeq5s3sdv4",
@@ -1103,6 +1158,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "2ya9pmsvvfpsuh67",
+      "title": "Archaeological Fiction: Sagfjordbotn",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://archaeologicalfiction.net/release/Archaeological_Fiction_v2.zip)"
+    },
+    {
       "tuid": "2yj5kbs7rxgjzn3l",
       "title": "Superstition S1",
       "reason": "unsupported-format",
@@ -1137,6 +1198,12 @@
       "title": "a signal from Saturn",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "3342rncu14tnbsg1",
+      "title": "Intro to Implements of the Arcane",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp18.zip)"
     },
     {
       "tuid": "33k3pv9z1j53hiv",
@@ -1289,6 +1356,12 @@
       "detail": "erotic"
     },
     {
+      "tuid": "3g3xyyfb5ydyod",
+      "title": "Fingertips: Hey Now, Everybody",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Fingertips - Hey Now Everybody.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "3h48r59mtw4i9l8e",
       "title": "The Locked Room",
       "reason": "unreadable-host",
@@ -1323,6 +1396,12 @@
       "title": "The Secrets of Sylvan Gardens",
       "reason": "no-ink-story",
       "detail": "https://lamppostprojects.com/the-secrets-of-sylvan-gardens/archived/"
+    },
+    {
+      "tuid": "3kb9mycmr3h4ztsk",
+      "title": "The Twelve Heads of St. John the Baptist",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no baptist.zblorb in 11 file(s), 9 stories (https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Introcomp.zip)"
     },
     {
       "tuid": "3l73pkt3g127dqf6",
@@ -1441,8 +1520,8 @@
     {
       "tuid": "3qq8rf555e8vf227",
       "title": "The Road to Hell",
-      "reason": "unreadable-host",
-      "detail": "https://rbiondi.itch.io/the-road-to-hell"
+      "reason": "story-does-not-open",
+      "detail": "bad-zip: invalid zip data (https://rbiondi.itch.io/the-road-to-hell)"
     },
     {
       "tuid": "3r63uvc82jnvpjj1",
@@ -2185,8 +2264,8 @@
     {
       "tuid": "5ft7a2kq8w8qq5h8",
       "title": "Il Diavolo a Venezia",
-      "reason": "unreadable-host",
-      "detail": "https://github.com/Leettyun/OOZELUMNY/blob/master/story-files/venice2.z5"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://github.com/Leettyun/OOZELUMNY/blob/master/story-files/venice2.z5)"
     },
     {
       "tuid": "5gbd6zz2hys54zl2",
@@ -2425,8 +2504,8 @@
     {
       "tuid": "65ncc75met13ha0l",
       "title": "Warrior Poet of Mourdrascus - Part I:  The City of Dol Bannath",
-      "reason": "unreadable-host",
-      "detail": "https://charlesmball.itch.io/warrior-poet-of-mourdrascus-part-i"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://charlesmball.itch.io/warrior-poet-of-mourdrascus-part-i)"
     },
     {
       "tuid": "662yiuj8w7qae8x2",
@@ -2507,10 +2586,22 @@
       "detail": "https://www.athleticarcade.com/interactivefiction/themanwhocallstheshots/index.html"
     },
     {
+      "tuid": "6bc1tdt0r14k8xa4",
+      "title": "Custard",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 7 (https://www.ifarchive.org/if-archive/art/if-artshow/year2000/custard.z7)"
+    },
+    {
       "tuid": "6blk9m9rbljblacp",
       "title": "The Virulence Protocol",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "6caq1sssnkciy0c4",
+      "title": "Sunburst Contamination",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://www.ifarchive.org/if-archive/games/zcode/sunburst.z6)"
     },
     {
       "tuid": "6d9dfn2akcrlq1bu",
@@ -2533,8 +2624,8 @@
     {
       "tuid": "6f55jwyznpebps3e",
       "title": "Tempête sur les bermudes (remake)",
-      "reason": "unreadable-host",
-      "detail": "https://inkypinkydotblog.files.wordpress.com/2019/08/tempc3aate-sur-les-bermudes.zip"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://inkypinkydotblog.files.wordpress.com/2019/08/tempc3aate-sur-les-bermudes.zip)"
     },
     {
       "tuid": "6fgbrgrviwlrlahy",
@@ -3039,6 +3130,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "7hrjcihg46sckudh",
+      "title": "Some Exceptions for Reasons Unknown",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip)"
+    },
+    {
       "tuid": "7i3ct7spzj8hjl60",
       "title": "Lewd Mod: XXXmas",
       "reason": "adult-content",
@@ -3500,6 +3597,12 @@
       "detail": "http://www.mattiebrice.com/wp-content/uploads/2013/04/Blink.html"
     },
     {
+      "tuid": "8ibiopqhu9pd6qhv",
+      "title": "Esbozo de feto investigando crimen",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip)"
+    },
+    {
       "tuid": "8jiuotzqzoliqf1r",
       "title": "If I Wasn't Shy",
       "reason": "unsupported-format",
@@ -3508,8 +3611,8 @@
     {
       "tuid": "8jjqgzui564odzio",
       "title": "La Tempête",
-      "reason": "unreadable-host",
-      "detail": "https://stephanef.itch.io/la-tempete"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://stephanef.itch.io/la-tempete)"
     },
     {
       "tuid": "8juzbsvl0sw96fh6",
@@ -3818,6 +3921,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "94up65zoci93px6z",
+      "title": "Turn Around",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no turn around.gblorb in 51 file(s), 6 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "95gfrnslsr1rou53",
       "title": "Mirrored",
       "reason": "unreadable-host",
@@ -3928,8 +4037,8 @@
     {
       "tuid": "9dv2py4fems2x0t7",
       "title": "Die Zuschauer",
-      "reason": "unreadable-host",
-      "detail": "https://if-forum.org/pub/ifGP/2024/"
+      "reason": "story-does-not-open",
+      "detail": "bad-zip: invalid zip data (https://if-forum.org/pub/ifGP/2024/)"
     },
     {
       "tuid": "9ev3i3cjgvoqpqz1",
@@ -4160,6 +4269,12 @@
       "detail": "http://hlabrande.fr/if/games/enfant.z5"
     },
     {
+      "tuid": "a3cm5guii2gl2xzy",
+      "title": "Fingertips: Mysterious Whispers",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Mysterious Whispers.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "a3r7tqvyorthd2hz",
       "title": "Les Trois-cités : les préludes d'une odyssée",
       "reason": "unsupported-format",
@@ -4190,6 +4305,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "a5jo2a1roas05dx5",
+      "title": "Fingertips: Something Grabbed Ahold of My Hand",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Fingertips - Something Grabbed Ahold of My Hand.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "a5tedyvxivculrs8",
       "title": "Perfect Darkness",
       "reason": "unsupported-format",
@@ -4198,8 +4319,8 @@
     {
       "tuid": "a6dlpyprolufwpy2",
       "title": "greenskeep",
-      "reason": "unreadable-host",
-      "detail": "https://html-classic.itch.zone/html/15245903/Release/greenskeep.gblorb"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://html-classic.itch.zone/html/15245903/Release/greenskeep.gblorb)"
     },
     {
       "tuid": "a6jea8wha2zws34",
@@ -4386,6 +4507,12 @@
       "title": "La Valise",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "an8l1mskve07ispa",
+      "title": "Fido and the Dead Body",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no fido.gam in 7 file(s), 2 stories (https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF11.zip)"
     },
     {
       "tuid": "anu79a4n1jedg5mm",
@@ -4698,6 +4825,12 @@
       "title": "The Wise-Woman's Dog",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "bpk1o1ver1er00k",
+      "title": "Mansion",
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://ifarchive.org/if-archive/games/zcode/Mansion.z5)"
     },
     {
       "tuid": "bpp58cwqb8gfu1wk",
@@ -5139,8 +5272,8 @@
     {
       "tuid": "d0psfju3r9vdd4ah",
       "title": "The Unstoppable Vengeance of Doctor Bonesaw",
-      "reason": "unreadable-host",
-      "detail": "https://www.dropbox.com/s/5cwiyem7x1n2zeg/bonesaw.z8"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://www.dropbox.com/s/5cwiyem7x1n2zeg/bonesaw.z8)"
     },
     {
       "tuid": "d10htbbb36ep55jf",
@@ -5521,6 +5654,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "e6vqb5qeu25czrq2",
+      "title": "The Circus of Sadness",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no boinspeed.z5 in 7 file(s), 5 stories (https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Jacket.zip)"
+    },
+    {
       "tuid": "e6xz7s2uhkfkky2",
       "title": "ЦSSЯ-DФS",
       "reason": "unsupported-format",
@@ -5669,6 +5808,12 @@
       "title": "Resentful ❅ Revered",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "ej1ojzk3h40ao1md",
+      "title": "The Ghost Ship",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2015.zip)"
     },
     {
       "tuid": "em62khnwxyyc2516",
@@ -6067,6 +6212,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "fpg8obr5lzenkpu1",
+      "title": "Hotel Tutorial",
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://www.ifarchive.org/if-archive/games/zcode/TutorialHotel.zblorb)"
+    },
+    {
       "tuid": "fqglfvr75ck4zyrc",
       "title": "Magic Travels",
       "reason": "unreadable-host",
@@ -6223,6 +6374,12 @@
       "detail": "https://the-intercept-from-inkle.netlify.app/%E6%8B%A6%E6%88%AA.js"
     },
     {
+      "tuid": "g6h1glu4zeds6sec",
+      "title": "Ragnarok: Twilight of the Gods",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+    },
+    {
       "tuid": "g6u45xu7enltw8gl",
       "title": "Wintervale",
       "reason": "insecure-url",
@@ -6329,6 +6486,12 @@
       "title": "The Day we got a pet",
       "reason": "insecure-url",
       "detail": "http://plover.net/~tale/NYC2017.zip"
+    },
+    {
+      "tuid": "ggdxsqyzos753507",
+      "title": "Little Green Robbing Hood",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 2 (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Gruff.zip)"
     },
     {
       "tuid": "ggkegzr8azf9irml",
@@ -6691,6 +6854,12 @@
       "detail": "http://media.textadventures.co.uk/games/qbXSAvGsskKeTGIcSyvpyw/jealousy/index.html"
     },
     {
+      "tuid": "h7384u8jehwex5pk",
+      "title": "Intro to The Devil's Music",
+      "reason": "story-does-not-open",
+      "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp19.zip)"
+    },
+    {
       "tuid": "h7xuaknosrvjz8a4",
       "title": "How the Little Match Girl Met the Queen of Vampires",
       "reason": "unreadable-host",
@@ -6867,8 +7036,8 @@
     {
       "tuid": "ho7e5s10d3qida7u",
       "title": "Visita al Marconi",
-      "reason": "unreadable-host",
-      "detail": "https://rebrand.ly/marconi"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 403 (https://rebrand.ly/marconi)"
     },
     {
       "tuid": "hpdzbp7cwhw15yat",
@@ -7113,8 +7282,8 @@
     {
       "tuid": "ihz4d2ywva0v0g2",
       "title": "Very Vile Fairy File",
-      "reason": "unreadable-host",
-      "detail": "https://www.dropbox.com/s/hqcd984rdxn73xx/very_vile_fairy_file_release_2.zip?dl=0"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://www.dropbox.com/s/hqcd984rdxn73xx/very_vile_fairy_file_release_2.zip?dl=0)"
     },
     {
       "tuid": "iio542r45seje190",
@@ -7347,8 +7516,8 @@
     {
       "tuid": "j7bqfkj1t4jq5bnl",
       "title": "Fischstäbchen",
-      "reason": "unreadable-host",
-      "detail": "https://if-forum.org/pub/ifGP/2023/fischstaeb.zip"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://if-forum.org/pub/ifGP/2023/fischstaeb.zip)"
     },
     {
       "tuid": "j83o3g49b01o1ka8",
@@ -7519,6 +7688,12 @@
       "detail": "https://www.ifarchive.org/if-archive/games/mini-comps/neo-twinyjam/2024/THE_CRIMSON_LINE.zip"
     },
     {
+      "tuid": "jllnjw6ykg109in0",
+      "title": "Fingertips: All Alone",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Fingertips - All Alone.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "jm0keegph6fqnw2k",
       "title": "Una vetllada gironina",
       "reason": "unsupported-format",
@@ -7655,6 +7830,12 @@
       "title": "Chloe Is Home",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "jwe1v7bh1evehrq",
+      "title": "Fingertips: I'm Having a Heart Attack",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no fingertips_im_having_a_heart_attack in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
     },
     {
       "tuid": "jwpr9yh3qpv36pt9",
@@ -7809,8 +7990,8 @@
     {
       "tuid": "kahycddsc66eq909",
       "title": "Quest for Arete",
-      "reason": "unreadable-host",
-      "detail": "https://html-classic.itch.zone/html/3026254/QuestForArete-2.0Release/Quest%20for%20Arete.gblorb"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://html-classic.itch.zone/html/3026254/QuestForArete-2.0Release/Quest%20for%20Arete.gblorb)"
     },
     {
       "tuid": "kbd990q5fp7pythi",
@@ -7862,8 +8043,8 @@
     {
       "tuid": "kfxpc2jfv1u8bmf7",
       "title": "The Argument-Winner's Ghost",
-      "reason": "unreadable-host",
-      "detail": "https://www.dropbox.com/s/4ni28ghjdum2pjx/ghost.zblorb"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://www.dropbox.com/s/4ni28ghjdum2pjx/ghost.zblorb)"
     },
     {
       "tuid": "kh1g12jie6qwgxoq",
@@ -7876,6 +8057,12 @@
       "title": "Et il fallut donc",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "khclq55krtwb5ruy",
+      "title": "LISEY",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no lisey.gblorb in 22 file(s), 5 stories (https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2014.zip)"
     },
     {
       "tuid": "ki8etgez8uznz1f4",
@@ -8060,8 +8247,8 @@
     {
       "tuid": "ktt1r3e1qfhg7xiz",
       "title": "Chunky Blues",
-      "reason": "unreadable-host",
-      "detail": "https://www.dropbox.com/s/v848g966cmqjf8q/Chunky%20Blues.gblorb?dl=0"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://www.dropbox.com/s/v848g966cmqjf8q/Chunky%20Blues.gblorb?dl=0)"
     },
     {
       "tuid": "ktw2box5rszroxcu",
@@ -8852,8 +9039,14 @@
     {
       "tuid": "mzbe0tjn05c3pgh2",
       "title": "Pub Hubbub",
-      "reason": "unreadable-host",
-      "detail": "https://christopherdrum.itch.io/pub-hubbub"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://christopherdrum.itch.io/pub-hubbub)"
+    },
+    {
+      "tuid": "n0gedrjrpk0p37uh",
+      "title": "Parlez-lui d'amour",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://www.ifarchive.org/if-archive/games/zcode/french/plda.zblorb)"
     },
     {
       "tuid": "n0weq1argql30tcl",
@@ -8876,8 +9069,8 @@
     {
       "tuid": "n1rob5dkybki2mfu",
       "title": "Die erste Nacht",
-      "reason": "unreadable-host",
-      "detail": "https://if-forum.org/pub/ifGP/2022/"
+      "reason": "story-does-not-open",
+      "detail": "bad-zip: invalid zip data (https://if-forum.org/pub/ifGP/2022/)"
     },
     {
       "tuid": "n1vr8lh59i0lb53a",
@@ -9143,6 +9336,12 @@
       "detail": "https://web.archive.org/web/20091010001418if_/http://www.dessgeega.com/robotgardening.zip"
     },
     {
+      "tuid": "nlb5cxhdabfkn0zz",
+      "title": "The Dream-Trap of Zzar",
+      "reason": "story-does-not-open",
+      "detail": "bad-zip: invalid zip data (https://drive.google.com/open?id=1nbCjthzUlREA3GNUsy6udkMAmSB7mpqh)"
+    },
+    {
       "tuid": "nlp1zehiwuts79bf",
       "title": "Voyage of the Marigold",
       "reason": "no-ink-story",
@@ -9271,8 +9470,8 @@
     {
       "tuid": "nwxi6reml171cr0",
       "title": "Reflejos blancos",
-      "reason": "unreadable-host",
-      "detail": "https://incanus.caad.club/ReflejosBlancos.zip"
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Reflejos.z5 in 39 file(s), 2 stories (https://incanus.caad.club/ReflejosBlancos.zip)"
     },
     {
       "tuid": "nxhpyvk6m7h83vsg",
@@ -9399,6 +9598,12 @@
       "title": "The Travelers and the Sea",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "oaskp9o0zwn56hql",
+      "title": "Assignment",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Assign-1.z5 in 12 file(s), 4 stories (https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF15.zip)"
     },
     {
       "tuid": "ob72ngy0kfr77ywy",
@@ -9907,8 +10112,8 @@
     {
       "tuid": "pdeztll2c9m0a4uo",
       "title": "The Storm",
-      "reason": "unreadable-host",
-      "detail": "https://stephanef.itch.io/the-storm"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://stephanef.itch.io/the-storm)"
     },
     {
       "tuid": "pdt3zwbu0rhzhy42",
@@ -10094,6 +10299,12 @@
       "title": "Unrequited",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "pvhcdsvpf29gdr9s",
+      "title": "The Silence of the Gods",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
     },
     {
       "tuid": "pw2igwtxt9pqsgw3",
@@ -10458,8 +10669,8 @@
     {
       "tuid": "qv0uxa6fgxftgsff",
       "title": "Sfida all'ignoto",
-      "reason": "unreadable-host",
-      "detail": "https://rebrand.ly/sfida"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 403 (https://rebrand.ly/sfida)"
     },
     {
       "tuid": "qvcdjqvl43b0whlx",
@@ -10574,6 +10785,12 @@
       "title": "Big Red Button",
       "reason": "unreadable-host",
       "detail": "https://web.archive.org/web/20100409235810if_/http://s2.webstarts.com/ZMachineTaro/uploads/Big_Red_Button_Everlasting_Edition.z5"
+    },
+    {
+      "tuid": "r4bhpydkl46q68lf",
+      "title": "All That Shimmers...",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fzcode%252Fall_that_shimmers.zip%26open%3Dshimmers.z5)"
     },
     {
       "tuid": "r4e3vmp4gogi1e0",
@@ -11008,6 +11225,12 @@
       "detail": "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/SecretLetter-Glulx-2.1.zip"
     },
     {
+      "tuid": "sda4g92j0pi8caii",
+      "title": "Which Describes How You're Feeling",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no Which Describes How You're Feel.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
+    },
+    {
       "tuid": "sdty6cu9m6cyrz03",
       "title": "Mein Leben für Seite Drei",
       "reason": "compressed-no-primary",
@@ -11088,8 +11311,8 @@
     {
       "tuid": "sjiowm1bb9jnjfpa",
       "title": "A Potion Labeled 'Time'",
-      "reason": "unreadable-host",
-      "detail": "https://ffabish.itch.io/a-potion-labeled-time"
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://ffabish.itch.io/a-potion-labeled-time)"
     },
     {
       "tuid": "skufuzf5r90z9gu2",
@@ -11154,8 +11377,14 @@
     {
       "tuid": "sqgoj5qh2j0fntw",
       "title": "Copérnico 86",
-      "reason": "unreadable-host",
-      "detail": "https://xaviercarrascosa.com/juegos/Copernico86/Copernico86.gblorb"
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://xaviercarrascosa.com/juegos/Copernico86/Copernico86.gblorb)"
+    },
+    {
+      "tuid": "sqr9hrocyazsb4i9",
+      "title": "Fingertips: I Heard a Sound",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no I Heard a Sound.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
     },
     {
       "tuid": "sr9tib6bpq5hsp4c",
@@ -11252,6 +11481,12 @@
       "title": "Rooftop Tolls",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "t2sezaqjx8j89nnx",
+      "title": "Connect",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no ZCode/Connect/connect.z5 in 11 file(s), 2 stories (https://www.ifarchive.org/if-archive/games/mini-comps/ifbeginners/IFBeginnersComp2008.zip)"
     },
     {
       "tuid": "t300lmh66x5hgoz7",
@@ -11432,6 +11667,12 @@
       "title": "The House with Nothing in It",
       "reason": "unreadable-host",
       "detail": "https://philome.la/dMarieLicea/the-house-with-nothing-in-it/play/index.html"
+    },
+    {
+      "tuid": "tgqfhix2awfeoqs2",
+      "title": "Return to Silli Productions",
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://www.ifarchive.org/if-archive/games/zcode/silli.z5)"
     },
     {
       "tuid": "th8k7iayhunb5b2f",
@@ -12375,6 +12616,12 @@
       "reason": "no-game-file"
     },
     {
+      "tuid": "w3pz3v8wckaw1wgb",
+      "title": "Shogun",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://curiousdannii.github.io/infocom-frotz/shogun-r322-s890706-graphics.zblorb)"
+    },
+    {
       "tuid": "w3xmpin8ahalah83",
       "title": "Trampelviecher - eine Halloween-Kurzgeschichte",
       "reason": "insecure-url",
@@ -12387,10 +12634,22 @@
       "detail": "http://ifiction.free.fr/concours2011/astrologue/astrologue.z5"
     },
     {
+      "tuid": "w4pkrecmrf1wpyg2",
+      "title": "Birth of Mind",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+    },
+    {
       "tuid": "w4z0fmu0xifk1tlo",
       "title": "how to create an interactive fiction: a 500 word tutorial",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "w5to7j97qy70t5nu",
+      "title": "Stories of Command Line - Teaching of Nmap",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://iplayif.com/?story=https://liuheyang20010816-bot.github.io/Stories_of_Command_Line/Untitled.inform.gblorb)"
     },
     {
       "tuid": "w75rufhqlarehtqb",
@@ -12415,6 +12674,12 @@
       "title": "Le date le (+) ou (-) long",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "w9s82w5o59a43tzt",
+      "title": "New Cat",
+      "reason": "story-does-not-open",
+      "detail": "http: HTTP 404 (https://www.ifarchive.org/if-archive/games/zcode/NewCat.zblorb)"
     },
     {
       "tuid": "w9y8rxq6hsth8xuz",
@@ -12573,6 +12838,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "wj79te72mruhbnni",
+      "title": "The Voodoo You Do 2",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no The Voodoo Do You 2.gblorb in 22 file(s), 3 stories (https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2014.zip)"
+    },
+    {
       "tuid": "wjcxkqyoqsxo2l8u",
       "title": "Beat the Devil",
       "reason": "adult-content",
@@ -12595,6 +12866,12 @@
       "title": "I Am A Pencil (Aku Sebatang Pensel)",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "wm5h7xe91k9mzuuo",
+      "title": "Frobozz Magic Video Poker",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://www.ifarchive.org/if-archive/games/zcode/fmvpoker.zip)"
     },
     {
       "tuid": "wm5kdshyewe9dxmh",
@@ -13173,6 +13450,12 @@
       "detail": "http://playfic.com/games/jojo/strained-tea"
     },
     {
+      "tuid": "y7gdf3671h662253",
+      "title": "Being the Ending of the Beginning",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+    },
+    {
       "tuid": "y7j3nudckw62a7uo",
       "title": "Briar",
       "reason": "adult-content",
@@ -13243,6 +13526,12 @@
       "title": "Amorphous",
       "reason": "unreadable-host",
       "detail": "https://philome.la/anarchicAccord/amorphous/play/index.html"
+    },
+    {
+      "tuid": "ydpzujvvatlukt9",
+      "title": "The Cenric Family Curse",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no The_Cenric_Family_Curse.zip in 6 file(s), 2 stories (https://www.ifarchive.org/if-archive/games/zcode/The_Cenric_Family_Curse.zip)"
     },
     {
       "tuid": "ye7j1geloce730eh",
@@ -13357,6 +13646,12 @@
       "title": "Illuminate",
       "reason": "insecure-url",
       "detail": "http://mattweiner.net/Shufflecomp%202014/Illuminate.z8"
+    },
+    {
+      "tuid": "yl9dnwe1kmpo5m9x",
+      "title": "Fingertips: I Hear the Wind Blow",
+      "reason": "story-does-not-open",
+      "detail": "not-in-zip: no windblow.zblorb in 51 file(s), 31 stories (https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip)"
     },
     {
       "tuid": "ylax4yenjm6s0w6",
@@ -13635,6 +13930,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "z94xzredmdtg6mla",
+      "title": "GHOST LAYER",
+      "reason": "story-does-not-open",
+      "detail": "not-a-story: a web page (https://xaltotun84.github.io/Ghost-Layer/)"
+    },
+    {
       "tuid": "zaktb2lrkpt4rr43",
       "title": "They Will Not Return",
       "reason": "unsupported-format",
@@ -13747,6 +14048,12 @@
       "title": "The Choice is Yours",
       "reason": "unsupported-format",
       "detail": "storyfile"
+    },
+    {
+      "tuid": "zoohwv5nqye7up2t",
+      "title": "Arthur: The Quest for Excalibur",
+      "reason": "story-does-not-open",
+      "detail": "unsupported-version: version 6 (https://curiousdannii.github.io/infocom-frotz/arthur-r74-s890714-graphics.zblorb)"
     },
     {
       "tuid": "zoqqgv7o8a7qvyjb",
