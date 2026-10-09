@@ -1,38 +1,38 @@
 {
-  "built": "2026-10-09T22:11:56.471Z",
-  "commit": "4a3063254114420c8deac6b10c7f7bc2cccfc7fd",
+  "built": "2026-10-09T22:26:06.935Z",
+  "commit": "6f4d348fa90bbd52626b9b5731bcf1ee4702b8e9",
   "books": [
     {
       "locale": "en",
       "format": "epub",
       "file": "inkventure-en.epub",
       "size": 580698,
-      "built": "2026-10-09T22:11:56.471Z",
-      "commit": "4a3063254114420c8deac6b10c7f7bc2cccfc7fd"
+      "built": "2026-10-09T22:26:06.935Z",
+      "commit": "6f4d348fa90bbd52626b9b5731bcf1ee4702b8e9"
     },
     {
       "locale": "en",
       "format": "azw3",
       "file": "inkventure-en.azw3",
-      "size": 1166103,
-      "built": "2026-10-09T22:11:56.471Z",
-      "commit": "4a3063254114420c8deac6b10c7f7bc2cccfc7fd"
+      "size": 1166117,
+      "built": "2026-10-09T22:26:06.935Z",
+      "commit": "6f4d348fa90bbd52626b9b5731bcf1ee4702b8e9"
     },
     {
       "locale": "fr",
       "format": "epub",
       "file": "inkventure-fr.epub",
       "size": 435827,
-      "built": "2026-10-09T22:11:56.471Z",
-      "commit": "4a3063254114420c8deac6b10c7f7bc2cccfc7fd"
+      "built": "2026-10-09T22:26:06.935Z",
+      "commit": "6f4d348fa90bbd52626b9b5731bcf1ee4702b8e9"
     },
     {
       "locale": "fr",
       "format": "azw3",
       "file": "inkventure-fr.azw3",
       "size": 1378647,
-      "built": "2026-10-09T22:11:56.471Z",
-      "commit": "4a3063254114420c8deac6b10c7f7bc2cccfc7fd"
+      "built": "2026-10-09T22:26:06.935Z",
+      "commit": "6f4d348fa90bbd52626b9b5731bcf1ee4702b8e9"
     }
   ],
   "covers": {
