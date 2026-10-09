@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inkventure — offline probe</title>
+    <style>
+      /* Same minimal, old-browser safe style as the device probe. */
+      body {
+        margin: 0;
+        padding: 16px;
+        font-family: Georgia, serif;
+        font-size: 18px;
+        line-height: 1.4;
+        color: #000;
+        background: #fff;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 8px;
+      }
+      p,
+      ol {
+        margin: 0 0 12px;
+      }
+      button {
+        font: inherit;
+        min-height: 48px;
+        min-width: 48px;
+        padding: 8px 16px;
+        margin: 0 8px 8px 0;
+        border: 2px solid #000;
+        background: #fff;
+      }
+      #status {
+        font-weight: bold;
+      }
+      #report {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        border: 1px solid #000;
+        padding: 8px;
+      }
+      #copy {
+        width: 100%;
+        height: 160px;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+      }
+      #qr img {
+        width: 100%;
+        max-width: 560px;
+        height: auto;
+        image-rendering: pixelated;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Inkventure — offline probe</h1>
+    <ol>
+      <li>With Wi-Fi <b>on</b>, wait until the status says <b>Done</b>.</li>
+      <li>Turn Wi-Fi <b>off</b> (airplane mode).</li>
+      <li>
+        Reload this page. Then also close the browser, reopen it and come back here (history or
+        bookmark).
+      </li>
+      <li>Send the last report: QR code or copied text.</li>
+    </ol>
+    <p id="status">Running…</p>
+    <p>
+      <button type="button" id="rerun">Run again</button>
+      <button type="button" id="show-qr">Show QR code</button>
+      <button type="button" id="clear">Clear test data</button>
+    </p>
+    <div id="qr"></div>
+    <pre id="report"></pre>
+    <p>Copyable report:</p>
+    <textarea id="copy" readonly></textarea>
+    <script src="../qrcode.js"></script>
+    <script src="offline.js"></script>
+  </body>
+</html>
