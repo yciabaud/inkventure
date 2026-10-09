@@ -120,6 +120,7 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
   let resources: BlorbClass | null = null;
   let columns = DEFAULT_COLUMNS;
   let running: Running | null = null;
+  let timersActive = true;
 
   function fail(error: unknown) {
     errorCb(error instanceof Error ? error.message : String(error));
@@ -155,10 +156,14 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
         }
         if (error !== null) {
           next.vm.abandon();
+          next.bridge.dispose();
           reject(new Error(error));
           return;
         }
-        if (running) running.vm.abandon();
+        if (running) {
+          running.vm.abandon();
+          running.bridge.dispose();
+        }
         running = next;
         live = true;
         for (let i = 0; i < held.length; i++) held[i]();
@@ -189,6 +194,7 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
         columns,
         dialog,
       );
+      bridge.setTimersActive(timersActive);
       let unpacked: ReturnType<typeof unpack>;
       try {
         unpacked = unpack(data);
@@ -222,6 +228,7 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
         if (!settled) {
           settled = true;
           vm.abandon();
+          bridge.dispose();
           reject(error);
         }
       }
@@ -274,6 +281,10 @@ export function createQuixeEngine(options: { sliceMs?: number } = {}): Engine {
     },
     choose() {
       // Parser games have no choices.
+    },
+    setTimersActive(active: boolean) {
+      timersActive = active;
+      if (running) running.bridge.setTimersActive(active);
     },
 
     saveState(): Promise<Uint8Array> {

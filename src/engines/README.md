@@ -36,6 +36,16 @@ dispatch layer `ifvms/src/zvm/dispatch.js`; importing it also sets an unused `wi
 the game running. The text Glk keeps for redrawing (`reserve`) is dropped from snapshots: the reader restores its own
 transcript.
 
+Timers (S1.25): the bridge declares `timer` support and sends GlkOte timer events at the game's interval, never more
+often than once a second (`MIN_TIMER_MS`), only while the VM waits in `glk_select` (a tick during a sliced Glulx run is
+skipped) and while the reader shows the game (`Engine.setTimersActive`); a replaced or failed VM's bridge is
+`dispose()`d. ZVM 1.1.6 ignores the time and routine of `@read` / `@read_char`: `zvm/timedInput.ts` wraps one VM
+instance (not a build-time patch, so unit tests run it too). Each timed read asks Glk for a timer; at each timer event
+the routine runs nested (`call` with its result on the stack, run to the frame depth: a routine can return from inside
+a compiled branch), with a pending line request cancelled meanwhile (without echo) and asked again when it returns
+false; true turns the event into the input, with terminator 0 or key 0. Return is stored as terminator 13 (ZVM stored
+glkapi's 0).
+
 Glulx (S1.7): Quixe runs on its own, newer Glk library (Quixe 2.2 needs it), through the same GlkOte bridge, which also
 hands that library its `Dialog` (`getlibrary('Dialog')`). A `.gblorb` is unpacked with Quixe's Blorb decoder. VM runs are
 **time-sliced** (`SLICE_MS` = 100 ms): past that, Quixe yields to the event loop and carries on from a timer, so the page

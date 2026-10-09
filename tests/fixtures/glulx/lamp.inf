@@ -6,6 +6,7 @@
 !
 ! It exercises: a "press any key" char prompt, the status line (location, score, turns), line input, several rooms,
 ! objects, a locked container, a score and a winning ending; QUOTE shows an epigraph in a quote box (Inform's `box`).
+! TIDE waits for a key with a timer of 2 s (S1.25).
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -115,3 +116,33 @@ Include "Grammar";
 ];
 
 Verb meta 'quote' * -> Quote;
+
+! TIDE: text that comes by itself (S1.25). A timer of 2 s while the game waits for a key: each event the tide rises,
+! and the second one ends the wait. A key stops it at once.
+Global tide_ticks;
+
+[ TideSub done;
+    tide_ticks = 0;
+    print "You watch the water and wait. [Press any key to stop.]^";
+    glk_request_char_event(gg_mainwin);
+    glk_request_timer_events(2000);
+    while (~~done) {
+        glk_select(gg_event);
+        switch (gg_event-->0) {
+            evtype_Timer:
+                tide_ticks++;
+                print "The tide rises.^";
+                if (tide_ticks >= 2) {
+                    print "The tide is full.^";
+                    glk_cancel_char_event(gg_mainwin);
+                    done = 1;
+                }
+            evtype_CharInput:
+                if (gg_event-->1 == gg_mainwin) done = 1;
+        }
+    }
+    glk_request_timer_events(0);
+    "You stop watching the tide.";
+];
+
+Verb meta 'tide' * -> Tide;

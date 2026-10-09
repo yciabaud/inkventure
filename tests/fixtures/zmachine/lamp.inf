@@ -18,6 +18,7 @@
 ! Parser questions: two oilskins at the foot of the tower share a word, so EXAMINE alone there asks "What do you want
 ! to examine?" and EXAMINE OILSKIN asks "Which do you mean, the yellow oilskin or the black oilskin?". OPEN alone asks
 ! in words of its own ("Open what, exactly?"), which no phrase table knows.
+! TIDE and BELL run on a clock (S1.25): a key prompt and a line of input with a time and a routine.
 !
 ! Walkthrough: (any key) / look / take can / north / open shed / take matches / up / fill lamp / light lamp
 
@@ -335,3 +336,45 @@ Verb 'boat' * -> Boat;
 Verb 'signal' * -> Signal;
 Verb meta 'help' 'hint' 'hints' * -> Help;
 Verb meta 'logbook' 'log' * -> Logbook;
+
+! TIDE: text that comes by itself (S1.25). A key prompt with a time (2 s) and a routine, like a game on a clock: each
+! time the routine runs the tide rises, and the second time it ends the prompt. A key stops it at once.
+Global tide_ticks;
+
+[ TideTick;
+    tide_ticks++;
+    print "The tide rises.^";
+    if (tide_ticks >= 2) { print "The tide is full.^"; rtrue; }
+    rfalse;
+];
+
+[ TideSub key;
+    tide_ticks = 0;
+    print "You watch the water and wait. [Press any key to stop.]^";
+    @read_char 1 20 TideTick -> key;
+    "You stop watching the tide.";
+];
+
+! BELL: a line of input with a time (2 s) and a routine: the bell rings while the player may type, and the third ring
+! ends the input. A line typed before that is answered.
+Global bell_rings;
+
+[ BellRing;
+    bell_rings++;
+    print "^A bell rings out at sea.^";
+    if (bell_rings >= 3) rtrue;
+    rfalse;
+];
+
+[ BellSub result;
+    bell_rings = 0;
+    print "Somewhere a bell is ringing. What do you call out?^>";
+    buffer2->0 = 60;
+    buffer2->1 = 0;
+    @aread buffer2 parse2 20 BellRing -> result;
+    if (result == 0) "The bell falls silent.";
+    "You call out, but only the bell answers.";
+];
+
+Verb meta 'tide' * -> Tide;
+Verb meta 'bell' * -> Bell;

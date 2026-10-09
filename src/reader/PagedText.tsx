@@ -46,6 +46,11 @@ interface Props {
   frameKey?: string;
   /** When the blocks change, open on the page where this block starts (the echoed command of a new turn). */
   focus?: number;
+  /**
+   * New blocks with the same `focus` as before keep the page being read instead of going back to it (text a game
+   * prints on a timer while it waits, S1.25).
+   */
+  keepPage?: boolean;
   /** The data of picture `id` (image blocks), or null: its alt text shows in its place. */
   imageUrl?: (id: number) => string | null;
 }
@@ -100,6 +105,7 @@ export function PagedText({
   pageSlot,
   interceptTap,
   focus,
+  keepPage,
   pinToLast,
   lastSlotHeight,
   textStyle,
@@ -125,8 +131,11 @@ export function PagedText({
     if (areaRef.current && textRef.current) return turner.attach(areaRef.current, textRef.current);
   }, [turner]);
 
+  const focusRef = useRef<number | undefined>(undefined);
   useLayoutEffect(() => {
-    turner.setBlocks(blocks, focus);
+    const same = keepPage && focus === focusRef.current;
+    focusRef.current = focus;
+    turner.setBlocks(blocks, same ? undefined : focus);
     // Only new text moves the reader, not a new focus on its own.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turner, blocks]);

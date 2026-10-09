@@ -6,6 +6,7 @@ import { ZVM } from 'ifvms';
 import ZVMDispatch from 'ifvms/src/zvm/dispatch.js';
 import type { Engine, EngineOptions, InputRequest, OutputBlock } from '../engine';
 import { createMemoryDialog, GlkOteBridge } from '../glkote-bridge/bridge';
+import { addTimedInput } from './timedInput';
 
 // Inform's status line shows "Score: 3  Moves: 12" only on screens of about 66 columns or more ("3/12" below).
 const DEFAULT_COLUMNS = 80;
@@ -44,6 +45,7 @@ export function createZvmEngine(): Engine {
   let story: Uint8Array | null = null;
   let columns = DEFAULT_COLUMNS;
   let running: Running | null = null;
+  let timersActive = true;
 
   function fail(error: unknown) {
     errorCb(error instanceof Error ? error.message : String(error));
@@ -71,7 +73,9 @@ export function createZvmEngine(): Engine {
       },
       columns,
     );
+    bridge.setTimersActive(timersActive);
     const vm = new ZVM();
+    addTimedInput(vm);
     const Glk = createGlk();
     const dialog = createMemoryDialog(snapshot);
     try {
@@ -86,12 +90,19 @@ export function createZvmEngine(): Engine {
       // ZVM's dispatch layer lets the Glk library save its state (windows, pending line input) for snapshots.
       Glk.init({ vm: vm, Glk: Glk, GlkOte: bridge, Dialog: dialog, GiDispa: new ZVMDispatch() });
     } catch (error) {
+      bridge.dispose();
       return Promise.reject(error);
     }
-    if (startError) return Promise.reject(new Error(startError));
+    if (startError) {
+      bridge.dispose();
+      return Promise.reject(new Error(startError));
+    }
     // ZVM falls back to a fresh start (and clears the slot) when a snapshot fails to restore.
-    if (snapshot !== null && dialog.autosave === null)
+    if (snapshot !== null && dialog.autosave === null) {
+      bridge.dispose();
       return Promise.reject(new Error('The saved game could not be restored.'));
+    }
+    if (running) running.bridge.dispose();
     running = { vm: vm, bridge: bridge, dialog: dialog };
     live = true;
     for (let i = 0; i < held.length; i++) held[i]();
@@ -138,6 +149,10 @@ export function createZvmEngine(): Engine {
     },
     choose() {
       // Parser games have no choices.
+    },
+    setTimersActive(active: boolean) {
+      timersActive = active;
+      if (running) running.bridge.setTimersActive(active);
     },
 
     saveState(): Promise<Uint8Array> {

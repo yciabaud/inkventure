@@ -2,7 +2,7 @@
 // Headless adapter test: the Glulx fixture game played through Quixe, its Glk library and our GlkOte bridge, no DOM.
 import { readFileSync } from 'node:fs';
 import { inflateSync } from 'fflate';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Engine, InputRequest } from '../engine';
 import {
   applyOutput,
@@ -324,5 +324,44 @@ describe('Quixe engine', () => {
   it('rejects a file that is not a Glulx game', async () => {
     const engine = createQuixeEngine();
     await expect(engine.load(new ArrayBuffer(64), {})).rejects.toThrow();
+  });
+
+  describe('timer events (S1.25)', () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('sends the timer events the game asks for while it waits for a key', async () => {
+      const s = await start(STORY, { sliceMs: 0 });
+      await begin(s);
+      vi.useFakeTimers();
+      expect(await send(s, 'tide')).toContain('You watch the water and wait.');
+      expect(s.input()).toEqual({ type: 'char' });
+      vi.advanceTimersByTime(1999);
+      expect(s.take()).not.toContain('The tide rises.');
+      vi.advanceTimersByTime(1);
+      expect(s.take()).toContain('The tide rises.');
+      vi.advanceTimersByTime(2000);
+      const end = s.take();
+      expect(end).toContain('The tide is full.');
+      expect(end).toContain('You stop watching the tide.');
+      expect(s.input()).toMatchObject({ type: 'line' });
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('The tide');
+      expect(s.errors).toEqual([]);
+    });
+
+    it('sends none while timers are off', async () => {
+      const s = await start(STORY, { sliceMs: 0 });
+      await begin(s);
+      vi.useFakeTimers();
+      await send(s, 'tide');
+      s.engine.setTimersActive!(false);
+      vi.advanceTimersByTime(10000);
+      expect(s.take()).not.toContain('The tide rises.');
+      s.engine.setTimersActive!(true);
+      vi.advanceTimersByTime(2000);
+      expect(s.take()).toContain('The tide rises.');
+    });
   });
 });

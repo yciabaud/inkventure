@@ -233,6 +233,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
   const [slots, setSlots] = useState<Array<SlotInfo | null>>([]);
   // Name proposed in the Save dialog: the location, else the turn.
   const [saveName, setSaveName] = useState('');
+  // The page is shown (not hidden behind another app or tab, or the e-reader's screen saver).
+  const [visible, setVisible] = useState(() => !document.hidden);
 
   function showTranscript(next: Transcript) {
     transcriptRef.current = next;
@@ -315,6 +317,8 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
         savesRef.current = saves;
         const engine = createEngine();
         engineRef.current = engine;
+        // Timers start once the game is shown (below).
+        if (engine.setTimersActive) engine.setTimersActive(false);
         engine.onOutput((blocks) => showTranscript(applyOutput(transcriptRef.current, blocks)));
         engine.onInputRequest((req) => {
           turnEnded();
@@ -355,11 +359,29 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
       });
     return () => {
       cancelled = true;
+      const engine = engineRef.current;
+      if (engine && engine.setTimersActive) engine.setTimersActive(false);
       engineRef.current = null;
     };
     // Mount only: the callbacks read the session through refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    function onVisibility() {
+      setVisible(!document.hidden);
+    }
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  // A game's timer events (S1.25) only while the reader shows the game: not in the Transcript view, a dialog, or with
+  // the page hidden.
+  const timersOn = state.phase === 'playing' && view === 'game' && dialog === null && visible;
+  useEffect(() => {
+    const engine = engineRef.current;
+    if (engine && engine.setTimersActive) engine.setTimersActive(timersOn);
+  }, [timersOn]);
 
   function openSlots(which: 'save' | 'restore') {
     const saves = savesRef.current;
@@ -761,6 +783,7 @@ export function GameReader({ tuid, title, author, cover, language, kind, story, 
               key={upper ? 'upper' : 'game'}
               blocks={upper ? upper.blocks : blocks}
               focus={upper ? 0 : openAt}
+              keepPage={!upper}
               lastPageSlot={slot}
               lastSlotHeight={
                 kind === 'ink'

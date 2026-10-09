@@ -290,6 +290,8 @@ The core screen. It must feel like reading an ebook.
 - New output after a command opens on the page containing the echoed command; if output spans several
   pages, a "▸ more" marker invites turning the page. A turn (echoed command + reply) that does not fit in the rest of
   the page but fits on a page of its own starts a new page, so most replies are read whole, with the command bar.
+- Text a game prints **on a timer** while it waits (S1.25: a countdown, text that appears by itself, §4.2) goes at the
+  end of the text, like a turn's, without moving the reader off the page being read; status rows change in place.
 - While the game waits for a command, its bare prompt (">") is not shown: the command field stands for it. The command bar is visible only on the **last** page
   (on earlier pages a short slot shows "Last page ›", which opens it). All pages share one text-area height; on the last
   page the taller command bar covers the bottom of it and the paginator gives that page less text, so earlier pages
@@ -453,6 +455,7 @@ interface Engine {
   restart(): Promise<void>;
   undo(): Promise<boolean>;           // false: the reader restores its previous turn snapshot instead
   imageUrl?(image: number): string | null; // data URL of a picture of the story (Glulx Blorb), or null
+  setTimersActive?(active: boolean): void;  // timer events on/off (Z-machine, Glulx: off while the game is not shown)
 }
 ```
 
@@ -471,7 +474,17 @@ and later, which the Inform library reads as a time game ("Time: 9:05 am"), as u
 runs synchronously until it waits for input. Glulx runs on Quixe 2.2.6 with its own, newer Glk library and Blorb decoder,
 downloaded unchanged at install time from the upstream `quixe-2.2.6` tag into `vendor/quixe/` (Quixe is not on npm;
 the files are checked against SHA-256 hashes kept in the repository, and ignored by git) and patched at build time; `.gblorb` files are unpacked
-client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input. Pictures
+client-side. Its runs are time-sliced (§4.5), so `load()` resolves when the game first waits for input.
+**Timers** (S1.25): the bridge declares GlkOte's `timer` support and sends the timer events a game asks for
+(`glk_request_timer_events`), at its interval but **never more often than once a second** (on e-ink each event may
+redraw the screen: a 10 ms animation gets one frame a second), and only while the VM waits for an event and the reader
+shows the game (not in the Transcript view, a dialog, with the page hidden, nor after leaving the reader; back on, the
+next event comes a full interval later). ZVM leaves out the Z-machine's timed input (`@read` / `@read_char` with a time
+in tenths of a second and a routine): the adapter adds it to each VM (`src/engines/zvm/timedInput.ts`): the time goes
+to Glk as a timer; at each event the routine runs nested in the waiting VM (a line request is cancelled meanwhile,
+without echo, so the routine can print, and asked again after); when it returns true the input ends (terminator 0 or
+key 0). It also stores Return as terminator 13 (ZVM stored glkapi's 0, which a game would read as ended by its
+routine). The interval is in ZVM's and Glk's saved state, so a restored game ticks again. Pictures
 drawn in the main window (`glk_image_draw`, from the Blorb's `Pict` chunks) are shown: the bridge passes the picture's
 number, size and alt text (Blorb `RDes`), and `imageUrl` gives its data (a `data:` URL built by Quixe's Blorb decoder).
 The paginator sizes a picture from its known size before it loads (scaled down to the text column and to the room on
