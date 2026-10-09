@@ -31,6 +31,7 @@
     "catalog:featured": "node scripts/catalog/build-featured.ts",
     "ebook": "node scripts/ebook/build.ts",
     "ebook:screenshots": "node scripts/ebook/screenshots.ts",
+    "release:notes": "node scripts/release/build-notes.ts",
     "survey:rendering": "node scripts/survey/rendering.ts",
     "survey:scan": "node scripts/survey/scan.ts"
   },
