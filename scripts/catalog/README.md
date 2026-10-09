@@ -109,11 +109,14 @@ Z-machine and Glulx file the resolver may pick in the raw dataset (`storiesToChe
 included) and opens each one as the app would. A zip is downloaded whole (up to 64 MB): its story is the file IFDB
 names, else the only file of that name in another case or folder, else the only story of the game's format in it. Of
 a bare file only the head is read (a `Range` request for 4 KB; the start of a Blorb's executable chunk when it lies
-further). The story must be one of the game's format (a Z-machine header or Glulx's magic number, bare or in a
-Blorb), and a Z-machine story version 3, 4, 5 or 8 (ZVM's). Results go to `data/cache/stories.json` (`{ "url" or
-"url#primary": { checked, ok?, version?, primary?, problem?, detail?, transient? } }`; problems: `http`, `too-big`,
-`bad-zip`, `not-in-zip`, `not-a-story`, `wrong-format`, `unsupported-version`), reused for 180 days; network errors
-and 5xx answers are `transient`, checked again at the next run, and the file is kept meanwhile. It runs after the
+further). It must hold a story (a Z-machine header or Glulx's magic number, bare or in a Blorb, whose resource
+index is read whole up to 256 KB), and a Z-machine story must be version 3, 4, 5 or 8 (ZVM's). A story of the other
+format (a Glulx game IFDB lists as Z-code) is recorded (`format`) and played in its own engine. Results go to `data/cache/stories.json` (`{ "url" or
+"url#primary": { checked, ok?, format?, version?, primary?, problem?, detail?, transient?, v? } }`; problems: `http`, `too-big`,
+`bad-zip`, `not-in-zip`, `not-a-story`, `unsupported-version`), reused for 180 days; network errors and 5xx answers
+are `transient`, checked again at the next run, and the file is kept meanwhile. A failure records the version of the
+check (`v`, `STORIES_CHECK_VERSION`): when the check improves, the files that failed an older one are checked again
+at the next run. It runs after the
 CORS check; `check-pictures.ts` and `resolve.ts` take `--stories FILE`. The summary lists the files that do not open,
 with the games and the reason (to report to IFDB when the record is wrong), and the stories found under another name.
 
