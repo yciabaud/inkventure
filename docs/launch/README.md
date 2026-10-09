@@ -8,7 +8,8 @@ Drafts and steps for the public release. Nothing here is sent automatically: the
 2. **Production smoke** workflow run on the live address (Actions → Production smoke → Run workflow): green.
 3. The [real-device checklist](../device-checklist.md) run on the Kindle with the deployed build, recorded in
    `docs/device-reports/` and in the release notes ([template](../release-notes-template.md)).
-4. Tag the release (`v1.0.0`): the Ebook workflow attaches both books to the run.
+4. Tag the release (`v1.0.0`): the Ebook workflow attaches both books (EPUB and AZW3) to the tag's GitHub release
+   (creating a draft release if the tag was pushed with git).
 5. Fill the `[…]` placeholders in the drafts below (number of games, release date, links that changed).
 
 ## Messages
