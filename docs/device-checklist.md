@@ -1,9 +1,8 @@
 # Device checklist
 
 A 15-minute scripted test of Inkventure on a real e-reader (SPEC §11.4; story S7.1), run before each release on the
-Kindle (and on a Kobo when one is at hand). Copy the **Results** table at the end into the release notes
-([template](release-notes-template.md)) and save the filled checklist as
-`docs/device-reports/<YYYY-MM-DD>-<device>-checklist.md`.
+Kindle (and on a Kobo when one is at hand). Save the filled checklist as `docs/device-reports/<YYYY-MM-DD>-<device>-checklist.md`: the
+[release notes](releases/README.md) copy the **Results** table at the end of the latest one.
 
 Targets (SPEC §4.5, §10): Home ready **< 3 s** on Wi-Fi, Library first results **< 4 s**, page turn **< 300 ms**,
 Z-machine turn **< 1 s**, Glulx turn **< 3 s**.

@@ -3,7 +3,7 @@ name: Ebook
 # Builds the EN and FR ebooks (SPEC §8; story S6.1) on a version tag, on pull requests that change them, or on
 # demand: EPUB 3 (Pandoc, checked with EPUBCheck) and AZW3 (Calibre), with game cards from the published catalogue's
 # featured lists. The books are uploaded as a workflow artifact; on a version tag, the EPUB and AZW3 files are also
-# attached to the tag's GitHub release (a draft is created when the tag has no release yet).
+# attached to the tag's GitHub release, with generated release notes (a draft is created when the tag has none yet).
 on:
   push:
     tags: ['v*']
@@ -51,37 +51,55 @@ jobs:
             ebook/build/books.json
           if-no-files-found: error
 
-  # On a version tag only: attach the books to the tag's release, replacing files of the same name (a re-run). The
-  # release is the one created with the tag (GitHub UI); a tag pushed with git gets a draft release, whose notes the
-  # owner fills from docs/release-notes-template.md before publishing it.
+  # On a version tag only: attach the books to the tag's release, replacing files of the same name (a re-run), and
+  # write its notes (scripts/release/, story S7.5; docs/releases/ says what they hold). A tag pushed with git gets a
+  # draft release with those notes, published by the owner after a read. A release created with the tag (GitHub UI)
+  # gets them only if its notes are empty; the job summary always shows them.
   release:
     if: startsWith(github.ref, 'refs/tags/v')
     needs: ebook
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+        with:
+          # The previous tag and its backlog, for the stories done since then.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # The app as the release deploys it, for the first-load sizes.
+      - run: scripts/catalog/use-published.sh
+      - run: npm run build
+      - run: npm run check:size -- --json release-sizes.json
       - uses: actions/download-artifact@v4
         with:
           name: ebooks
           path: ebooks
-      - name: Attach the books to the release
+      - name: Write the release notes
+        run: |
+          npm run release:notes -- --tag "$GITHUB_REF_NAME" --sizes release-sizes.json --books ebooks/books.json \
+            --out release-notes.md
+          cat release-notes.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Attach the books and the notes to the release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
         run: |
           shopt -s failglob
           files=(ebooks/*.epub ebooks/*.azw3)
           if gh release view "$TAG" > /dev/null 2>&1; then
             gh release upload "$TAG" "${files[@]}" --clobber
+            if [ -z "$(gh release view "$TAG" --json body --jq .body)" ]; then
+              gh release edit "$TAG" --notes-file release-notes.md
+            else
+              echo 'The release already has notes: left as they are (the generated ones are in the job summary).'
+            fi
           else
             gh release create "$TAG" "${files[@]}" --draft --verify-tag --title "Inkventure $TAG" \
-              --notes 'Draft: fill the notes from docs/release-notes-template.md, then publish.'
+              --notes-file release-notes.md
           fi
-          {
-            echo "### Release $TAG"
-            echo
-            for f in "${files[@]}"; do echo "- $(basename "$f") ($(du -k "$f" | cut -f1) KiB)"; done
-          } >> "$GITHUB_STEP_SUMMARY"

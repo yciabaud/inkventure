@@ -835,8 +835,8 @@ A free ebook, in EN and FR, is the main acquisition channel.
   strings and rounding, and the badge stands in for difficulty (no forgiveness rating is emitted yet). The QR code
   is a PNG of the same link. The host is `ebook/config.json`'s `host`. The book cover is rendered from HTML with
   Playwright's Chromium (Calibre drops SVG covers). The Ebook workflow builds both books from the published catalogue
-  on `v*` tags (artifact, and the EPUB and AZW3 files attached to the tag's GitHub release, a draft if the tag
-  has none yet) and on pull requests that touch the ebook. CI builds them in an image with the tools
+  on `v*` tags (artifact, and the EPUB and AZW3 files attached to the tag's GitHub release, §11.5) and on pull
+  requests that touch the ebook. CI builds them in an image with the tools
   preinstalled (`.github/ebook-image`: Playwright's, plus Pandoc, EPUBCheck and Calibre; published to ghcr.io by
   the Ebook image workflow, tagged like Playwright).
 - **Download page** (S6.3): `<host>/ebook/`, a standalone static page like `probe/` (not a route of the app), for
@@ -896,6 +896,7 @@ A free ebook, in EN and FR, is the main acquisition channel.
 ├── content/featured.json
 ├── scripts/catalog/    crawler, resolver, emitter, content-policy.json
 ├── scripts/size/       check-size.ts: asset budgets report (CI)
+├── scripts/release/    build-notes.ts: release notes of a v* tag (Ebook workflow)
 ├── scripts/build/      Vite plugins: build-info.ts (version.json + build meta tag), licences.ts (licences.txt)
 ├── ebook/              ebook Markdown sources per locale, metadata, CSS, config (app address)
 ├── scripts/ebook/      build.ts: ebook build (cards, QR codes, cover, Pandoc, EPUBCheck, Calibre)
@@ -974,12 +975,24 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 ### 11.4 Real-device checklist
 
 - `docs/device-checklist.md` (story S7.1): a 15-minute manual script run on a real Kindle (and a Kobo)
-  before each release; results recorded in the release notes (`docs/release-notes-template.md`) and in
-  `docs/device-reports/`.
+  before each release; results recorded in `docs/device-reports/`, whose latest checklist the release notes copy
+  (§11.5).
 - **Timings** (Settings → About → Timings, or `?perf=1`): a small line at the top right of the screen gives the
   last time measured on the device — Home ready (from the page's start on a cold start, else from the address
   change), the Library's first results, a page turn in the reader (from the tap to the new page painted) — and the
   console logs each one. The reader's status line gives each game turn's time (§4.5).
+
+### 11.5 Releases
+
+- A release is a `v*` tag pushed with git. The Ebook workflow then builds the books and, in its `release` job,
+  creates a **draft** GitHub release (title `Inkventure <tag>`) with the EPUB and AZW3 files attached and generated
+  notes; the owner reads it and publishes it. A release created with its tag in GitHub's interface gets the books, and
+  the notes only if its own are empty. A re-run replaces the attached files.
+- The notes (`scripts/release/`, story S7.5) say: the catalogue (games by format, build date), the stories done since
+  the previous tag (`docs/BACKLOG.md` at both tags; all of them for the first), the Results table of the latest
+  `docs/device-reports/*-checklist.md`, the first-load sizes (`check:size --json`), the known issues (the open
+  stories outside Post-V1) and the books with their sizes. An optional `docs/releases/<tag>.md` adds the highlights
+  after the title and known issues first (its `### Known issues` section). `npm run release:notes` previews them.
 
 ---
 

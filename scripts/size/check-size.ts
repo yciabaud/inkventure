@@ -1,6 +1,7 @@
 // Checks built asset sizes against size-budget.json (SPEC §10). Run after `vite build`: `npm run check:size`.
 // Prints a Markdown table (also appended to the GitHub Actions job summary) and exits 1 when a budget is exceeded.
-import { appendFileSync, readFileSync, readdirSync, statSync } from 'node:fs';
+// `--json <file>` also writes the rows, for the release notes (scripts/release/).
+import { appendFileSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { evaluate, toMarkdown, type Budgets, type Manifest, type Sizes } from './budget.ts';
@@ -29,6 +30,8 @@ for (const file of files) {
 
 const rows = evaluate(manifest, files, sizes, budgets);
 const table = toMarkdown(rows);
+const json = process.argv.indexOf('--json');
+if (json >= 0) writeFileSync(process.argv[json + 1], JSON.stringify(rows, null, 2) + '\n');
 console.log(table);
 if (process.env.GITHUB_STEP_SUMMARY) {
   appendFileSync(process.env.GITHUB_STEP_SUMMARY, '## Asset size budgets\n\n' + table + '\n');
