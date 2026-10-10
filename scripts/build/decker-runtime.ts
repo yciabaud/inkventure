@@ -154,6 +154,10 @@ export const APP_PATCHES: Replacement[] = [
   startPatch(),
 ];
 
+/** The pace of a deck that only sleeps (see the bridge): after a tick that drew, and after one that did not. */
+export const PACE_DRAWN_MS = 100;
+export const PACE_STILL_MS = 1000;
+
 /** How long after the deck goes idle its state is sent to the reader to be saved. */
 export const SAVE_DELAY_MS = 1000;
 
@@ -220,6 +224,21 @@ ik_bridge=_=>{
 	const redraw=_=>{if(!document.hidden)sync(1)}
 	document.addEventListener('visibilitychange',redraw),window.addEventListener('pageshow',redraw)
 	;[display,q('#render')].forEach(c=>c.addEventListener('contextrestored',_=>sync(1)))
+	// Pace a deck that only sleeps: a script waiting in a sleep loop (Decker's dialog module waits for a tap that way)
+	// kept the deck busy, ticking as fast as the device could, which took the whole CPU on the Kindle (the browser
+	// slowed down). Sleeps run in wall-clock time (SLEEP_PATCHES), so ticking less often changes nothing to the deck's
+	// pace: the next tick comes ${PACE_DRAWN_MS} ms after one that drew, ${PACE_STILL_MS} ms after one that did not. An input still
+	// ticks at once (ik_wake).
+	let pacer=0,now=0,draws=0
+	const sleeping=_=>sleep_frames||sleep_play||running()
+	ik_wake=_=>{ik_quiet=0,now=1,ik_schedule(0)}
+	ik_schedule=delay=>{
+		if(!delay&&!now&&sleeping()){delay=ik.draws!==draws?${PACE_DRAWN_MS}:${PACE_STILL_MS};draws=ik.draws}
+		const asap=!delay&&now;now=0
+		if(ik_scheduled){if(!asap||!pacer)return;clearTimeout(pacer),pacer=0}
+		ik_scheduled=1,ik.awake=1
+		if(delay)pacer=setTimeout(_=>{pacer=0,loop()},delay);else requestAnimationFrame(loop)
+	}
 }
 // After decker.js has started the deck: its first tick waits for an animation frame.
 ik_bridge()`;
