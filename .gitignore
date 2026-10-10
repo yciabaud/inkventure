@@ -26,3 +26,7 @@ tests/fixtures/ink/*.zip
 
 # Ebook build output (scripts/ebook/build.ts)
 ebook/build/
+# Bitsy's engine, font and default game, downloaded at install from a pinned commit (scripts/build/fetch-bitsy.ts)
+vendor/bitsy/*.js
+vendor/bitsy/*.bitsy
+vendor/bitsy/*.bitsyfont
