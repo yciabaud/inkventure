@@ -223,3 +223,33 @@ test('the deck cannot reach the app', async ({ page }) => {
   });
   expect(reached).toEqual({ document: false, storage: false, top: false, own: false });
 });
+
+test('a sound does nothing where the browser has no Web Audio (an e-reader), and the deck goes on', async ({
+  page,
+}) => {
+  // Runs in every frame, the deck's included.
+  await page.addInitScript(() => {
+    const w = window as unknown as Record<string, unknown>;
+    delete w.AudioContext;
+    delete w.webkitAudioContext;
+  });
+  const errors: string[] = [];
+  page.on('pageerror', (error) => {
+    if (!/service ?worker/i.test(error.message)) errors.push(error.message);
+  });
+  await page.goto(GAME);
+  const frame = await deckFrame(page);
+  const played = await frame.evaluate(() => {
+    const w = window as unknown as {
+      n_play(args: unknown[]): unknown;
+      lms(text: string): unknown;
+      NIL: unknown;
+    };
+    // The tour deck's own sound.
+    return w.n_play([w.lms('sosumi')]) === w.NIL;
+  });
+  expect(played).toBe(true);
+  await tapButton(page, frame, 'Guided Tour');
+  await expect.poll(async () => (await deck(frame)).card).not.toBe('home');
+  expect(errors).toEqual([]);
+});

@@ -88,10 +88,16 @@ const APP_ZOOM_PATCH: Replacement = [
   '\tik_dpr=window.devicePixelRatio||1,ik_fit=min(screen.x*ik_dpr/fb.size.x,window.innerHeight*ik_dpr/fb.size.y),zoom=(ik_fit>=1?Math.floor(ik_fit):ik_fit)/ik_dpr // Inkventure: whole device pixels (less than one only when the card would not fit)',
 ];
 
-/** No sound: e-readers have no speakers, and a deck's sounds are not part of what the reader plays (SPEC §4.1). */
-const SILENT_PATCH: Replacement = [
-  /^n_play=\(\[x,hint\]\)=>\{$/m,
-  'n_play=_=>NIL // Inkventure: silent\nik_n_play=([x,hint])=>{',
+/**
+ * Sound plays where the browser has Web Audio; where it has none (or refuses to create a context), `play` does nothing
+ * instead of stopping the deck with an error (upstream assumes Web Audio).
+ */
+const AUDIO_PATCHES: Replacement[] = [
+  [
+    /^initaudio=_=>\{if\(!audio\)audio=new audioContext\(\{sampleRate:44100\}\)\}$/m,
+    'initaudio=_=>{if(!audio&&audioContext)try{audio=new audioContext({sampleRate:44100})}catch(e){} } // Inkventure: no Web Audio, no sound',
+  ],
+  [/initaudio\(\);if\(!audio\)return$/m, 'initaudio();if(!audio)return NIL'],
 ];
 
 const DISPLAY_PATCH: Replacement = [
@@ -116,7 +122,7 @@ export const APP_PATCHES: Replacement[] = [
   RESIZE_PATCH,
   ...STILL_PATCHES,
   KEYCAPS_PATCH,
-  SILENT_PATCH,
+  ...AUDIO_PATCHES,
   startPatch(),
 ];
 
