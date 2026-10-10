@@ -28,7 +28,7 @@ describe('the app runtime patches', () => {
     // Sleeps in wall-clock time (frames owed to a sleeping deck run without a draw).
     expect(patched).toContain('ik_owed=(sleep_frames||sleep_play||running())?');
     expect(patched).toContain(
-      'ik_owed>=sleep_frames){ik_owed-=sleep_frames,sleep_frames=0,pointer.down=pointer.up=0;continue}',
+      'ik_owed>=sleep_frames&&performance.now()-ik_slept<50){ik_owed-=sleep_frames,sleep_frames=0,pointer.down=pointer.up=0;continue}',
     );
     expect(patched).toContain("c.style.width=(fb.size.x*zoom)+'px'");
     expect(patched).toContain('menus_off=_=>1');

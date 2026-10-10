@@ -109,12 +109,18 @@ const DISPLAY_PATCH: Replacement = [
  * `sleep` in wall-clock time. Upstream counts a sleep in frames, one per tick, at 60 a second; a tick costs hundreds
  * of milliseconds on the Kindle, so a typewriter's `sleep[3]` per letter (Decker's dialog module) showed a word a
  * second, and a box opening one line per tick. Here the time spent since the last frame is owed to a sleeping deck:
- * a sleep that time covers ends at once and the script goes on in the same frame (up to `IK_MAX_OWED` frames of it),
+ * a sleep that time covers ends at once and the script goes on in the same frame (up to `IK_MAX_OWED` frames of it,
+ * for at most `IK_CATCHUP_MS`),
  * so the deck runs at its own pace and the screen shows where it got to at each draw. A tap's down and up are
  * one frame long: they are cleared in the frames run this way, so that a tap is not seen twice (Decker's dialog module
  * would both finish a line and go to the next). On a 60 Hz screen nothing changes (one frame owed per frame).
  */
 const IK_MAX_OWED = 120;
+/**
+ * At most this long of a frame catching up (what is left is owed to the next frames): a dialog module runs a script
+ * at every frame it catches up, and a tick that caught up 120 of them froze the Kindle (owner's check).
+ */
+const IK_CATCHUP_MS = 50;
 const SLEEP_PATCHES: Replacement[] = [
   [
     /^\tviewed=lmd\(\)$/m,
@@ -127,7 +133,9 @@ const SLEEP_PATCHES: Replacement[] = [
   ],
   [
     /^\t\tif\(!nomodal\(\)\|\|quota<=0\|\|sleep_frames\|\|sleep_play\)\{if\(sleep_frames\)sleep_frames--;break\}$/m,
-    '\t\tif(sleep_frames&&!sleep_play&&nomodal()&&quota>0&&ik_owed>=sleep_frames){ik_owed-=sleep_frames,sleep_frames=0,pointer.down=pointer.up=0;continue}\n' +
+    '\t\tif(sleep_frames&&!sleep_play&&nomodal()&&quota>0&&ik_owed>=sleep_frames&&performance.now()-ik_slept<' +
+      IK_CATCHUP_MS +
+      '){ik_owed-=sleep_frames,sleep_frames=0,pointer.down=pointer.up=0;continue}\n' +
       '\t\tif(!nomodal()||quota<=0||sleep_frames||sleep_play){if(sleep_frames)sleep_frames--;break}',
   ],
 ];
