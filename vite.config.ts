@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import { buildInfoPlugin } from './scripts/build/build-info.ts';
+import { deckerProbePlugin } from './scripts/build/decker-probe.ts';
 import { ebookPagePlugin } from './scripts/build/ebook-page.ts';
 import { licencesPlugin } from './scripts/build/licences.ts';
 import { serviceWorkerPlugin } from './scripts/build/service-worker.ts';
@@ -26,6 +27,8 @@ export default defineConfig({
     licencesPlugin(),
     // The offline app shell (S5.3), dist/sw.js: its precache list comes from the manifest.
     serviceWorkerPlugin(),
+    // The Decker probe (S0.11), dist/probe/decker/: Decker's runtime patched for e-ink, outside the app's budgets.
+    deckerProbePlugin(),
     // ES5 bundle + core-js polyfills for the Kindle experimental browser (old WebKit).
     legacy({
       targets: ['defaults', 'safari >= 5', 'ie >= 11'],

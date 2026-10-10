@@ -9,7 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/fixtures/build-twine.ts && node scripts/fixtures/build-ink-export.ts",
+    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/build/fetch-decker.ts && node scripts/fixtures/build-twine.ts && node scripts/fixtures/build-ink-export.ts",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -18,7 +18,7 @@
     "test:production": "playwright test --config playwright.production.config.ts",
     "lint": "eslint . && stylelint \"src/**/*.css\" && prettier --check .",
     "format": "prettier --write .",
-    "check:es5": "es-check es5 \"dist/assets/*-legacy*.js\" \"dist/probe/**/*.js\" \"dist/ebook/*.js\" dist/sw.js",
+    "check:es5": "es-check es5 \"dist/assets/*-legacy*.js\" \"dist/probe/**/*.js\" \"dist/ebook/*.js\" dist/sw.js --not=dist/probe/decker/runtime.js",
     "check:size": "node scripts/size/check-size.ts",
     "catalog:crawl": "node scripts/catalog/crawl.ts",
     "catalog:resolve": "node scripts/catalog/resolve.ts",
