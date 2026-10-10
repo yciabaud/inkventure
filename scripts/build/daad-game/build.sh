@@ -1,7 +1,8 @@
 #!/bin/sh
 # Rebuilds The Lamp Room (story S0.13) into public/probe/daad/: lamp-room.jddb (the database as jDAAD's DDBDATA,
-# compiled by the DAAD Reborn Compiler for its HTML target) and images.js (the pictures, by pictures.ts). Not run by
-# `npm install` or CI: the compiled output is committed.
+# compiled by the DAAD Reborn Compiler for its HTML target) and images.js (the pictures, by pictures.ts); and, for the
+# relocation test (relocate.ts), the same game built for two other machines into tests/fixtures/daad/: the Spectrum
+# 48K in classic (v2) mode and the Atari ST. Not run by `npm install` or CI: the compiled output is committed.
 #
 # Needs PHP and the DAAD Reborn Compiler: DRC_SRC is the src/ folder of a checkout of https://github.com/Utodev/DRC
 # with the frontend built by Free Pascal (`fpc -g -gl drf.pas`; built with -O2 it crashed on this template). The
@@ -20,8 +21,15 @@ cp "$here/lamp-room.dsf" "$work/LAMP.DSF"
   cd "$work"
   "$DRC_SRC/drf" html LAMP.DSF -v3
   php "$DRC_SRC/drb.php" html EN LAMP.json LAMP.DDB
+  "$DRC_SRC/drf" zx 48k LAMP.DSF
+  php "$DRC_SRC/drb.php" zx 48k EN LAMP.json ZX.DDB -c
+  "$DRC_SRC/drf" st LAMP.DSF -v3
+  php "$DRC_SRC/drb.php" st EN LAMP.json ST.DDB
 )
+fixtures="$here/../../../tests/fixtures/daad"
+cp "$work/ZX.DDB" "$fixtures/lamp-room-zx48k-v2.ddb"
+cp "$work/ST.DDB" "$fixtures/lamp-room-st.ddb"
 cp "$work/lamp.jddb" "$out/lamp-room.jddb"
 node "$here/pictures.ts" "$work"
 cp "$work/images.js" "$out/images.js"
-echo "Wrote $out/lamp-room.jddb and $out/images.js"
+echo "Wrote $out/lamp-room.jddb, $out/images.js and the fixtures in $fixtures"

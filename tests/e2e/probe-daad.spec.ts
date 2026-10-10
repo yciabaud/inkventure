@@ -1,4 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
+import { relocateDdb, toJddb } from '../../scripts/build/daad-game/relocate';
 
 // The DAAD probe (S0.13): our test game, The Lamp Room, in jDAAD as patched for e-ink (scripts/build/daad-probe.ts).
 // Everything it loads is same-origin (dist/probe/daad/); no network.
@@ -131,3 +133,31 @@ test('the probe keeps the game’s colours, zooms in whole steps and hides the k
   );
   expect(errors).toEqual([]);
 });
+
+// A database DRC built for another machine plays once relocated (scripts/build/daad-game/relocate.ts): the same game
+// for the Spectrum (classic v2, loaded at 0x8400) and the Atari ST (big-endian), served in place of the HTML build.
+for (const [name, file, base, bigEndian] of [
+  ['a Spectrum (v2)', 'lamp-room-zx48k-v2.ddb', 0x8400, false],
+  ['an Atari ST', 'lamp-room-st.ddb', 0, true],
+] as const) {
+  test(`${name} database, relocated, plays like the HTML build`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+    const { ddb } = relocateDdb(readFileSync('tests/fixtures/daad/' + file), base, bigEndian);
+    await page.route('**/lamp-room.jddb', (route) =>
+      route.fulfill({ body: toJddb(ddb), contentType: 'text/javascript' }),
+    );
+    await page.goto('/probe/daad/');
+    await waitingFor(page, 'key', 0);
+    await page.locator('#paper').click();
+    await waitingFor(page, 'command', 1);
+    await page.locator('#type').pressSequentially('north');
+    await page.locator('#type').press('Enter');
+    await waitingFor(page, 'command', 2);
+    expect((await stats(page)).pictures).toBe(2);
+    await page.locator('#type').pressSequentially('read log');
+    await page.locator('#type').press('Enter');
+    await waitingFor(page, 'more', 2);
+    expect(errors).toEqual([]);
+  });
+}
