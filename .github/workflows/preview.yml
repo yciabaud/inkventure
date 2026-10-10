@@ -33,6 +33,13 @@ jobs:
       # The real catalogue (catalog branch) when there is one, as in the deployed site.
       - run: scripts/catalog/use-published.sh
         if: github.event.action != 'closed'
+      # TEMPORARY (S2.9, dropped before merge): the Decker games of the IF Archive, as the pipeline finds them
+      # (preview-catalog/, built locally on 2026-10-10), instead of the published catalogue, to try them on the Kindle.
+      - run: |
+          find public/catalog -mindepth 1 ! -name README.md -exec rm -rf {} +
+          cp -R preview-catalog/. public/catalog/
+          node scripts/catalog/build-featured.ts --catalog public/catalog
+        if: github.event.action != 'closed'
       - run: npm run build && rm -rf dist/.vite
         if: github.event.action != 'closed'
         env:
