@@ -15,6 +15,12 @@ export const DECKER_MAX_AGE_DAYS = 90;
 /** An export bigger than this is not opened. */
 export const MAX_DECKER_EXPORT_BYTES = 50 * 1024 * 1024;
 
+/**
+ * A deck larger than this is left out: the Kindle did not open EyeOS's (9.3 M characters, owner's check of S2.9), and
+ * a deck is held several times over in memory (the page, the frame's document, Decker's own copy).
+ */
+export const MAX_DECK_CHARS = 5_000_000;
+
 /** What a static look at a deck shows: things that play badly on e-ink, counted (S2.9 suitability). */
 export interface DeckNotes {
   /** Size of the deck (characters). */
@@ -144,7 +150,8 @@ export async function inspectDeckerExport(
 export function deckerPageFrom(cache: DeckerCache): (link: DeckerExport) => string | null {
   return (link) => {
     const entry = cache[deckerKey(link)];
-    return entry && entry.page ? entry.page : null;
+    if (!entry || !entry.page) return null;
+    return entry.notes && entry.notes.chars > MAX_DECK_CHARS ? null : entry.page;
   };
 }
 
@@ -203,7 +210,8 @@ export function deckerSummary(
           .filter(Boolean)
           .join(', ')
       : (entry && entry.detail) || 'not checked';
-    return `| \`${link.tuid}\` | ${cell(link.title)} | ${n ? 'deck' : 'none'} | ${cell(look.replace(/; $/, ''))} |`;
+    const kept = !!n && n.chars <= MAX_DECK_CHARS;
+    return `| \`${link.tuid}\` | ${cell(link.title)} | ${kept ? 'deck' : n ? 'too large' : 'none'} | ${cell(look.replace(/; $/, ''))} |`;
   });
   return rows.length
     ? '| Game | Title | Deck | A look at it |\n|---|---|---|---|\n' + rows.join('\n') + '\n'

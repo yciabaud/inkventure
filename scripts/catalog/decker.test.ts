@@ -176,6 +176,14 @@ describe('the Decker exports of a dataset', () => {
     };
     expect(deckerPageFrom(cache)(links[0])).toBe('g.html');
     expect(deckerPageFrom({})(links[0])).toBeNull();
+    // Too large for an e-reader (MAX_DECK_CHARS).
+    const big = { ...cache['https://www.ifarchive.org/if-archive/games/html/g.zip#g.html'] };
+    big.notes = { ...big.notes, chars: 9_000_000 };
+    const bigCache = { 'https://www.ifarchive.org/if-archive/games/html/g.zip#g.html': big };
+    expect(deckerPageFrom(bigCache)(links[0])).toBeNull();
+    expect(deckerSummary(links, bigCache)).toContain(
+      '| `deck` | T deck | too large | 2 cards, 8789 K;',
+    );
     expect(deckerSummary(links, cache)).toContain(
       '| `deck` | T deck | deck | 2 cards, 0 K; 1 animated, 1 sleep, 1 canvas, 1 sound |',
     );

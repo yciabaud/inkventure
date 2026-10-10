@@ -33,7 +33,7 @@ type Replacement = [RegExp, string];
 
 /** The draw: changed rows only, colours from a table. Replaces upstream's `sync` whole. */
 export const SYNC = `// Inkventure (S1.29, scripts/build/decker-runtime.ts): draws only the rows that changed, colours from a table.
-let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null,ik_dpr=1,ik_fit=1
+let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null,ik_dpr=1,ik_fit=1,ik_owed=0,ik_slept=0
 ik_rgba=c=>{const v=COLORS[c];return (0xFF000000|((0xFF&v)<<16)|(0xFF00&v)|(0xFF&(v>>16)))>>>0}
 ik_color=(pal,anim,p,x,y)=>{
 	const a=p<28||p>31?p: anim[p-28][0]
@@ -105,6 +105,33 @@ const DISPLAY_PATCH: Replacement = [
   "\tconst c =q('#display');c.width=Math.round(fb.size.x*zoom*ik_dpr),c.height=Math.round(fb.size.y*zoom*ik_dpr),c.style.width=(fb.size.x*zoom)+'px',c.style.height=(fb.size.y*zoom)+'px'",
 ];
 
+/**
+ * `sleep` in wall-clock time. Upstream counts a sleep in frames, one per tick, at 60 a second; a tick costs hundreds
+ * of milliseconds on the Kindle, so a typewriter's `sleep[3]` per letter (Decker's dialog module) showed a word a
+ * second, and a box opening one line per tick. Here the time spent since the last frame is owed to a sleeping deck:
+ * a sleep that time covers ends at once and the script goes on in the same frame (up to `IK_MAX_OWED` frames of it),
+ * so the deck runs at its own pace and the screen shows where it got to at each draw. A tap's down and up are
+ * one frame long: they are cleared in the frames run this way, so that a tap is not seen twice (Decker's dialog module
+ * would both finish a line and go to the next). On a 60 Hz screen nothing changes (one frame owed per frame).
+ */
+const IK_MAX_OWED = 120;
+const SLEEP_PATCHES: Replacement[] = [
+  [
+    /^\tviewed=lmd\(\)$/m,
+    `\tviewed=lmd() // Inkventure: sleeps in wall-clock time
+\t{const now=performance.now();ik_owed=(sleep_frames||sleep_play||running())?min(${IK_MAX_OWED},ik_owed+(now-ik_slept)*60/1000):0;ik_slept=now}`,
+  ],
+  [
+    /^\tif\(sleep_frames\)\{sleep_frames--;return 0\}$/m,
+    '\tif(sleep_frames){const k=min(sleep_frames,max(1,0|ik_owed));sleep_frames-=k,ik_owed=max(0,ik_owed-k);if(sleep_frames)return 0}',
+  ],
+  [
+    /^\t\tif\(!nomodal\(\)\|\|quota<=0\|\|sleep_frames\|\|sleep_play\)\{if\(sleep_frames\)sleep_frames--;break\}$/m,
+    '\t\tif(sleep_frames&&!sleep_play&&nomodal()&&quota>0&&ik_owed>=sleep_frames){ik_owed-=sleep_frames,sleep_frames=0,pointer.down=pointer.up=0;continue}\n' +
+      '\t\tif(!nomodal()||quota<=0||sleep_frames||sleep_play){if(sleep_frames)sleep_frames--;break}',
+  ],
+];
+
 /** Upstream's `sync`, from its declaration to the end of the function. */
 const SYNC_PATCH: Replacement = [/^let id=null\nsync=_=>\{\n(?:\t.*\n)*?\}$/m, SYNC];
 
@@ -123,6 +150,7 @@ export const APP_PATCHES: Replacement[] = [
   ...STILL_PATCHES,
   KEYCAPS_PATCH,
   ...AUDIO_PATCHES,
+  ...SLEEP_PATCHES,
   startPatch(),
 ];
 
