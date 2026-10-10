@@ -21,6 +21,8 @@ describe('the app runtime patches', () => {
     expect(patched).toContain('ik_table=(pal,anim)=>');
     expect(patched).not.toContain('for(let z=0,d=0,y=0;y<id.height;y++)');
     expect(patched).toContain('keycaps_enter=_=>{} // Inkventure');
+    expect(patched).toContain('zoom=max(1,Math.floor(min(screen.x*ik_dpr/fb.size.x');
+    expect(patched).toContain("c.style.width=(fb.size.x*zoom)+'px'");
     expect(patched).toContain('menus_off=_=>1');
     expect(patched).toContain('ik_wake=_=>');
     expect(patched).toContain('const ccolor=0 // Inkventure: no corners');
