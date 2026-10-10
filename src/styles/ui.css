@@ -1067,7 +1067,8 @@ button.pager__btn {
 }
 
 /* Twine stories (SPEC §4.3): the story's own page in a sandboxed frame filling the text area. */
-.twine__frame {
+.twine__frame,
+.decker__frame {
   display: block;
   flex: 1;
   width: 100%;

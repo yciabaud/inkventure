@@ -1,6 +1,6 @@
 // Engine abstraction (SPEC §4.2): every story format implements this interface, so the reader is engine-agnostic.
 
-export type EngineKind = 'zmachine' | 'glulx' | 'ink' | 'twine';
+export type EngineKind = 'zmachine' | 'glulx' | 'ink' | 'twine' | 'decker';
 
 /** Glk text styles, as named by GlkOte. The reader maps them to typography. */
 export type TextStyle =

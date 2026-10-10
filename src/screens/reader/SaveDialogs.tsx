@@ -132,16 +132,21 @@ export function RestartDialog({
   onConfirm,
   onErase,
   onClose,
+  text,
 }: {
   onConfirm: () => void;
   /** Also offers to erase the story's own saves and start afresh (Twine). */
   onErase?: () => void;
   onClose: () => void;
+  /** What restarting does, when it is not the usual (a Decker deck loses where the player was). */
+  text?: string;
 }) {
   return (
     <Dialog title={t('saves.restartTitle')} onClose={onClose}>
       <div class="saves ui-font">
-        <p class="saves__hint">{t(onErase ? 'saves.restartTextErase' : 'saves.restartText')}</p>
+        <p class="saves__hint">
+          {text || t(onErase ? 'saves.restartTextErase' : 'saves.restartText')}
+        </p>
         <div class="saves__buttons">
           <Button onClick={onConfirm}>{t('saves.restartConfirm')}</Button>
           {onErase && <Button onClick={onErase}>{t('saves.restartErase')}</Button>}

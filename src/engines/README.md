@@ -10,6 +10,8 @@ Engine abstraction and adapters (SPEC §4).
 - `zvm/`: the Z-machine engine (lazy chunk).
 - `quixe/`: the Glulx engine (lazy chunk), on the Quixe files downloaded into `vendor/quixe/` at install.
 - `ink/`: the ink engine (lazy chunk), on inkjs.
+- `decker/`: not an `Engine`: the page of a Decker deck's sandboxed frame (`deckerHtml.ts`: Decker's markup, the deck,
+  the runtime inlined), the deck taken out of a web export, and the frame's messages; `DeckerReader` runs it (S1.29).
 - `twine/`: not an `Engine`: preparing a Twine story's page for its sandboxed frame (`twineHtml.ts`: e-ink stylesheet,
   injection) and the script run inside it (`frameScript.ts`); `messages.ts` is what the reader (`TwineReader`) needs.
 
@@ -70,3 +72,14 @@ string (it runs outside the bundle), which stands in for `localStorage` / `sessi
 every change posted to the reader), turns pages on taps (left 30 % back, elsewhere forward; links and controls excluded)
 and applies a new stylesheet when the reader sends one. The reader keeps the story's storage under
 `save:<tuid>:twine` (`src/storage/twine.ts`). Only messages whose `source` is the frame's window are handled.
+
+Decker (S1.29): Decker 1.71's web runtime (John Earnest, MIT), downloaded at install into `vendor/decker/` and patched
+at build time by `scripts/build/decker-runtime.ts` (on top of the S0.11 probe's patches in `decker-probe.ts`), served as
+two minified scripts through `virtual:decker-runtime` (`assets/decker-lil-<hash>.js`, `assets/decker-ui-<hash>.js`),
+each budgeted as a lazy chunk. `DeckerReader` fetches them and the deck, and runs the deck in
+`<iframe sandbox="allow-scripts" srcdoc>` with everything inlined. The runtime's draw converts only the rows of the
+frame buffer that changed, through a colour table built once per palette; `keycaps` (Decker's drawn keyboard) is off,
+and the bridge puts a hidden input over a tapped editable field, focused during the tap so that the device keyboard
+opens. The bridge posts the deck's name, `ready`, errors, and the deck itself a second after it goes idle following an
+input; the reader keeps it under `save:<tuid>:decker` (`src/storage/decker.ts`). The editor is still in the runtime,
+unreachable (menus off): removing it is not needed for the budget (see the story's notes).

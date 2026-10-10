@@ -21,19 +21,23 @@ export function engineFor(format: string): EngineKind | null {
 
 type Loader = () => Promise<() => Engine>;
 
-/** The engines. Twine stories are not run by an `Engine`: they play in their own sandboxed frame (TwineReader). */
+/**
+ * The engines. Twine stories and Decker decks are not run by an `Engine`: they play in their own sandboxed frame
+ * (TwineReader, DeckerReader).
+ */
 const LOADERS: Partial<Record<EngineKind, Loader>> = {
   zmachine: () => import('./zvm/zvmEngine').then((module) => module.createZvmEngine),
   glulx: () => import('./quixe/quixeEngine').then((module) => () => module.createQuixeEngine()),
   ink: () => import('./ink/inkEngine').then((module) => module.createInkEngine),
 };
 
-/** Whether this build can play games of `kind`. */
+/** Whether this build can play games of `kind`. Decker is ES2017: not on the legacy (ES5) bundle. */
 export function isAvailable(kind: EngineKind): boolean {
+  if (kind === 'decker') return !import.meta.env.LEGACY;
   return kind === 'twine' || !!LOADERS[kind];
 }
 
-/** Loads the engine's chunk and returns its factory. Rejects for Twine, which has no `Engine`. */
+/** Loads the engine's chunk and returns its factory. Rejects for Twine and Decker, which have no `Engine`. */
 export function loadEngine(kind: EngineKind): Promise<() => Engine> {
   const loader = LOADERS[kind];
   return loader ? loader() : Promise.reject(new Error('No engine for ' + kind));
@@ -69,6 +73,7 @@ function containsAscii(bytes: Uint8Array, needle: string): boolean {
 export function looksLikeStory(kind: EngineKind, bytes: Uint8Array): boolean {
   if (kind === 'twine')
     return containsAscii(bytes, '<tw-storydata') || containsAscii(bytes, 'storeArea');
+  if (kind === 'decker') return containsAscii(bytes, '{deck}');
   if (bytes.length >= 12 && fourCC(bytes, 0) === 'FORM') return fourCC(bytes, 8) === 'IFRS';
   if (kind === 'zmachine') return bytes.length >= 64 && bytes[0] >= 1 && bytes[0] <= 8;
   if (kind === 'glulx') return bytes.length >= 36 && fourCC(bytes, 0) === 'Glul';

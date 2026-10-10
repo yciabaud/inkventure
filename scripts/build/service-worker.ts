@@ -3,7 +3,7 @@
 // dictionary and the other small chunks the app loads on demand) is cached when the worker installs; each engine's
 // chunks only when an adventure of its format is kept offline.
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import type { Plugin, ResolvedConfig } from 'vite';
 import type { Manifest } from '../size/budget.ts';
@@ -23,7 +23,14 @@ const ENGINE_SOURCES: Array<[RegExp, string]> = [
   [/^src\/engines\/quixe\//, 'glulx'],
   [/^src\/engines\/ink\//, 'ink'],
   [/^src\/engines\/twine\/|^_?TwineReader[-.]|\/TwineReader\./, 'twine'],
+  [
+    /^src\/engines\/decker\/|^_?DeckerReader[-.]|\/DeckerReader\.|^virtual:decker-runtime/,
+    'decker',
+  ],
 ];
+
+/** The Decker runtime's scripts (S1.29): assets the Decker reader fetches, not chunks, so not in the manifest. */
+const DECKER_RUNTIME = /^assets\/decker-(lil|ui)-[^/]+\.js$/;
 
 const FONT = /\.(woff2?)$/;
 
@@ -57,7 +64,7 @@ function filesOf(manifest: Manifest, chunkKeys: Iterable<string>): string[] {
  * what they import make the shell, with the fonts; every chunk loaded on demand joins it too, unless it belongs to an
  * engine. Other assets (the test stories the demo imports) are left to the network.
  */
-export function precacheList(manifest: Manifest): Omit<Precache, 'version'> {
+export function precacheList(manifest: Manifest, files: string[] = []): Omit<Precache, 'version'> {
   const shellKeys = new Set<string>();
   const engineKeys: Record<string, Set<string>> = {};
   const fonts = new Set<string>();
@@ -78,6 +85,7 @@ export function precacheList(manifest: Manifest): Omit<Precache, 'version'> {
   for (const kind of Object.keys(engineKeys).sort()) {
     // What the shell already holds is not cached twice.
     engines[kind] = filesOf(manifest, engineKeys[kind])
+      .concat(kind === 'decker' ? files.filter((file) => DECKER_RUNTIME.test(file)) : [])
       .filter((file) => shell.indexOf(file) < 0)
       .sort();
   }
@@ -114,7 +122,8 @@ export function serviceWorkerPlugin(template = 'src/sw/sw.js'): Plugin {
       const manifest = JSON.parse(
         readFileSync(join(outDir, '.vite', 'manifest.json'), 'utf8'),
       ) as Manifest;
-      const list = precacheList(manifest);
+      const assets = readdirSync(join(outDir, 'assets')).map((name) => 'assets/' + name);
+      const list = precacheList(manifest, assets);
       const page = readFileSync(join(outDir, 'index.html'), 'utf8');
       const precache: Precache = { version: precacheVersion(list, page), ...list };
       const source = readFileSync(resolve(config.root, template), 'utf8');

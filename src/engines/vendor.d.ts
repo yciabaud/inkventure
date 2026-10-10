@@ -54,3 +54,10 @@ declare module '*/vendor/quixe/gi_blorb.js' {
     get_image_url(image: number): string | null;
   }
 }
+
+// The Decker reader's runtime (scripts/build/decker-runtime.ts): the URLs of its two scripts and of the tour deck.
+declare module 'virtual:decker-runtime' {
+  export const lilUrl: string;
+  export const uiUrl: string;
+  export const tourUrl: string;
+}

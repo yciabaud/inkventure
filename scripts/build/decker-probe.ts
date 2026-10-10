@@ -56,9 +56,55 @@ loop=_=>{
 	else{ik.awake=0,ev.clicklast=0;if(ik.input!=null&&ik.settle==null)ik.settle=performance.now()-ik.input;if(ik.onidle)ik.onidle()}
 }`;
 
+/** The loop: a tick only while the deck is busy (upstream: one per 1/60 s with up to 5 of catch-up, forever). */
+export const LOOP_PATCH: Replacement = [
+  /^let prev_stamp=null, leftover=0\nloop=stamp=>\{\n(?:\t.*\n){5}\}$/m,
+  LOOP,
+];
+
+/** The card fills the width (a fractional zoom); the page's body is only as tall as its content. */
+export const ZOOM_PATCH: Replacement = [
+  /^\tzoom=max\(1,is_fullscreen\(\)\?fs:\(0\|fs\)\)$/m,
+  '\tzoom=max(1,min(screen.x/fb.size.x,window.innerHeight/fb.size.y)) // Inkventure: fill the width',
+];
+
+/** A resize draws again and wakes the loop. */
+export const RESIZE_PATCH: Replacement = [
+  /^window\.onresize=_=>\{resize\(\),sync\(\)\}$/m,
+  'window.onresize=_=>{resize(),sync(1),ik_wake()}',
+];
+
+/** Transitions, animated patterns, the blinking cursor, menus and corners: off. */
+export const STILL_PATCHES: Replacement[] = [
+  [
+    /^\tif\(ms\.type!='trans'&&x>=0&&tfun\)\{$/m,
+    "\tif(0/* Inkventure: no transitions */&&ms.type!='trans'&&x>=0&&tfun){",
+  ],
+  [/^\tshow_widgets:1,show_anim:1,/m, '\tshow_widgets:1,show_anim:0,'],
+  [
+    /^\twid\.cursor_timer=\(wid\.cursor_timer\+1\)%\(2\*FIELD_CURSOR_DUTY\)$/m,
+    '\twid.cursor_timer=0',
+  ],
+  [/^menus_off=_=>lb\(ifield\(deck,'locked'\)\)$/m, 'menus_off=_=>1'],
+  [
+    /^\tconst ccolor=ln\(ifield\(deck,'corners'\)\)$/m,
+    '\tconst ccolor=0 // Inkventure: no corners',
+  ],
+];
+
+/** Start: input wakes the loop; one first tick. `extra` runs just before it. */
+export function startPatch(extra = ''): Replacement {
+  return [
+    /^resize\(\),requestAnimationFrame\(loop\)$/m,
+    ";['mousedown','mousemove','touchstart','touchmove','wheel'].forEach(n=>q('body').addEventListener(n,ik_wake,{passive:true}))\n" +
+      ";['mouseup','touchend','keydown'].forEach(n=>q('body').addEventListener(n,ik_input,{passive:true}))\n" +
+      extra +
+      'resize(),ik.started=performance.now(),ik_wake()',
+  ];
+}
+
 export const PATCHES: Replacement[] = [
-  // The loop (upstream: a tick per 1/60 s with up to 5 of catch-up, and a sync, on every animation frame).
-  [/^let prev_stamp=null, leftover=0\nloop=stamp=>\{\n(?:\t.*\n){5}\}$/m, LOOP],
+  LOOP_PATCH,
   // Sync: skip the draw when nothing changed.
   [
     /^let id=null\nsync=_=>\{\n\tpick_palette\(deck\)$/m,
@@ -73,46 +119,14 @@ export const PATCHES: Replacement[] = [
     /^(\tconst g=q\('#display'\)\.getContext\('2d'\);.*g\.drawImage\(r,0,0\),g\.restore\(\))\n\}$/m,
     '$1\n\tik_drawn();return 1\n}',
   ],
-  // The card fills the width (a fractional zoom), drawn without smoothing.
-  [
-    /^\tzoom=max\(1,is_fullscreen\(\)\?fs:\(0\|fs\)\)$/m,
-    // The page's body is only as tall as its content: the height limit is the window's.
-    '\tzoom=max(1,min(screen.x/fb.size.x,window.innerHeight/fb.size.y)) // Inkventure: fill the width',
-  ],
+  ZOOM_PATCH,
   [
     /g\.imageSmoothingEnabled=zoom!=\(0\|zoom\),g\.save\(\),g\.scale\(zoom,zoom\)/m,
     'g.imageSmoothingEnabled=false,g.save(),g.scale(zoom,zoom)',
   ],
-  // No corners.
-  [
-    /^\tconst ccolor=ln\(ifield\(deck,'corners'\)\)$/m,
-    '\tconst ccolor=0 // Inkventure: no corners',
-  ],
-  [
-    /^window\.onresize=_=>\{resize\(\),sync\(\)\}$/m,
-    'window.onresize=_=>{resize(),sync(1),ik_wake()}',
-  ],
-  // Transitions jump to their end.
-  [
-    /^\tif\(ms\.type!='trans'&&x>=0&&tfun\)\{$/m,
-    "\tif(0/* Inkventure: no transitions */&&ms.type!='trans'&&x>=0&&tfun){",
-  ],
-  // Animated patterns frozen.
-  [/^\tshow_widgets:1,show_anim:1,/m, '\tshow_widgets:1,show_anim:0,'],
-  // A steady field cursor.
-  [
-    /^\twid\.cursor_timer=\(wid\.cursor_timer\+1\)%\(2\*FIELD_CURSOR_DUTY\)$/m,
-    '\twid.cursor_timer=0',
-  ],
-  // No menus.
-  [/^menus_off=_=>lb\(ifield\(deck,'locked'\)\)$/m, 'menus_off=_=>1'],
-  // Start: input wakes the loop; one first tick.
-  [
-    /^resize\(\),requestAnimationFrame\(loop\)$/m,
-    ";['mousedown','mousemove','touchstart','touchmove','wheel'].forEach(n=>q('body').addEventListener(n,ik_wake,{passive:true}))\n" +
-      ";['mouseup','touchend','keydown'].forEach(n=>q('body').addEventListener(n,ik_input,{passive:true}))\n" +
-      'resize(),ik.started=performance.now(),ik_wake()',
-  ],
+  RESIZE_PATCH,
+  ...STILL_PATCHES,
+  startPatch(),
 ];
 
 /** Applies each replacement, which must match exactly once; throws naming the first one that does not. */

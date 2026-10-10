@@ -21,6 +21,8 @@ export const keys = {
   keptFile: (tuid: string) => 'kept:' + tuid,
   /** A Twine story's own storage (its format's saves and session), kept like a named save. */
   twine: (tuid: string) => 'save:' + tuid + ':twine',
+  /** A Decker deck as the player left it (its state is in the deck itself), kept like a named save. */
+  decker: (tuid: string) => 'save:' + tuid + ':decker',
 };
 
 /**

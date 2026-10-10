@@ -1,11 +1,12 @@
 // Third-party licences (SPEC §5.6, §10, S7.2): writes dist/licences.txt, the full licence text of every piece of
 // third-party code or font the site serves. Vite's `build.license` lists the npm packages bundled into the app
-// (.vite/license.md); this plugin adds what it cannot see: Quixe (vendored, outside node_modules), the legacy
+// (.vite/license.md); this plugin adds what it cannot see: Quixe and Decker (vendored, outside node_modules), the legacy
 // bundle's polyfills (core-js, SystemJS, built separately by @vitejs/plugin-legacy) and the device probe's QR code
 // script (a plain file in public/probe/).
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import type { Plugin } from 'vite';
+import { DECKER_VERSION } from './decker-files.ts';
 import { QUIXE_TAG } from './quixe-files.ts';
 
 export interface Notice {
@@ -56,6 +57,13 @@ export function extraNotices(root: string): Notice[] {
       licence: 'MIT',
       use: 'Glulx interpreter, by Andrew Plotkin',
       file: join(root, 'vendor/quixe/LICENSE'),
+    },
+    {
+      name: 'Decker',
+      version: DECKER_VERSION,
+      licence: 'MIT',
+      use: 'Decker decks (its web runtime, patched) and the tour deck, by John Earnest',
+      file: join(root, 'vendor/decker/LICENSE'),
     },
     {
       name: 'core-js',

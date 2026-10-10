@@ -23,6 +23,8 @@ interface Props {
   menuNote?: ComponentChildren;
   /** The game's own actions in the menu (Save…, Restore…, Undo, Restart, Transcript), after "Aa". */
   actions?: ReaderAction[];
+  /** "Aa" in the menu (default): not for a game whose text the settings cannot change (Decker draws its own). */
+  textSettings?: boolean;
 }
 
 export interface ReaderAction {
@@ -35,7 +37,14 @@ export interface ReaderAction {
  * Full-screen reader chrome. The top zone opens a menu over the text: the app's top bar and the reader's own
  * actions (text settings "Aa", the game's actions and Transcript, refresh screen).
  */
-export function ReaderFrame({ tuid, heading, children, actions, menuNote }: Props) {
+export function ReaderFrame({
+  tuid,
+  heading,
+  children,
+  actions,
+  menuNote,
+  textSettings = true,
+}: Props) {
   const [barOpen, setBarOpen] = useState(false);
   // The menu opens under the top zone, whose height follows the rows of the status window.
   const [barTop, setBarTop] = useState(0);
@@ -67,19 +76,21 @@ export function ReaderFrame({ tuid, heading, children, actions, menuNote }: Prop
         <div class="reader__bar" style={barTop ? { top: barTop + 'px' } : undefined}>
           <TopBar current="play" />
           <div class="reader__actions ui-font" role="group" aria-label={t('reader.menu')}>
-            <button
-              type="button"
-              class="reader__action"
-              onClick={() => {
-                setBarOpen(false);
-                setSettingsOpen(true);
-              }}
-            >
-              <span class="reader__aa" aria-hidden="true">
-                Aa
-              </span>
-              {t('reader.textSettings')}
-            </button>
+            {textSettings && (
+              <button
+                type="button"
+                class="reader__action"
+                onClick={() => {
+                  setBarOpen(false);
+                  setSettingsOpen(true);
+                }}
+              >
+                <span class="reader__aa" aria-hidden="true">
+                  Aa
+                </span>
+                {t('reader.textSettings')}
+              </button>
+            )}
             {(actions || []).map((action) => (
               <button
                 key={action.label}
