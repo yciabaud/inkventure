@@ -33,7 +33,7 @@ type Replacement = [RegExp, string];
 
 /** The draw: changed rows only, colours from a table. Replaces upstream's `sync` whole. */
 export const SYNC = `// Inkventure (S1.29, scripts/build/decker-runtime.ts): draws only the rows that changed, colours from a table.
-let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null,ik_dpr=1
+let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null,ik_dpr=1,ik_fit=1
 ik_rgba=c=>{const v=COLORS[c];return (0xFF000000|((0xFF&v)<<16)|(0xFF00&v)|(0xFF&(v>>16)))>>>0}
 ik_color=(pal,anim,p,x,y)=>{
 	const a=p<28||p>31?p: anim[p-28][0]
@@ -80,11 +80,18 @@ sync=force=>{
  * (at least 1), so that every deck pixel is the same square of screen pixels and dithers stay regular. On the
  * Kindle (2 device pixels per CSS pixel, 636 CSS pixels wide) that is 2: the card at 512 CSS pixels, as sharp as the
  * S0.11 probe at 1:1. (Filling the width, × 2.48 there, made cells of 2 or 3 pixels: irregular dithers; the owner
- * chose sharp.) `zoom` is in CSS pixels, as Decker's pointer expects.
+ * chose sharp.) A screen too narrow for one device pixel per deck pixel (a phone held upright at 1 device pixel per
+ * CSS pixel) gets the fractional zoom that fits. `zoom` is in CSS pixels, as Decker's pointer expects.
  */
 const APP_ZOOM_PATCH: Replacement = [
   /^\tzoom=max\(1,is_fullscreen\(\)\?fs:\(0\|fs\)\)$/m,
-  '\tik_dpr=window.devicePixelRatio||1,zoom=max(1,Math.floor(min(screen.x*ik_dpr/fb.size.x,window.innerHeight*ik_dpr/fb.size.y)))/ik_dpr // Inkventure: whole device pixels',
+  '\tik_dpr=window.devicePixelRatio||1,ik_fit=min(screen.x*ik_dpr/fb.size.x,window.innerHeight*ik_dpr/fb.size.y),zoom=(ik_fit>=1?Math.floor(ik_fit):ik_fit)/ik_dpr // Inkventure: whole device pixels (less than one only when the card would not fit)',
+];
+
+/** No sound: e-readers have no speakers, and a deck's sounds are not part of what the reader plays (SPEC §4.1). */
+const SILENT_PATCH: Replacement = [
+  /^n_play=\(\[x,hint\]\)=>\{$/m,
+  'n_play=_=>NIL // Inkventure: silent\nik_n_play=([x,hint])=>{',
 ];
 
 const DISPLAY_PATCH: Replacement = [
@@ -109,6 +116,7 @@ export const APP_PATCHES: Replacement[] = [
   RESIZE_PATCH,
   ...STILL_PATCHES,
   KEYCAPS_PATCH,
+  SILENT_PATCH,
   startPatch(),
 ];
 
@@ -140,18 +148,31 @@ ik_bridge=_=>{
 	input.type='text',input.id='ik-input',input.setAttribute('autocomplete','off'),input.setAttribute('autocapitalize','off')
 	input.style.cssText='position:absolute;opacity:0;width:1px;height:1px;border:0;padding:0;font-size:16px;left:0;top:0'
 	document.body.appendChild(input)
+	// The editable field under a point of the card (x, y), in the card's widgets or in a contraption's (whose widgets
+	// are placed from its corner): its rectangle on the card.
+	const fieldIn=(ws,ox,oy,x,y)=>{
+		for(let i=ws.length-1;i>=0;i--){
+			const w=ws[i]
+			if(contraption_is(w)){
+				if(ls(ifield(w,'show'))=='none')continue
+				const p=getpair(ifield(w,'pos')),s=getpair(ifield(w,'size')),px=ox+p.x,py=oy+p.y
+				if(x<px||y<py||x>=px+s.x||y>=py+s.y)continue
+				const b=fieldIn(ivalue(w,'widgets').v,px,py,x,y);if(b)return b;continue
+			}
+			if(!field_is(w))continue
+			const f=unpack_field(w);if(f.locked||f.show=='none')continue
+			const b={x:ox+f.size.x,y:oy+f.size.y,w:f.size.w,h:f.size.h}
+			if(x>=b.x&&y>=b.y&&x<b.x+b.w&&y<b.y+b.h)return b
+		}return null
+	}
 	const fieldAt=(cx,cy)=>{
 		if(ms.type!=null||uimode!='interact')return null
-		const r=display.getBoundingClientRect(),x=(cx-r.left)/zoom,y=(cy-r.top)/zoom,ws=con_wids().v
-		for(let i=ws.length-1;i>=0;i--){
-			const w=ws[i];if(!field_is(w))continue
-			const f=unpack_field(w);if(f.locked||f.show=='none')continue
-			if(x>=f.size.x&&y>=f.size.y&&x<f.size.x+f.size.w&&y<f.size.y+f.size.h)return {f:f,r:r}
-		}return null
+		const r=display.getBoundingClientRect(),b=fieldIn(con_wids().v,0,0,(cx-r.left)/zoom,(cy-r.top)/zoom)
+		return b&&{b:b,r:r}
 	}
 	const focusAt=(cx,cy)=>{
 		const hit=fieldAt(cx,cy);if(!hit)return
-		const b=hit.f.size,r=hit.r
+		const b=hit.b,r=hit.r
 		input.style.left=(r.left+window.scrollX+b.x*zoom)+'px',input.style.top=(r.top+window.scrollY+(b.y+b.h)*zoom-1)+'px'
 		input.value='',input.focus()
 	}
@@ -160,6 +181,11 @@ ik_bridge=_=>{
 	// Before Decker is in the field, a character stays in the input (Decker's handler would drop it).
 	input.addEventListener('keydown',e=>{if(!wid.infield&&e.key&&e.key.length==1&&!e.ctrlKey&&!e.metaKey)e.stopPropagation()})
 	input.addEventListener('input',_=>{flush();if(input.value)ik_wake()})
+	// A browser may drop the canvases' pixels while the page is hidden (Chrome on Android, after a while in the
+	// background or with the screen off): drawn only on change, the card would stay blank. Draw it whole again.
+	const redraw=_=>{if(!document.hidden)sync(1)}
+	document.addEventListener('visibilitychange',redraw),window.addEventListener('pageshow',redraw)
+	;[display,q('#render')].forEach(c=>c.addEventListener('contextrestored',_=>sync(1)))
 }
 // After decker.js has started the deck: its first tick waits for an animation frame.
 ik_bridge()`;
