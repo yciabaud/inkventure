@@ -24,7 +24,7 @@ The baseline Kindle (SPEC §2.2, probe reports in [device-reports/](device-repor
 |---|---|---|---|---|
 | **Decker** decks | Yes (MIT) | Good UI fit (1-bit, cards, click); runtime needs patching | IFDB lists some; ~300 on itch.io | **Most promising** — spike |
 | **Bitsy** games | Yes, ES5 (MIT) | Good: spike done, ~10–225 ms per tap on the Kindle, engine unchanged | ~6–12k on itch.io, almost none on IFDB | **Go** (S0.12), catalogue needs permissions |
-| **DAAD** games (incl. Adventuron 8-bit exports) | Yes, jDAAD (GPL-3) | Text + pictures, parser | Small, scattered | Worth a look if GPL is acceptable |
+| **DAAD** games (incl. Adventuron 8-bit exports) | Yes, jDAAD (GPL-3) | Good: spike done, ~2 ms a key and ~200 ms a command on the Kindle | 27 on IFDB, none with an open licence | **Not now** (S0.13): technically ready, nothing to offer |
 | Magnetic Scrolls | Yes, Magnetic Scripts (licence unknown) | Text + pictures | Games **not redistributable** | No |
 | TADS, Hugo, ADRIFT, Alan, AGT, Level 9, Scott Adams (graphics), Quill/PAW, GAC | No maintained pure-JS interpreter | — | IF Archive | Only via our own asm.js builds — expensive |
 | Frotz | No JS build found | — | — | No: ZVM already covers it |
@@ -137,6 +137,19 @@ dialogue.
 | Level 9 | em-snowball: an asm.js test port, archived 2016, Firefox-only | none | Shows asm.js is feasible; not usable as is. |
 | Quill / PAW (original) | None (UnQuill is native C) | — | ngPAWS authors new HTML games; it does not run original snapshots. |
 | GAC | None (reGAC is Python) | — | — |
+
+### DAAD spike (S0.13)
+
+[S0.13](stories/S0.13-daad-spike.md), Kindle [report](device-reports/2026-10-10-kindle-daad.txt) of 2026-10-10:
+jDAAD 1.2 patched for e-ink (drawing into memory and one put per wait instead of a `fillRect` per pixel, transpiled to
+ES2017) plays a test game compiled with the DAAD Reborn Compiler. On the Kindle: first screen 158 ms after the start
+(~1.7 s of downloads before), a typed letter 2 ms, a command ~200 ms, a picture 129 ms, 0 draws while waiting; the
+Kindle's keyboard sends real keys. Databases built for other machines (Spectrum v2/v3, MSX, ST) play once their
+pointers are relocated (`scripts/build/daad-game/relocate.ts`); original pictures would need a converter per machine.
+
+**Recommendation: not now.** Technically ready, but there is nothing to offer: 27 DAAD games on IFDB, none under an
+open licence, 2 with a jDAAD build, none on the IF Archive. Reopen when authors agree (first the two jDAAD games by
+Gareth Pitchford) and the owner accepts jDAAD's GPL-3 in a lazy engine chunk.
 
 ## Other text IF formats (TADS, Hugo, ADRIFT, Alan, AGT)
 
@@ -281,7 +294,7 @@ Milestone V1.1 in the [backlog](BACKLOG.md):
 1. **Decker spike** on the Kindle: done (S0.11). **Go** (owner, 2026-10-10), first in V1.1: the engine
    [S1.29](stories/S1.29-decker-engine.md), then the catalogue [S2.9](stories/S2.9-decker-catalogue.md) (about 15
    Decker games on the IF Archive, as web exports in zips).
-2. **Bitsy and DAAD spikes** on the Kindle: S0.12 done (go, above); S0.13 to do.
+2. **Bitsy and DAAD spikes** on the Kindle: S0.12 done (go, above); S0.13 done (not now, above).
 3. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
    (no user-supplied files).
 4. Record the ZVM/Quixe maintenance risk in SPEC §13.
