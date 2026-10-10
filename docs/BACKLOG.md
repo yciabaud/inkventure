@@ -53,7 +53,7 @@ S1.26 → S1.20 → S1.28 → S1.27 → S0.11 → S0.12 → S0.13
 | [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | done |
 | [S0.10](stories/S0.10-first-load-budget.md) | First-load budget: measure what the Kindle loads, and slim the bundle | E0 | M6 | S0.7, S0.3 | done |
 | [S0.11](stories/S0.11-decker-spike.md) | Decker on the Kindle (spike) | E0 | V1.1 | S0.3 | done |
-| [S0.12](stories/S0.12-bitsy-spike.md) | Bitsy on the Kindle (spike) | E0 | V1.1 | S0.3, S0.11 | todo |
+| [S0.12](stories/S0.12-bitsy-spike.md) | Bitsy on the Kindle (spike) | E0 | V1.1 | S0.3, S0.11 | in-progress |
 | [S0.13](stories/S0.13-daad-spike.md) | DAAD on the Kindle (spike) | E0 | V1.1 | S0.3, S0.11 | todo |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
