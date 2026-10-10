@@ -36,7 +36,10 @@ off, so S5.3 keeps its full scope.
 **V1.1** comes after V1, from the follow-ups of the [story-file scan](reports/story-file-scan-2026-10-04.md) and the
 [rendering survey](reports/rendering-survey-2026-10-05.md), plus the Decker, Bitsy and DAAD spikes of [post-v1-ideas.md](post-v1-ideas.md):
 
-S1.26 → S1.20 → S1.28 → S1.27 → S0.11 → S0.12 → S0.13
+S0.11 → S0.12 → **S1.29 → S2.9** → S1.26 → S1.20 → S1.28 → S1.27 → S0.13
+
+Decker comes first (owner's decision, 2026-10-10, after the S0.11 spike: go, with the conditions of
+[post-v1-ideas.md](post-v1-ideas.md#decker)).
 
 ## Stories
 
@@ -83,6 +86,7 @@ S1.26 → S1.20 → S1.28 → S1.27 → S0.11 → S0.12 → S0.13
 | [S1.26](stories/S1.26-glk-hyperlinks.md) | Tappable links in parser games | E1 | V1.1 | S1.3, S1.7 | todo |
 | [S1.27](stories/S1.27-upper-window-styles.md) | Styles of the upper window: titles and selections that read | E1 | V1.1 | S1.15, S1.22 | todo |
 | [S1.28](stories/S1.28-wide-fixed-width-text.md) | Wide fixed-width text: maps and tables that keep their columns | E1 | V1.1 | S1.1, S1.2 | todo |
+| [S1.29](stories/S1.29-decker-engine.md) | Decker decks in the reader | E1 | V1.1 | S0.11, S1.9 | in-progress |
 | [S2.1](stories/S2.1-ifdb-crawler.md) | IFDB crawler with recorded fixtures | E2 | M2 | S0.1 | done |
 | [S2.2](stories/S2.2-playability-resolution.md) | Playability resolution & content policy | E2 | M2 | S2.1 | done |
 | [S2.3](stories/S2.3-index-emitter-workflow.md) | Sharded catalogue index & scheduled workflow | E2 | M2 | S2.2 | done |
@@ -91,6 +95,7 @@ S1.26 → S1.20 → S1.28 → S1.27 → S0.11 → S0.12 → S0.13
 | [S2.6](stories/S2.6-file-language.md) | The language of the file we play, not of every version | E2 | M4 | S2.2, S2.3 | done |
 | [S2.7](stories/S2.7-ink-web-exports.md) | Ink games published as web exports | E2 | M4 | S1.8, S2.2, S3.4 | done |
 | [S2.8](stories/S2.8-catalogue-story-file-check.md) | The catalogue keeps only story files that open | E2 | M6 | S2.2, S7.4 | done |
+| [S2.9](stories/S2.9-decker-catalogue.md) | Decker games in the catalogue | E2 | V1.1 | S1.29, S2.2, S2.7 | todo |
 | [S3.1](stories/S3.1-catalog-loader-search.md) | Catalogue loader & text search | E3 | M3 | S2.3, S0.5 | done |
 | [S3.2](stories/S3.2-library-filters-sort.md) | Library filters & sorting | E3 | M3 | S3.1 | done |
 | [S3.3](stories/S3.3-game-detail.md) | Game detail screen | E3 | M3 | S3.1 | done |

@@ -426,6 +426,7 @@ are the frames of an animation (Shrapnel's title, S1.25), shown one at a time, a
 | Glulx | `.ulx .gblorb` | **Quixe** (Parchment project) | Most Inform 7 games. Turns up to ~3 s on a Kindle (see §4.5). |
 | Ink | compiled `.json` (ink story), or Inky's web export (zip or page) holding it | **inkjs** | Choice-based; ideal on e-ink. Most are on itch.io only (out of scope). |
 | Twine | `.html` (published story) | Game's own runtime, **sandboxed iframe** | Experimental; best-effort restyling. |
+| Decker (V1.1) | `.deck`, or a web export's `.html` holding it | **Decker** 1.71 (John Earnest, MIT), patched for e-ink, **sandboxed iframe** | Experimental; 1-bit cards and buttons, tap-driven (S1.29). Modern bundle only (ES2017). |
 
 Out of scope V1: TADS, Hugo, ADRIFT, Alan, AGT, Quest, Adventuron, web-only games hosted on external sites.
 Games whose only download is a `.zip` are supported if the zip contains exactly one supported story file
@@ -495,7 +496,7 @@ are still not drawn; sound is ignored. Ink runs on inkjs 2.4 (runtime only): eac
 `ChoiceInput`; the `title` global tag and `chapter` line tags make the status line; external functions fall back to
 the ink functions of the same name.
 
-### 4.3 Twine sandbox
+### 4.3 Twine and Decker sandboxes
 
 - Story HTML loaded into `<iframe sandbox="allow-scripts">` from `srcdoc`: scripts run, but with an opaque origin, so
   the story cannot reach the app's page, its storage, cookies or the top window, nor open pop-ups.
@@ -531,11 +532,26 @@ the ink functions of the same name.
 - Flagged "Experimental" in the UI (game page and the reader's top zone). Twine has no `Engine`: the reader runs it
   directly (`TwineReader`, lazy chunk).
 
+- **Decker decks** (S1.29) run the same way: `<iframe sandbox="allow-scripts" srcdoc>`, with Decker's own markup, the
+  deck in its `<script language="decker">` block and the runtime inlined (two scripts the reader fetched, so the
+  frame needs no network). The runtime is Decker 1.71's web runtime with patches applied at build time
+  (`scripts/build/decker-runtime.ts`, each matching the pinned code once): a tick only while the deck is busy, a draw
+  only of the rows that changed with colours from a table, no transitions, frozen animated patterns, a steady cursor,
+  menus off (the editor cannot be reached), the card scaled to the frame's width without smoothing, no black corners,
+  and no drawn keyboard: a tap on an editable field puts a hidden input over it, focused within the tap, so that the
+  device keyboard opens and what it types goes to the field. A small bridge posts the deck's name and, a second after
+  the deck goes idle following an input, the deck itself (as Decker writes it) to the reader. The reader's menu has
+  Restart and Refresh screen (no Aa, Save, Restore, Undo or Transcript); the top zone shows the deck's name and
+  "Experimental". The two runtime scripts (Lil, then the UI) are budgeted as lazy chunks (53.5 and 60.4 KiB gz).
+
 ### 4.4 Saves
 
 - Z-machine / Glulx: in-memory snapshots produced via the engine's autosave (after each turn), plus up to 5 named
   slots.
 - Twine: the story format's own saves, in its storage kept by the reader (§4.3).
+- Decker: a deck keeps its state in itself; the reader keeps the whole deck under `save:<tuid>:decker` (at most 1 M
+  characters: a larger deck plays but does not resume, and the reader says so), opens it instead of the original
+  next time, and drops it on Restart.
 - Ink: `story.state.toJson()`, in a JSON envelope naming the story (a hash of its JSON); Undo restores the reader's
   previous turn snapshot. A turn begins at each choice.
 - Undo: engine undo where available, else restore the previous autosave (keep last 10 turn snapshots in memory,
@@ -763,6 +779,7 @@ All keys are prefixed and versioned:
 | `ik:v1:save:<tuid>:auto` | latest autosave: `{v, date, turn, data, text}` (`data` = engine state, `text` = transcript tail, both deflated + base64) |
 | `ik:v1:save:<tuid>:<slot>` | named save slots `1`–`5`, same record plus `name` |
 | `ik:v1:save:<tuid>:twine` | a Twine story's own storage (§4.3): `{v, date, local, session}` (string maps), counted with the saves |
+| `ik:v1:save:<tuid>:decker` | a Decker deck as the player left it (§4.3, §4.4): `{v, date, deck}`, counted with the saves |
 | `ik:v1:file:<tuid>` | cached story file (small files only) |
 | `ik:v1:kept` | adventures kept offline (S5.3): `{<tuid>: {url, kind, title, author, size, date, where, files?, auto?}}` (`where`: `cache` or `local`; their files are in the Cache API, §6.2) |
 | `ik:v1:kept:<tuid>` | a kept story in localStorage, on a browser without the Cache API (< 512 KB): `{v, story, game}`; pinned, never evicted |
@@ -1022,7 +1039,7 @@ Tests are part of every story's definition of done; CI blocks merges when they f
 | **M5 — Ebook & launch** | Ebook build & content, device checklist, launch | S6.1–S6.2, S7.1–S7.2 |
 | **M6 — Play fidelity** | Single-key prompts, Twine animations & colours, status rows, menus, answer chips, small rendering fixes | S1.12–S1.19, S1.21–S1.25, S2.8, S7.3, S7.4 |
 | **M7 — Offline** | Offline probe on the Kindle, offline app shell and kept adventures | S0.9, S5.3 |
-| **V1.1** | Tappable links and compass, styled upper-window rows, wide fixed-width text, Decker, Bitsy and DAAD spikes | S1.20, S1.26–S1.28, S0.11–S0.13 |
+| **V1.1** | Decker (spike, then decks in the reader and in the catalogue), tappable links and compass, styled upper-window rows, wide fixed-width text, Bitsy and DAAD spikes | S0.11, S1.29, S2.9, S1.20, S1.26–S1.28, S0.12, S0.13 |
 
 Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 
@@ -1043,5 +1060,5 @@ Details and dependencies: [docs/BACKLOG.md](docs/BACKLOG.md).
 | 9 | Kindle may clear localStorage. | Survives sleep / wake and a device restart (S0.3), but could still be cleared by the user or the browser. Accepted for V1 (export/import dropped, §6.3). |
 | 10 | Virtual keyboard covering the screen on Kindle. | Chips-first design; test layout with keyboard open on device. |
 | 11 | Offline on Kindle: Service Worker, IndexedDB and Cache API exist there. | **Works** (S0.9, 2026-10-02): the page opens offline and kept files survive browser and device restarts. Offline app shell + kept adventures shipped in S5.3 (M7, §6.2), checked on the Kindle on 2026-10-03; whether the ebook's link opens the app offline is to check after the release. `persist()` is refused, so a lost file degrades to "Needs Wi-Fi" (offline) or is downloaded again (online). |
-| 12 | Decker decks on the Kindle (post-V1 idea, S0.11). | **Spike done** (2026-10-10): a patched web-decker (redraw on change, no transitions, no editor menus, full width) plays a real deck; ~8.5 s to open, 1.1–1.4 s from a tap to the new card (a tick ~450 ms + a draw ~550 ms), no CPU on a still card. **Recommended: go, with conditions** (`docs/post-v1-ideas.md`): cut the draw, remove the editor (107 KiB gz, over the lazy-chunk budget), the Kindle keyboard for fields, card-and-button decks only, < 1 s per tap as the target. Owner's decision. |
+| 12 | Decker decks on the Kindle (post-V1 idea, S0.11). | **Spike done** (2026-10-10): a patched web-decker (redraw on change, no transitions, no editor menus, full width) plays a real deck; ~8.5 s to open, 1.1–1.4 s from a tap to the new card (a tick ~450 ms + a draw ~550 ms), no CPU on a still card. **Recommended: go, with conditions** (`docs/post-v1-ideas.md`): cut the draw, remove the editor (107 KiB gz, over the lazy-chunk budget), the Kindle keyboard for fields, card-and-button decks only, < 1 s per tap as the target. **Go** (owner, 2026-10-10): S1.29 (reader: done, draw ~4–40× faster than the probe's in throttled Chromium, to measure on the Kindle), S2.9 (catalogue). |
 | 13 | Bitsy games on the Kindle (post-V1 idea, S0.12). | **Spike done** (2026-10-10): Bitsy 8.14's engine, unchanged, with an e-ink system layer (on-screen pad, no sound, a loop that ticks only while something happens) plays a game; first room 164 ms after the start, 10–225 ms from a tap to the drawn step or dialogue page, no CPU on a still room; 29 KiB gz minified, ES5. 449 of bitsy-archive's 451 games start with the pinned engine. **Recommended: go** (`docs/post-v1-ideas.md`): flat effect text, a full refresh on room change against ghosting, a curated shelf with each author's permission. Owner's decision. |

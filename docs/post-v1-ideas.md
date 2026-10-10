@@ -64,6 +64,9 @@ HyperCard-like tool by John Earnest: cards, buttons, fields, 1-bit patterns, scr
   starts in ~8.5 s (runtime 3.8 s, first card 4.6 s later); a card change shows **1.1–1.4 s** after the tap (a tick
   ~450 ms + a draw ~550 ms); a still card uses no CPU (0 ticks, 0 draws in 10 s); the device keyboard never opens on
   the canvas. Patched runtime: 107 KiB gz minified, over the 100 KiB lazy-chunk budget with the editor still in it.
+- **Decision: go** (owner, 2026-10-10), as stories [S1.29](stories/S1.29-decker-engine.md) (the reader) and
+  [S2.9](stories/S2.9-decker-catalogue.md) (the catalogue: the IF Archive holds about 15 Decker games, web exports in
+  zips, so no permission round is needed for those).
 - **Recommendation: go, with conditions.** Card-and-button decks (the HyperCard-like ones: stories, puzzles, point and
   click) are playable at about a second per tap, close to a Glulx turn on the same Kindle; decks that draw, drag or
   animate are not. A Decker engine story would:
@@ -275,8 +278,9 @@ Milestone V1.1 in the [backlog](BACKLOG.md):
 
 ## Possible next steps
 
-1. **Decker spike** on the Kindle: done (S0.11), recommendation above: go, with conditions; a Decker engine story is
-   the owner's call.
+1. **Decker spike** on the Kindle: done (S0.11). **Go** (owner, 2026-10-10), first in V1.1: the engine
+   [S1.29](stories/S1.29-decker-engine.md), then the catalogue [S2.9](stories/S2.9-decker-catalogue.md) (about 15
+   Decker games on the IF Archive, as web exports in zips).
 2. **Bitsy and DAAD spikes** on the Kindle: S0.12 done (go, above); S0.13 to do.
 3. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
    (no user-supplied files).
