@@ -23,7 +23,7 @@ The baseline Kindle (SPEC §2.2, probe reports in [device-reports/](device-repor
 | Idea | Pure JS? | Kindle fit | Content & catalogue | Verdict |
 |---|---|---|---|---|
 | **Decker** decks | Yes (MIT) | Good UI fit (1-bit, cards, click); runtime needs patching | IFDB lists some; ~300 on itch.io | **Most promising** — spike |
-| **Bitsy** games | Yes, ES5 (MIT) | Good (3-colour, discrete moves); engine needs patching or own player | ~6–12k on itch.io, almost none on IFDB | **Promising**, catalogue is the problem |
+| **Bitsy** games | Yes, ES5 (MIT) | Good: spike done, ~10–225 ms per tap on the Kindle, engine unchanged | ~6–12k on itch.io, almost none on IFDB | **Go** (S0.12), catalogue needs permissions |
 | **DAAD** games (incl. Adventuron 8-bit exports) | Yes, jDAAD (GPL-3) | Text + pictures, parser | Small, scattered | Worth a look if GPL is acceptable |
 | Magnetic Scrolls | Yes, Magnetic Scripts (licence unknown) | Text + pictures | Games **not redistributable** | No |
 | TADS, Hugo, ADRIFT, Alan, AGT, Level 9, Scott Adams (graphics), Quill/PAW, GAC | No maintained pure-JS interpreter | — | IF Archive | Only via our own asm.js builds — expensive |
@@ -106,6 +106,23 @@ dialogue.
   each author's permission**).
 - **Spike:** a player for one bundled sample game (with its author's permission) rendering rooms and dialogue in the
   reader, measured on the Kindle.
+- **Spike done** ([S0.12](stories/S0.12-bitsy-spike.md), Kindle
+  [report](device-reports/2026-10-10-kindle-bitsy.txt) of 2026-10-10). Rather than our own player, the probe keeps
+  Bitsy 8.14's engine unchanged and replaces only its system layer (input with an on-screen pad, no sound, a loop
+  that ticks only while something happens). On the Kindle: first room **164 ms** after the start (under a second from
+  opening the page), each step or dialogue page drawn **10–225 ms** after the tap (ticks ≤ 31 ms, draws ≤ 25 ms),
+  0 ticks and 0 draws on a still room. The runtime is 29 KiB gz minified, all ES5. The room is sharp at 512 px. Seen
+  on the screen: text effects drawn still look like a glitch, and partial-refresh ghosting leaves traces of the
+  avatar's steps and of a closed dialogue box. Of bitsy-archive's 451 games, 449 start and take input with the pinned
+  engine, 407 without HD tiles or hack tags; 91 % animate (they would stand still).
+- **Recommendation: go.** Bitsy is the cheapest graphical format so far: about ten times faster per tap than Decker on
+  the same Kindle, with no engine patch. A Bitsy engine story would:
+  1. wrap the probe's e-ink layer (`scripts/build/bitsy-eink/`) in the reader as a lazy engine chunk, with the
+     reader's own controls (pad, Refresh screen, saves if Bitsy's state can be kept);
+  2. draw effect text flat (drop `{wvy}`, `{shk}`, `{rbw}`) and deal with ghosting: a full black/white refresh on a
+     room change, and room backgrounds pushed towards white or black;
+  3. feed a **curated shelf** of games with each author's permission (bitsy-archive's authors list is a start),
+     each tested on the Kindle.
 
 ## Illustrated retro adventures
 
@@ -260,7 +277,7 @@ Milestone V1.1 in the [backlog](BACKLOG.md):
 
 1. **Decker spike** on the Kindle: done (S0.11), recommendation above: go, with conditions; a Decker engine story is
    the owner's call.
-2. **Bitsy and DAAD spikes** on the Kindle: S0.12 and S0.13.
+2. **Bitsy and DAAD spikes** on the Kindle: S0.12 done (go, above); S0.13 to do.
 3. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
    (no user-supplied files).
 4. Record the ZVM/Quixe maintenance risk in SPEC §13.

@@ -1,0 +1,41 @@
+[Part 1/3]
+inkventure-bitsy-probe v1
+probe.startedAt: Sat, 10 Oct 2026 11:25:33 GMT
+ua: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+viewport: 636x740 @2
+game: keepers-lamp
+gray: stretch
+feature.touchEvents: no
+feature.requestAnimationFrame: yes
+feature.audio: AudioContext
+zoom: 1 (512 px)
+load.game: 3.4 KiB in 260 ms
+load.font: 15.5 KiB in 154 ms
+load.runtime: 243.7 KiB in 165 ms
+runtime.parse: 21 ms
+runtime.start: 23 ms
+firstDraw: 164 ms after the game started
+firstDraw.tick: 143 ms (the game parsed), draw 36 ms
+idle.firstReached: 507 ms after the game started
+idle.10s: 0 ticks, 0 draws in "lighthouse"
+input.1: lighthouse: first frame 81 ms, idle 572 ms (3 ticks, slowest tick 9 ms, slowest draw 8 ms)
+input.2: lighthouse: first frame 25 ms, idle 517 ms (3 ticks, slowest tick 9 ms, slowest draw 8 ms)
+[Part 2/3]
+input.3: lighthouse: first frame 17 ms, idle 519 ms (3 ticks, slowest tick 14 ms, slowest draw 9 ms)
+input.4: lighthouse: first frame 162 ms, idle 404 ms (2 ticks, slowest tick 9 ms, slowest draw 8 ms)
+input.5: lighthouse: first frame 10 ms, idle 440 ms (3 ticks, slowest tick 9 ms, slowest draw 8 ms)
+input.6: lighthouse: first frame 225 ms, idle 466 ms (2 ticks, slowest tick 9 ms, slowest draw 8 ms)
+input.7: lighthouse: first frame 174 ms, idle 416 ms (2 ticks, slowest tick 9 ms, slowest draw 8 ms)
+input.8: lighthouse (dialogue): first frame 73 ms, idle 551 ms (3 ticks, slowest tick 31 ms, slowest draw 19 ms)
+input.9: lighthouse (dialogue): first frame 27 ms, idle 334 ms (3 ticks, slowest tick 31 ms, slowest draw 25 ms)
+input.10: lighthouse: first frame 20 ms, idle 304 ms (3 ticks, slowest tick 19 ms, slowest draw 16 ms)
+contrast: shore 100, path 100, lighthouse 108
+[Part 3/3]
+input.events: touchstart 78, touchend 78, mousedown 1, mouseup 1, click 1, keydown 0
+
+Owner's observations (photos, same run):
+- Rooms, sprites and text are sharp at 512 px (zoom 1); the stretched grays read well.
+- The {wvy} text of the gull's dialogue stands still but its letters stay offset up and down (the effect at time 0):
+  it looks like a glitch rather than an effect.
+- Ghosting: the Kindle repaints partially, so walking leaves faint traces of the avatar and of the closed dialogue
+  box, most visible on the lighthouse's mid-gray floor.
