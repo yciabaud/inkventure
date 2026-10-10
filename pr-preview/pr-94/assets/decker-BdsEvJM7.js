@@ -1,0 +1,1 @@
+import{c}from"./index-DRFsZnam.js";const k=1e6;function u(r,t){const e=r.get(c.decker(t));return e&&e.v===1&&typeof e.deck=="string"?e.deck:null}function a(r,t,e,n){if(e.length>k)return!1;const o={v:1,date:n,deck:e};return r.set(c.decker(t),o),!0}function d(r,t){r.remove(c.decker(t))}export{k as DECKER_MAX_CHARS,d as clearDeckerSave,u as readDeckerSave,a as writeDeckerSave};
