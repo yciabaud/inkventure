@@ -7,6 +7,7 @@
 // - Draw: only the rows of the frame buffer that changed since the last draw are converted and put on the canvas, and
 //   a pixel's colour comes from a table built once per palette (pattern x position in its 8 x 8 tile) instead of a few
 //   function calls per pixel. The probe measured ~550 ms per draw on the Kindle.
+// - The display canvas is sized in device pixels, so the card scaled to the width stays sharp (no second scaling).
 // - Decker's drawn keyboard (`keycaps`) is never shown: typing goes through a hidden input of the page (the bridge),
 //   so that the device's own keyboard opens.
 // - The bridge (plain code after decker.js, using its globals) talks to the reader with `postMessage`: the deck's
@@ -64,10 +65,20 @@ sync=force=>{
 	ik_prev=pix.slice(0)
 	const r=q('#render');r.getContext('2d').putImageData(ik_id,0,0,0,y0,w,y1-y0+1)
 	// One row more on each side: at a fractional zoom the edges of a strip fall between device pixels.
-	const a=max(0,y0-1),b=min(h,y1+2),g=q('#display').getContext('2d')
-	g.imageSmoothingEnabled=false,g.save(),g.scale(zoom,zoom),g.drawImage(r,0,a,w,b-a,0,a,w,b-a),g.restore()
+	const a=max(0,y0-1),b=min(h,y1+2),d=q('#display'),g=d.getContext('2d')
+	g.imageSmoothingEnabled=false,g.save(),g.scale(d.width/w,d.height/h),g.drawImage(r,0,a,w,b-a,0,a,w,b-a),g.restore()
 	ik_drawn();return 1
 }`;
+
+/**
+ * The display canvas at the screen's own resolution (its CSS size times `devicePixelRatio`): drawn into without
+ * smoothing, so that the browser does not scale it again (the Kindle's, at 2 device pixels per CSS pixel, smoothed the
+ * card scaled to the width, which blurred it). `zoom` stays in CSS pixels, for Decker's pointer.
+ */
+const DISPLAY_PATCH: Replacement = [
+  /^\tconst c =q\('#display'\);c \.width=fb\.size \.x\*zoom,c\.height =fb\.size \.y\*zoom$/m,
+  "\tconst c =q('#display'),ik_dpr=window.devicePixelRatio||1;c.width=Math.round(fb.size.x*zoom*ik_dpr),c.height=Math.round(fb.size.y*zoom*ik_dpr),c.style.width=(fb.size.x*zoom)+'px',c.style.height=(fb.size.y*zoom)+'px'",
+];
 
 /** Upstream's `sync`, from its declaration to the end of the function. */
 const SYNC_PATCH: Replacement = [/^let id=null\nsync=_=>\{\n(?:\t.*\n)*?\}$/m, SYNC];
@@ -82,6 +93,7 @@ export const APP_PATCHES: Replacement[] = [
   LOOP_PATCH,
   SYNC_PATCH,
   ZOOM_PATCH,
+  DISPLAY_PATCH,
   RESIZE_PATCH,
   ...STILL_PATCHES,
   KEYCAPS_PATCH,
