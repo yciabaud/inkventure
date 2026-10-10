@@ -37,6 +37,13 @@ if (decker) {
     `\n\nNot budgeted: the Decker probe runtime (S0.11), probe/decker/runtime.js, ` +
     `${(decker.gzip / KIB).toFixed(1)} KiB gzip (${(decker.raw / KIB).toFixed(1)} KiB raw).`;
 }
+// Reported, not budgeted: the Bitsy probe's runtime (S0.12), likewise.
+const bitsy = sizes['probe/bitsy/runtime.js'];
+if (bitsy) {
+  table +=
+    `\n\nNot budgeted: the Bitsy probe runtime (S0.12), probe/bitsy/runtime.js, ` +
+    `${(bitsy.gzip / KIB).toFixed(1)} KiB gzip (${(bitsy.raw / KIB).toFixed(1)} KiB raw).`;
+}
 const json = process.argv.indexOf('--json');
 if (json >= 0) writeFileSync(process.argv[json + 1], JSON.stringify(rows, null, 2) + '\n');
 console.log(table);

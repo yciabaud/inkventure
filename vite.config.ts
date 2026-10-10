@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import { buildInfoPlugin } from './scripts/build/build-info.ts';
+import { bitsyProbePlugin } from './scripts/build/bitsy-probe.ts';
 import { deckerProbePlugin } from './scripts/build/decker-probe.ts';
 import { ebookPagePlugin } from './scripts/build/ebook-page.ts';
 import { licencesPlugin } from './scripts/build/licences.ts';
@@ -29,6 +30,8 @@ export default defineConfig({
     serviceWorkerPlugin(),
     // The Decker probe (S0.11), dist/probe/decker/: Decker's runtime patched for e-ink, outside the app's budgets.
     deckerProbePlugin(),
+    // The Bitsy probe (S0.12), dist/probe/bitsy/: Bitsy's engine with an e-ink system layer, outside the app's budgets.
+    bitsyProbePlugin(),
     // ES5 bundle + core-js polyfills for the Kindle experimental browser (old WebKit).
     legacy({
       targets: ['defaults', 'safari >= 5', 'ie >= 11'],

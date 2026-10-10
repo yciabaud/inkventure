@@ -63,6 +63,23 @@ Before each release, run the [device checklist](../device-checklist.md) and save
 4. Tap **Report & QR code** and scan each part, save it as `docs/device-reports/<YYYY-MM-DD>-<device>-decker.txt`, add
    a line to the table of the README, and update S0.11.
 
+## Bitsy probe (story S0.12)
+
+1. On the Kindle, open **https://yciabaud.github.io/inkventure/probe/bitsy/** (or the pull request preview's
+   `/probe/bitsy/`). It downloads our test game *The Keeper's Lamp*, the font and Bitsy's runtime (~250 KB), then shows
+   the game's title at the top, a pad under it, and the live measures below. The `load.*`, `runtime.*` and
+   `firstDraw` lines time the start; `zoom` says how big the room is drawn.
+2. Tap the game (or **●**) to read on. Walk up to the **gull** with the pad and bump into it (a dialogue); tap through
+   its pages. Go right through the gap in the wall (a **new room**), pick up the **key** on the path, go right again
+   and talk to the **keeper**. Each tap adds an `input.N` line: time to its first frame, to a room change, until the
+   game is idle again, with its slowest tick and draw. Note whether the rooms, the sprites and the text read well
+   (a photo helps), and whether holding a pad button walks on.
+3. Leave the game alone for **10 s**: `idle.10s` should read `0 ticks, 0 draws`.
+4. Optional: open **Default game** (the editor's one-room game), and the **Luminance** and **Colours** grays, to compare
+   how the rooms read (`contrast:` gives the smallest gray step between a room's colours, 0–255).
+5. Tap **Report & QR code** and scan each part, save it as `docs/device-reports/<YYYY-MM-DD>-<device>-bitsy.txt`, add
+   a line to the table of the README, and update S0.12.
+
 ## Measuring turn latency (story S1.7)
 
 1. On the e-reader, turn on **Settings → About → Timings: Shown** (editing the address is awkward in the Kindle

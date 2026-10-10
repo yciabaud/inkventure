@@ -57,6 +57,25 @@ export default tseslint.config(
     },
   },
   {
+    // The Bitsy probe's e-ink system layer (S0.12): plain ES5 scripts around Bitsy's engine, whose globals they use.
+    files: ['scripts/build/bitsy-eink/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 5,
+      sourceType: 'script',
+      globals: { ...globals.browser },
+    },
+    rules: {
+      // Bitsy's system.js calls the functions defined here for it.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^(InputSystem|SoundSystem|enableGlobalAudioContext)$',
+        },
+      ],
+      'no-unused-vars': 'off',
+    },
+  },
+  {
     // The app's Service Worker template (S5.3): plain ES5, copied into dist/sw.js by the build.
     files: ['src/sw/**/*.js'],
     languageOptions: {
