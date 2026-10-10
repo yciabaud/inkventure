@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inkventure — Decker probe</title>
+    <style>
+      /* The deck on top across the width, the measures below; same plain style as the other probes. */
+      body {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: 16px;
+        line-height: 1.3;
+        color: #000;
+        background: #fff;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      #deck {
+        text-align: center;
+        border-bottom: 2px solid #000;
+      }
+      #deck canvas {
+        display: none;
+      }
+      #deck #display {
+        display: inline-block;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+        vertical-align: top;
+        touch-action: none;
+      }
+      #panel {
+        padding: 8px 12px;
+      }
+      #status {
+        font-weight: bold;
+        margin: 0 0 4px;
+      }
+      #live {
+        margin: 0 0 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 14px;
+        white-space: pre-wrap;
+      }
+      button {
+        font: inherit;
+        min-height: 48px;
+        min-width: 48px;
+        padding: 8px 16px;
+        margin: 0 8px 8px 0;
+        border: 2px solid #000;
+        background: #fff;
+      }
+      #sheet {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        min-height: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+        background: #fff;
+      }
+      #report {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        border: 1px solid #000;
+        padding: 8px;
+      }
+      #qr img {
+        width: 100%;
+        max-width: 560px;
+        height: auto;
+        image-rendering: pixelated;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Decker's own markup (js/decker.html); runtime.js finds these by id. -->
+    <div id="deck">
+      <a id="target" style="display: none"></a>
+      <img id="loader" style="display: none" alt="" />
+      <input id="source" type="file" style="display: none" />
+      <canvas id="render"></canvas>
+      <canvas id="lrender"></canvas>
+      <canvas id="rrender"></canvas>
+      <canvas width="0" height="0" id="ltools"></canvas>
+      <canvas id="display"></canvas>
+      <canvas width="0" height="0" id="rtools"></canvas>
+    </div>
+    <div id="panel">
+      <p id="status">Loading…</p>
+      <div id="live"></div>
+      <p>
+        <button type="button" id="show-report">Report &amp; QR code</button>
+      </p>
+      <p>
+        Tap <b>Guided Tour</b>, then <b>Next</b> three times. On the Widgets card, tap
+        <b>MORE!</b> then <b>OK</b>, and type in the text about Galena. Leave a card alone for 10 s,
+        then send the report.
+      </p>
+    </div>
+    <div id="sheet">
+      <p><button type="button" id="close-report">Back to the deck</button></p>
+      <div id="qr"></div>
+      <pre id="report"></pre>
+    </div>
+    <script src="../qrcode.js"></script>
+    <script src="probe.js"></script>
+  </body>
+</html>
