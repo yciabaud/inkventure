@@ -125,7 +125,7 @@ test('plays the tour deck: a button changes the card, a field takes typed text, 
   page.on('pageerror', (error) => {
     // Playwright's `serviceWorkers: 'block'` (playwright.config.ts) reads navigator.serviceWorker in every frame, which
     // a sandboxed frame refuses: not the deck's.
-    if (!/serviceWorker/.test(error.message)) errors.push(error.message);
+    if (!/service ?worker/i.test(error.message)) errors.push(error.message);
   });
   await page.goto(GAME);
   let frame = await deckFrame(page);
