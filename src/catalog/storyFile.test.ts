@@ -419,3 +419,29 @@ describe('ink web exports (S2.7)', () => {
     expect(log).toEqual(['GET ' + URL_INK]);
   });
 });
+
+describe('Decker web exports (S2.9)', () => {
+  const deck = '{deck}\nversion:1\ncard:0\nsize:[512,342]\n\n{card:home}\n';
+  const URL_DECK = 'https://ifarchive.org/if-archive/games/html/tour.zip';
+  const page =
+    '<html><script language="decker">\n' + deck + '</script><script>run()</script></html>';
+  const file = { url: URL_DECK, archive: { type: 'zip' as const, primary: 'tour.html' } };
+
+  it("takes the deck out of a zipped export's page, a page, or a deck file", () => {
+    const exported = zipSync({ 'tour.html': strToU8(page) });
+    expect(strFromU8(storyData(file, 'decker', exported).bytes)).toBe(deck);
+    expect(strFromU8(storyData({ url: URL_DECK }, 'decker', strToU8(page)).bytes)).toBe(deck);
+    expect(strFromU8(storyData({ url: URL_DECK }, 'decker', strToU8(deck)).bytes)).toBe(deck);
+  });
+
+  it('fails as "Not a story file" without a deck', () => {
+    let error: unknown;
+    try {
+      storyData({ url: URL_DECK }, 'decker', strToU8('<html>Play on itch.io</html>'));
+    } catch (e) {
+      error = e;
+    }
+    expect(isStoryFileError(error) && error.reason).toBe('format');
+    expect((error as Error).message).toMatch(/^Not a story file/);
+  });
+});

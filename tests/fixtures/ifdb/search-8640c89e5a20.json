@@ -1,0 +1,5 @@
+{
+  "url": "https://ifdb.org/search?json&searchfor=downloadable%3Ayes%20system%3Adecker&sortby=ttl&pg=1",
+  "status": 200,
+  "body": "{\"games\":[{\"tuid\":\"fxdeck0000000012\",\"title\":\"The Decker Tour\",\"link\":\"https://ifdb.org/viewgame?id=fxdeck0000000012\",\"author\":\"F. Specimen\",\"hasCoverArt\":false,\"devsys\":\"Decker\",\"published\":{\"machine\":\"2024\",\"printable\":\"2024\"},\"averageRating\":4,\"numRatings\":2,\"starRating\":4,\"starSort\":4,\"playTimeInMinutes\":15}]}"
+}

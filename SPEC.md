@@ -426,7 +426,7 @@ are the frames of an animation (Shrapnel's title, S1.25), shown one at a time, a
 | Glulx | `.ulx .gblorb` | **Quixe** (Parchment project) | Most Inform 7 games. Turns up to ~3 s on a Kindle (see §4.5). |
 | Ink | compiled `.json` (ink story), or Inky's web export (zip or page) holding it | **inkjs** | Choice-based; ideal on e-ink. Most are on itch.io only (out of scope). |
 | Twine | `.html` (published story) | Game's own runtime, **sandboxed iframe** | Experimental; best-effort restyling. |
-| Decker (V1.1) | `.deck`, or a web export's `.html` holding it | **Decker** 1.71 (John Earnest, MIT), patched for e-ink, **sandboxed iframe** | Experimental; 1-bit cards and buttons, tap-driven (S1.29). Modern bundle only (ES2017). |
+| Decker (V1.1) | `.deck`, or a web export's `.html` holding it | **Decker** 1.71 (John Earnest, MIT), patched for e-ink, **sandboxed iframe** | Experimental; 1-bit cards and buttons, tap-driven (S1.29). Modern bundle only (ES2017). In the catalogue from the IF Archive's web exports (S2.9). |
 
 Out of scope V1: TADS, Hugo, ADRIFT, Alan, AGT, Quest, Adventuron, web-only games hosted on external sites.
 Games whose only download is a `.zip` are supported if the zip contains exactly one supported story file
@@ -538,9 +538,11 @@ the ink functions of the same name.
   (`scripts/build/decker-runtime.ts`, each matching the pinned code once): a tick only while the deck is busy, a draw
   only of the rows that changed with colours from a table, no transitions, frozen animated patterns, a steady cursor,
   menus off (the editor cannot be reached), the card scaled by the largest whole number of device pixels that fits (2 on the Kindle: 512 of 636 CSS pixels,
-  sharp, regular dithers) into a canvas sized in device pixels, no black corners,
-  and no drawn keyboard: a tap on an editable field puts a hidden input over it, focused within the tap, so that the
-  device keyboard opens and what it types goes to the field. A small bridge posts the deck's name and, a second after
+  sharp, regular dithers; a fractional zoom only where the card would not fit) into a canvas sized in device pixels,
+  drawn whole again when the page is shown again, no black corners, `sleep` in wall-clock time (a slow device skips
+  the frames it has no time to draw, S2.9), sound only where the browser has Web Audio,
+  and no drawn keyboard: a tap on an editable field (in a contraption too) puts a hidden input over it, focused within
+  the tap, so that the device keyboard opens and what it types goes to the field. A small bridge posts the deck's name and, a second after
   the deck goes idle following an input, the deck itself (as Decker writes it) to the reader. The reader's menu has
   Restart and Refresh screen (no Aa, Save, Restore, Undo or Transcript); the top zone shows the deck's name and
   "Experimental". The two runtime scripts (Lil, then the UI) are budgeted as lazy chunks (53.5 and 60.4 KiB gz).
@@ -657,6 +659,17 @@ Pipeline (Node scripts in `scripts/catalog/`, run weekly and on demand):
    (`story-does-not-open`, with the reason and the file); a zip's story found under another name becomes
    `archive.primary`. The job summary lists the files that do not open with their games (to report to IFDB when the
    record is wrong) and the stories found under another name.
+   **Decker games** (S2.9, `check-decker.ts` before checking CORS; the crawl searches `system:decker` too): a link of
+   a Decker game (development system naming `Decker`) is Decker when it is a zip whose named file is a page, or a web
+   page outside itch.io; this comes before the Twine and ink rules. Each such zip or page is opened once
+   (≤ 1 request/s): the deck is the `<script language="decker">` block of the named page, else of the only page of the
+   zip holding one, and must be in Decker's text format, version 1 (what the runtime reads). A zip of several decks
+   (a game in parts) has none: the app plays one deck, and a deck over 5 M characters is left out (the Kindle did not
+   open a 9.3 M one). The result, with what a look at the deck shows (cards, size,
+   animated widgets, `sleep` calls, canvases, sounds: what plays badly on e-ink, to check on the Kindle first), is
+   cached per link in `cache/decker.json` on the `catalog` branch for 90 days and listed in the job summary. The
+   resolver points the game's file at that page (`archive.primary`) and drops exports without a deck (`no-deck`).
+   The app takes the deck out of the page after the download and keeps the deck alone.
 3. **Apply content policy** ([§5.4](#54-content-policy)).
 4. **Emit** static JSON into `public/catalog/`:
    - `meta.json` — build date, counts (games, illustrated games), facet values (genres, languages, formats) with

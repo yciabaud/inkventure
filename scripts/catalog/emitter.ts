@@ -176,7 +176,7 @@ export function serialize(content: unknown): string {
 }
 
 const TUID = /^[a-z0-9]+$/;
-const FORMATS: StoryFormat[] = ['zcode', 'glulx', 'twine', 'ink'];
+const FORMATS: StoryFormat[] = ['zcode', 'glulx', 'twine', 'ink', 'decker'];
 
 /** Schema check of one index row: every problem found, empty when valid. */
 export function rowProblems(row: unknown): string[] {

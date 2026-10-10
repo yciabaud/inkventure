@@ -3,6 +3,7 @@
 // small (src/storage/files.ts).
 import { strFromU8, strToU8, unzipSync } from 'fflate';
 import type { StoryFile } from '../../scripts/catalog/resolver';
+import { deckText } from '../engines/decker/deckerHtml';
 import type { EngineKind } from '../engines/engine';
 import { looksLikeStory } from '../engines/formats';
 import { cacheFile, readCachedStory, type StoryData, type StoryFiles } from '../storage/files';
@@ -207,15 +208,24 @@ export function inkStory(bytes: Uint8Array): Uint8Array {
   return strToU8(json);
 }
 
+/** The deck of a Decker game (story S2.9): the deck file itself, or the deck out of a web export's page. */
+export function deckerDeck(bytes: Uint8Array): Uint8Array {
+  const deck = deckText(strFromU8(bytes));
+  if (deck === null) throw storyFileError('format', 'Not a story file: no Decker deck');
+  return strToU8(deck);
+}
+
 /**
  * The story itself from the downloaded bytes: unzipped when the catalogue says the file is a zip, with its files for
- * a Twine story; the compiled story out of an ink web export.
+ * a Twine story; the compiled story out of an ink web export; the deck out of a Decker web export.
  */
 export function storyData(file: StoryFile, kind: EngineKind, bytes: Uint8Array): StoryData {
   const zipped = !!file.archive && file.archive.type === 'zip';
   if (kind === 'twine' && zipped) return extractTwine(bytes, file.archive!.primary);
   const story = zipped ? extractPrimary(bytes, file.archive!.primary) : bytes;
-  return { bytes: kind === 'ink' ? inkStory(story) : story };
+  return {
+    bytes: kind === 'ink' ? inkStory(story) : kind === 'decker' ? deckerDeck(story) : story,
+  };
 }
 
 interface FetchOptions extends DownloadOptions {

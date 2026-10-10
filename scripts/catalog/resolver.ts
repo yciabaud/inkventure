@@ -2,14 +2,15 @@
 // dataset (data/raw/games.json) into the games the app can play, with the reason for every game left out.
 import type { GameRecord } from './ifdb.ts';
 import type { RawDataset, RawGame } from './crawler.ts';
+import type { DeckerExport } from './decker.ts';
 import type { InkExport } from './ink.ts';
 import { isCandidate, MIN_PICTURES } from './pictures.ts';
 import type { StoryVerdict } from './stories.ts';
 
 /** Story formats the app knows. A format plays once its engine exists; `enabledFormats` lists those. */
-export type StoryFormat = 'zcode' | 'glulx' | 'twine' | 'ink';
+export type StoryFormat = 'zcode' | 'glulx' | 'twine' | 'ink' | 'decker';
 
-const ALL_FORMATS: StoryFormat[] = ['zcode', 'glulx', 'twine', 'ink'];
+const ALL_FORMATS: StoryFormat[] = ['zcode', 'glulx', 'twine', 'ink', 'decker'];
 
 /** IFDB file format ids (`downloads.links[].format`, IFDB's "externid") of each story format. */
 const IFDB_FORMATS: Record<string, StoryFormat> = {
@@ -31,6 +32,14 @@ const EXTENSIONS: Array<[RegExp, StoryFormat, boolean]> = [
 const TWINE_SYSTEMS = /twine|harlowe|sugarcube|snowman|chapbook/i;
 const INK_SYSTEMS = /\bink(le)?\b/i;
 
+/** Development systems of Decker decks (S2.9): `Decker`, `Decker, HTML`… */
+const DECKER_SYSTEMS = /\bdecker\b/i;
+
+/** Whether a development system is Decker (S2.9). */
+export function isDeckerSystem(devsys: string): boolean {
+  return DECKER_SYSTEMS.test(devsys);
+}
+
 /** Whether a development system is ink (inkle's): `ink`, `Ink`, `Godot, Ink`… but not inklewriter (S2.7). */
 export function isInkSystem(devsys: string): boolean {
   return INK_SYSTEMS.test(devsys);
@@ -47,6 +56,7 @@ export type DropReason =
   | 'insecure-url'
   | 'unreadable-host'
   | 'no-ink-story'
+  | 'no-deck'
   | 'story-does-not-open'
   | 'adult-content'
   | 'excluded';
@@ -87,6 +97,12 @@ export interface ResolveOptions {
    * the checks of `check-stories.ts`; undefined when not checked. Without it, every file is assumed to open.
    */
   storyVerdict?: (file: StoryFile, format: StoryFormat) => StoryVerdict | undefined;
+  /**
+   * The page holding the deck of a Decker web export (S2.9: its path in the zip, or the page's URL), from the checks of
+   * `check-decker.ts`; null when the export has none or was not checked. Without it, the file IFDB names is assumed to
+   * hold the deck (fixtures, local runs).
+   */
+  deckerPage?: (link: DeckerExport) => string | null;
 }
 
 /** The file the app downloads. `archive`: the story is `primary` inside a zip. */
@@ -218,12 +234,13 @@ export function secureUrl(url: string): string | undefined {
 
 /**
  * Story format of a download link, from IFDB's format id, else the file name and the development system.
- * `inkExport`: the link of an ink game is a web export (a zip or a page), whose story is found by `check-ink.ts`.
+ * `inkExport`: the link of an ink game is a web export (a zip or a page), whose story is found by `check-ink.ts`;
+ * `deckerExport`: the link of a Decker game is a web export, whose deck is found by `check-decker.ts`.
  */
 export function linkFormat(
   link: Link,
   devsys: string,
-): { format: StoryFormat; blorb: boolean; inkExport?: true } | undefined {
+): { format: StoryFormat; blorb: boolean; inkExport?: true; deckerExport?: true } | undefined {
   const name = (link.compressedPrimary || link.url).split(/[?#]/)[0];
   if (link.format && IFDB_FORMATS[link.format]) {
     return {
@@ -234,6 +251,11 @@ export function linkFormat(
   for (const [pattern, format, blorb] of EXTENSIONS) {
     if (pattern.test(name)) return { format: format, blorb: blorb };
   }
+  if (DECKER_SYSTEMS.test(devsys) && webExport(link, name)) {
+    // Decker's web export (S2.9): a page holding the deck, zipped or not. First: a game made with Decker and Twine is
+    // played as a deck when the check finds one.
+    return { format: 'decker', blorb: false, deckerExport: true };
+  }
   if (link.format === 'hypertextgame' && /\.html?$/i.test(name) && TWINE_SYSTEMS.test(devsys)) {
     return { format: 'twine', blorb: false };
   }
@@ -241,13 +263,17 @@ export function linkFormat(
     // A compiled ink story is JSON (the inkjs runtime plays it).
     if (/\.json$/i.test(name)) return { format: 'ink', blorb: false };
     // Inky's web export (S2.7): a zip holding its page, or the page itself (not on a game store).
-    const page = link.compression
-      ? !link.compressedPrimary || /\.(html?|js)$/i.test(name)
-      : (link.format === 'hypertextgame' || /\.html?$/i.test(name)) &&
-        !PAGE_HOSTS_REFUSED.test(hostOf(link.url));
-    if (page) return { format: 'ink', blorb: false, inkExport: true };
+    if (webExport(link, name)) return { format: 'ink', blorb: false, inkExport: true };
   }
   return undefined;
+}
+
+/** Whether a link is a web export: a zip holding a page (or script), or a page itself, not on a game store. */
+function webExport(link: Link, name: string): boolean {
+  return link.compression
+    ? !link.compressedPrimary || /\.(html?|js)$/i.test(name)
+    : (link.format === 'hypertextgame' || /\.html?$/i.test(name)) &&
+        !PAGE_HOSTS_REFUSED.test(hostOf(link.url));
 }
 
 /** The chosen file, and the other usable files in order of preference (not checked for CORS). */
@@ -268,6 +294,7 @@ export function chooseFile(
   readable?: (url: string) => boolean,
   inkStory?: (link: InkExport) => string | null,
   storyVerdict?: (file: StoryFile, format: StoryFormat) => StoryVerdict | undefined,
+  deckerPage?: (link: DeckerExport) => string | null,
 ): Choice {
   const links = ((record.ifdb.downloads && record.ifdb.downloads.links) || []) as Link[];
   const candidates: Candidate[] = [];
@@ -305,6 +332,17 @@ export function chooseFile(
       if (file.archive) file.archive.primary = story;
       else file.url = story;
     }
+    if (detected.deckerExport && deckerPage) {
+      // The page that holds the deck of a Decker web export (S2.9).
+      const page = deckerPage(
+        file.archive ? { url: url, primary: file.archive.primary } : { url: url },
+      );
+      if (!page) {
+        problems.push({ reason: 'no-deck', detail: url });
+        return;
+      }
+      if (file.archive) file.archive.primary = page;
+    }
     const verdict = storyVerdict ? storyVerdict(file, detected.format) : undefined;
     if (verdict && !verdict.opens) {
       problems.push({ reason: 'story-does-not-open', detail: verdict.why + ' (' + url + ')' });
@@ -336,6 +374,7 @@ export function chooseFile(
     const order: DropReason[] = [
       'story-does-not-open',
       'no-ink-story',
+      'no-deck',
       'unsupported-format',
       'compressed-no-primary',
       'insecure-url',
@@ -849,6 +888,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       undefined,
       options.inkStory,
       options.storyVerdict,
+      options.deckerPage,
     );
     if ('reason' in choice) {
       drop(game, choice.reason, choice.detail);
@@ -863,6 +903,7 @@ export function resolve(dataset: RawDataset, options: ResolveOptions): Resolutio
       options.readable,
       options.inkStory,
       options.storyVerdict,
+      options.deckerPage,
     );
     if ('reason' in enabledChoice) {
       drop(game, enabledChoice.reason, enabledChoice.detail);

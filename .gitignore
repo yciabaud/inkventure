@@ -23,6 +23,8 @@ tests/fixtures/twine/*.zip
 
 # The zipped ink web export of the sample catalogue, built at install (scripts/fixtures/build-ink-export.ts)
 tests/fixtures/ink/*.zip
+# The zipped Decker web export of the sample catalogue, built at install (scripts/fixtures/build-decker-export.ts)
+tests/fixtures/decker/*.zip
 
 # Ebook build output (scripts/ebook/build.ts)
 ebook/build/

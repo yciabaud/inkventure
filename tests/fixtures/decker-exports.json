@@ -1,0 +1,14 @@
+{
+  "https://ifarchive.org/if-archive/games/html/tour.zip#tour.html": {
+    "checked": "2026-01-01T00:00:00.000Z",
+    "page": "tour.html",
+    "notes": {
+      "chars": 115267,
+      "cards": 24,
+      "animated": 1,
+      "sleeps": 4,
+      "canvases": 10,
+      "sounds": 1
+    }
+  }
+}

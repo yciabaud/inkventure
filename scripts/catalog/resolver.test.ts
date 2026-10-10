@@ -326,6 +326,7 @@ describe('resolution of the recorded fixtures', () => {
     expect(Object.fromEntries(result.dropped.map((d) => [d.tuid, d.reason]))).toEqual({
       fxadlt0000000008: 'adult-content',
       fxbell0000000002: 'format-not-enabled',
+      fxdeck0000000012: 'format-not-enabled',
       fxexcl0000000011: 'excluded',
       fxhttp0000000010: 'insecure-url',
       fxinky0000000007: 'format-not-enabled',
@@ -334,7 +335,7 @@ describe('resolution of the recorded fixtures', () => {
     });
     expect(result.games.length + result.dropped.length).toBe(dataset.games.length);
     // Games the policy removes are not counted.
-    expect(result.counts.formats).toEqual({ zcode: 3, glulx: 1, twine: 1, ink: 1 });
+    expect(result.counts.formats).toEqual({ zcode: 3, glulx: 1, twine: 1, ink: 1, decker: 1 });
   });
 
   it('fills the metadata the index needs', async () => {
@@ -786,8 +787,100 @@ describe('ink web exports (S2.7)', () => {
     });
     expect(resolution.games.map((g) => g.tuid)).toEqual(['kept', 'z']);
     const summary = summarize(dataset, resolution);
-    expect(summary).toContain('**Ink games (S2.7)**: 3 crawled, 1 kept, 2 dropped.');
+    expect(summary).toContain('**Ink games**: 3 crawled, 1 kept, 2 dropped.');
     expect(summary).toContain('| `no-ink-story` | 1 |');
     expect(summary).toContain('| `unsupported-format` | 1 |');
+  });
+});
+
+describe('Decker web exports (S2.9)', () => {
+  const ZIP = A + 'html/tour.zip';
+  const zip = {
+    url: ZIP,
+    format: 'hypertextgame',
+    compression: 'zip',
+    compressedPrimary: 'index.html',
+  };
+  const decker: StoryFormat[] = ['decker', 'twine'];
+  const pages: Record<string, string> = { [ZIP + '#index.html']: 'tour/play.html' };
+  const deckerPage = (link: { url: string; primary?: string }) =>
+    pages[link.primary ? link.url + '#' + link.primary : link.url] || null;
+
+  it('recognises the web exports of Decker games, first, but not game stores', () => {
+    const exported = { format: 'decker', blorb: false, deckerExport: true };
+    for (const devsys of ['Decker', 'Decker, HTML', 'Decker, Twine'])
+      expect(linkFormat(zip, devsys)).toEqual(exported);
+    expect(linkFormat({ url: A + 'html/tour.html', format: 'hypertextgame' }, 'Decker')).toEqual(
+      exported,
+    );
+    expect(
+      linkFormat({ url: 'https://a.itch.io/tour', format: 'hypertextgame' }, 'Decker'),
+    ).toBeUndefined();
+    expect(linkFormat(zip, 'Deckerish')).toBeUndefined();
+  });
+
+  it('points a zip at the page holding the deck, and drops an export without one', () => {
+    const choice = chooseFile(
+      record([zip]),
+      'Decker',
+      decker,
+      undefined,
+      undefined,
+      undefined,
+      deckerPage,
+    );
+    expect('file' in choice && choice.file.file).toEqual({
+      url: ZIP,
+      ifdbFormat: 'hypertextgame',
+      archive: { type: 'zip', primary: 'tour/play.html' },
+    });
+    const none = chooseFile(
+      record([
+        { ...zip, url: A + 'html/parts.zip' },
+        { url: 'https://a.itch.io/t', format: 'hypertextgame', isGame: true },
+      ]),
+      'Decker',
+      decker,
+      undefined,
+      undefined,
+      undefined,
+      deckerPage,
+    );
+    expect(none).toEqual({ reason: 'no-deck', detail: A + 'html/parts.zip' });
+    // Without the checks, the page IFDB names is assumed to hold the deck.
+    const unchecked = chooseFile(record([zip]), 'Decker', decker);
+    expect('file' in unchecked && unchecked.file.file.archive!.primary).toBe('index.html');
+  });
+
+  it('counts the Decker games kept and dropped in the job summary', () => {
+    const game = (tuid: string, links: Link[]): RawGame => ({
+      tuid: tuid,
+      pageVersion: 1,
+      queries: [],
+      search: {
+        tuid: tuid,
+        title: tuid,
+        link: '',
+        author: '',
+        hasCoverArt: false,
+        devsys: 'Decker',
+      },
+      record: record(links, { tuid: tuid }),
+    });
+    const dataset: RawDataset = {
+      source: 'test',
+      queries: [],
+      games: [game('kept', [zip]), game('parts', [{ ...zip, url: A + 'html/parts.zip' }])],
+    };
+    const resolution = resolve(dataset, {
+      enabledFormats: decker,
+      policy: 'general',
+      config: CONFIG,
+      deckerPage: deckerPage,
+    });
+    expect(resolution.games.map((g) => g.format)).toEqual(['decker']);
+    const summary = summarize(dataset, resolution);
+    expect(summary).toContain('**Decker games**: 2 crawled, 1 kept, 1 dropped.');
+    expect(summary).toContain('| `no-deck` | 1 |');
   });
 });

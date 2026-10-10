@@ -10,6 +10,7 @@ const ENGINES: Record<StoryFormat, EngineKind> = {
   glulx: 'glulx',
   ink: 'ink',
   twine: 'twine',
+  decker: 'decker',
 };
 
 /** The engine that plays a catalogue format, or null for a format the app does not know. */

@@ -2,7 +2,7 @@
 // games and a report of the games left out, with their reasons.
 //
 //   node scripts/catalog/resolve.ts [--in FILE] [--out DIR] [--cors FILE] [--pictures FILE] [--ink FILE]
-//                                   [--stories FILE] [--summary FILE]
+//                                   [--stories FILE] [--decker FILE] [--summary FILE]
 //
 // CONTENT_POLICY=general (default) | adult. Formats: scripts/catalog/playability.json. Policy lists:
 // scripts/catalog/content-policy.json. --summary appends a Markdown summary (e.g. $GITHUB_STEP_SUMMARY).
@@ -11,6 +11,7 @@
 // --pictures: the checks of `check-pictures.ts`; games whose Blorb holds pictures besides the cover are illustrated.
 // --ink: the checks of `check-ink.ts`; an ink web export is then used only when it holds a story, pointing at it.
 // --stories: the checks of `check-stories.ts`; a Z-machine or Glulx file is then used only when it opens.
+// --decker: the checks of `check-decker.ts`; a Decker web export is then used only when it holds a deck, pointing at it.
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -22,6 +23,7 @@ import {
   type StoryFormat,
 } from './resolver.ts';
 import { readableFrom, type CorsCache } from './cors.ts';
+import { deckerPageFrom, type DeckerCache } from './decker.ts';
 import { inkStoryFrom, type InkCache } from './ink.ts';
 import { picturesFrom, type PicturesCache } from './pictures.ts';
 import { storyVerdictFrom, type StoriesCache } from './stories.ts';
@@ -35,6 +37,7 @@ const { values } = parseArgs({
     pictures: { type: 'string' },
     ink: { type: 'string' },
     stories: { type: 'string' },
+    decker: { type: 'string' },
     summary: { type: 'string' },
   },
 });
@@ -62,6 +65,7 @@ const resolution = resolve(dataset, {
   storyVerdict: values.stories
     ? storyVerdictFrom(readJson<StoriesCache>(values.stories))
     : undefined,
+  deckerPage: values.decker ? deckerPageFrom(readJson<DeckerCache>(values.decker)) : undefined,
 });
 
 mkdirSync(values.out, { recursive: true });

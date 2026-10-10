@@ -13,3 +13,5 @@ vendor
 tests/fixtures/ink/lamp.json
 # Built Twine fixtures (scripts/fixtures/build-twine.ts)
 tests/fixtures/twine/*.html
+# TEMPORARY (S2.9 preview, dropped before merge)
+preview-catalog

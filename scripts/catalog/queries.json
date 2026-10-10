@@ -5,6 +5,7 @@
     "downloadable:yes system:zil",
     "downloadable:yes system:dialog",
     "downloadable:yes system:twine",
-    "downloadable:yes system:ink"
+    "downloadable:yes system:ink",
+    "downloadable:yes system:decker"
   ]
 }

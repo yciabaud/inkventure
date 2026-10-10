@@ -35,8 +35,8 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
   await expect(lamp).toContainText('The Lamp at Saltmere');
   await expect(lamp).toContainText('Start here');
   // Cave of Echoes is in French with an English translation (S2.6): on the English shelf too; Ink and Tide is the
-  // ink web export (S2.7).
-  await expect(shelf(page).getByRole('link')).toHaveCount(5);
+  // ink web export (S2.7), The Decker Tour the Decker one (S2.9).
+  await expect(shelf(page).getByRole('link')).toHaveCount(6);
   expect(await scrolls(page)).toBe(false);
 
   await press(lamp);
@@ -46,13 +46,13 @@ test('fresh profile: welcome and the featured shelf; a card opens its game', asy
 
 test('games in progress are left out, and the welcome is gone', async ({ page }) => {
   await page.goto('/#/home');
-  await expect(shelf(page).getByRole('link')).toHaveCount(5);
+  await expect(shelf(page).getByRole('link')).toHaveCount(6);
   await page.evaluate(
     (tuid) => localStorage.setItem('ik:v1:progress:' + tuid, JSON.stringify({ turns: 3 })),
     LAMP,
   );
   await page.reload();
-  await expect(shelf(page).getByRole('link')).toHaveCount(4);
+  await expect(shelf(page).getByRole('link')).toHaveCount(5);
   await expect(shelf(page).getByRole('link').first()).toHaveAttribute(
     'aria-label',
     /^Cave of Echoes/,
@@ -63,7 +63,7 @@ test('games in progress are left out, and the welcome is gone', async ({ page })
     'fxcave0000000003',
   );
   await page.reload();
-  await expect(shelf(page).getByRole('link')).toHaveCount(3);
+  await expect(shelf(page).getByRole('link')).toHaveCount(4);
   await expect(page.getByText('Welcome to Inkventure')).toHaveCount(0);
 });
 

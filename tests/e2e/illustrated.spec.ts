@@ -24,7 +24,7 @@ test('the Illustrated filter shows only the illustrated game, whose page has the
   page,
 }) => {
   await page.goto('/#/library');
-  await expect(page.getByText('7 adventures')).toBeVisible();
+  await expect(page.getByText('8 adventures')).toBeVisible();
 
   await press(page.getByRole('link', { name: 'Filters' }));
   const illustrated = page.getByRole('button', { name: /^Illustrated/ });

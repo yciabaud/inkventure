@@ -335,6 +335,7 @@ export const FORMAT_NAMES: Record<string, string> = {
   glulx: 'Glulx',
   twine: 'Twine',
   ink: 'ink',
+  decker: 'Decker',
 };
 
 export function formatName(format: string): string {
