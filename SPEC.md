@@ -537,7 +537,8 @@ the ink functions of the same name.
   frame needs no network). The runtime is Decker 1.71's web runtime with patches applied at build time
   (`scripts/build/decker-runtime.ts`, each matching the pinned code once): a tick only while the deck is busy, a draw
   only of the rows that changed with colours from a table, no transitions, frozen animated patterns, a steady cursor,
-  menus off (the editor cannot be reached), the card scaled to the frame's width without smoothing, no black corners,
+  menus off (the editor cannot be reached), the card scaled by the largest whole number of device pixels that fits (2 on the Kindle: 512 of 636 CSS pixels,
+  sharp, regular dithers) into a canvas sized in device pixels, no black corners,
   and no drawn keyboard: a tap on an editable field puts a hidden input over it, focused within the tap, so that the
   device keyboard opens and what it types goes to the field. A small bridge posts the deck's name and, a second after
   the deck goes idle following an input, the deck itself (as Decker writes it) to the reader. The reader's menu has

@@ -7,7 +7,8 @@
 // - Draw: only the rows of the frame buffer that changed since the last draw are converted and put on the canvas, and
 //   a pixel's colour comes from a table built once per palette (pattern x position in its 8 x 8 tile) instead of a few
 //   function calls per pixel. The probe measured ~550 ms per draw on the Kindle.
-// - The display canvas is sized in device pixels, so the card scaled to the width stays sharp (no second scaling).
+// - The zoom is a whole number of device pixels per deck pixel (the largest that fits), and the display canvas is
+//   sized in device pixels: every deck pixel is the same square of screen pixels, sharp, with regular dithers.
 // - Decker's drawn keyboard (`keycaps`) is never shown: typing goes through a hidden input of the page (the bridge),
 //   so that the device's own keyboard opens.
 // - The bridge (plain code after decker.js, using its globals) talks to the reader with `postMessage`: the deck's
@@ -26,14 +27,13 @@ import {
   RESIZE_PATCH,
   startPatch,
   STILL_PATCHES,
-  ZOOM_PATCH,
 } from './decker-probe.ts';
 
 type Replacement = [RegExp, string];
 
 /** The draw: changed rows only, colours from a table. Replaces upstream's `sync` whole. */
 export const SYNC = `// Inkventure (S1.29, scripts/build/decker-runtime.ts): draws only the rows that changed, colours from a table.
-let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null
+let ik_id=null,ik_px=null,ik_prev=null,ik_lut=null,ik_lutkey=null,ik_dpr=1
 ik_rgba=c=>{const v=COLORS[c];return (0xFF000000|((0xFF&v)<<16)|(0xFF00&v)|(0xFF&(v>>16)))>>>0}
 ik_color=(pal,anim,p,x,y)=>{
 	const a=p<28||p>31?p: anim[p-28][0]
@@ -75,9 +75,21 @@ sync=force=>{
  * smoothing, so that the browser does not scale it again (the Kindle's, at 2 device pixels per CSS pixel, smoothed the
  * card scaled to the width, which blurred it). `zoom` stays in CSS pixels, for Decker's pointer.
  */
+/**
+ * The zoom: the largest whole number of device pixels per deck pixel that fits the width and the window's height
+ * (at least 1), so that every deck pixel is the same square of screen pixels and dithers stay regular. On the
+ * Kindle (2 device pixels per CSS pixel, 636 CSS pixels wide) that is 2: the card at 512 CSS pixels, as sharp as the
+ * S0.11 probe at 1:1. (Filling the width, × 2.48 there, made cells of 2 or 3 pixels: irregular dithers; the owner
+ * chose sharp.) `zoom` is in CSS pixels, as Decker's pointer expects.
+ */
+const APP_ZOOM_PATCH: Replacement = [
+  /^\tzoom=max\(1,is_fullscreen\(\)\?fs:\(0\|fs\)\)$/m,
+  '\tik_dpr=window.devicePixelRatio||1,zoom=max(1,Math.floor(min(screen.x*ik_dpr/fb.size.x,window.innerHeight*ik_dpr/fb.size.y)))/ik_dpr // Inkventure: whole device pixels',
+];
+
 const DISPLAY_PATCH: Replacement = [
   /^\tconst c =q\('#display'\);c \.width=fb\.size \.x\*zoom,c\.height =fb\.size \.y\*zoom$/m,
-  "\tconst c =q('#display'),ik_dpr=window.devicePixelRatio||1;c.width=Math.round(fb.size.x*zoom*ik_dpr),c.height=Math.round(fb.size.y*zoom*ik_dpr),c.style.width=(fb.size.x*zoom)+'px',c.style.height=(fb.size.y*zoom)+'px'",
+  "\tconst c =q('#display');c.width=Math.round(fb.size.x*zoom*ik_dpr),c.height=Math.round(fb.size.y*zoom*ik_dpr),c.style.width=(fb.size.x*zoom)+'px',c.style.height=(fb.size.y*zoom)+'px'",
 ];
 
 /** Upstream's `sync`, from its declaration to the end of the function. */
@@ -92,7 +104,7 @@ const KEYCAPS_PATCH: Replacement = [
 export const APP_PATCHES: Replacement[] = [
   LOOP_PATCH,
   SYNC_PATCH,
-  ZOOM_PATCH,
+  APP_ZOOM_PATCH,
   DISPLAY_PATCH,
   RESIZE_PATCH,
   ...STILL_PATCHES,
