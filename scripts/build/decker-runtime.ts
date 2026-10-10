@@ -101,15 +101,17 @@ ik_bridge=_=>{
 	window.addEventListener('error',e=>post({type:'error',message:String(e.message||e)}))
 	let title=null,saved=null,savedInputs=0,timer=0,ready=0
 	const save=_=>{timer=0;const text=deck_write(deck);if(text!==saved){saved=text;post({type:'save',deck:text})}}
-	ik.ondraw=_=>{if(!ready){ready=1;post({type:'ready'})}}
+	ik.ondraw=_=>{if(!ready){ready=1;post({type:'ready'})}flush()}
 	ik.onidle=_=>{
 		const t=document.title;if(t!==title){title=t;post({type:'title',title:t})}
 		if(ik.inputs!==savedInputs){savedInputs=ik.inputs;clearTimeout(timer);timer=setTimeout(save,${SAVE_DELAY_MS})}
-		if(!wid.infield&&document.activeElement===input)input.blur()
+		flush();if(!wid.infield&&document.activeElement===input)input.value='',input.blur()
 	}
-	// Typing: an input over the tapped field, focused during the tap so that the device keyboard opens. A key Decker
-	// understands reaches it by the page's keydown handler (which cancels the key); what the keyboard sends otherwise
-	// (an "input" event) is passed to the field here.
+	// Typing: an input over the tapped field, focused during the tap so that the device keyboard opens. Decker enters
+	// the field at its next tick: until then what is typed stays in the input, and goes to the field once it is in it
+	// (flush). Then a key Decker understands reaches it by the page's keydown handler (which cancels the key), and what
+	// the keyboard sends otherwise (an "input" event) is passed to the field here.
+	const flush=_=>{if(wid.infield&&input.value){const text=input.value;input.value='';field_input(clchars(text)),ik_wake()}}
 	const input=document.createElement('input'),display=q('#display')
 	input.type='text',input.id='ik-input',input.setAttribute('autocomplete','off'),input.setAttribute('autocapitalize','off')
 	input.style.cssText='position:absolute;opacity:0;width:1px;height:1px;border:0;padding:0;font-size:16px;left:0;top:0'
@@ -131,10 +133,9 @@ ik_bridge=_=>{
 	}
 	q('body').addEventListener('touchend',e=>{const t=e.changedTouches[0];if(t)focusAt(t.clientX,t.clientY)},{passive:true})
 	q('body').addEventListener('mouseup',e=>focusAt(e.clientX,e.clientY))
-	input.addEventListener('input',_=>{
-		const text=input.value;input.value=''
-		if(text&&wid.infield){field_input(clchars(text)),ik_wake()}
-	})
+	// Before Decker is in the field, a character stays in the input (Decker's handler would drop it).
+	input.addEventListener('keydown',e=>{if(!wid.infield&&e.key&&e.key.length==1&&!e.ctrlKey&&!e.metaKey)e.stopPropagation()})
+	input.addEventListener('input',_=>{flush();if(input.value)ik_wake()})
 }
 // After decker.js has started the deck: its first tick waits for an animation frame.
 ik_bridge()`;
