@@ -44,6 +44,13 @@ if (bitsy) {
     `\n\nNot budgeted: the Bitsy probe runtime (S0.12), probe/bitsy/runtime.js, ` +
     `${(bitsy.gzip / KIB).toFixed(1)} KiB gzip (${(bitsy.raw / KIB).toFixed(1)} KiB raw).`;
 }
+// Reported, not budgeted: the DAAD probe's runtime (S0.13) and our test game's pictures, likewise.
+const daad = sizes['probe/daad/runtime.js'];
+if (daad) {
+  table +=
+    `\n\nNot budgeted: the DAAD probe runtime (S0.13), probe/daad/runtime.js, ` +
+    `${(daad.gzip / KIB).toFixed(1)} KiB gzip (${(daad.raw / KIB).toFixed(1)} KiB raw).`;
+}
 const json = process.argv.indexOf('--json');
 if (json >= 0) writeFileSync(process.argv[json + 1], JSON.stringify(rows, null, 2) + '\n');
 console.log(table);

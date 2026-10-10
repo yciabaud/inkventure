@@ -6,6 +6,8 @@ package-lock.json
 public/catalog
 *.md
 public/probe/qrcode.js
+# The DAAD probe's test pictures, generated in jDAAD's format (scripts/build/daad-game/pictures.ts)
+public/probe/daad/images.js
 vendor
 # Compiled by scripts/fixtures/build-ink.sh, committed as the compiler writes it
 tests/fixtures/ink/lamp.json

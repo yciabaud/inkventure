@@ -13,6 +13,8 @@ export default tseslint.config(
       'test-results',
       'public/catalog',
       'public/probe/qrcode.js',
+      // The DAAD probe's test pictures in jDAAD's format, generated (scripts/build/daad-game/pictures.ts).
+      'public/probe/daad/images.js',
       'vendor',
     ],
   },

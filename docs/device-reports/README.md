@@ -81,6 +81,23 @@ Before each release, run the [device checklist](../device-checklist.md) and save
 5. Tap **Report & QR code** and scan each part, save it as `docs/device-reports/<YYYY-MM-DD>-<device>-bitsy.txt`, add
    a line to the table of the README, and update S0.12.
 
+## DAAD probe (story S0.13)
+
+1. On the Kindle, open **https://yciabaud.github.io/inkventure/probe/daad/** (or the pull request preview's
+   `/probe/daad/`). It downloads our test game *The Lamp Room* (~20 KB of database, ~570 KB of pictures as jDAAD
+   arrays) and jDAAD's runtime (~250 KB), then shows the game's screen across the width, jDAAD's keyboard and a text
+   field under it, and the live measures below. The `load.*`, `parse.*`, `runtime.*`, `start`, `firstRun` and
+   `firstDraw` lines time the start; `zoom` says how big the screen is drawn.
+2. The title waits for a key: **tap the picture**. On the shore, type **EXAMINE SEA** with jDAAD's keys and **Enter**,
+   then type **NORTH** in the **Kindle keyboard** field (it should open the device's keyboard) and its **Enter**: the
+   lamp room and its picture. Then **READ LOG**: a long text that stops (*More…*): tap the picture to read on. Each key
+   adds an `input.N` line: time to its draw, the area drawn, a location change. Note whether the bitmap text and the
+   pictures read well (a photo helps), and whether the keys answer each tap once.
+3. Leave the game alone for **10 s**: `idle.10s` should read `0 draws`.
+4. Optional: **The game's (white on black)** colours and **Whole steps** zoom, to compare how the text reads.
+5. Tap **Report & QR code** and scan each part, save it as `docs/device-reports/<YYYY-MM-DD>-<device>-daad.txt`, add
+   a line to the table of the README, and update S0.13.
+
 ## Measuring turn latency (story S1.7)
 
 1. On the e-reader, turn on **Settings → About → Timings: Shown** (editing the address is awkward in the Kindle

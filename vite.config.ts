@@ -3,6 +3,7 @@ import preact from '@preact/preset-vite';
 import legacy from '@vitejs/plugin-legacy';
 import { buildInfoPlugin } from './scripts/build/build-info.ts';
 import { bitsyProbePlugin } from './scripts/build/bitsy-probe.ts';
+import { daadProbePlugin } from './scripts/build/daad-probe.ts';
 import { deckerProbePlugin } from './scripts/build/decker-probe.ts';
 import { deckerRuntimePlugin } from './scripts/build/decker-runtime.ts';
 import { ebookPagePlugin } from './scripts/build/ebook-page.ts';
@@ -35,6 +36,8 @@ export default defineConfig({
     deckerRuntimePlugin(),
     // The Bitsy probe (S0.12), dist/probe/bitsy/: Bitsy's engine with an e-ink system layer, outside the app's budgets.
     bitsyProbePlugin(),
+    // The DAAD probe (S0.13), dist/probe/daad/: jDAAD patched for e-ink and transpiled to ES2017, outside the app's budgets.
+    daadProbePlugin(),
     // ES5 bundle + core-js polyfills for the Kindle experimental browser (old WebKit).
     legacy({
       targets: ['defaults', 'safari >= 5', 'ie >= 11'],
