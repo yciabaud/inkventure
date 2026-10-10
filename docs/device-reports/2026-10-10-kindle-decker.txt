@@ -1,0 +1,29 @@
+inkventure-decker-probe v1
+probe.startedAt: Sat, 10 Oct 2026 09:15:54 GMT
+ua: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+viewport: 636x740 @2
+feature.newImageData: yes
+feature.passiveOption: yes
+feature.touchEvents: no
+feature.pointerEvents: yes
+feature.requestAnimationFrame: yes
+feature.audio: AudioContext
+load.deck: 112.6 KiB in 189 ms
+load.runtime: 415.7 KiB in 185 ms
+runtime.parse: 58 ms
+runtime.start: 3788 ms
+runtime.total: 3846 ms
+firstDraw: 4598 ms after the runtime started
+firstDraw.tick: 249 ms
+firstDraw.sync: 559 ms
+idle.firstReached: 6465 ms after the runtime started
+idle.10s: 0 ticks, 0 draws on "Drawing Practice"
+tap.1: What's a Deck? -> Drawing Practice: first frame 1413 ms, card 1413 ms, idle 3506 ms (tick 436 ms, draw 549 ms)
+tap.2: Drawing Practice -> Widgets: first frame 1199 ms, card 1199 ms, idle 3395 ms (tick 463 ms, draw 543 ms)
+tap.3: Widgets: first frame 1119 ms, idle 3302 ms (tick 463 ms, draw 568 ms)
+tap.4: Widgets: first frame –, idle 2509 ms (tick 1150 ms, draw 488 ms)
+tap.5: Widgets: first frame 1650 ms, idle 4149 ms (tick 1135 ms, draw 506 ms)
+tap.6: Widgets: first frame 1722 ms, idle 3880 ms (tick 463 ms, draw 534 ms)
+tap.7: Widgets -> Widget Overview: first frame 1176 ms, card 1176 ms, idle 3270 ms (tick 430 ms, draw 548 ms)
+tap.8: Widgets: first frame –, idle 1088 ms (tick 459 ms, draw 542 ms)
+input.events: touchstart 23, touchend 23, mousedown 3, mouseup 3, click 3, keydown 0
