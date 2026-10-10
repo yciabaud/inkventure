@@ -59,6 +59,22 @@ HyperCard-like tool by John Earnest: cards, buttons, fields, 1-bit patterns, scr
   system "Decker").
 - **Spike:** load one real deck with a patched web-decker on the Kindle; measure one card change and one button
   script.
+- **Spike done** ([S0.11](stories/S0.11-decker-spike.md), Kindle
+  [report](device-reports/2026-10-10-kindle-decker.txt) of 2026-10-10): the patched runtime plays the tour deck. It
+  starts in ~8.5 s (runtime 3.8 s, first card 4.6 s later); a card change shows **1.1–1.4 s** after the tap (a tick
+  ~450 ms + a draw ~550 ms); a still card uses no CPU (0 ticks, 0 draws in 10 s); the device keyboard never opens on
+  the canvas. Patched runtime: 107 KiB gz minified, over the 100 KiB lazy-chunk budget with the editor still in it.
+- **Recommendation: go, with conditions.** Card-and-button decks (the HyperCard-like ones: stories, puzzles, point and
+  click) are playable at about a second per tap, close to a Glulx turn on the same Kindle; decks that draw, drag or
+  animate are not. A Decker engine story would:
+  1. **cut the draw** (~550 ms): convert and put only the rows of the frame buffer that changed (the patched `sync`
+     already compares them), and measure what a tick (~450 ms) spends;
+  2. **remove the editor** from the runtime, to fit the lazy-chunk budget (owner's decision);
+  3. **type with the Kindle keyboard** through a hidden input over the tapped field, `keycaps` off (owner's decision);
+  4. aim for **< 1 s from a tap to the new card and < 5 s to open** on the Kindle, and stop (no-go) if it cannot get
+     close;
+  5. feed a **curated shelf** of card-and-button decks only, each tested on the Kindle, with its author's permission
+     or a free licence (strategy below).
 
 ## Bitsy
 
@@ -222,7 +238,8 @@ Milestone V1.1 in the [backlog](BACKLOG.md):
 
 ## Possible next steps
 
-1. **Decker spike** on the Kindle: patched runtime, one real deck, measure.
+1. **Decker spike** on the Kindle: done (S0.11), recommendation above: go, with conditions; a Decker engine story is
+   the owner's call.
 2. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
    (no user-supplied files).
 3. Record the ZVM/Quixe maintenance risk in SPEC §13.
