@@ -34,9 +34,9 @@ M7 (offline) started with a device spike: the S0.9 probe showed the Kindle can o
 off, so S5.3 keeps its full scope.
 
 **V1.1** comes after V1, from the follow-ups of the [story-file scan](reports/story-file-scan-2026-10-04.md) and the
-[rendering survey](reports/rendering-survey-2026-10-05.md), plus the Decker spike of [post-v1-ideas.md](post-v1-ideas.md):
+[rendering survey](reports/rendering-survey-2026-10-05.md), plus the Decker, Bitsy and DAAD spikes of [post-v1-ideas.md](post-v1-ideas.md):
 
-S1.26 → S1.20 → S1.28 → S1.27 → S0.11
+S1.26 → S1.20 → S1.28 → S1.27 → S0.11 → S0.12 → S0.13
 
 ## Stories
 
@@ -53,6 +53,8 @@ S1.26 → S1.20 → S1.28 → S1.27 → S0.11
 | [S0.9](stories/S0.9-offline-probe.md) | Offline probe on the Kindle (spike) | E0 | M7 | S0.3 | done |
 | [S0.10](stories/S0.10-first-load-budget.md) | First-load budget: measure what the Kindle loads, and slim the bundle | E0 | M6 | S0.7, S0.3 | done |
 | [S0.11](stories/S0.11-decker-spike.md) | Decker on the Kindle (spike) | E0 | V1.1 | S0.3 | done |
+| [S0.12](stories/S0.12-bitsy-spike.md) | Bitsy on the Kindle (spike) | E0 | V1.1 | S0.3, S0.11 | todo |
+| [S0.13](stories/S0.13-daad-spike.md) | DAAD on the Kindle (spike) | E0 | V1.1 | S0.3, S0.11 | todo |
 | [S1.1](stories/S1.1-paginated-text-view.md) | Paginated text view with tap zones | E1 | M1 | S0.4 | done |
 | [S1.2](stories/S1.2-reader-settings.md) | Reader settings (Aa menu) | E1 | M1 | S1.1, S0.6 | done |
 | [S1.3](stories/S1.3-engine-zmachine.md) | Engine abstraction, Glk display bridge & Z-machine (ZVM) | E1 | M1 | S1.1 | done |

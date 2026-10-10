@@ -235,11 +235,14 @@ Milestone V1.1 in the [backlog](BACKLOG.md):
 
 - **Tappable compass** in the status window (Bronze's exits): [S1.20](stories/S1.20-tappable-compass.md).
 - **Decker spike** on the Kindle (next step 1 below): [S0.11](stories/S0.11-decker-spike.md).
+- **Bitsy spike** on the Kindle, with a count of the games that play from their data: [S0.12](stories/S0.12-bitsy-spike.md).
+- **DAAD spike** on the Kindle (jDAAD), with a catalogue count and the GPL question: [S0.13](stories/S0.13-daad-spike.md).
 
 ## Possible next steps
 
 1. **Decker spike** on the Kindle: done (S0.11), recommendation above: go, with conditions; a Decker engine story is
    the owner's call.
-2. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
+2. **Bitsy and DAAD spikes** on the Kindle: S0.12 and S0.13.
+3. **Catalogue**, following the hybrid strategy above: a candidate scraper, then a curated, permission-based shelf
    (no user-supplied files).
-3. Record the ZVM/Quixe maintenance risk in SPEC §13.
+4. Record the ZVM/Quixe maintenance risk in SPEC §13.
