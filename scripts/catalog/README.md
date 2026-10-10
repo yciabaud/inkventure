@@ -77,7 +77,7 @@ the app can play) and `data/resolved/report.json` (every game left out, with its
   opened it; a zip's story is then the file it found there. A game whose files all fail is dropped
   (`story-does-not-open`, with the reason and the file). Without `--stories` every file is assumed to open.
 - **Reasons**: `no-game-file`, `unsupported-format`, `format-not-enabled`, `compressed-no-primary`, `insecure-url`,
-  `unreadable-host`, `no-ink-story`, `story-does-not-open`, `adult-content`, `excluded`. The summary also counts the ink games kept and
+  `unreadable-host`, `no-ink-story`, `no-deck`, `story-does-not-open`, `adult-content`, `excluded`. The summary also counts the ink games kept and
   dropped, by reason.
 - `--summary FILE` appends a Markdown summary, including the distribution of the raw IFDB fields (link formats,
   compression, languages, genres); the manual workflow writes it to the job summary.
@@ -91,6 +91,17 @@ else in the first of the page's own scripts that does (`ink.js` is skipped). Res
 (`{ "url" or "url#primary": { checked, story?, detail?, transient? } }`), reused for 90 days; network errors and 5xx
 answers are `transient`. It runs before the CORS check, which then takes `--ink FILE` too, so the script of a page
 outside the IF Archive is the file checked; `check-pictures.ts` and `resolve.ts` take it as well.
+
+## Decker games (S2.9)
+
+`check-decker.ts` (`npm run catalog:decker`, live network, ≤ 1 request/s, project `User-Agent`) lists the web exports
+of the Decker games in the raw dataset (`deckerExportsToInspect`: zips whose named file is a page, and pages outside
+itch.io) and opens each one: the deck is the `<script language="decker">` block of the named page, else of the only
+page in the zip holding one (a zip of several decks has none), in Decker's text format version 1. Results go to
+`data/cache/decker.json` (`{ "url" or "url#primary": { checked, page?, notes?, detail?, transient? } }`; `notes`:
+cards, size, animated widgets, `sleep` calls, canvases, sounds), reused for 90 days; network errors and 5xx answers are
+`transient`. The job summary lists every export with what a look at its deck shows, for the Kindle checks.
+`resolve.ts --decker FILE` points each Decker game at its page and drops the exports without a deck (`no-deck`).
 
 ## CORS check
 

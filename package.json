@@ -9,7 +9,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/build/fetch-decker.ts && node scripts/build/fetch-bitsy.ts && node scripts/build/fetch-daad.ts && node scripts/fixtures/build-twine.ts && node scripts/fixtures/build-ink-export.ts",
+    "postinstall": "node scripts/build/fetch-quixe.ts && node scripts/build/fetch-decker.ts && node scripts/build/fetch-bitsy.ts && node scripts/build/fetch-daad.ts && node scripts/fixtures/build-twine.ts && node scripts/fixtures/build-ink-export.ts && node scripts/fixtures/build-decker-export.ts",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
@@ -26,6 +26,7 @@
     "catalog:cors": "node scripts/catalog/check-cors.ts",
     "catalog:pictures": "node scripts/catalog/check-pictures.ts",
     "catalog:stories": "node scripts/catalog/check-stories.ts",
+    "catalog:decker": "node scripts/catalog/check-decker.ts",
     "catalog:emit": "node scripts/catalog/emit.ts",
     "catalog:sample": "node scripts/catalog/build-sample.ts",
     "catalog:featured": "node scripts/catalog/build-featured.ts",

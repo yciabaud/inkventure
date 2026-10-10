@@ -228,7 +228,9 @@ function Details({ game, id }: { game: GameDetail; id: string }) {
           <p class="game__badges">
             <span class="badge">{formatName(game.format)}</span>
             {game.illustrated && <span class="badge">{t('game.illustrated')}</span>}
-            {game.format === 'twine' && <span class="badge">{t('game.experimental')}</span>}
+            {(game.format === 'twine' || game.format === 'decker') && (
+              <span class="badge">{t('game.experimental')}</span>
+            )}
             {game.slow && <span class="badge">{t('game.slow')}</span>}
           </p>
         </div>

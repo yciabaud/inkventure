@@ -47,3 +47,8 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
   The Blorb parser's tests build their story files with `scripts/fixtures/build-blorb.ts`.
 - `#/play/fixture-decker` (S1.29): Decker's guided tour (`examples/decks/tour.deck`, by John Earnest, MIT), downloaded
   at install with the runtime (`vendor/decker/`, not committed) and built into the app as an asset.
+- `decker/tour.zip` (S2.9): the same tour deck as Decker's web export (`tour.html`, the deck in its
+  `<script language="decker">` block, the runtime a stand-in that throws), zipped: the file of the sample catalogue's
+  synthetic Decker game "The Decker Tour" (`ifdb/viewgame-fxdeck0000000012.json`). Not committed: `npm install` builds
+  it (`scripts/fixtures/build-decker-export.ts`). `decker-exports.json`: the page holding its deck, in the shape of
+  `data/cache/decker.json` (what `scripts/catalog/check-decker.ts` records), read by the sample catalogue.

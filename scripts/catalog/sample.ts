@@ -4,9 +4,12 @@
 // It includes featured.json, made from the curated sample games of tests/fixtures/featured.json (S2.4), and one
 // illustrated game, from the picture counts of tests/fixtures/pictures.json (the cache check-pictures.ts keeps, S2.5),
 // and one ink game served as a zipped web export, whose story tests/fixtures/ink-exports.json locates (as the cache
-// check-ink.ts keeps, S2.7; the zip itself is tests/fixtures/ink/tide.zip, built at install).
+// check-ink.ts keeps, S2.7; the zip itself is tests/fixtures/ink/tide.zip, built at install), and one Decker game, the
+// tour deck as a zipped web export, whose page tests/fixtures/decker-exports.json names (as the cache check-decker.ts
+// keeps, S2.9; the zip is tests/fixtures/decker/tour.zip, built at install).
 import { readFileSync } from 'node:fs';
 import { crawl, type CacheEntry } from './crawler.ts';
+import { deckerPageFrom, type DeckerCache } from './decker.ts';
 import { emit, type CatalogFiles } from './emitter.ts';
 import { buildFeatured, catalogView, type CuratedFile } from './featured.ts';
 import { offlineFetcher } from './fetcher.ts';
@@ -39,6 +42,7 @@ export async function sampleCatalog(): Promise<CatalogFiles> {
     config: readJson<ContentPolicyConfig>('scripts/catalog/content-policy.json'),
     pictures: picturesFrom(readJson<PicturesCache>('tests/fixtures/pictures.json')),
     inkStory: inkStoryFrom(readJson<InkCache>('tests/fixtures/ink-exports.json')),
+    deckerPage: deckerPageFrom(readJson<DeckerCache>('tests/fixtures/decker-exports.json')),
   });
   const files = emit(resolution.games, { built: SAMPLE_BUILT, policy: 'general' });
   // The featured lists, from a curated file of sample games (content/featured.json names real ones).

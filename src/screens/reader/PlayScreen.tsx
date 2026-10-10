@@ -25,6 +25,7 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { StorageNotice } from '../../ui/StorageNotice';
 import { TopBar } from '../../ui/TopBar';
 import { GameReader } from './GameReader';
+import { LazyDeckerReader as DeckerReader } from './LazyDeckerReader';
 import { LazyTwineReader as TwineReader } from './LazyTwineReader';
 
 type State =
@@ -194,7 +195,7 @@ export function PlayScreen({
           return;
         }
         // The engine's chunk loads during the download.
-        if (kind !== 'twine') loadEngine(kind).catch(() => undefined);
+        if (kind !== 'twine' && kind !== 'decker') loadEngine(kind).catch(() => undefined);
         let step = 0;
         Promise.all([import('../../catalog/storyFile'), import('../../catalog/offline')]).then(
           ([files, offline]) => {
@@ -257,6 +258,17 @@ export function PlayScreen({
         story={state.story.bytes}
         files={state.story.files}
         baseUrl={state.game.file.url}
+      />
+    );
+  }
+  if (state.phase === 'ready' && state.kind === 'decker') {
+    return (
+      <DeckerReader
+        tuid={tuid}
+        title={state.game.title}
+        author={state.game.author}
+        cover={!!state.game.cover}
+        story={state.story.bytes}
       />
     );
   }

@@ -51,7 +51,7 @@ function fetchText(url: string): Promise<string> {
 export function DeckerReader({ tuid, title, author, cover, story }: Props) {
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [restarting, setRestarting] = useState(false);
-  // The deck's own name, once it has drawn.
+  // The deck's own name, once it has drawn (shown for the tour deck only).
   const [deckTitle, setDeckTitle] = useState<string | null>(null);
   // The deck is too large to keep: said once.
   const [tooLarge, setTooLarge] = useState(false);
@@ -100,6 +100,9 @@ export function DeckerReader({ tuid, title, author, cover, story }: Props) {
   }, [story, tuid]);
 
   const loaded = state.phase === 'ready' ? state.loaded : null;
+  // A catalogue game is named by its catalogue title (decks are often named after their file); the tour deck (the
+  // fixture) by its own name.
+  const shownTitle = (!story && deckTitle) || title;
 
   /** The deck is being played: in My adventures, last played now. */
   function played() {
@@ -170,7 +173,7 @@ export function DeckerReader({ tuid, title, author, cover, story }: Props) {
       textSettings={false}
       heading={
         <span class="reader__status">
-          <span class="reader__title">{deckTitle || title}</span>
+          <span class="reader__title">{shownTitle}</span>
           <span class="badge reader__badge">{t('game.experimental')}</span>
         </span>
       }
@@ -179,7 +182,7 @@ export function DeckerReader({ tuid, title, author, cover, story }: Props) {
       {() =>
         loaded ? (
           <div class="reader__body">
-            <DeckerFrame key={run} title={deckTitle || title} loaded={loaded} frameRef={frameRef} />
+            <DeckerFrame key={run} title={shownTitle} loaded={loaded} frameRef={frameRef} />
             {tooLarge && (
               <p class="reader__indicator ui-font" role="status">
                 {t('decker.tooLarge')}
