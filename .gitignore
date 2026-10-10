@@ -30,3 +30,5 @@ ebook/build/
 vendor/bitsy/*.js
 vendor/bitsy/*.bitsy
 vendor/bitsy/*.bitsyfont
+# jDAAD, its jQuery, font and extern stub, downloaded at install from a pinned commit (scripts/build/fetch-daad.ts)
+vendor/daad/*.js
