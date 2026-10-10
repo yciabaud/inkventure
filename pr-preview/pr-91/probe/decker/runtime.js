@@ -7179,7 +7179,7 @@ tick=_=>{
 		iwrite(ob.sel[0],lms('pos'),lmpair(rsub(rsub(ev.pos,ob.prev),off))),mark_dirty()
 	}
 	document.title=ls(ifield(deck,'name')) || 'Untitled Deck'
-	const ccolor=ln(ifield(deck,'corners'))
+	const ccolor=0 // Inkventure: no corners
 	if(ccolor)for(let x=0;x<=1;x++)for(let y=0;y<=1;y++)draw_icon(rect(x*(context.size.x-5),y*(context.size.y-5)),CORNERS[x+y*2],ccolor)
 	const used=interpret()
 	if(uimode=='interact'&&profiler){
@@ -7230,7 +7230,7 @@ sync=force=>{
 		id.data[d+2]=0xFF&(cv    )
 	}
 	const r=q('#render');r.getContext('2d').putImageData(id,0,0)
-	const g=q('#display').getContext('2d');g.imageSmoothingEnabled=zoom!=(0|zoom),g.save(),g.scale(zoom,zoom),g.drawImage(r,0,0),g.restore()
+	const g=q('#display').getContext('2d');g.imageSmoothingEnabled=false,g.save(),g.scale(zoom,zoom),g.drawImage(r,0,0),g.restore()
 	ik_drawn();return 1
 }
 
@@ -7281,7 +7281,7 @@ loop=_=>{
 }
 resize=_=>{
 	const b=q('body'), screen=rect(b.clientWidth,b.clientHeight), fs=min(screen.x/fb.size.x,screen.y/fb.size.y)
-	zoom=max(1,is_fullscreen()?fs:(0|fs))
+	zoom=max(1,min(screen.x/fb.size.x,window.innerHeight/fb.size.y)) // Inkventure: fill the width
 	tzoom=0|min((screen.x-(zoom*fb.size.x))/(2*toolsize.x),screen.y/toolsize.y)
 	const tz=tzoom*toolbars_enable
 	const c =q('#display');c .width=fb.size .x*zoom,c.height =fb.size .y*zoom

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Inkventure — Decker probe</title>
     <style>
-      /* The deck on top at 1:1, the measures below; same plain style as the other probes. */
+      /* The deck on top across the width, the measures below; same plain style as the other probes. */
       body {
         margin: 0;
         font-family: Georgia, serif;
@@ -25,6 +25,9 @@
       }
       #deck #display {
         display: inline-block;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
         vertical-align: top;
         touch-action: none;
       }
