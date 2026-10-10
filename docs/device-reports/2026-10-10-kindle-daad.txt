@@ -1,0 +1,40 @@
+[Part 1/3]
+inkventure-daad-probe v1
+probe.startedAt: Sat, 10 Oct 2026 15:53:21 GMT
+ua: Mozilla/5.0 (X11; U; Linux armv7l like Android; en-us) AppleWebKit/531.2+ (KHTML, like Gecko) Version/5.0 Safari/533.2+ Kindle/3.0+
+viewport: 636x740 @2
+settings: paper white, zoom fit, keyboard on
+feature.ontouchstart: no
+feature.KeyboardEvent: yes
+load.game: 19.4 KiB in 327 ms
+load.images: 570.9 KiB in 369 ms
+load.runtime: 250.5 KiB in 1002 ms
+parse.game: 3 ms
+parse.images: 47 ms
+runtime.parse: 30 ms
+runtime.run: 68 ms (jQuery and the script, before the game starts)
+start: 145 ms from the script to jQuery ready
+firstRun: 153 ms (the game runs to its first wait)
+firstDraw: 158 ms after the start; put 3 ms, 64000 px
+zoom: 1.97 (630px)
+picture.1: 129 ms to draw in memory
+picture.2: 129 ms to draw in memory
+idle.10s: 0 draws while waiting for command at location 2
+[Part 2/3]
+input.1: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.2: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.3: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.4: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.5: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.6: BACKSPACE: draw 2 ms (put 0 ms, 96 px), then command
+input.7: a: draw 2 ms (put 0 ms, 96 px), then command
+input.8: d: draw 2 ms (put 0 ms, 96 px), then command
+input.9: space: draw 2 ms (put 0 ms, 96 px), then command
+input.10: l: draw 2 ms (put 0 ms, 96 px), then command
+input.11: o: draw 2 ms (put 0 ms, 96 px), then command
+input.12: g: draw 2 ms (put 0 ms, 96 px), then command
+input.13: ENTER: draw 194 ms (put 0 ms, 30720 px), then more
+input.14: tap: draw 78 ms (put 0 ms, 30720 px), then command
+input.events: touchstart 98, touchend 98, mousedown 8, click 8, keydown 8
+[Part 3/3]
+input.field: keydown 8, unidentified 0, input 0, submit 1
