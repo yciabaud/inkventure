@@ -12,6 +12,9 @@
 // - Transitions (`go[card "SlideLeft"]`) jump to their end: no transition modal.
 // - Animated patterns are frozen (the "Show Animation" setting off); the field cursor no longer blinks.
 // - Menus are off, as in a locked deck: the editor cannot be reached (its code is still there).
+// - The card fills the width: upstream zooms only by whole steps outside full screen (a 512 px card stays 1:1 on a
+//   636 px wide Kindle); patched, it zooms by the fraction that fits, drawn without smoothing so pixels stay sharp.
+// - No black corners: the deck's `corners` (a classic Mac screen's rounded corners) are not drawn.
 // - Measures for the probe page in `window.ikDecker`: ticks, draws, their last durations, the first draw, and for the
 //   last input (pointer up or key) the time to its first draw, to a card change, and to the loop going idle.
 import { existsSync, readFileSync } from 'node:fs';
@@ -69,6 +72,21 @@ export const PATCHES: Replacement[] = [
   [
     /^(\tconst g=q\('#display'\)\.getContext\('2d'\);.*g\.drawImage\(r,0,0\),g\.restore\(\))\n\}$/m,
     '$1\n\tik_drawn();return 1\n}',
+  ],
+  // The card fills the width (a fractional zoom), drawn without smoothing.
+  [
+    /^\tzoom=max\(1,is_fullscreen\(\)\?fs:\(0\|fs\)\)$/m,
+    // The page's body is only as tall as its content: the height limit is the window's.
+    '\tzoom=max(1,min(screen.x/fb.size.x,window.innerHeight/fb.size.y)) // Inkventure: fill the width',
+  ],
+  [
+    /g\.imageSmoothingEnabled=zoom!=\(0\|zoom\),g\.save\(\),g\.scale\(zoom,zoom\)/m,
+    'g.imageSmoothingEnabled=false,g.save(),g.scale(zoom,zoom)',
+  ],
+  // No corners.
+  [
+    /^\tconst ccolor=ln\(ifield\(deck,'corners'\)\)$/m,
+    '\tconst ccolor=0 // Inkventure: no corners',
   ],
   [
     /^window\.onresize=_=>\{resize\(\),sync\(\)\}$/m,
