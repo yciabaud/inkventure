@@ -7,10 +7,12 @@ import { ErrorPage } from '../../ui/ErrorPage';
 import { GameReader } from './GameReader';
 import { PlayScreen } from './PlayScreen';
 import { ReaderFrame } from './ReaderFrame';
+import { LazyDeckerReader as DeckerReader } from './LazyDeckerReader';
 import { LazyTwineReader as TwineReader } from './LazyTwineReader';
 // The fixture games (tests/fixtures/), served with the app for `#/play/fixture-z`, `fixture-glulx`,
 // `fixture-glulx-picture`, `fixture-ink`, `fixture-twine-harlowe` and `fixture-twine-sugarcube`. Never inlined: each is
-// a file of its own, fetched only by its route, not part of the bundle (S0.10).
+// a file of its own, fetched only by its route, not part of the bundle (S0.10). `#/play/fixture-decker` is Decker's
+// tour deck, which the Decker reader fetches itself (it is built with its runtime, S1.29).
 import fixtureGlulxUrl from '../../../tests/fixtures/glulx/lamp.ulx?url&no-inline';
 import fixturePictureUrl from '../../../tests/fixtures/glulx/picture.gblorb?url&no-inline';
 import fixtureInkUrl from '../../../tests/fixtures/ink/lamp.json?url&no-inline';
@@ -38,6 +40,9 @@ export const FIXTURE_INK_TUID = 'fixture-ink';
 export const FIXTURE_HARLOWE_TUID = 'fixture-twine-harlowe';
 export const FIXTURE_SUGARCUBE_TUID = 'fixture-twine-sugarcube';
 
+/** `#/play/fixture-decker`: Decker's guided tour (John Earnest, MIT). */
+export const FIXTURE_DECKER_TUID = 'fixture-decker';
+
 const FIXTURE_TITLE = 'The Lamp at Saltmere';
 
 const FIXTURES: Record<string, { url: string; kind: EngineKind; title?: string }> = {
@@ -64,6 +69,8 @@ export function ReaderScreen({
   perf?: boolean;
 }) {
   if (tuid === DEMO_TUID) return <DemoReader />;
+  if (tuid === FIXTURE_DECKER_TUID)
+    return <DeckerReader tuid={tuid} title="Decker" author="John Earnest" />;
   if (Object.prototype.hasOwnProperty.call(FIXTURES, tuid))
     return <FixtureReader key={tuid} tuid={tuid} language={language} perf={perf} />;
   return <PlayScreen tuid={tuid} language={language} perf={perf} />;

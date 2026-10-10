@@ -29,12 +29,14 @@ describe('extraNotices', () => {
     const notices = extraNotices(process.cwd());
     expect(notices.map((n) => n.name)).toEqual([
       'Quixe',
+      'Decker',
       'core-js',
       'SystemJS',
       'QR Code Generator for JavaScript',
     ]);
     expect(notices[0].version).toBe('2.2.6');
-    expect(notices[1].version).toMatch(/^3\./);
+    expect(notices[1].version).toBe('1.71');
+    expect(notices[2].version).toMatch(/^3\./);
     // Every notice has a readable text.
     expect(() => formatLicences(VITE, notices)).not.toThrow();
   });

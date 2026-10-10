@@ -41,3 +41,5 @@ Tiny freely-licensed stories and recorded IFDB JSON. Tests never hit the network
 - `pictures.json`: picture counts in the shape of `data/cache/pictures.json` (what `scripts/catalog/check-pictures.ts`
   records), read by the sample catalogue: the synthetic Glulx game "Bells of Aldermere" counts as illustrated (S2.5).
   The Blorb parser's tests build their story files with `scripts/fixtures/build-blorb.ts`.
+- `#/play/fixture-decker` (S1.29): Decker's guided tour (`examples/decks/tour.deck`, by John Earnest, MIT), downloaded
+  at install with the runtime (`vendor/decker/`, not committed) and built into the app as an asset.

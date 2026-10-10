@@ -135,6 +135,10 @@ export function evaluate(
   for (const chunk of lazyChunks(manifest)) {
     rows.push(row('Lazy chunk ' + chunk, [chunk], sizes, 'gzip', budgets.lazyChunk));
   }
+  // The Decker runtime's scripts (S1.29) are assets the Decker reader fetches, not chunks: budgeted as lazy chunks.
+  for (const script of files.filter((f) => /^assets\/decker-(lil|ui)-[^/]+\.js$/.test(f)).sort()) {
+    rows.push(row('Lazy chunk ' + script, [script], sizes, 'gzip', budgets.lazyChunk));
+  }
   for (const shard of shards) {
     rows.push(row('Catalogue ' + shard, [shard], sizes, 'raw', budgets.catalogShard));
   }
