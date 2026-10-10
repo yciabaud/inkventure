@@ -49,6 +49,19 @@ Before each release, run the [device checklist](../device-checklist.md) and save
    `docs/device-reports/<YYYY-MM-DD>-<device>-offline.txt`, add a line to the table above, and update S0.9.
 5. **Clear test data** removes everything the probe stored (up to ~52 MB with the 20 MB test files).
 
+## Decker probe (story S0.11)
+
+1. On the Kindle, open **https://yciabaud.github.io/inkventure/probe/decker/** (or the pull request preview's
+   `/probe/decker/`). It downloads the tour deck and Decker's patched runtime (~420 KB), then shows the deck's home
+   card at the top and the live measures below it. The `load.*`, `runtime.*` and `firstDraw` lines time the start.
+2. Tap **Guided Tour**, then **Next** three times to reach the **Widgets** card (card changes). There, tap **MORE!**
+   (a button script that shows an alert), then **OK**; tap the text about Galena (an editable field) and type a few
+   letters on the deck's own on-screen keyboard. Each tap adds a `tap.N` line: time to its first frame, to the card
+   change, and until the deck is idle again.
+3. Leave a card alone for **10 s**: `idle.10s` should read `0 ticks, 0 draws` (the patched loop has stopped).
+4. Tap **Report & QR code** and scan each part, save it as `docs/device-reports/<YYYY-MM-DD>-<device>-decker.txt`, add
+   a line to the table of the README, and update S0.11.
+
 ## Measuring turn latency (story S1.7)
 
 1. On the e-reader, turn on **Settings → About → Timings: Shown** (editing the address is awkward in the Kindle

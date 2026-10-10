@@ -4,7 +4,7 @@
 import { appendFileSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { gzipSync } from 'node:zlib';
-import { evaluate, toMarkdown, type Budgets, type Manifest, type Sizes } from './budget.ts';
+import { evaluate, KIB, toMarkdown, type Budgets, type Manifest, type Sizes } from './budget.ts';
 
 const dist = 'dist';
 
@@ -29,7 +29,14 @@ for (const file of files) {
 }
 
 const rows = evaluate(manifest, files, sizes, budgets);
-const table = toMarkdown(rows);
+let table = toMarkdown(rows);
+// Reported, not budgeted: the Decker probe's runtime (S0.11), a spike page outside the app.
+const decker = sizes['probe/decker/runtime.js'];
+if (decker) {
+  table +=
+    `\n\nNot budgeted: the Decker probe runtime (S0.11), probe/decker/runtime.js, ` +
+    `${(decker.gzip / KIB).toFixed(1)} KiB gzip (${(decker.raw / KIB).toFixed(1)} KiB raw).`;
+}
 const json = process.argv.indexOf('--json');
 if (json >= 0) writeFileSync(process.argv[json + 1], JSON.stringify(rows, null, 2) + '\n');
 console.log(table);
