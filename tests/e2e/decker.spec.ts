@@ -155,15 +155,18 @@ test('plays the tour deck: a button changes the card, a field takes typed text, 
     .toBe('ik-input');
   const before = await fieldText(frame);
   await page.keyboard.type('Hi');
+  // Typed before Decker is in the field, the keys wait in the input until its next tick: let them reach the field
+  // before setting the input's value below (which would replace them).
+  await expect.poll(() => fieldText(frame)).toContain('Hi');
   // What a virtual keyboard may send instead of keys: an "input" event.
   await frame.evaluate(() => {
     const input = document.getElementById('ik-input') as HTMLInputElement;
     input.value = '!';
     input.dispatchEvent(new Event('input'));
   });
-  await expect.poll(() => fieldText(frame)).not.toBe(before);
+  await expect.poll(() => fieldText(frame)).toContain('Hi!');
   const typed = await fieldText(frame);
-  expect(typed).toContain('Hi!');
+  expect(typed).not.toBe(before);
   await idle(frame);
 
   // Saved a moment after the deck went idle.
