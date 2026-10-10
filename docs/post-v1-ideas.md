@@ -144,7 +144,8 @@ dialogue.
 jDAAD 1.2 patched for e-ink (drawing into memory and one put per wait instead of a `fillRect` per pixel, transpiled to
 ES2017) plays a test game compiled with the DAAD Reborn Compiler. On the Kindle: first screen 158 ms after the start
 (~1.7 s of downloads before), a typed letter 2 ms, a command ~200 ms, a picture 129 ms, 0 draws while waiting; the
-Kindle's keyboard sends real keys. Databases built for other machines (Spectrum v2/v3, MSX, ST) play once their
+Kindle's keyboard sends real keys, but jDAAD's own keyboard is very big and the Kindle's, once open, leaves the game's
+screen tiny: an engine would type through the reader's command bar and chips, its text in the reader. Databases built for other machines (Spectrum v2/v3, MSX, ST) play once their
 pointers are relocated (`scripts/build/daad-game/relocate.ts`); original pictures would need a converter per machine.
 
 **Recommendation: not now.** Technically ready, but there is nothing to offer: 27 DAAD games on IFDB, none under an

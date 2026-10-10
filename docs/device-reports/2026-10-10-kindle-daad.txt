@@ -38,3 +38,7 @@ input.14: tap: draw 78 ms (put 0 ms, 30720 px), then command
 input.events: touchstart 98, touchend 98, mousedown 8, click 8, keydown 8
 [Part 3/3]
 input.field: keydown 8, unidentified 0, input 0, submit 1
+
+Owner's observations (same run):
+- jDAAD's on-screen keyboard is very big.
+- Opening the Kindle's own keyboard takes the whole screen: the game's screen above it becomes tiny.
