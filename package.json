@@ -51,7 +51,7 @@
     "@preact/preset-vite": "^2.10.6",
     "@types/jsdom": "^30.0.0",
     "@types/node": "^26.6.3",
-    "@vitejs/plugin-legacy": "^7.2.1",
+    "@vitejs/plugin-legacy": "^8.2.3",
     "autoprefixer": "^10.6.1",
     "es-check": "^9.8.1",
     "eslint": "^10.11.0",
