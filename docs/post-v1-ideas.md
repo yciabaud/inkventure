@@ -136,6 +136,24 @@ dialogue.
   interesting as a reference: it contains a Frotz-derived Z-machine with V6 support, and also ADRIFT, AGT, Alan,
   Hugo, Level 9, Magnetic, Scott Adams and TADS. But it is GPL-3 C++.
 
+## jsscummvm (no)
+
+Looked at on 2026-10-10 (repository cloned and read): [jsscummvm](https://github.com/mutle/jsscummvm), a native
+JavaScript port of ScummVM's SCUMM engine by Mutwin Kraus.
+
+- **Abandoned and partial:** 23 commits from May to August 2010, nothing since. ~5,100 lines; it targets only
+  *Monkey Island 1* (CD version, SCUMM v5) and its last commits reach the second room. No sound, no saves, no other
+  SCUMM version. Carrying it on means porting most of ScummVM's SCUMM engine (v1–v7) ourselves.
+- **No games to offer:** SCUMM games are commercial (Disney / Lucasfilm) and cannot be redistributed; ScummVM's
+  freeware games (Beneath a Steel Sky, Flight of the Amazon Queen, Drascula…) use other engines. The app is static
+  with a CI-built catalogue, and user-supplied files were rejected (2026-09-30), so nothing would be playable.
+- **Licence unclear:** the repository says MIT, but its README says the code is "directly ported from ScummVM's C++
+  code base" (GPL-2+), so it would have to be treated as GPL.
+- **Worst e-ink fit:** 256-colour point-and-click with scrolling rooms and animated actors, on a timer at the game's
+  frame rate; Decker's still 1-bit cards already cost ~1.2 s a tap on the Kindle.
+
+Verdict: **no**. Bitsy and DAAD (spikes S0.12, S0.13) are the graphical formats worth the effort.
+
 ## Risk found on the way: ZVM maintenance
 
 [Parchment](https://github.com/curiousdannii/parchment) has **dropped ZVM and Quixe from its active engines**
