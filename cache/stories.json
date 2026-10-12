@@ -34,10 +34,11 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/sh2.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Seeds_Cafe.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -133,9 +134,10 @@
     "ok": true
   },
   "https://iplayif.com/?story=https%3A%2F%2Fgithub.com%2Fakosela%2Fdarkzil%2Fraw%2Frefs%2Fheads%2Fmaster%2Fdarkpit.z3": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Dark_Pit.z3": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -162,9 +164,10 @@
     "version": 5
   },
   "https://unbox.ifarchive.org/?url=/if-archive/games/glulx/spanish/dwight.zip#dwight R4/dwight.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/mini-comps/spanish/brevecomp2/br2-dwight.zip#dwight.blb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -204,9 +207,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/glulx/spanish/Transilvania_Corruption.zip#tc2.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF07.zip#lilyjane.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -246,15 +250,18 @@
     "ok": true
   },
   "https://curiousdannii.github.io/infocom-frotz/zork0-r393-s890714-graphics.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "problem": "not-a-story",
-    "detail": "a Blorb without a story"
-  },
-  "https://eblong.com/infocom/gamefiles/zork0-r393-s890714.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
+  },
+  "https://eblong.com/infocom/gamefiles/zork0-r393-s890714.z6": {
+    "checked": "2026-10-12T11:59:21.144Z",
+    "problem": "unsupported-version",
+    "detail": "version 6",
+    "version": 6,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2012/glulx/j%27dal/J%27dal.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -280,9 +287,10 @@
     "version": 8
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#37 Fingertips-I Walk Along Darkened Corridorsdarkened-corridors.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no 37 Fingertips-I Walk Along Darkened Corridorsdarkened-corridors.zblorb in 51 file(s), 31 stories"
+    "detail": "no 37 Fingertips-I Walk Along Darkened Corridorsdarkened-corridors.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/dino/dino.zip#adno.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -435,9 +443,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp19.zip#introcomp2019/Imprisoned.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/The_Song_of_the_Mockingbird.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -486,10 +495,11 @@
     "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Century.zip#fade.z1": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 1",
-    "version": 1
+    "version": 1,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition97/inform/tdragon/tdragon.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -521,9 +531,10 @@
     "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip#The Dying of the Light.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://web.archive.org/web/20120510202639/http://k003.kiwi6.com/hotlink/ug5n85n79b/when_i_was_shot_by_elephants.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -584,9 +595,10 @@
     "version": 8
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip#introcomp16/grubbyville/Grubbyville.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Cottage.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -680,16 +692,18 @@
     "version": 5
   },
   "https://curiousdannii.github.io/infocom-frotz/journey-r83-s890706-graphics.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://eblong.com/infocom/gamefiles/journey-r83-s890706.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/The_Mary_Jane_of_Tomorrow.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -762,7 +776,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20080106134439id_/http://distractionware.com/junk/textthehalls/mymagictirehoax.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -823,7 +837,7 @@
     "primary": "speedIF14/bbp.z5"
   },
   "https://web.archive.org/web/20091010010147id_/http://www.daedalic.de/tww/april/twwonline.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -849,14 +863,16 @@
     "primary": "Release/Underground.z8"
   },
   "https://reason-optional.herokuapp.com/raygun-diplomacy/Raygun%20Diplomacy.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.andromedalegacy.com/A1RL0CK/A1RL0CK_R3.zip#A1RL0CK.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no A1RL0CK.z5 in 117 file(s), 6 stories"
+    "detail": "no A1RL0CK.z5 in 117 file(s), 6 stories",
+    "v": 2
   },
   "https://www.andromedalegacy.com/A1RL0CK/A1RL0CK.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -912,7 +928,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20120510203302/http://k004.kiwi6.com/hotlink/684hv94z2f/when_i_was_shot_by_elephants_conclusion_the_decision.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -955,14 +971,16 @@
     "version": 8
   },
   "https://archaeologicalfiction.net/release/Archaeological_Fiction_v2.zip#Archaeological Fiction.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Archaeological_Fiction.zip#Archaeological Fiction.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Everything%2C%20to%20a%20Computer.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1026,9 +1044,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp18.zip#introcomp2018/Intro to Implements of the Arcane/intro-to-implements-of-the-arcane.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2018/Charming/Release/Charming.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1177,7 +1196,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20121110215035/http://barrymars.co.uk/spaceship/Spaceship.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1211,9 +1230,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Fingertips - Hey Now Everybody.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Fingertips - Hey Now Everybody.zblorb in 51 file(s), 31 stories"
+    "detail": "no Fingertips - Hey Now Everybody.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2019/Randomized%20escape/RandomizedEscape1.0.inform/Build/output.ulx": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1234,7 +1254,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20240127031011if_/http://ftp.whtech.com/Users/Chris_Schneider/Adventures/inform/LOCKED.z3": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1282,9 +1302,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Introcomp.zip#baptist.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no baptist.zblorb in 11 file(s), 9 stories"
+    "detail": "no baptist.zblorb in 11 file(s), 9 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/art/if-artshow/year2000/stat1.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1391,9 +1412,10 @@
     "version": 3
   },
   "https://rbiondi.itch.io/the-road-to-hell#road2hell.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://github.com/Leettyun/OOZELUMNY/raw/master/story-files/wayback%20machine/GoldenShadow.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1557,9 +1579,10 @@
     "version": 5
   },
   "https://rebrand.ly/incercaditesla#tesla.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 403"
+    "detail": "HTTP 403",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/SagebrushCactus.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1660,7 +1683,7 @@
     "version": 8
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1779,9 +1802,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp18.zip#introcomp2018/Napier's Cache/napier/napier.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/italian/kangourou.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1971,9 +1995,9 @@
     "ok": true
   },
   "https://web.archive.org/web/20090130003942if_/http://meltsner.com/random/Champion%20of%20Guitars.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://www.ifarchive.org/if-archive/art/if-artshow/year2003/redeem.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2029,18 +2053,20 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip#introcomp16/spellcraft/Spellbound.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Crack_open_a_cold_one.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
   "https://github.com/Leettyun/OOZELUMNY/blob/master/story-files/venice2.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://rcveeder.net/littlematchgirl/poseidon/How%20the%20Little%20Match%20Girl%20Came%20.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2161,9 +2187,10 @@
     "format": "glulx"
   },
   "https://drive.google.com/uc?export=download&id=0B_3WEQexP409RjI1WlU3aGtWWlk": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/infocom/demos/zork_1_demo.zip#zork_1_demo.z3": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2191,9 +2218,9 @@
     "version": 5
   },
   "https://web.archive.org/web/20210124001940if_/http://www.caad.es/sites/default/files/descargas/Juegos/Maquina-Z/casi.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/zbefunge.zip#zbefunge.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2248,9 +2275,10 @@
     "version": 5
   },
   "https://narfation.org/2008/03/14/the-it-crowd-season-2-dvd-easter-eggs#barber_z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2011.zip#Dash Slapney and the Calamitous.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2273,9 +2301,10 @@
     "version": 5
   },
   "https://charlesmball.itch.io/warrior-poet-of-mourdrascus-part-i": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/mini-comps/spanish/brevecomp2/br2-luna.zip#luna.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2317,10 +2346,11 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/art/if-artshow/year2000/custard.z7": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 7",
-    "version": 7
+    "version": 7,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp03.zip#Statue/Statue.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2338,10 +2368,11 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/sunburst.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/TauntingDonut.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2400,9 +2431,10 @@
     "ok": true
   },
   "https://inkypinkydotblog.files.wordpress.com/2019/08/tempc3aate-sur-les-bermudes.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "a zip IFDB does not name a file in",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Locked_Door_VIII-Enemy_Mine.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2501,7 +2533,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20090417014439if_/http://www.historicalsimulations.net/inform/studentsims/Greensboro%20Sit-In.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2596,9 +2628,10 @@
     "ok": true
   },
   "https://www.dropbox.com/s/7urgqav3hlbdi6y/roil-2.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/springthing/2013/roil.zip#roil.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2713,15 +2746,17 @@
     "version": 8
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
     "detail": "HTTP 522",
-    "transient": true
+    "transient": true,
+    "v": 2
   },
   "https://dl.shame.games/DiaperQuest240329.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 403"
+    "detail": "HTTP 403",
+    "v": 2
   },
   "https://plover.net/~davidw/games/snowe25/snowe25_r2.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -2810,9 +2845,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip#introcomp16/someexceptions/exceptions.ulx": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/ArtOfFugue.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3057,7 +3093,7 @@
     "version": 8
   },
   "https://web.archive.org/web/20130904145319/http://www.turbulence.org/Works/mystery/generate.php?id=15&type=download": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -3122,9 +3158,9 @@
     "version": 8
   },
   "https://web.archive.org/web/20090417032443if_/http://www.historicalsimulations.net/inform/studentsims/Apollo%2011.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://ifarchive.org/if-archive/games/zcode/TheHouse.zip#The House.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3200,9 +3236,10 @@
     "ok": true
   },
   "https://www.dropbox.com/s/y1epmi97rp8q4tn/Dude%2C%20Where%27s%20My%20Scapula.gblorb?dl=0": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Dont_Push_The_Mailbox.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3210,9 +3247,10 @@
     "version": 8
   },
   "https://drive.google.com/file/d/1-n9DmpB9T1tTu9OBBGMEtQpUGOoRQHXU/view?usp=sharing#Slenderman - L'Incubo/Slenderman - l'Incubo.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/italian/Slenderman-lIncubo.zip#Slenderman - L'Incubo/Slenderman - l'Incubo.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3224,9 +3262,8 @@
     "version": 5
   },
   "https://web.archive.org/web/20080418111545if_/http://www.effseven.co.uk/rope/You%20Have%20To%20Burn%20The%20Rope.ulx": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Head_Case.zip#Head Case.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3242,7 +3279,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20130904145319/http://www.turbulence.org/Works/mystery/generate.php?id=17&type=download": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -3299,9 +3336,10 @@
     "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip#Esbozo de feto investigando cri.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp08.zip#Nine Tenths of the Law/ninetenths.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3314,9 +3352,10 @@
     "version": 8
   },
   "https://stephanef.itch.io/la-tempete": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/ifbeginners/IFBeginnersComp2008.zip#ZCode/Limelight/Limelight.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3436,9 +3475,10 @@
     "ok": true
   },
   "https://drive.google.com/drive/folders/0B9w-k3VTJsMMLWgwVTM3dE1Mamc?resourcekey=0-8bi7c9uF7zIT_RKXNKHUjg&usp=sharing#Treasures of a Slaver's Kingdom.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://mirror.ifarchive.org/if-archive/games/zcode/ToaSK.zip#Treasures of a Slaver's Kingdom.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3480,9 +3520,9 @@
     "version": 5
   },
   "https://web.archive.org/web/20111012161857id_/http://home.comcast.net/~dbernazzani/requiem.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://mirror.ifarchive.org/if-archive/games/mini-comps/metafilter/metafilter2009.zip#Rockrider.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3508,9 +3548,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#turn around.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no turn around.gblorb in 51 file(s), 6 stories"
+    "detail": "no turn around.gblorb in 51 file(s), 6 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Dinner Bell.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3623,9 +3664,10 @@
     "version": 8
   },
   "https://if-forum.org/pub/ifGP/2024/#Die Zuschauer.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/hangar_22.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3855,9 +3897,9 @@
     "ok": true
   },
   "https://web.archive.org/web/20131004184211/http://www.maroncelli.net/wp-content/uploads/2008/12/moonwatch.zip#moonwatch.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "format": "glulx"
   },
   "https://www.ifarchive.org/if-archive/art/if-artshow/year2001/esgarden.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3889,9 +3931,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Mysterious Whispers.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Mysterious Whispers.zblorb in 51 file(s), 31 stories"
+    "detail": "no Mysterious Whispers.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF09.zip#DARKNESS.Z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4009,9 +4052,10 @@
     "version": 8
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Fingertips - Something Grabbed Ahold of My Hand.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Fingertips - Something Grabbed Ahold of My Hand.zblorb in 51 file(s), 31 stories"
+    "detail": "no Fingertips - Something Grabbed Ahold of My Hand.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/commodore32/c32_comp.zip#DowntownTrain.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4039,9 +4083,10 @@
     "version": 5
   },
   "https://html-classic.itch.zone/html/15245903/Release/greenskeep.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2006/zcode/tower/The Tower of the Elephant.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4186,9 +4231,10 @@
     "primary": "no es culpa tuya maria/No es culpa tuya, Maria.zblorb"
   },
   "https://ifarchive.org/if-archive/games/zcode/spanish/kunelar.zip#kunelar.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no kunelar.zblorb in 11 file(s), 2 stories"
+    "detail": "no kunelar.zblorb in 11 file(s), 2 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Get_Out.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4267,9 +4313,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF11.zip#fido.gam": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no fido.gam in 7 file(s), 2 stories"
+    "detail": "no fido.gam in 7 file(s), 2 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/The_Outcasts.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4539,7 +4586,7 @@
     "ok": true
   },
   "https://www.nigeljayne.ca/AFOTW.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -4738,9 +4785,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/zcode/Mansion.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://rcveeder.net/balderstone/18/balderstone.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5022,9 +5070,10 @@
     "ok": true
   },
   "https://www.dropbox.com/s/xtnxq5kjb1eal99/shuf-r3.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2012/glulx/shuffling/original/Shuffling%20Around.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5181,7 +5230,7 @@
     "version": 5
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -5219,9 +5268,10 @@
     "version": 5
   },
   "https://www.dropbox.com/s/5cwiyem7x1n2zeg/bonesaw.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/TGM.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5344,9 +5394,9 @@
     "version": 5
   },
   "https://web.archive.org/web/20130211095515if_/http://zmachinetaro.webstarts.com/uploads/Supermarket_Robbery_Last.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://ifarchive.org/if-archive/games/competitions-spanish/nanocomp3/n3-demoespacio.zip#demoespacio.ulx": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5626,9 +5676,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Jacket.zip#boinspeed.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no boinspeed.z5 in 7 file(s), 5 stories"
+    "detail": "no boinspeed.z5 in 7 file(s), 5 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/swashcomp/swash.zip#shecaptains Folder/shecaptains.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5650,9 +5701,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip#Put-Peep(tm).gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/cavern.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5722,9 +5774,9 @@
     "version": 5
   },
   "https://web.archive.org/web/20010525072951_if/http://www.onyxring.com:80/downloads/wadewar2.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/swedish/Storforsen.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5736,9 +5788,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2015.zip#ECTOCOMP_2015/La Petite Mort/TheGhostShip.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "a zip IFDB does not name a file in",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2021/Games/Grandma%20Bethlindas%20Remarkable%20Egg/Egg_210922.ulx": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -5847,14 +5900,15 @@
     "ok": true
   },
   "https://distancechess.com/games/walking/Walking.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://www.textfyre.com/PAXSpeedIF/Queuelty.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_PAX_East_2010.zip#Queuelty.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6188,9 +6242,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/zcode/TutorialHotel.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Try_Again.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6400,9 +6455,10 @@
     "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "a zip IFDB does not name a file in",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Clean_Air.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6451,10 +6507,11 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Gruff.zip#green.z2": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 2",
-    "version": 2
+    "version": 2,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/wurm.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6486,7 +6543,7 @@
     "ok": true
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -6728,9 +6785,10 @@
     "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp19.zip#introcomp2019/Intro to The Devil's Music.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://rcveeder.net/littlematchgirl/queen/How%20the%20Little%20Match%20Girl%20Met%20t.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6784,9 +6842,9 @@
     "version": 5
   },
   "https://web.archive.org/web/20090417014433if_/http://www.historicalsimulations.net/inform/studentsims/Cortes%20Creed.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5
   },
   "https://jmac.org/warbler/The%20Warbler's%20Nest.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -6888,9 +6946,10 @@
     "ok": true
   },
   "https://rebrand.ly/marconi#marconi.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 403"
+    "detail": "HTTP 403",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2004/zcode/blink/blink.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7086,9 +7145,10 @@
     "version": 5
   },
   "https://github.com/andrewschultz/fourdiopolis/releases/download/v2/fourdiopolis_release_2.zip#fourdiopolis.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no fourdiopolis.gblorb in 20 file(s), 3 stories"
+    "detail": "no fourdiopolis.gblorb in 20 file(s), 3 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/springthing/2016/Fourdiopolis.zip#Fourdiopolis.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7158,7 +7218,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20120510214956if_/http://aliendovecote.com/uploads/Nostrils%20of%20Flesh%20and%20Clay/Nostrils%20of%20Flesh%20and%20Clay.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -7195,9 +7255,10 @@
     "ok": true
   },
   "https://www.dropbox.com/s/hqcd984rdxn73xx/very_vile_fairy_file_release_2.zip?dl=0": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2009/glulx/broken/Broken%20Legs.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7218,7 +7279,7 @@
     "version": 5
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -7300,7 +7361,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20040816155014if_/http://www.ifarchive.org/if-archive/games/zcode/eto.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -7370,9 +7431,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/competition2024/Games/THE_BAT.zip#index.html": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://web.archive.org/web/20090417040120if_/http://wordeology.com/radix/Inventory/Inventory.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7475,9 +7537,10 @@
     "ok": true
   },
   "https://if-forum.org/pub/ifGP/2023/fischstaeb.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "a zip IFDB does not name a file in",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/castles-1.1.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7653,9 +7716,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Fingertips - All Alone.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Fingertips - All Alone.zblorb in 51 file(s), 31 stories"
+    "detail": "no Fingertips - All Alone.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/highland/roots.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7766,9 +7830,10 @@
     "version": 8
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#fingertips_im_having_a_heart_attack": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no fingertips_im_having_a_heart_attack in 51 file(s), 31 stories"
+    "detail": "no fingertips_im_having_a_heart_attack in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/down-the-serpent-and-the-sun.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7872,9 +7937,9 @@
     "ok": true
   },
   "https://web.archive.org/web/20120110075922/https://dagarro.webs.upv.es/VarronisMuseum/VMr2.zip#Varronis Museum.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 8
   },
   "https://www.ifarchive.org/if-archive/art/if-artshow/year2007/VM.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7886,9 +7951,10 @@
     "ok": true
   },
   "https://ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2023.zip#The Haunting of Corbitt House.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "too-big",
-    "detail": "67108865 bytes"
+    "detail": "67108865 bytes",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/OnYourBack.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7896,9 +7962,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/unprocessed/OnYourBack.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2019/Hard%20Puzzle%204%20The%20Ballad%20of%20Bob%20and%20Cheryl/Hard_Puzzle_4_-_The_Ballad_of_B.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7924,9 +7991,10 @@
     "ok": true
   },
   "https://umgrobin22.itch.io/the-passenger-in-berth-6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2005/zcode/dreary/dreary.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7943,9 +8011,10 @@
     "ok": true
   },
   "https://html-classic.itch.zone/html/3026254/QuestForArete-2.0Release/Quest%20for%20Arete.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/bomber.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7993,9 +8062,10 @@
     "ok": true
   },
   "https://www.dropbox.com/s/4ni28ghjdum2pjx/ghost.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2020/Games/Entangled/entangled.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -8003,7 +8073,7 @@
     "version": 8
   },
   "https://web.archive.org/web/20120510200548/http://k004.kiwi6.com/hotlink/pexmca8076/when_i_was_shot_by_elephants_definiteive_editiom.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8012,9 +8082,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2014.zip#lisey.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no lisey.gblorb in 22 file(s), 5 stories"
+    "detail": "no lisey.gblorb in 22 file(s), 5 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Neologism.zip#SpeedIF_Neologism/nbh_neologism.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -8142,9 +8213,10 @@
     "primary": "Apollo18+20/08 The Guitar (The Lion Sleeps Tonight)/The Guitar.zblorb"
   },
   "https://www.dropbox.com/s/v848g966cmqjf8q/Chunky%20Blues.gblorb?dl=0": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/Mystery%21.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -8209,7 +8281,7 @@
     "version": 8
   },
   "https://games.saugus.net/GatewayOfTheFerrets/Gateway%20of%20the%20Ferrets.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8218,9 +8290,10 @@
     "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Jacket_2.zip#gwdpete.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no gwdpete.z5 in 12 file(s), 8 stories"
+    "detail": "no gwdpete.z5 in 12 file(s), 8 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/The_Sacred_Shovel_of_Athenia.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -8353,7 +8426,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20201104224229if_/http://ifarchive.org/if-archive/games/competition2020/Games/Elsegar%20I/Release/Elsegar%20I-%20Arrival.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8395,9 +8468,10 @@
     "version": 8
   },
   "https://templaro.com/games/lobster.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_PAX_East_2010.zip#lobster.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -8561,7 +8635,7 @@
     "ok": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8681,7 +8755,7 @@
     "format": "glulx"
   },
   "https://web.archive.org/web/20150915044444if_/http://frezned.com/responsibility/It%20Is%20Your%20Responsibility.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9036,9 +9110,10 @@
     "ok": true
   },
   "https://christopherdrum.itch.io/pub-hubbub": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip#stupidcreek.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9051,10 +9126,11 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/french/plda.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2006/zcode/polendina/polendina.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9062,9 +9138,10 @@
     "version": 5
   },
   "https://if-forum.org/pub/ifGP/2022/#Die-erste-Nacht.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/rans.zip#RANS.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9176,7 +9253,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20221213202106/http://www.caad.es/sites/default/files/descargas/Juegos/Glulx/wizlair.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9218,9 +9295,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/zenspeak.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a Blorb without a story"
+    "detail": "a Blorb without a story",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/NudistsGoneWild.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9272,7 +9350,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20091010001418if_/http://www.dessgeega.com/robotgardening.zip#robotgardening.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9293,14 +9371,16 @@
     "version": 8
   },
   "https://drive.google.com/open?id=1nbCjthzUlREA3GNUsy6udkMAmSB7mpqh#Dream Trap of Zzar.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Jacket_4.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "a zip IFDB does not name a file in",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Immune_System.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9426,9 +9506,10 @@
     "primary": "Release/The Crystal Palace.zblorb"
   },
   "https://incanus.caad.club/ReflejosBlancos.zip#Reflejos.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Reflejos.z5 in 39 file(s), 2 stories"
+    "detail": "no Reflejos.z5 in 39 file(s), 2 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/Tower.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -9531,7 +9612,7 @@
     "version": 8
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9595,31 +9676,34 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF15.zip#Assign-1.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Assign-1.z5 in 12 file(s), 4 stories"
+    "detail": "no Assign-1.z5 in 12 file(s), 4 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2001/inform/moments/moments.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2001/inform/moments/moments.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a Blorb without a story"
+    "detail": "a Blorb without a story",
+    "v": 2
   },
   "https://web.archive.org/web/20140926072248/http://streamdive.trenchcoatsoft.com/moments.zip#moments.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "problem": "unsupported-version",
-    "detail": "version 6",
-    "version": 6
+    "checked": "2026-10-12T11:59:21.144Z",
+    "detail": "network: fetch failed",
+    "transient": true
   },
   "https://unbox.ifarchive.org/?url=/if-archive/games/zcode/moments.zip#moments.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "bad-zip",
-    "detail": "invalid zip data"
+    "detail": "invalid zip data",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/schooldays.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10053,9 +10137,10 @@
     "version": 5
   },
   "https://stephanef.itch.io/the-storm": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition97/inform/lest/lest.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10228,7 +10313,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20160927095959if_/http://www222.pair.com/sjohn/free/lovecame.zip#The Day That Love Came to Play.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -10305,12 +10390,12 @@
     "version": 8
   },
   "https://web.archive.org/web/20120110020700if_/http://www.volxvergnuegen.org/textadventure/plandsdsgamepage/Dr-%20Kong%20in-%20Plan%20DSDS%20from%20pra.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -10513,7 +10598,7 @@
     "ok": true
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -10572,9 +10657,10 @@
     "ok": true
   },
   "https://rebrand.ly/sfida#sfida.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 403"
+    "detail": "HTTP 403",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/Smitten_Kittens.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10675,9 +10761,10 @@
     "version": 5
   },
   "https://iplayif.com/?story=https%3A%2F%2Funbox.ifarchive.org%2F%3Furl%3Dhttps%253A%252F%252Fifarchive.org%252Fif-archive%252Fgames%252Fzcode%252Fall_that_shimmers.zip%26open%3Dshimmers.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2019/Clusterflux/Clusterflux.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10788,9 +10875,10 @@
     "version": 5
   },
   "https://umgrobin22.itch.io/the-last-coach": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/The Last Coach.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10926,7 +11014,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20090710233329/http://cle.usu.edu/AUSFLUG/AUSFLUG.zip#game.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -11099,9 +11187,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#Which Describes How You're Feel.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no Which Describes How You're Feel.zblorb in 51 file(s), 31 stories"
+    "detail": "no Which Describes How You're Feel.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/TheMuseum.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11176,9 +11265,10 @@
     "ok": true
   },
   "https://ffabish.itch.io/a-potion-labeled-time": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/dragon.zip#Dragon.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11214,7 +11304,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20110110025650if_/http://www.highmount.demon.co.uk/thingy.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -11261,14 +11351,16 @@
     "version": 8
   },
   "https://xaviercarrascosa.com/juegos/Copernico86/Copernico86.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#I Heard a Sound.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no I Heard a Sound.zblorb in 51 file(s), 31 stories"
+    "detail": "no I Heard a Sound.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/zcode/french/filaments.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11385,9 +11477,10 @@
     "primary": "SpeedIFJacket4/Mysterious Ocean Tower.zblorb"
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/ifbeginners/IFBeginnersComp2008.zip#ZCode/Connect/connect.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no ZCode/Connect/connect.z5 in 11 file(s), 2 stories"
+    "detail": "no ZCode/Connect/connect.z5 in 11 file(s), 2 stories",
+    "v": 2
   },
   "https://rinform.org/games/vespers/vespersr.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11538,9 +11631,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/silli.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/ThePriceOfFreedom.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11684,7 +11778,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20210226220618id_/http://templaro.com/games/greater-than-by-at-sign.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -11757,7 +11851,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20150729061925id_/http://www.sibylmoon.com:80/if/rainbows/release/Rainbows%20and%20Dance%20Parties!.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -11819,9 +11913,10 @@
     "version": 5
   },
   "https://www.dropbox.com/s/edechudj1mtrwlc/Hat.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2013/glulx/ollie/Ollie%20Ollie%20Oxen%20Free.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12349,9 +12444,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/toaster/ToasterCompWithSrc.zip#Z-Code/GotToast/source/GotToast.inf": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "not a story file"
+    "detail": "not a story file",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/kiiwii.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12388,16 +12484,18 @@
     "version": 5
   },
   "https://curiousdannii.github.io/infocom-frotz/shogun-r322-s890706-graphics.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://eblong.com/infocom/gamefiles/shogun-r322-s890706.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/italian/schizo.ulx": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12441,9 +12539,10 @@
     "version": 5
   },
   "https://iplayif.com/?story=https://liuheyang20010816-bot.github.io/Stories_of_Command_Line/Untitled.inform.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/arcade/arcade.zip#marble.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12469,9 +12568,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/NewCat.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "http",
-    "detail": "HTTP 404"
+    "detail": "HTTP 404",
+    "v": 2
   },
   "https://www.springthing.net/2021/play_online/Baggage/Baggage.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12574,9 +12674,10 @@
     "version": 5
   },
   "https://fos1.itch.io/sea-coral": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/competition2013/zcode/9lives/9Lives.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12603,9 +12704,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2014.zip#The Voodoo Do You 2.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no The Voodoo Do You 2.gblorb in 22 file(s), 3 stories"
+    "detail": "no The Voodoo Do You 2.gblorb in 22 file(s), 3 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/TheLibrary.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12641,10 +12743,11 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/fmvpoker.zip#fmvpoker/fmvpoker.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/competition2020/Games/Lovely%20Assistant%20Magical%20Girl/Release/Lovely%20Assistant-%20Magical%20Girl.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12745,7 +12848,7 @@
     "version": 8
   },
   "https://web.archive.org/web/20221213061430/http://www.caad.es/jarel/games/Venenarius_Verborum.zip#venenarius.blb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -12874,16 +12977,17 @@
     "version": 5
   },
   "https://docs.google.com/leaf?id=0ByCOtKTQGrqpZDJjMjI3ZmEtNWU1NC00ODQ1LWJhOWItN2ViZTIwYmZmOTM4&hl=en_US": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://ifarchive.org/if-archive/games/glulx/Klaustro.zip#Klaustro/Klaustrophobia.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -12910,9 +13014,10 @@
     "ok": true
   },
   "https://amanda-walker.itch.io/of-their-shadows-deep": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/glulx/Of_Their_Shadows_Deep.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13326,10 +13431,8 @@
     "ok": true
   },
   "https://web.archive.org/web/20110110011730if_/http://plover.net/~tale/Bedtime.zip#Bedtime.gblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "problem": "http",
-    "detail": "HTTP 500",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp08.zip#Bedtime Story/Bedtime story.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13347,9 +13450,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/The_Cenric_Family_Curse.zip#The_Cenric_Family_Curse.zip": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no The_Cenric_Family_Curse.zip in 6 file(s), 2 stories"
+    "detail": "no The_Cenric_Family_Curse.zip in 6 file(s), 2 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/art/mhto/mhto-lee-and-lee.zip#mhto.blb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13436,9 +13540,10 @@
     "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/Apollo18+20.zip#windblow.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-in-zip",
-    "detail": "no windblow.zblorb in 51 file(s), 31 stories"
+    "detail": "no windblow.zblorb in 51 file(s), 31 stories",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/sgate.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13631,9 +13736,10 @@
     "version": 5
   },
   "https://xaltotun84.github.io/Ghost-Layer/": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "not-a-story",
-    "detail": "a web page"
+    "detail": "a web page",
+    "v": 2
   },
   "https://www.ifarchive.org/if-archive/games/zcode/So_Youve_Never_Played_a_Text.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13659,9 +13765,9 @@
     "ok": true
   },
   "https://web.archive.org/web/20131006144311id_/http://www.shamusyoung.com/if/sps2.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 8
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp03.zip#Harrington House/HarringtonHouse.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13737,14 +13843,15 @@
     "version": 5
   },
   "https://web.archive.org/web/20151103172836if_/http://genericgeekgirl.com/games/hippo-on-elm-street/hippo-on-elm-street.z8": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 8
   },
   "https://web.archive.org/web/1000if_/http://www.ministryofpeace.com/if/SpeedIF7/games/nose.zip#Noseguard.z5": {
-    "checked": "2026-10-09T20:41:47.487Z",
-    "detail": "network: fetch failed",
-    "transient": true
+    "checked": "2026-10-12T11:59:21.144Z",
+    "ok": true,
+    "version": 5,
+    "primary": "noseguard.z5"
   },
   "https://eblong.com/infocom/gamefiles/bureaucracy-r116-s870602.z4": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -13796,16 +13903,18 @@
     "version": 5
   },
   "https://curiousdannii.github.io/infocom-frotz/arthur-r74-s890714-graphics.zblorb": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://eblong.com/infocom/gamefiles/arthur-r74-s890714.z6": {
-    "checked": "2026-10-09T20:41:47.487Z",
+    "checked": "2026-10-12T11:59:21.144Z",
     "problem": "unsupported-version",
     "detail": "version 6",
-    "version": 6
+    "version": 6,
+    "v": 2
   },
   "https://www.jjguest.com/Yak_Shaving/Yak%20Shaving%20for%20Kicks%20and%20Giggl.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",

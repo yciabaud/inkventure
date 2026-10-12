@@ -9,19 +9,19 @@
   "counts": {
     "kept": 3002,
     "dropped": {
-      "unsupported-format": 1308,
+      "unsupported-format": 1309,
       "story-does-not-open": 73,
       "adult-content": 157,
-      "unreadable-host": 472,
+      "unreadable-host": 473,
       "insecure-url": 275,
       "no-game-file": 9,
       "no-ink-story": 30,
       "compressed-no-primary": 20
     },
     "formats": {
-      "zcode": 1623,
-      "glulx": 717,
-      "twine": 1064,
+      "zcode": 1622,
+      "glulx": 718,
+      "twine": 1065,
       "ink": 70
     },
     "pictures": {
@@ -388,7 +388,7 @@
       "tuid": "17coplfu323xif76",
       "title": "Zork Zero: The Revenge of Megaboz",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: a Blorb without a story (https://curiousdannii.github.io/infocom-frotz/zork0-r393-s890714-graphics.zblorb)"
+      "detail": "unsupported-version: version 6 (https://curiousdannii.github.io/infocom-frotz/zork0-r393-s890714-graphics.zblorb)"
     },
     {
       "tuid": "1985kxxeze4f2r77",
@@ -718,6 +718,12 @@
       "title": "Intro to A Fool's Rescue",
       "reason": "insecure-url",
       "detail": "http://introcomp.org/introcomp2020/Intro%20to%20A%20Fools%20Rescue/Intro%20to%20A%20Fool's%20Rescue.gblorb"
+    },
+    {
+      "tuid": "1x4h6mja1onfhkg9",
+      "title": "The Presidential Pizza Plot",
+      "reason": "unreadable-host",
+      "detail": "https://web.archive.org/web/20130210213501/http://penguinsjlyrics.webs.com/The%20Presidential%20Pizza%20Plot.html"
     },
     {
       "tuid": "1xlfww5ow6lvwi1p",
@@ -2625,7 +2631,7 @@
       "tuid": "6f55jwyznpebps3e",
       "title": "Tempête sur les bermudes (remake)",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://inkypinkydotblog.files.wordpress.com/2019/08/tempc3aate-sur-les-bermudes.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://inkypinkydotblog.files.wordpress.com/2019/08/tempc3aate-sur-les-bermudes.zip)"
     },
     {
       "tuid": "6fgbrgrviwlrlahy",
@@ -5813,7 +5819,7 @@
       "tuid": "ej1ojzk3h40ao1md",
       "title": "The Ghost Ship",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2015.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://www.ifarchive.org/if-archive/games/mini-comps/ectocomp/ectocomp2015.zip)"
     },
     {
       "tuid": "em62khnwxyyc2516",
@@ -6377,7 +6383,7 @@
       "tuid": "g6h1glu4zeds6sec",
       "title": "Ragnarok: Twilight of the Gods",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
     },
     {
       "tuid": "g6u45xu7enltw8gl",
@@ -6706,6 +6712,12 @@
     {
       "tuid": "guor0miph5y2x465",
       "title": "吟游诗人的重生",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "gvyciruivjq52097",
+      "title": "The Starlight Circus",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -7517,7 +7529,7 @@
       "tuid": "j7bqfkj1t4jq5bnl",
       "title": "Fischstäbchen",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://if-forum.org/pub/ifGP/2023/fischstaeb.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://if-forum.org/pub/ifGP/2023/fischstaeb.zip)"
     },
     {
       "tuid": "j83o3g49b01o1ka8",
@@ -10304,7 +10316,7 @@
       "tuid": "pvhcdsvpf29gdr9s",
       "title": "The Silence of the Gods",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
     },
     {
       "tuid": "pw2igwtxt9pqsgw3",
@@ -12637,7 +12649,7 @@
       "tuid": "w4pkrecmrf1wpyg2",
       "title": "Birth of Mind",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
     },
     {
       "tuid": "w4z0fmu0xifk1tlo",
@@ -13453,7 +13465,7 @@
       "tuid": "y7gdf3671h662253",
       "title": "Being the Ending of the Beginning",
       "reason": "story-does-not-open",
-      "detail": "not-a-story: not a story file (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
+      "detail": "not-a-story: a zip IFDB does not name a file in (https://ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_Penultimate.zip)"
     },
     {
       "tuid": "y7j3nudckw62a7uo",
