@@ -9,13 +9,13 @@
   "counts": {
     "kept": 3002,
     "dropped": {
-      "unsupported-format": 1309,
+      "unsupported-format": 1313,
       "story-does-not-open": 73,
       "adult-content": 157,
       "unreadable-host": 473,
       "insecure-url": 275,
       "no-game-file": 9,
-      "no-ink-story": 30,
+      "no-ink-story": 31,
       "compressed-no-primary": 20
     },
     "formats": {
@@ -1052,6 +1052,12 @@
     {
       "tuid": "2obu9uhu6hbamufg",
       "title": "Traveler",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "2ofcuw9skdqkn8ij",
+      "title": "A Tale of Crowns",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -7880,6 +7886,12 @@
       "detail": "https://html-classic.itch.zone/html/10315373/Release/The%20Wolf.gblorb"
     },
     {
+      "tuid": "jzhxmu92av5xw6h8",
+      "title": "Your Own Variation",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "jzizhav8dy828ct9",
       "title": "Not yet Perished",
       "reason": "unsupported-format",
@@ -8429,6 +8441,12 @@
       "title": "Secret of the Knights",
       "reason": "unreadable-host",
       "detail": "https://github.com/daelsepara/secret-knights/releases/latest/download/knights.z5"
+    },
+    {
+      "tuid": "lbfhhck7i0u0famj",
+      "title": "The Last Train Home",
+      "reason": "no-ink-story",
+      "detail": "https://arenaone3.com/the-last-train-home/"
     },
     {
       "tuid": "ld0r03t5t12o5iaw",
@@ -10343,6 +10361,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "pz6w9fpum5o5b541",
+      "title": "Escalier E",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "pz97j0es542e5fb2",
       "title": "A Cold Dark Night",
       "reason": "unsupported-format",
@@ -11065,6 +11089,12 @@
     {
       "tuid": "ruz7dfngwjjf5kta",
       "title": "Max's Adventure",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "ruzncthnthr5vjge",
+      "title": "Parasym",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
