@@ -7,22 +7,22 @@
     "twine"
   ],
   "counts": {
-    "kept": 3002,
+    "kept": 3042,
     "dropped": {
-      "unsupported-format": 1313,
+      "unsupported-format": 1323,
       "story-does-not-open": 73,
-      "adult-content": 157,
+      "adult-content": 159,
       "unreadable-host": 473,
+      "no-ink-story": 32,
       "insecure-url": 275,
-      "no-game-file": 9,
-      "no-ink-story": 31,
+      "no-game-file": 10,
       "compressed-no-primary": 20
     },
     "formats": {
-      "zcode": 1622,
-      "glulx": 718,
-      "twine": 1065,
-      "ink": 70
+      "zcode": 1630,
+      "glulx": 726,
+      "twine": 1088,
+      "ink": 71
     },
     "pictures": {
       "blorbs": 399,
@@ -188,7 +188,7 @@
         ]
       }
     ],
-    "assumed": 33,
+    "assumed": 34,
     "unknownOverrides": []
   },
   "dropped": [
@@ -389,6 +389,12 @@
       "title": "Zork Zero: The Revenge of Megaboz",
       "reason": "story-does-not-open",
       "detail": "unsupported-version: version 6 (https://curiousdannii.github.io/infocom-frotz/zork0-r393-s890714-graphics.zblorb)"
+    },
+    {
+      "tuid": "18ys6ty6xhaivijx",
+      "title": "That Sink",
+      "reason": "no-ink-story",
+      "detail": "https://sheep.horse/that_sink/"
     },
     {
       "tuid": "1985kxxeze4f2r77",
@@ -1950,6 +1956,11 @@
       "detail": "https://www.springthing.net/2026/play.html#Exchange"
     },
     {
+      "tuid": "4pcifquno03jza5q",
+      "title": "SALMON OF DOUBT PART ONE",
+      "reason": "no-game-file"
+    },
+    {
       "tuid": "4ps1lqo53w5mpqd",
       "title": "Captain Connie's Ejactor Seat",
       "reason": "adult-content",
@@ -2544,6 +2555,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "672emzea54dutjw1",
+      "title": "Ḫattušumna Laḫḫa",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "68gp8cdyqjh3hvk5",
       "title": "(un)twisting",
       "reason": "unsupported-format",
@@ -2620,6 +2637,12 @@
       "title": "To Hell in a Hamper",
       "reason": "unreadable-host",
       "detail": "https://www.jjguest.com/To_Hell_in_a_Hamper/To%20Hell%20in%20a%20Hamper.gblorb"
+    },
+    {
+      "tuid": "6dlkh730qtvztiau",
+      "title": "Late Shadows",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "6ec16khm357uu89f",
@@ -4085,6 +4108,12 @@
     {
       "tuid": "9hbwfdprymfp8ot",
       "title": "The Good Egg Club",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "9i26a4ilp2q2wvr5",
+      "title": "Shadow and Ink",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -5888,6 +5917,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "eq8h1l6d8jbw4knd",
+      "title": "One (More) Week in Dolcett - Scarlett Sky",
+      "reason": "adult-content",
+      "detail": "sexual content"
+    },
+    {
       "tuid": "eqj99ncnej4gshk7",
       "title": "Time Before Memory",
       "reason": "unsupported-format",
@@ -7310,6 +7345,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "ijlcmn5i4hgigt0l",
+      "title": "Ultraviolent Unicorn Deathmatch of Destiny 4",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "ijn6qrp2qx54jc",
       "title": "gay pharaohs from beyond-time : two slaves one chalice",
       "reason": "unsupported-format",
@@ -7338,6 +7379,12 @@
       "title": "Please Help Me",
       "reason": "insecure-url",
       "detail": "http://howtophil.com/IF/pleasehelpme/Please%20Help%20Me.z8"
+    },
+    {
+      "tuid": "imfcf3yoownkrbc5",
+      "title": "The 9:00 AM Train",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "in5lr9rmbcxpkrp5",
@@ -7722,6 +7769,12 @@
       "title": "Stygia II: The Sisters of Stygia",
       "reason": "unreadable-host",
       "detail": "https://philome.la/kittyhorrorshow/stygia-2---the-sisters-of-stygia/index.html"
+    },
+    {
+      "tuid": "jmhujeh24h56tirt",
+      "title": "When You Were Shot By Elephants",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "jmzun2k1fsz965s7",
@@ -8875,6 +8928,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "mi58kt6fyxcuiu72",
+      "title": "Alana's Dungeon",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "miekmujzouq9v7nv",
       "title": "Every Day the Same Dream",
       "reason": "insecure-url",
@@ -9572,6 +9631,12 @@
     {
       "tuid": "o2wi7q29grpzw5h8",
       "title": "Dirk's Shortest Quest",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "o2zi0horx00b2srv",
+      "title": "Forensic Necromancy: A Murder in Nineveh",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -11011,6 +11076,12 @@
     {
       "tuid": "rmob8byoijcp2a7s",
       "title": "soporfall.",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "rn4h1b23f5lw9b86",
+      "title": "The Rat",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -12970,6 +13041,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "wtsiev7b7429wase",
+      "title": "See You Around",
+      "reason": "adult-content",
+      "detail": "sexual content"
+    },
+    {
       "tuid": "wund9fb8690y4at",
       "title": "catgirl truckers",
       "reason": "unsupported-format",
@@ -13094,6 +13171,12 @@
       "title": "Insomnia: Twenty-Six Adventures After Dark",
       "reason": "unreadable-host",
       "detail": "https://www.springthing.net/2023/play_online/InsomniaTwentySixAdventuresAfterDark/index.html"
+    },
+    {
+      "tuid": "x59xclkfbaff4yu4",
+      "title": "Tableaux Vivants",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "x5fj59hxkzj6xxv",

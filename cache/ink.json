@@ -191,6 +191,10 @@
     "checked": "2026-10-01T20:31:00.479Z",
     "story": "youcannotspeakv2/youcannotspeak.js"
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Epistemophilia.zip#Epistemophilia/index.html": {
+    "checked": "2026-10-26T10:07:48.862Z",
+    "story": "Epistemophilia/PROJE.js"
+  },
   "https://ifarchive.org/if-archive/games/html/ptmylm.zip#ptmylm 1.3/dying_mmo_jam/index.html": {
     "checked": "2026-10-01T20:31:00.479Z",
     "detail": "no ink story"
@@ -302,6 +306,10 @@
   "https://riverknows.gitee.io/oneday/": {
     "checked": "2026-10-01T20:31:00.479Z",
     "detail": "HTTP 404"
+  },
+  "https://sheep.horse/that_sink/": {
+    "checked": "2026-10-26T10:07:48.862Z",
+    "detail": "HTTP 400"
   },
   "https://sheep.horse/voyage_of_the_marigold/": {
     "checked": "2026-10-01T20:31:00.479Z",

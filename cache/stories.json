@@ -77,6 +77,11 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Two_Seasons_Encounter_With_A_Vampire.zip#2S_Vampire.z5": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 5
+  },
   "https://ifarchive.org/if-archive/games/competition2025/Games/Who_Whacked_Jimmy_Pi_ata_.zip#Who Whacked Jimmy Pinata.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
@@ -409,6 +414,10 @@
     "ok": true,
     "version": 5
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Count_and_the_Communist.zip#additional materials/The Count and the Communist.gblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
+  },
   "https://ifarchive.org/if-archive/games/zcode/Gumshoe.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
@@ -432,6 +441,11 @@
   "https://www.paololucchesi.it/at/files/LeLandeDiErisvalle.zip#erisvalle.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Gamblers_Quest.zip#tavernkeepers-tale.z5": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 5
   },
   "https://ifarchive.org/if-archive/games/mini-comps/coverstories/LegendOfTheMissingHat.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -1073,6 +1087,11 @@
     "ok": true,
     "version": 5
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Bob_The_Barbarian.zip#BTB_260909.z5": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 5
+  },
   "https://ifarchive.org/if-archive/games/zcode/vigilance.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
@@ -1253,7 +1272,7 @@
     "version": 5
   },
   "https://web.archive.org/web/20240127031011if_/http://ftp.whtech.com/Users/Chris_Schneider/Adventures/inform/LOCKED.z3": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1682,7 +1701,7 @@
     "version": 8
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2745,7 +2764,7 @@
     "version": 8
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "problem": "http",
     "detail": "HTTP 522",
     "transient": true,
@@ -3092,7 +3111,7 @@
     "version": 8
   },
   "https://web.archive.org/web/20130904145319/http://www.turbulence.org/Works/mystery/generate.php?id=15&type=download": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -3165,6 +3184,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
     "version": 5
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Last_Voyage_of_the_Warsaw_Queen.zip#The Last Voyage of the Warsaw Q.gblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/zcode/ImpossibleStairs.z8": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -3278,7 +3301,7 @@
     "ok": true
   },
   "https://web.archive.org/web/20130904145319/http://www.turbulence.org/Works/mystery/generate.php?id=17&type=download": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -3562,6 +3585,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
     "version": 5
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Verb_Noun_Adjective.zip#VerbNounAdjective_v1.ulx": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
   },
   "https://simpsong00.github.io/Quotient%2C%20The%20Game%2047.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -4123,6 +4150,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Out_by_Midnight.zip#Midnight_260809.ulx": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
+  },
   "https://www.ifarchive.org/if-archive/games/zcode/italian/La Casa nella Nebbia.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
@@ -4585,7 +4616,7 @@
     "ok": true
   },
   "https://www.nigeljayne.ca/AFOTW.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -5137,6 +5168,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Thirst_for_blood.zip#Blood_260827.ulx": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
+  },
   "https://ifarchive.org/if-archive/games/zcode/german/Tutorial.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
@@ -5229,7 +5264,7 @@
     "version": 5
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -5899,7 +5934,7 @@
     "ok": true
   },
   "https://distancechess.com/games/walking/Walking.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -6542,7 +6577,7 @@
     "ok": true
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -6690,6 +6725,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Ryan_Veeders_Agatha_Christies_the_Murder_on_the_Orient_Express.zip#Ryan Veeder's Agatha Christie's.gblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
+  },
   "https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp14.zip#Hornets' Nest/Hornets' Nest.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
@@ -6792,6 +6831,11 @@
   "https://rcveeder.net/littlematchgirl/queen/How%20the%20Little%20Match%20Girl%20Met%20t.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Demonstration.zip#demonstration.zblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/mini-comps/speedif/SpeedIF_CrinkleCut.zip#travels.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -7278,7 +7322,7 @@
     "version": 5
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8280,7 +8324,7 @@
     "version": 8
   },
   "https://games.saugus.net/GatewayOfTheFerrets/Gateway%20of%20the%20Ferrets.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -8633,7 +8677,7 @@
     "ok": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9609,7 +9653,7 @@
     "version": 8
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -9915,6 +9959,11 @@
   "https://www.ifarchive.org/if-archive/games/competition2011/glulx/hours/original/The%20Hours.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Copper_Tavern.zip#story.z5": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 5
   },
   "https://www.ifarchive.org/if-archive/games/zcode/figueres.zblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -10394,7 +10443,7 @@
     "ok": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -10597,7 +10646,7 @@
     "ok": true
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -10954,6 +11003,11 @@
     "ok": true,
     "version": 8,
     "primary": "Apollo18+20/24 Fingertips - Aren't You the Guy Who Hit Me in the Eye/Fingertips- ArentYouTheGuy.zblorb"
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/WITHOUT_corporation.zip#with.z8": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 8
   },
   "https://ifarchive.org/if-archive/games/competition2003/zcode/lardo/lardo.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -11320,6 +11374,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
     "version": 8
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Live_and_Get_Pie.zip#Live_And_Get_Pie.gblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/glulx/Terminator_Chaser.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12149,6 +12207,11 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
     "version": 5
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Meet_the_timesheet.zip#mtt260827.z8": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 8
   },
   "https://www.marcovallarino.it/sdc_download/5838/?key=q36craex024yal1yrfyanswsszpkkr#Sogno_di_Sangue.z5": {
     "checked": "2026-10-09T20:41:47.487Z",
@@ -12984,7 +13047,7 @@
     "ok": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
-    "checked": "2026-10-19T09:54:57.275Z",
+    "checked": "2026-10-26T10:08:52.302Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -13095,6 +13158,11 @@
     "ok": true,
     "version": 5
   },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Black_Thumb.zip#black_thumb.zblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true,
+    "version": 8
+  },
   "https://www.ifarchive.org/if-archive/games/glulx/Lockdown.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true
@@ -13203,6 +13271,10 @@
     "checked": "2026-10-09T20:41:47.487Z",
     "ok": true,
     "version": 5
+  },
+  "https://ifarchive.org/if-archive/games/competition2026/Games/Galilee_Bones_and_the_Juggernaut_of_Jordan.zip#Galilee_Bones_and_the_Juggernau.gblorb": {
+    "checked": "2026-10-26T10:08:52.302Z",
+    "ok": true
   },
   "https://www.ifarchive.org/if-archive/games/glulx/Fate_of_the_Vanguard.gblorb": {
     "checked": "2026-10-09T20:41:47.487Z",
