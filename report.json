@@ -7,20 +7,20 @@
     "twine"
   ],
   "counts": {
-    "kept": 3042,
+    "kept": 3040,
     "dropped": {
-      "unsupported-format": 1323,
-      "story-does-not-open": 73,
-      "adult-content": 159,
-      "unreadable-host": 473,
+      "unsupported-format": 1331,
+      "story-does-not-open": 72,
+      "adult-content": 160,
+      "unreadable-host": 475,
       "no-ink-story": 32,
       "insecure-url": 275,
       "no-game-file": 10,
       "compressed-no-primary": 20
     },
     "formats": {
-      "zcode": 1630,
-      "glulx": 726,
+      "zcode": 1629,
+      "glulx": 727,
       "twine": 1088,
       "ink": 71
     },
@@ -293,6 +293,12 @@
       "title": "inside you there are two wolves",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "0x0p7agao5gkbzqr",
+      "title": "CHRONIC PAIN MASOCHIST",
+      "reason": "adult-content",
+      "detail": "sexual content"
     },
     {
       "tuid": "10dqqhfw5kpcbgk",
@@ -1929,7 +1935,7 @@
       "tuid": "4nijlgs7taq39vim",
       "title": "The Big Mama",
       "reason": "adult-content",
-      "detail": "sexual content"
+      "detail": "Sexual Content"
     },
     {
       "tuid": "4nmfygd7dcbh4x1c",
@@ -1954,11 +1960,6 @@
       "title": "Exchange",
       "reason": "no-ink-story",
       "detail": "https://www.springthing.net/2026/play.html#Exchange"
-    },
-    {
-      "tuid": "4pcifquno03jza5q",
-      "title": "SALMON OF DOUBT PART ONE",
-      "reason": "no-game-file"
     },
     {
       "tuid": "4ps1lqo53w5mpqd",
@@ -2863,7 +2864,7 @@
       "tuid": "6u8xfl6tz0szfik3",
       "title": "Got ID?",
       "reason": "adult-content",
-      "detail": "Sexual content"
+      "detail": "sexual content"
     },
     {
       "tuid": "6u9hes434bmymiom",
@@ -3620,6 +3621,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "8h8tjtc85nbqi6b0",
+      "title": "snakeface",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "8hdtgidxze1lqpyw",
       "title": "Devotion",
       "reason": "unsupported-format",
@@ -4282,6 +4289,12 @@
     {
       "tuid": "9zytsuf6ab019mu5",
       "title": "SHADOW PLAY",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "a08u216tj6n9r8q8",
+      "title": "Boxed In",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -5983,6 +5996,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "eufcqiov28zwskrz",
+      "title": "FꙮLLOWER",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "euwlca5ige9da173",
       "title": "We're yours and you're ours",
       "reason": "unsupported-format",
@@ -6419,6 +6438,12 @@
       "title": "拦截",
       "reason": "unreadable-host",
       "detail": "https://the-intercept-from-inkle.netlify.app/%E6%8B%A6%E6%88%AA.js"
+    },
+    {
+      "tuid": "g6ciaoptwj80i29n",
+      "title": "Pepe and the Balloon v 1.0",
+      "reason": "unreadable-host",
+      "detail": "https://anilkumarbheemaiah.weebly.com/uploads/1/0/5/1/105161743/pepe_and_the_balloon.html"
     },
     {
       "tuid": "g6h1glu4zeds6sec",
@@ -8502,6 +8527,12 @@
       "detail": "https://arenaone3.com/the-last-train-home/"
     },
     {
+      "tuid": "lctubzcvfaym29fr",
+      "title": "Fissure - A Contract between Worlds",
+      "reason": "unsupported-format",
+      "detail": "executable"
+    },
+    {
       "tuid": "ld0r03t5t12o5iaw",
       "title": "Elsegar I: Arrival",
       "reason": "unreadable-host",
@@ -8679,7 +8710,7 @@
       "tuid": "lsnpv1bkylr6vsva",
       "title": "Only After Dark",
       "reason": "adult-content",
-      "detail": "Sexual Content"
+      "detail": "sexual content"
     },
     {
       "tuid": "ltg7ermau8me4zp2",
@@ -9134,8 +9165,7 @@
     {
       "tuid": "n0gedrjrpk0p37uh",
       "title": "Parlez-lui d'amour",
-      "reason": "story-does-not-open",
-      "detail": "unsupported-version: version 6 (https://www.ifarchive.org/if-archive/games/zcode/french/plda.zblorb)"
+      "reason": "no-game-file"
     },
     {
       "tuid": "n0weq1argql30tcl",
@@ -9355,6 +9385,12 @@
     {
       "tuid": "nc2ux13h6y5tx1v",
       "title": "1181",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "ncb9jyd108t21tr6",
+      "title": "Monsters in the Basement",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -9787,6 +9823,12 @@
     {
       "tuid": "of1ej458mb7oz8lb",
       "title": "Breathless at CEH: A curious case of Christmas party",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "oggtoic3xjn97pra",
+      "title": "The Monster at the End of This Game",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -10372,6 +10414,12 @@
       "detail": "https://web.archive.org/web/20160927095959if_/http://www222.pair.com/sjohn/free/lovecame.zip"
     },
     {
+      "tuid": "psm6w7v0m0jhooes",
+      "title": "Undead Identities",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "pt5de7xn3j7ms8og",
       "title": "Home",
       "reason": "unsupported-format",
@@ -10625,7 +10673,7 @@
     },
     {
       "tuid": "qk5wszcd5zdalscf",
-      "title": "Lucifugus",
+      "title": "Lucifugus [es]",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -12008,6 +12056,12 @@
       "title": "Save the World!",
       "reason": "unreadable-host",
       "detail": "https://www.jedidjahjulianoomen.nl/wp-content/uploads/2024/05/index-1.html"
+    },
+    {
+      "tuid": "u094vn795tub8kbq",
+      "title": "My boyfriend The Comedian",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "u16mpjnk07d3l8i2",
@@ -13981,6 +14035,12 @@
       "title": "Dad and Chloe",
       "reason": "unsupported-format",
       "detail": "storyfile"
+    },
+    {
+      "tuid": "z1ru8wkg1hp1w4bm",
+      "title": "Harold Night (2003)",
+      "reason": "unreadable-host",
+      "detail": "https://willhines.net/if/haroldnight/Harold%20Night%202003.gblorb"
     },
     {
       "tuid": "z2w8hgz8hryoqopo",

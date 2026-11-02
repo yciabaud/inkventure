@@ -1639,11 +1639,6 @@
     "lastModified": "Tue, 07 Mar 2023 22:34:09 GMT",
     "pictures": 0
   },
-  "https://www.ifarchive.org/if-archive/games/glulx/Harold_Night_2003.gblorb": {
-    "checked": "2026-10-01T09:09:01.696Z",
-    "lastModified": "Wed, 08 Oct 2014 08:15:54 GMT",
-    "pictures": 0
-  },
   "https://www.ifarchive.org/if-archive/games/glulx/Jack.gblorb": {
     "checked": "2026-10-09T21:41:40.644Z",
     "lastModified": "Sun, 07 Nov 2021 21:09:16 GMT",
@@ -1747,6 +1742,11 @@
   "https://www.ifarchive.org/if-archive/games/glulx/Safe.gblorb": {
     "checked": "2026-10-01T09:09:01.696Z",
     "lastModified": "Sun, 09 Jan 2011 06:29:31 GMT",
+    "pictures": 0
+  },
+  "https://www.ifarchive.org/if-archive/games/glulx/Salmon of Doubt Part One.gblorb": {
+    "checked": "2026-11-02T13:20:59.541Z",
+    "lastModified": "Sun, 25 Oct 2026 02:46:41 GMT",
     "pictures": 0
   },
   "https://www.ifarchive.org/if-archive/games/glulx/SamFortunePrivateInvestigator.gblorb": {
