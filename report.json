@@ -9,24 +9,24 @@
   "counts": {
     "kept": 3040,
     "dropped": {
-      "unsupported-format": 1331,
+      "unsupported-format": 1365,
       "story-does-not-open": 72,
-      "adult-content": 160,
+      "adult-content": 161,
       "unreadable-host": 475,
-      "no-ink-story": 32,
+      "no-game-file": 11,
+      "no-ink-story": 33,
       "insecure-url": 275,
-      "no-game-file": 10,
       "compressed-no-primary": 20
     },
     "formats": {
       "zcode": 1629,
-      "glulx": 727,
-      "twine": 1088,
+      "glulx": 726,
+      "twine": 1089,
       "ink": 71
     },
     "pictures": {
-      "blorbs": 399,
-      "inspected": 399,
+      "blorbs": 400,
+      "inspected": 400,
       "illustrated": 55
     }
   },
@@ -235,6 +235,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "0dj4ovroj8advcjl",
+      "title": "The Escape (by The Fried People)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "0dwctbtziwcnz1a3",
       "title": "The Ivory Calico",
       "reason": "unreadable-host",
@@ -275,6 +281,11 @@
       "title": "Escape",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "0omlat7gocne2mih",
+      "title": "Why Don't You Dance",
+      "reason": "no-game-file"
     },
     {
       "tuid": "0stz0hr7a98bp9mp",
@@ -523,6 +534,12 @@
       "detail": "Sexual content"
     },
     {
+      "tuid": "1gx79ax6zrtvclae",
+      "title": "The Choice",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "1hcx8jts9vcjv9fu",
       "title": "c ya laterrrr",
       "reason": "unsupported-format",
@@ -691,6 +708,12 @@
       "detail": "https://web.archive.org/web/20120510202639/http://k003.kiwi6.com/hotlink/ug5n85n79b/when_i_was_shot_by_elephants.z5"
     },
     {
+      "tuid": "1vayetp2g4casswz",
+      "title": "Mal Fario",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "1vbkpdcxw28zo0nc",
       "title": "Bill Roy: Demon Hunter",
       "reason": "no-game-file"
@@ -760,6 +783,12 @@
       "title": "Grubbyville",
       "reason": "story-does-not-open",
       "detail": "too-big: 67108865 bytes (https://ifarchive.org/if-archive/games/mini-comps/introcomp/introcomp16.zip)"
+    },
+    {
+      "tuid": "1zmnszn3ywnolfcz",
+      "title": "Jumping Frenzy",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "1zxtch399c45i5x",
@@ -1266,6 +1295,12 @@
       "detail": "nsfw"
     },
     {
+      "tuid": "34zzzvuanv6hlo2v",
+      "title": "The Land of After (by Metale Grele)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "35yqdqy3ennlte69",
       "title": "Life On Mars?",
       "reason": "unreadable-host",
@@ -1442,6 +1477,12 @@
     {
       "tuid": "3lsmkteoxl6523c7",
       "title": "Brain surgery",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "3lz8twek9vv8qpjc",
+      "title": "'27 Bonnie and Clyde",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -2861,6 +2902,12 @@
       "detail": "https://loststoryofvandermar.netlify.app/%E5%87%A1%E5%BE%B7%E7%8E%9B%E5%B0%94%E9%81%97%E9%97%BB%E5%BD%95.js"
     },
     {
+      "tuid": "6u0xp92lwzmz2ki7",
+      "title": "Once Upon a Wound",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "6u8xfl6tz0szfik3",
       "title": "Got ID?",
       "reason": "adult-content",
@@ -3286,6 +3333,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "7rxx8joojikwy1qw",
+      "title": "The 4 Adele & 2 Suzy",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "7sco5ca3c64frfol",
       "title": "BEER",
       "reason": "unsupported-format",
@@ -3458,6 +3511,12 @@
       "title": "Mirror",
       "reason": "unreadable-host",
       "detail": "https://www.springthing.net/2023/play.html#Mirror"
+    },
+    {
+      "tuid": "84cnghiyew5619rj",
+      "title": "The Last Voyage of the Warsaw Queen",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "8529mk2x07p18taq",
@@ -4413,6 +4472,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "a9yqiwkoo74nleq0",
+      "title": "The Kings of Iasington (by The Kings of Iasington)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "aa0isrx1wzsxaujm",
       "title": "Logic Puzzle Sampler",
       "reason": "unsupported-format",
@@ -4611,6 +4676,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "avom0ut6hua3mgss",
+      "title": "Labyrinth of Thoughts (by The Twines)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "awahllb90bdpzfv5",
       "title": "Roguelike Goose",
       "reason": "unreadable-host",
@@ -4761,6 +4832,12 @@
       "detail": "executable"
     },
     {
+      "tuid": "bb1lo9ue0usfgur2",
+      "title": "The Last Bell (by The Shield)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "bb3he06qx7j7x5ut",
       "title": "Sleepless",
       "reason": "unsupported-format",
@@ -4891,6 +4968,12 @@
       "title": "Tales from Castle Balderstone",
       "reason": "unreadable-host",
       "detail": "https://rcveeder.net/balderstone/18/balderstone.gblorb"
+    },
+    {
+      "tuid": "bqgksa3xr2907276",
+      "title": "The Human Bench",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "brc4m4yqonmjgy0",
@@ -5111,6 +5194,12 @@
     {
       "tuid": "c9bc9vl2paxqa98d",
       "title": "The Maze Gallery",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "cajj516w0ekvwexy",
+      "title": "Checkmate (by Eggrique)",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -6188,6 +6277,12 @@
       "detail": "sexual content"
     },
     {
+      "tuid": "fho1pg4759c8amps",
+      "title": "Meddling Kid",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "fiv7g19recam7vf3",
       "title": "The Electric Puppet",
       "reason": "adult-content",
@@ -6324,6 +6419,12 @@
       "title": "Kitty and the Sea",
       "reason": "unreadable-host",
       "detail": "https://felix.plesoianu.ro/intfic/kitty-and-the-sea/kitty-and-the-sea.html"
+    },
+    {
+      "tuid": "ftps6uydvpc7tpfo",
+      "title": "A Felinthropic Endeavor",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "fvaefo40g1x1q20k",
@@ -6612,6 +6713,12 @@
       "title": "Fogged Up Mirror",
       "reason": "insecure-url",
       "detail": "http://shallow-depths.com/mirror/mirror.html"
+    },
+    {
+      "tuid": "gl3wd41b6nwzum9u",
+      "title": "El Día Después",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "gl9bp78xjggvmnwl",
@@ -7216,6 +7323,12 @@
     {
       "tuid": "i4kg84xz3sqfz4f2",
       "title": "Doors",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "i5pno7uynbfxzi34",
+      "title": "An Unlikely Demon",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -7874,6 +7987,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "jrootfjesfg665z8",
+      "title": "taso lon tomo pakala",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "jrzyhlywnuwwazzr",
       "title": "Halloween Scarecrow II: Interview with a Scarecrow",
       "reason": "unsupported-format",
@@ -8025,7 +8144,7 @@
     },
     {
       "tuid": "k2x38k0t268ryt52",
-      "title": "Muerte de Berta Cáceres",
+      "title": "Berta Multiplicada / Berta Multiplied",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -8044,6 +8163,12 @@
     {
       "tuid": "k56imbkvpvy6k1mb",
       "title": "Grievance",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "k5be8o8jp3aymaqp",
+      "title": "Virtual Adventure of Bored Edwin (by Storyteller)",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -8509,6 +8634,12 @@
       "detail": "https://web.archive.org/web/1000if_/http://aliendovecote.com/uploads/twine/atlantean.html"
     },
     {
+      "tuid": "l8iikuwm9xvhas19",
+      "title": "Lucifugus [en]",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "lbek1f9rrhgophmy",
       "title": "My Name is Tara Sue",
       "reason": "unsupported-format",
@@ -8561,6 +8692,12 @@
       "title": "Forgewhisper",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "lfltybbpknxq1b2v",
+      "title": "No.",
+      "reason": "adult-content",
+      "detail": "sexual content"
     },
     {
       "tuid": "lgijgofnsvgb9ckm",
@@ -9221,6 +9358,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "n2lz5w1inkuw857k",
+      "title": "Starling",
+      "reason": "unreadable-host",
+      "detail": "https://expositionreview.com/wp-content/uploads/2020/05/Starling_KevinFlanagan.html"
+    },
+    {
       "tuid": "n32ahpmlhl98m16l",
       "title": "Napanee, 1961",
       "reason": "unsupported-format",
@@ -9567,6 +9710,12 @@
       "title": "Buttered Toast: the Interactive Fiction Starring Billy Davis",
       "reason": "unreadable-host",
       "detail": "https://github.com/leettyun/OOZELUMNY/raw/master/story-files/ButteredToast.gblorb"
+    },
+    {
+      "tuid": "nu72vgdtv2fs2b53",
+      "title": "El umbral",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "nummmn9jlr3uctl",
@@ -10241,6 +10390,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "pc0uz2pu1ai1vfvq",
+      "title": "Amb fang a les mans",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "pcprb1wdtn9ez7km",
       "title": "Labour's Letters Lost",
       "reason": "insecure-url",
@@ -10460,6 +10615,12 @@
       "title": "Citizens on the Mountaintop: The Story of the Civil War Amendments",
       "reason": "unsupported-format",
       "detail": "storyfile"
+    },
+    {
+      "tuid": "pwntimp80wc02siv",
+      "title": "Lead Sarcophagus (in space)",
+      "reason": "no-ink-story",
+      "detail": "https://inklewriter.com/stories/283297"
     },
     {
       "tuid": "pxs5jlc2cjxhnrd7",
@@ -10948,6 +11109,12 @@
       "detail": "http://www.springthing.net/2021/play_online/ThoseDays/index.html"
     },
     {
+      "tuid": "r4y5x7sb40jbfikp",
+      "title": "Lot 46",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "r7412iha6kxa57z3",
       "title": "Hyde",
       "reason": "unreadable-host",
@@ -11410,6 +11577,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "sebhzvz36liywxrt",
+      "title": "AURORA Project",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "sej4l6z6i23h1fsr",
       "title": "Cinnamon Tea",
       "reason": "adult-content",
@@ -11614,6 +11787,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "syrrkc8cai7q3m6q",
+      "title": "The more you feed it",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "szvlejnlla8g514l",
       "title": "Summer of '22",
       "reason": "unsupported-format",
@@ -11752,6 +11931,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "ta83286aljrx4dsr",
+      "title": "The Forbidden Temple (by Lantisorul)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "tail9uwzs0scswta",
       "title": "Slappy Squirrel Gets The Girl",
       "reason": "unsupported-format",
@@ -11784,6 +11969,12 @@
     {
       "tuid": "tcuzy12fajsa2ysp",
       "title": "Sophomore Slump",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "td30st1emjuymhyh",
+      "title": "Burdens",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -12472,6 +12663,12 @@
       "detail": "nsfw"
     },
     {
+      "tuid": "v7cdkqsv9nheal16",
+      "title": "Small Wyverns",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "v7zwph0drvuj0xsv",
       "title": "Who‘s that?",
       "reason": "unsupported-format",
@@ -12766,6 +12963,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "vz8ak0ds8norx7jx",
+      "title": "Plumbing the Depths",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "vzphqs73jufjswqo",
       "title": "Dust & Data",
       "reason": "unsupported-format",
@@ -12999,6 +13202,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "wi1wk7ezc2sy53es",
+      "title": "incarnate",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "wisqfpjdzpog5lq9",
       "title": "What is this place (by Gooseberry)",
       "reason": "unsupported-format",
@@ -13099,6 +13308,12 @@
       "title": "See You Around",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "wu29f43hpd5h54xw",
+      "title": "Monotype",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "wund9fb8690y4at",
@@ -13413,6 +13628,12 @@
       "detail": "http://www.nigeljayne.ca/scd2downloads/Comrade.gblorb"
     },
     {
+      "tuid": "xlw4c1dagrolhgff",
+      "title": "Érase una herida",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "xmin0dycwcwm5rxm",
       "title": "Virtue",
       "reason": "unsupported-format",
@@ -13493,6 +13714,12 @@
     {
       "tuid": "xua6ubqh68hulln",
       "title": "Extinction Escape: Your Travel Guide to the Apocalypse",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "xub8te6p0uvtc5gp",
+      "title": "Face the Music",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -14035,12 +14262,6 @@
       "title": "Dad and Chloe",
       "reason": "unsupported-format",
       "detail": "storyfile"
-    },
-    {
-      "tuid": "z1ru8wkg1hp1w4bm",
-      "title": "Harold Night (2003)",
-      "reason": "unreadable-host",
-      "detail": "https://willhines.net/if/haroldnight/Harold%20Night%202003.gblorb"
     },
     {
       "tuid": "z2w8hgz8hryoqopo",
