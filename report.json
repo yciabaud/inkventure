@@ -9,10 +9,10 @@
   "counts": {
     "kept": 3040,
     "dropped": {
-      "unsupported-format": 1365,
+      "unsupported-format": 1375,
       "story-does-not-open": 72,
       "adult-content": 161,
-      "unreadable-host": 475,
+      "unreadable-host": 476,
       "no-game-file": 11,
       "no-ink-story": 33,
       "insecure-url": 275,
@@ -20,7 +20,7 @@
     },
     "formats": {
       "zcode": 1629,
-      "glulx": 726,
+      "glulx": 727,
       "twine": 1089,
       "ink": 71
     },
@@ -195,6 +195,12 @@
     {
       "tuid": "03enp9z2oszblv5h",
       "title": "Eclipse",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "03z7v4jq0wuxktve",
+      "title": "The Feminine Urge",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -2217,6 +2223,12 @@
       "title": "Seastalker",
       "reason": "unreadable-host",
       "detail": "https://eblong.com/infocom/gamefiles/seastalker-r16-s850603.z3"
+    },
+    {
+      "tuid": "56ywq7lzl5gk9d66",
+      "title": "Pupperween",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "579odktztmpx4qad",
@@ -5122,8 +5134,8 @@
     {
       "tuid": "c35gzroxv9dphr",
       "title": "Advent Window",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
+      "reason": "unreadable-host",
+      "detail": "https://html-classic.itch.zone/html/12388120/dist/Advent%20Window.gblorb"
     },
     {
       "tuid": "c4d8glpwxmywbhss",
@@ -5581,6 +5593,12 @@
       "detail": "https://www.marcovallarino.it/sdc_download/5784/?key=0e17ah1ab3invg0dplmuqfw836anxy"
     },
     {
+      "tuid": "dg0t0yvhavurdjmb",
+      "title": "Plague on the Discovery",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "dgpkz7fysr1ssp6b",
       "title": "Sabotage!",
       "reason": "unreadable-host",
@@ -5603,6 +5621,12 @@
       "title": "Trapped in School",
       "reason": "unsupported-format",
       "detail": "storyfile"
+    },
+    {
+      "tuid": "dk6jlufj2h254kh0",
+      "title": "Lost in the Woods",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "dkmzg73cff1p9xdb",
@@ -7099,6 +7123,12 @@
       "detail": "https://web.archive.org/web/20090417014433if_/http://www.historicalsimulations.net/inform/studentsims/Cortes%20Creed.zblorb"
     },
     {
+      "tuid": "hdh0fntbmk6fzm7i",
+      "title": "The Witching Hour",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "hdv742eg5mekfcsn",
       "title": "Freed from the Curse",
       "reason": "unsupported-format",
@@ -7863,6 +7893,12 @@
     {
       "tuid": "jig3n3lp0422kdxx",
       "title": "The Antediluvian Weapon",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "jiiyib3mchlqv173",
+      "title": "The Sin Eater",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -9244,6 +9280,12 @@
       "title": "Slacker X",
       "reason": "adult-content",
       "detail": "sexual content"
+    },
+    {
+      "tuid": "muji8gx251ayj359",
+      "title": "Trick or Treat: Last Delight",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "mw1x38505ixjtxps",
@@ -10797,6 +10839,12 @@
       "detail": "http://www.fiction-interactive.fr/fi/yoruk/quete-du-baal/quete-du-baal.z8"
     },
     {
+      "tuid": "qbrfcyz0ss6suyey",
+      "title": "Blackout Fun",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "qbvd79sdy6510222",
       "title": "En la Oscuridad",
       "reason": "unsupported-format",
@@ -11591,6 +11639,12 @@
     {
       "tuid": "sg3mtjs4voyo2me",
       "title": "piele",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "sgaoboeffel7xjv5",
+      "title": "October 15th",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -13316,6 +13370,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "wufx0zk3fh9sc4xm",
+      "title": "Welcome to the Monster Mash",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "wund9fb8690y4at",
       "title": "catgirl truckers",
       "reason": "unsupported-format",
@@ -14518,6 +14578,12 @@
     {
       "tuid": "zqz1rlcjx2slophj",
       "title": "Pas De Deux",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "zr38dqoe0er40wa6",
+      "title": "lineage: I",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
