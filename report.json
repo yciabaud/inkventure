@@ -7,26 +7,26 @@
     "twine"
   ],
   "counts": {
-    "kept": 3040,
+    "kept": 3044,
     "dropped": {
-      "unsupported-format": 1375,
+      "unsupported-format": 1381,
       "story-does-not-open": 72,
       "adult-content": 161,
-      "unreadable-host": 476,
-      "no-game-file": 11,
-      "no-ink-story": 33,
-      "insecure-url": 275,
-      "compressed-no-primary": 20
+      "unreadable-host": 478,
+      "no-game-file": 13,
+      "no-ink-story": 34,
+      "insecure-url": 274,
+      "compressed-no-primary": 19
     },
     "formats": {
-      "zcode": 1629,
-      "glulx": 727,
-      "twine": 1089,
+      "zcode": 1630,
+      "glulx": 728,
+      "twine": 1093,
       "ink": 71
     },
     "pictures": {
-      "blorbs": 400,
-      "inspected": 400,
+      "blorbs": 401,
+      "inspected": 401,
       "illustrated": 55
     }
   },
@@ -289,8 +289,8 @@
       "detail": "hypertextgame"
     },
     {
-      "tuid": "0omlat7gocne2mih",
-      "title": "Why Don't You Dance",
+      "tuid": "0ok314v53u37ilky",
+      "title": "Space Story Where You Do Things",
       "reason": "no-game-file"
     },
     {
@@ -3129,12 +3129,6 @@
       "detail": "http://www.fiction-interactive.fr/fi/yoruk/loup-la-chevre-et-la-salade/loup-la-chevre-et-la-salade.z8"
     },
     {
-      "tuid": "7bj9wr8o6zu4mlwh",
-      "title": "Velcro Church",
-      "reason": "unsupported-format",
-      "detail": "hypertextgame"
-    },
-    {
       "tuid": "7btsk9iqqku2t8g9",
       "title": "En Garde",
       "reason": "unsupported-format",
@@ -3373,6 +3367,12 @@
       "title": "Player 2",
       "reason": "insecure-url",
       "detail": "http://www.lifeinneon.com/games/Player2.html"
+    },
+    {
+      "tuid": "7ty9kq4n2p6fuc1c",
+      "title": "Identity Crises",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "7u29f0fk5prohmkd",
@@ -4082,6 +4082,12 @@
       "detail": "https://philome.la/Hexfu/boom/play/index.html"
     },
     {
+      "tuid": "995ji16yk4eamomb",
+      "title": "The Comrade General...",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "9a4a5msagzvtz9aj",
       "title": "Zombie's Adventure Into Bone Malone's Spooky Gang",
       "reason": "unsupported-format",
@@ -4478,6 +4484,12 @@
       "detail": "http://www.glorioustrainwrecks.com/files/A%20AAAAA%20AAAAAAAAA.zip"
     },
     {
+      "tuid": "a956lnvuxnfp8b5i",
+      "title": "Guests are Coming!",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "a9hs98q1rd99aofi",
       "title": "I Love You, Player",
       "reason": "unsupported-format",
@@ -4540,6 +4552,12 @@
     {
       "tuid": "aceemlstv4qlb786",
       "title": "Aftermath",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
+      "tuid": "act2tkvtttjtcl4h",
+      "title": "Shipwreck on Guyoth IV",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
     },
@@ -5186,12 +5204,6 @@
       "detail": "https://incanus.caad.club/Goteras.zip"
     },
     {
-      "tuid": "c7wvo7453qvozsh3",
-      "title": "Retro Fatale",
-      "reason": "compressed-no-primary",
-      "detail": "http://www.ifarchive.org/if-archive/games/zcode/RetroFatale.zip"
-    },
-    {
       "tuid": "c83dw9sx4lcjp6m1",
       "title": "The Maze",
       "reason": "unsupported-format",
@@ -5761,6 +5773,11 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "e0fk84f68z5pw9rl",
+      "title": "Fish and Spaceships",
+      "reason": "no-game-file"
+    },
+    {
       "tuid": "e0y9b89vfv70y6pu",
       "title": "Mars Menace from Outer Space",
       "reason": "unsupported-format",
@@ -5967,8 +5984,8 @@
     {
       "tuid": "eig3nbmccyx4po6a",
       "title": "Escape Game",
-      "reason": "insecure-url",
-      "detail": "http://www.fiction-interactive.fr/fi/bryan/escape-game/Escape%20game.html"
+      "reason": "unreadable-host",
+      "detail": "https://www.fiction-interactive.fr/fi/bryan/escape-game/Escape%20game.html"
     },
     {
       "tuid": "eit20qe5eublmc9h",
@@ -6361,6 +6378,12 @@
       "detail": "https://legendofzulkunda.netlify.app/%E7%A5%96%E6%98%86%E8%BE%BE%E7%9A%84%E4%BC%A0%E8%AF%B4.js"
     },
     {
+      "tuid": "fnghzc7v18xogkw6",
+      "title": "FINAL CUT",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "fnl7svp9izgzzd0h",
       "title": "A Murder In Engrams",
       "reason": "unreadable-host",
@@ -6497,6 +6520,12 @@
       "title": "Arrow of Death Part 2",
       "reason": "unsupported-format",
       "detail": "storyfile"
+    },
+    {
+      "tuid": "fyc2ox6pyiu87aeh",
+      "title": "Die Legende von Yamagawa (Deutsch) (Demo)",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
     },
     {
       "tuid": "fyeh7e8ceqig8vgh",
@@ -8976,6 +9005,12 @@
       "detail": "hypertextgame"
     },
     {
+      "tuid": "m0jfowa9raho7281",
+      "title": "The Mother Deer",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "m17ezt8mufvyd3fm",
       "title": "Repeat : Return : Reprise",
       "reason": "unsupported-format",
@@ -10408,6 +10443,12 @@
       "detail": "https://philome.la/miss_merboy/bed-dream-first-draft/play/index.html"
     },
     {
+      "tuid": "p923qnbm76wm8nfh",
+      "title": "Molt Honorable Simulator",
+      "reason": "unsupported-format",
+      "detail": "hypertextgame"
+    },
+    {
       "tuid": "p93ysvur4wb58oxx",
       "title": "KillerTuneKillsMe",
       "reason": "unsupported-format",
@@ -10701,6 +10742,12 @@
       "detail": "https://web.archive.org/web/20120110020700if_/http://www.volxvergnuegen.org/textadventure/plandsdsgamepage/Dr-%20Kong%20in-%20Plan%20DSDS%20from%20pra.gblorb"
     },
     {
+      "tuid": "q0jhrh6auruuqf4q",
+      "title": "Project Procrustes",
+      "reason": "unreadable-host",
+      "detail": "https://philome.la/DamonWakes/project-procrustes/index.html"
+    },
+    {
       "tuid": "q2gsx1e3u5v64g9r",
       "title": "Dead by Noon",
       "reason": "unsupported-format",
@@ -10770,7 +10817,7 @@
       "tuid": "q6a45m9wnrsvk3ol",
       "title": "Metal Max: Space Princess",
       "reason": "unreadable-host",
-      "detail": "https://rpgmaker.net/content/games/11492/downloads/Metal%20Max_%20Space%20Princess.html"
+      "detail": "https://content.rpgmaker.net/games/11492/downloads/Metal%20Max_%20Space%20Princess.html"
     },
     {
       "tuid": "q6v604a5iz69jddq",
@@ -12135,6 +12182,12 @@
       "detail": "https://poppelyang.github.io/sleeptight/"
     },
     {
+      "tuid": "tlxhe33nqalemz5n",
+      "title": "The Last Train",
+      "reason": "no-ink-story",
+      "detail": "https://aventurasapp.com/s/mystery-lasttrain?lang=en&utm_source=ifdb&utm_medium=directory&utm_campaign=catalogo_bilingue_202611&utm_content=last_train_en"
+    },
+    {
       "tuid": "tm4gyzvk4kjcfi",
       "title": "Aquarium",
       "reason": "unsupported-format",
@@ -13021,6 +13074,11 @@
       "title": "Plumbing the Depths",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
+    },
+    {
+      "tuid": "vzk0f6c4vxjbroj2",
+      "title": "Poisoned",
+      "reason": "no-game-file"
     },
     {
       "tuid": "vzphqs73jufjswqo",
@@ -14556,12 +14614,6 @@
       "title": "their angelical understanding",
       "reason": "unsupported-format",
       "detail": "hypertextgame"
-    },
-    {
-      "tuid": "zpouytxhuqsek2rq",
-      "title": "Test Story",
-      "reason": "unsupported-format",
-      "detail": "storyfile"
     },
     {
       "tuid": "zq77j4e3tqjse13v",

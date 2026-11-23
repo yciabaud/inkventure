@@ -72,7 +72,7 @@
   },
   "https://area57.cloud/index.php/s/fweipDWbBcPbCyp/download.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "HTTP 522",
     "transient": true
   },
@@ -180,6 +180,11 @@
     "checked": "2026-11-02T12:58:28.762Z",
     "detail": "no CORS headers"
   },
+  "https://content.rpgmaker.net/games/11492/downloads/Metal%20Max_%20Space%20Princess.html": {
+    "ok": false,
+    "checked": "2026-11-23T14:38:18.278Z",
+    "detail": "HTTP 403"
+  },
   "https://contrafatual.files.wordpress.com/2019/10/a-capa-da-escuridc3a3o.zip": {
     "ok": false,
     "checked": "2026-11-02T12:58:28.762Z",
@@ -229,7 +234,7 @@
   },
   "https://doopnet.com/games/Light%20into%20Darkness.zblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -459,7 +464,7 @@
   },
   "https://games.saugus.net/TimeoutInTheWasteland/Timeout%20in%20the%20Wasteland.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -884,7 +889,7 @@
   },
   "https://hadesunited.com/wp-content/uploads/2024/09/Charlie-The-Robot.html": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1153,19 +1158,19 @@
   },
   "https://inurashii.com/relic.html": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/seedlings/seeds2.html": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://inurashii.com/transplant/Transplant.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1209,7 +1214,7 @@
   },
   "https://launchpad.yourlibrary.ca/games/escape_the_library/index.html": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1300,6 +1305,11 @@
   "https://philome.la/DachshundTechno/priapism/play/index.html": {
     "ok": false,
     "checked": "2026-11-02T12:58:28.762Z",
+    "detail": "no CORS headers"
+  },
+  "https://philome.la/DamonWakes/project-procrustes/index.html": {
+    "ok": false,
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "no CORS headers"
   },
   "https://philome.la/DamonWakes/ultraviolent-unicorn-deathmatch-of-destiny-2/play/index.html": {
@@ -1764,11 +1774,6 @@
     "ok": true,
     "checked": "2026-11-02T12:58:28.762Z"
   },
-  "https://rpgmaker.net/content/games/11492/downloads/Metal%20Max_%20Space%20Princess.html": {
-    "ok": false,
-    "checked": "2026-11-02T12:58:28.762Z",
-    "detail": "HTTP 403"
-  },
   "https://samkabo.com/ifdbs2/IFDB%20Spelunking%202.gblorb": {
     "ok": false,
     "checked": "2026-11-02T12:58:28.762Z",
@@ -1791,7 +1796,7 @@
   },
   "https://spacestories.ru/stories/looter/index.html": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -1841,25 +1846,25 @@
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1745423/Once%20upon%20a%20winter%20night,%20the%20r.zblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1746418/Release/When%20He%20Died.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/1747863/balderstone2.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
   "https://v6p9d9t4.ssl.hwcdn.net/html/2456903/The%20Story%20is%20a%20Room.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2418,6 +2423,11 @@
     "checked": "2026-11-02T12:58:28.762Z",
     "detail": "no CORS headers"
   },
+  "https://www.fiction-interactive.fr/fi/bryan/escape-game/Escape%20game.html": {
+    "ok": false,
+    "checked": "2026-11-23T14:38:18.278Z",
+    "detail": "no CORS headers"
+  },
   "https://www.fiction-interactive.fr/fi/multiples/lieux-communs/lieux-communs.blb": {
     "ok": false,
     "checked": "2026-11-02T12:58:28.762Z",
@@ -2500,7 +2510,7 @@
   },
   "https://www.mirality.co.nz/if/micropuzzle/Micropuzzle.zblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
@@ -2531,7 +2541,7 @@
   },
   "https://www.sibylmoon.com/if/realthing/release/This is a Real Thing that Happe.gblorb": {
     "ok": false,
-    "checked": "2026-11-16T12:45:11.005Z",
+    "checked": "2026-11-23T14:38:18.278Z",
     "detail": "network: fetch failed",
     "transient": true
   },
